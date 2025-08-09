@@ -6,10 +6,9 @@ import { motion } from "motion/react";
 const HeroText = () => {
   const words = [
     "desarrollo web",
-    "desarrollo de software",
-    "crear soluciones digitales",
+    "desarrollar software",
+    "soluciones digitales",
     "la innovación",
-    "el mundo digital",
   ];
   const variants = {
     hidden: { opacity: 0, x: -50 },
