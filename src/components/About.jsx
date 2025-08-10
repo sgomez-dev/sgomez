@@ -61,23 +61,18 @@ export const About = () => {
               containerRef={grid2container}
             />
             <Card
-              style={{ rotate: "30deg", top: "70%", left: "70%" }}
-              image="/models/assets/logos/csharp-pink.png"
-              containerRef={grid2container}
-            />
-            <Card
               style={{ rotate: "-45deg", top: "70%", left: "25%" }}
-              image="/models/assets/logos/dotnet-pink.png"
+              image="/models/assets/sicons/sgomez-dev1.png"
               containerRef={grid2container}
             />
             <Card
               style={{ rotate: "30deg", top: "70%", left: "70%" }}
-              image="/models/assets/logos/csharp-pink.png"
+              image="/models/assets/sicons/sgomez-dev2.png"
               containerRef={grid2container}
             />
             <Card
               style={{ rotate: "-45deg", top: "5%", left: "10%" }}
-              image="/models/assets/logos/blazor-pink.png"
+              image="/models/assets/sicons/sgomez-dev3.png"
               containerRef={grid2container}
             />
           </div>
