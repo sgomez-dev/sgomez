@@ -93,14 +93,14 @@ export const About = () => {
         <div className="grid-special-color grid-4">
           <div className="flex flex-col items-center justify-center gap-4 size-full">
             <p className="text-center headtext">
-              ¿Quieres comenzar un projecto juntos?
+              ¿Quieres comenzar un proyecto juntos?
             </p>
             <CopyEmailButton />
           </div>
         </div>
         <div className="grid-default-color grid-5">
           <div className="z-10 w-[50%]">
-            <p className="headtext">Stack tecnológico</p>
+            <p className="headtext">Habilidades tecnológicas</p>
             <p className="subtext">
               Me especializo en una variedad de lenguajes, frameworks y
               herramientas de software que me permiten crear aplicaciones

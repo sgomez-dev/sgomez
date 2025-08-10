@@ -4,14 +4,30 @@ import { AnimatePresence, motion } from "framer-motion";
 export const CopyEmailButton = () => {
   const [copied, setCopied] = useState(false);
   const email = "contacto@sgomez.dev";
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+  const copyToClipboard = () => {
+    if (typeof window !== "undefined") {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(email).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = email;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    }
   };
+
   return (
     <motion.button
       onClick={copyToClipboard}
@@ -41,7 +57,7 @@ export const CopyEmailButton = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
           >
-            <img src="/models/assets/copy.svg" className="w-5"></img>
+            <img src="/models/assets/copy.svg" className="w-5" />
             Copiar email
           </motion.p>
         )}
