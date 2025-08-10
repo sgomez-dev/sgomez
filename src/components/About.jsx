@@ -5,9 +5,13 @@ import { useRef } from "react";
 import { Globe } from "./Globe";
 import { CopyEmailButton } from "@/constants/CopyEmailButton";
 import { Frameworks } from "@/constants/Frameworks";
+import { useState } from "react";
+import { FrameworksModal } from "@/constants/FrameworksModal";
 
 export const About = () => {
   const grid2container = useRef();
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <section className="c-space section-spacing">
       <h2 className="text-heading">Sobre mi</h2>
@@ -106,12 +110,20 @@ export const About = () => {
               herramientas de software que me permiten crear aplicaciones
               escalables.
             </p>
+            <button
+              className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer"
+              onClick={() => setShowModal(true)}
+            >
+              Ver detalles
+            </button>
           </div>
           <div className="absolute inset-y-0 md:inset-y-9 w-full h-full start-[50%] md:scale-125">
             <Frameworks />
           </div>
         </div>
       </div>
+
+      {showModal && <FrameworksModal onClose={() => setShowModal(false)} />}
     </section>
   );
 };

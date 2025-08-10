@@ -1,6 +1,6 @@
-import { OrbitingCircles } from "./OrbitingCircles";
+import React from "react";
 
-export function Frameworks() {
+export const FrameworksModal = ({ onClose }) => {
   const skills = [
     { name: "github", displayName: "GitHub", experience: "5+ años" },
     { name: "javascript", displayName: "JavaScript", experience: "3+ años" },
@@ -20,41 +20,40 @@ export function Frameworks() {
     { name: "mysql", displayName: "MySQL", experience: "1+ años" },
     { name: "firebase", displayName: "Firebase", experience: "2+ años" },
     { name: "postman", displayName: "Postman", experience: "3+ años" },
-    { name: "sonarqube", displayName: "SonarQube", experience: "2+ año" },
+    { name: "sonarqube", displayName: "SonarQube", experience: "2+ años" },
     { name: "nextjs", displayName: "Next.js", experience: "2+ años" },
   ];
 
   return (
-    <div className="relative flex h-[15rem] w-full flex-col items-center justify-center">
-      <OrbitingCircles iconSize={40}>
-        {skills.map((skill, index) => (
-          <Icon
-            key={index}
-            src={`/models/assets/logos/${skill.name}.svg`}
-            skill={skill}
-          />
-        ))}
-      </OrbitingCircles>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 overflow-hidden">
+      <div className="bg-primary max-w-4xl w-full rounded-lg p-6 relative overflow-y-auto max-h-[90vh]">
+        {/* Botón cerrar */}
+        <button
+          className="absolute top-3 right-3 text-gray-500 hover:text-white text-2xl cursor-pointer"
+          onClick={onClose}
+        >
+          &times;
+        </button>
 
-      <OrbitingCircles iconSize={25} radius={100} reverse speed={2}>
-        {skills.reverse().map((skill, index) => (
-          <Icon
-            key={index}
-            src={`/models/assets/logos/${skill.name}.svg`}
-            skill={skill}
-          />
-        ))}
-      </OrbitingCircles>
+        <h2 className="text-2xl font-bold mb-6">Habilidades Detalladas</h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {skills.map((skill, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md transition"
+            >
+              <img
+                src={`/models/assets/logos/${skill.name}.svg`}
+                alt={skill.displayName}
+                className="w-12 h-12 mb-2"
+              />
+              <p className="font-semibold">{skill.displayName}</p>
+              <p className="text-sm text-gray-500">{skill.experience}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
-}
-
-const Icon = ({ src, skill, onMouseEnter, onMouseLeave }) => (
-  <img
-    src={src}
-    className="duration-200 rounded-sm hover:scale-110 cursor-pointer"
-    onTouchStart={(e) => onMouseEnter(skill, e)}
-    onTouchEnd={onMouseLeave}
-    alt={skill.displayName}
-  />
-);
+};
