@@ -26,8 +26,8 @@
         rotate(calc((var(--angle) * -1deg) - 360deg));
     }
   }
-  --animate-marquee: marquee 50s linear infinite;
-  --animate-marquee-vertical: marquee-vertical 50s linear infinite;
+  --animate-marquee: marquee 90s linear infinite;
+  --animate-marquee-vertical: marquee-vertical 90s linear infinite;
 
   @keyframes marquee {
     from {

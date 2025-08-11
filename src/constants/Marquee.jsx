@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 export default function Marquee({
   className,
@@ -5,9 +8,11 @@ export default function Marquee({
   pauseOnHover = false,
   children,
   vertical = false,
-  repeat = 4,
+  repeat = 50,
   ...props
 }) {
+  const [paused, setPaused] = useState(false);
+
   return (
     <div
       {...props}
@@ -17,6 +22,8 @@ export default function Marquee({
         }`,
         className
       )}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
     >
       {Array(repeat)
         .fill(0)
@@ -29,6 +36,7 @@ export default function Marquee({
                 ? "animate-marquee-vertical flex-col"
                 : "animate-marquee flex-row",
               pauseOnHover && "group-hover:[animation-play-state:paused]",
+              paused && "[animation-play-state:paused]",
               reverse && "[animation-direction:reverse]"
             )}
           >
