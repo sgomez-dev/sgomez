@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ProjectDetail } from "./ProjectDetail";
+import { motion } from "framer-motion";
 
 export const Project = ({
   title,
@@ -15,9 +16,13 @@ export const Project = ({
   const [isHidden, setIsHidden] = useState(false);
   return (
     <>
-      <div
+      <motion.div
         onMouseEnter={() => setPreview(image)}
         onMouseLeave={() => setPreview(null)}
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        whileHover={{ scale: 1.05 }}
         className="flex-wrap items-center justify-between py-10 space-y-14 sm:flex sm:space-y-0"
       >
         <div>
@@ -35,7 +40,7 @@ export const Project = ({
           Ver más
           <img src="/models/assets/arrow-right.svg" className="w-5" />
         </button>
-      </div>
+      </motion.div>
       <div className="bg-gradient-to-r from-transparent via-neutral-700 to-transparent h-[1px] w-full" />
       {isHidden && (
         <ProjectDetail

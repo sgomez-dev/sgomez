@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
+import { mySocials } from "@/constants";
 
 function Navigation() {
   return (
@@ -60,8 +61,21 @@ const Navbar = () => {
             href="/"
             className="text-xl font-bold transition-colors text-neutral-400 hover:text-white"
           >
-            Santiago
+            SGOMEZ
           </a>
+          <div className="flex gap-3">
+            {mySocials.map((social, index) => (
+              <a
+                href={social.href}
+                key={index}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-transform duration-200 hover:scale-110"
+              >
+                <img src={social.icon} className="w-5 h-5" alt={social.name} />
+              </a>
+            ))}
+          </div>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="flex cursor-pointer  text-neutral-400 hover:text-white hover:font-bold focus:outline-none sm:hidden"

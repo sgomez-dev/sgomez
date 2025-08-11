@@ -72,7 +72,7 @@ export const About = () => {
             />
             <Card
               style={{ rotate: "-45deg", top: "5%", left: "10%" }}
-              image="/models/assets/sicons/sgomez-dev3.png"
+              image="/models/assets/sicons/sgomez-dev3.PNG"
               containerRef={grid2container}
             />
           </div>
@@ -97,13 +97,12 @@ export const About = () => {
             <CopyEmailButton />
           </div>
         </div>
-        <div className="grid-default-color grid-5">
+        <div className="grid-default-color grid-5 relative">
           <div className="z-10 w-[50%]">
             <p className="headtext">Habilidades tecnológicas</p>
             <p className="subtext">
-              Me especializo en una variedad de lenguajes, frameworks y
-              herramientas de software que me permiten crear aplicaciones
-              escalables.
+              Me especializo en una variedad de lenguajes y frameworks que me
+              permiten crear aplicaciones escalables.
             </p>
             <button
               className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer"

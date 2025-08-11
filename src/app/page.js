@@ -2,6 +2,7 @@ import { About } from "@/components/About";
 import Certifications from "@/components/Certifications";
 import { Contact } from "@/components/Contact";
 import { Experiences } from "@/components/Experiences";
+import { MyHistory } from "@/components/MyHistory";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
@@ -15,6 +16,7 @@ export default function Home() {
       <div className="mt-200 md:mt-150 lg:mt-[40rem]">
         <About />
       </div>
+      <MyHistory />
       <Experiences />
       <Projects />
       <Certifications />

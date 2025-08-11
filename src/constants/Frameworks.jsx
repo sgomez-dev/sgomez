@@ -6,6 +6,11 @@ export function Frameworks() {
     { name: "javascript", displayName: "JavaScript", experience: "3+ años" },
     { name: "react", displayName: "React", experience: "3+ años" },
     { name: "tailwindcss", displayName: "Tailwind CSS", experience: "2+ años" },
+    {
+      name: "framer-motion",
+      displayName: "FramerMotion",
+      experience: "1+ años",
+    },
     { name: "vitejs", displayName: "Vite", experience: "3+ años" },
     { name: "angular", displayName: "Angular", experience: "1+ años" },
     { name: "nodejs", displayName: "Node.js", experience: "2+ años" },

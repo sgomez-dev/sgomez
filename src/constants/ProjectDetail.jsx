@@ -45,6 +45,7 @@ export const ProjectDetail = ({
             </div>
             <a
               href={href}
+              target="_blank"
               className="inline-flex items-center gap-1 font-medium cursor-pointer hover-animation"
             >
               Ver proyecto
