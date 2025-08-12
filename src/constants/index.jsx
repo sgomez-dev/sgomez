@@ -5,10 +5,10 @@ export const myProjects = [
     description:
       "Esta es una página web en la cual se puede ver uno de mis proyectos más desarrollados. En esta misma, se pueden ver todos los servicios que tengo en mi servidor en casa.",
     subDescription: [
-      "Built a scalable application with ASP.NET Core MVC, integrating global platforms like Amazon for domestic delivery.",
-      "Implemented secure authentication and database management using ASP.NET Core Identity and Entity Framework Core.",
-      "Designed a responsive frontend with Tailwind CSS, enhancing user experience.",
-      "Added payment systems, localization, and product filtering for functionality improvements.",
+      "Servicio alojado en mi servidor que muestra mi homelab.",
+      "Incluye visualización del entorno, servicios y configuraciones que mantengo activos.",
+      "No fue desarrollado por mí, pero está configurado y desplegado en mi infraestructura personal.",
+      "Disponible en https://home.sgomez.dev",
     ],
     href: "https://home.sgomez.dev",
     image: "/models/assets/projects/homepage.png",
@@ -41,10 +41,10 @@ export const myProjects = [
     description:
       "Aplicación web progresiva (PWA) para profesionales inmobiliarios para gestionar propiedades, citas y áreas de manera eficiente. Interfaz moderna y responsive para el control de portafolio y agenda.",
     subDescription: [
-      "Integrated Auth0 for authentication, supporting OAuth, JWT, and multi-factor authentication.",
-      "Implemented role-based access control (RBAC) for fine-grained user permissions.",
-      "Developed a React-based frontend with Tailwind CSS for a sleek user experience.",
-      "Connected to a secure SQLite database for user data storage.",
+      "PWA para gestión inmobiliaria con catálogo de propiedades, citas y zonas.",
+      "Integración con Firebase (Authentication, Firestore, Storage) para datos en tiempo real y autenticación segura.",
+      "Implementación de notificaciones push, calendario interactivo (FullCalendar) y gráficos estadísticos (Chart.js).",
+      "Frontend desarrollado en React + Vite con TailwindCSS para una interfaz moderna y responsive.",
     ],
     href: "https://elite-estate-manager.vercel.app/",
     image: "/models/assets/projects/EliteEstateManager.png",
@@ -82,10 +82,10 @@ export const myProjects = [
     description:
       "Un portfolio profesional que muestra habilidades, proyectos y experiencia con un diseño moderno. Incluye introducción, proyectos, habilidades y experiencia, utilizando React para la interacción.",
     subDescription: [
-      "Developed a fully interactive Single Page Application (SPA) using Blazor WebAssembly.",
-      "Implemented API interactions using .NET Core for a robust backend.",
-      "Designed responsive UI components with Tailwind CSS for an enhanced UX.",
-      "Integrated SQLite for efficient client-side database storage.",
+      "SPA interactiva desarrollada con Next.js y React para mostrar proyectos, habilidades y experiencia.",
+      "Animaciones fluidas con Framer Motion para mejorar la experiencia del usuario.",
+      "Diseño responsive con TailwindCSS optimizado para dispositivos móviles y escritorio.",
+      "Integración de secciones dinámicas para proyectos, habilidades técnicas, trayectoria laboral y educación.",
     ],
     href: "https://portfolio.sgomez.dev",
     logo: "",
@@ -119,10 +119,10 @@ export const myProjects = [
     description:
       "Repositorio visual de documentación que presenta un stack tecnológico personalizado, organizado por categorías mediante una interfaz de temática galáctica, con contenido estructurado y navegación intuitiva.",
     subDescription: [
-      "Built a powerful rendering engine using OpenGL and C++.",
-      "Developed a physics engine with collision detection and particle effects.",
-      "Implemented a scripting system for easy game customization.",
-      "Optimized performance with multi-threading and efficient memory management.",
+      "Sitio web de documentación visual que organiza mis conocimientos en frontend, backend, bases de datos y más.",
+      "Interfaz temática (galáctica) para una navegación intuitiva entre categorías técnicas.",
+      "Estructura categorizada que facilita la exploración de contenidos por áreas de conocimiento.",
+      "Diseño responsive para una experiencia accesible desde cualquier dispositivo.",
     ],
     href: "https://docs.sgomez.dev",
     logo: "",
@@ -156,10 +156,10 @@ export const myProjects = [
     description:
       "SortLab combina animaciones dinámicas con explicaciones estructuradas para desmontar la lógica algorítmica, ofreciendo a los usuarios una comprensión práctica de la eficiencia, la implementación y las aplicaciones reales de las técnicas de ordenación.",
     subDescription: [
-      "Developed a responsive WordPress theme using HTML5, CSS3, and JavaScript.",
-      "Integrated Tailwind CSS for modern styling and UI enhancements.",
-      "Optimized SEO and page speed using Vite.js for fast builds.",
-      "Implemented custom widgets and plugin compatibility for extended functionality.",
+      "Visualizador interactivo de 15 algoritmos de ordenamiento con animaciones en tiempo real.",
+      "Desarrollado en React con TypeScript y navegación mediante React Router.",
+      "Interfaz moderna con Material-UI, diseño glassmorphism y tema oscuro.",
+      "Animaciones fluidas con Framer Motion y controles para velocidad y tamaño de arrays.",
     ],
     href: "https://sortlab.sgomez.dev",
     image: "/models/assets/projects/sortlab.png",
@@ -192,10 +192,10 @@ export const myProjects = [
     description:
       "Esta página profesional ha sido cuidadosamente diseñada para representar quién soy como desarrollador. Los visitantes pueden explorar mi trabajo, descargar mi currículum y acceder a mis perfiles de redes sociales.",
     subDescription: [
-      "Built using Blazor WebAssembly for a seamless SPA experience.",
-      "Implemented video streaming with Azure Media Services.",
-      "Added a quiz system with dynamic question generation and real-time grading.",
-      "Integrated Stripe API for secure payment processing.",
+      "Landingpage minimalista desarrollado con React para mostrar habilidades, proyectos y experiencia.",
+      "Diseño responsive con CSS para adaptarse a cualquier dispositivo.",
+      "Incluye sección de servicios, descarga de CV y enlaces directos a redes sociales.",
+      "Optimizado para una navegación clara y una experiencia de usuario fluida.",
     ],
     href: "https://landing.sgomez.dev",
     image: "/models/assets/projects/landing.png",
@@ -213,10 +213,10 @@ export const myProjects = [
     description:
       "Una aplicación meteorológica moderna construida con React y Vite que proporciona información meteorológica en tiempo real con una interfaz de usuario intuitiva. La aplicación presenta geolocalización automática y pronóstico meteorológico.",
     subDescription: [
-      "Built using Blazor WebAssembly for a seamless SPA experience.",
-      "Implemented video streaming with Azure Media Services.",
-      "Added a quiz system with dynamic question generation and real-time grading.",
-      "Integrated Stripe API for secure payment processing.",
+      "Aplicación web de clima en tiempo real desarrollada con React y Vite.",
+      "Incluye geolocalización automática, búsqueda y guardado de múltiples ubicaciones.",
+      "Pronóstico detallado para varios días y persistencia de datos con localStorage.",
+      "Interfaz moderna con TailwindCSS y animaciones suaves con Framer Motion.",
     ],
     href: "https://packatrack.sgomez.dev",
     image: "/models/assets/projects/skyzen.png",
@@ -244,10 +244,10 @@ export const myProjects = [
     description:
       "Una aplicación de gestión financiera para rastrear gastos, establecer presupuestos y supervisar saldos. Su interfaz minimalista proporciona gráficos y informes para un manejo eficiente de los gastos.",
     subDescription: [
-      "Built using Blazor WebAssembly for a seamless SPA experience.",
-      "Implemented video streaming with Azure Media Services.",
-      "Added a quiz system with dynamic question generation and real-time grading.",
-      "Integrated Stripe API for secure payment processing.",
+      "Aplicación de administración financiera para gestionar ingresos y gastos.",
+      "Incluye registro de transacciones, balance actualizado y categorización de gastos.",
+      "Alertas cuando se alcanza el límite presupuestario.",
+      "Desarrollada en React con Context API para manejo de estado global.",
     ],
     href: "https://budget.sgomez.dev",
     image: "/models/assets/projects/budget.png",
@@ -300,7 +300,9 @@ export const experiences = [
     place: "Evenbytes, Santa Cruz de Bezana, Cantabria, España",
     date: "Junio 2025 - Actualidad",
     contents: [
-      "Desarrollador de software en Evenbytes, responsable de crear aplicaciones web utilizando Angular, Node.js, Firebase y Google Cloud, mientras colaboro con el equipo para diseñar soluciones escalables y centradas en el usuario.",
+      "Actualmente trabajo como desarrollador de software en Evenbytes, donde soy responsable del diseño, desarrollo y mantenimiento de aplicaciones web robustas y escalables. Trabajo principalmente con Angular en el frontend para crear interfaces interactivas y responsivas, y con Node.js en el backend para construir APIs eficientes y seguras.",
+      "Utilizo Firebase para servicios generales y complementarios, pero la gestión principal de bases de datos y autenticación la realizo con Google Cloud Platform, aprovechando Datastore para el almacenamiento estructurado y el sistema de autenticación integrado de GCP para garantizar seguridad y escalabilidad.",
+      "Mi rol implica colaboración cercana con arquitectos de software, product managers y otros desarrolladores para diseñar soluciones centradas en el usuario, asegurando una experiencia fluida e intuitiva. Participo en la planificación técnica de proyectos, aplico buenas prácticas de desarrollo y código limpio, y contribuyo a la mejora continua de los procesos para optimizar tiempos y resultados.",
     ],
   },
   {
@@ -308,7 +310,8 @@ export const experiences = [
     place: "GDG, Santander, Cantabria, España",
     date: "Noviembre 2024 - Actualidad",
     contents: [
-      "Organizador del Google Developers Group, responsable de organizar eventos para atraer a desarrolladores y entusiastas de la tecnología, mientras fomenta el intercambio de conocimientos dentro de la comunidad.",
+      "Como organizador del Google Developer Group (GDG) en Santander, lidero la planificación y ejecución de eventos y actividades orientadas a la comunidad tecnológica local. Mi objetivo principal es fomentar la colaboración, el aprendizaje y la innovación entre desarrolladores, estudiantes y profesionales interesados en la tecnología y el ecosistema open source.",
+      "Me encargo de coordinar charlas y talleres, trabajando con ponentes expertos para asegurar contenido relevante y de calidad. También gestiono la promoción de eventos a través de redes sociales y plataformas digitales, logrando aumentar la participación y el alcance de la comunidad.",
     ],
   },
   {
@@ -316,7 +319,9 @@ export const experiences = [
     place: "Irma Romero Morales, Santander, Cantabria, España",
     date: "Febrero 2025 - Junio 2025",
     contents: [
-      "Desarrollé una Aplicación Web Progresiva (PWA) llamada  EliteEstate - Manager para una empresa inmobiliaria, gestionando propiedades, citas y zonas. La app presenta una interfaz de usuario fácil de usar para el control de portafolio y agenda.",
+      "Durante este período, trabajé como desarrollador freelance para Irma Romero Morales, llevando a cabo el desarrollo completo de una Aplicación Web Progresiva (PWA) llamada EliteEstate - Manager, destinada a la gestión eficiente de propiedades inmobiliarias. La aplicación fue diseñada para cubrir las necesidades específicas de la empresa inmobiliaria, permitiendo la administración de zonas, propiedades y citas con clientes desde una interfaz intuitiva y moderna.",
+      "Me encargué del diseño, desarrollo y despliegue del proyecto utilizando tecnologías web modernas, asegurando que la aplicación fuera responsiva, accesible y fácil de usar tanto para agentes inmobiliarios como para administradores. Implementé funcionalidades clave como la gestión de múltiples zonas geográficas, manejo detallado de propiedades con atributos personalizados, control de agendas para citas, y un sistema eficiente para visualizar el portafolio de propiedades.",
+      "Este proyecto fortalecí mis habilidades en desarrollo full stack, gestión de proyectos y atención al cliente, además de aportar experiencia en la creación de aplicaciones PWA enfocadas en el sector inmobiliario.",
     ],
   },
   {
@@ -324,7 +329,9 @@ export const experiences = [
     place: "Universidad Europea del Atlántico, Santander, Cantabria, España",
     date: "Julio 2023 - Julio 2024",
     contents: [
-      "Miembro del equipo de IT, responsable de implementar soluciones de infraestructura y brindar soporte técnico especializado para garantizar la eficiencia operativa y la estabilidad.",
+      "Formé parte del equipo de Tecnologías de la Información de la Universidad Europea del Atlántico, donde fui responsable de proporcionar soporte técnico integral para garantizar la operatividad y eficiencia de los sistemas informáticos en toda la institución. Mi labor abarcó desde la resolución de incidencias diarias, asistencia a usuarios y mantenimiento preventivo, hasta la implementación y mejora de infraestructuras tecnológicas.",
+      "Mi enfoque principal fue mantener la continuidad operativa del campus tecnológico, atendiendo de manera ágil y efectiva las necesidades del personal académico y administrativo. También elaboré documentación técnica y manuales de usuario para facilitar la resolución autónoma de problemas recurrentes.",
+      "Esta experiencia me permitió consolidar mis habilidades en soporte técnico, trabajo en equipo y gestión de sistemas, además de desarrollar una orientación clara hacia la satisfacción del usuario final y la mejora continua en ambientes académicos.",
     ],
   },
   {
@@ -333,7 +340,9 @@ export const experiences = [
       "Fundación Universitaria Iberoamericana (FUNIBER), Santander, Cantabria, España",
     date: "Julio 2022 - Julio 2023",
     contents: [
-      "Lideré soluciones de infraestructura, asegurando una integración fluida de sistemas. Gestioné el aseguramiento de la calidad del software (QA) para mantener los estándares del producto. Supervisé el mantenimiento de servidores y la gestión de proyectos del equipo para garantizar la fiabilidad y la alineación con los objetivos organizacionales.",
+      "Durante mi tiempo en FUNIBER, desempeñé un rol clave como administrador de sistemas (Sysadmin) y responsable de aseguramiento de la calidad (QA), donde lideré la gestión de la infraestructura tecnológica para garantizar su óptimo rendimiento y disponibilidad. Me encargué de la supervisión y mantenimiento de servidores, redes y servicios internos, asegurando una operación estable y segura para soportar las actividades académicas y administrativas.",
+      "Además, coordiné la planificación y ejecución de proyectos tecnológicos dentro del equipo, alineando objetivos técnicos con las metas organizacionales. Participé en la documentación y automatización de procesos para optimizar la gestión del entorno TI.",
+      "Esta experiencia fortaleció mis competencias técnicas en administración de sistemas y calidad de software, así como mis habilidades en liderazgo, comunicación y gestión de proyectos en entornos colaborativos.",
     ],
   },
   {
@@ -342,7 +351,9 @@ export const experiences = [
       "Fundación Universitaria Iberoamericana (FUNIBER), Santander, Cantabria, España",
     date: "Septiembre 2021 - Julio 2022",
     contents: [
-      "Como parte del Programa de Becas de FUNIBER, contribuí a la redacción y estructuración de guías para correos académicos e internacionales, enfocándome en la escritura y edición de comunicaciones y asegurando el cumplimiento de los estándares de correspondencia corporativa.",
+      "Formé parte del equipo encargado de la redacción, revisión y estructuración de guías y correos académicos e internacionales dentro del Programa de Becas de FUNIBER. Mi labor principal consistió en crear comunicaciones claras, formales y adecuadas a diferentes contextos académicos y culturales, garantizando que cumplieran con los estándares de correspondencia corporativa y las mejores prácticas de comunicación escrita.",
+      "Colaboré estrechamente con otros miembros del equipo para asegurar la coherencia y calidad de los textos, adaptando mensajes para diferentes públicos y objetivos. Además, participé en la actualización y mejora continua de las guías, incorporando feedback y tendencias en comunicación institucional.",
+      "Esta experiencia me permitió desarrollar habilidades avanzadas en redacción profesional, atención al detalle y trabajo en equipo, además de profundizar en la gestión documental y la comunicación corporativa en entornos educativos.",
     ],
   },
 ];

@@ -41,7 +41,7 @@ const CertCard = ({ img, title, institution, date, url }) => {
 
 export default function Certifications() {
   return (
-    <div className="items-start mt-25 md:mt-35 c-space">
+    <div id="certifications" className="items-start mt-25 md:mt-35 c-space">
       <h2 className="text-heading">Certificaciones</h2>
       <div className="relative flex flex-col items-center justify-center w-full mt-12 overflow-hidden">
         <Marquee pauseOnHover className="[--duration:60s]">

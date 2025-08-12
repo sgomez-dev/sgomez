@@ -8,42 +8,42 @@ function Navigation() {
   return (
     <ul className="nav-ul">
       <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#about" className="nav-link">
+          Sobre mi
+        </a>
+      </li>
+      <li className="nav-li">
+        <a href="#bio" className="nav-link">
           Bio
         </a>
       </li>
       <li className="nav-li">
-        <a href="" className="nav-link">
-          Habilidades
-        </a>
-      </li>
-      <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#experience" className="nav-link">
           Experiencia
         </a>
       </li>
       <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#projects" className="nav-link">
           Proyectos
         </a>
       </li>
       <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#recommendations" className="nav-link">
           Recomendaciones
         </a>
       </li>
       <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#certifications" className="nav-link">
           Certificaciones
         </a>
       </li>
       <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#education" className="nav-link">
           Educación
         </a>
       </li>
       <li className="nav-li">
-        <a href="" className="nav-link">
+        <a href="#contact" className="nav-link">
           Contacto
         </a>
       </li>

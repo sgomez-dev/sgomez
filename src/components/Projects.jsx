@@ -3,9 +3,15 @@
 import { myProjects } from "@/constants";
 import { Project } from "@/constants/Project";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Projects = () => {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+
   const motionX = useMotionValue(0);
   const motionY = useMotionValue(0);
   const springX = useSpring(motionX, { damping: 10, stiffness: 50 });
@@ -18,6 +24,7 @@ export const Projects = () => {
 
   return (
     <section
+      id="projects"
       onMouseMove={handleMouseMove}
       className="relative c-space section-spacing"
     >
@@ -26,7 +33,7 @@ export const Projects = () => {
       {myProjects.map((project) => (
         <Project key={project.id} {...project} setPreview={setPreview} />
       ))}
-      {preview && (
+      {preview && !isTouchDevice && (
         <motion.img
           style={{ x: springX, y: springY }}
           src={preview}

@@ -9,11 +9,13 @@ import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import { Projects } from "@/components/Projects";
 import Recommendations from "@/components/Recommendations";
+import { FloatingCTA } from "@/components/FloatingCTA";
 
 export default function Home() {
   return (
     <div className="container mx-auto max-w-7xl">
       <Navbar />
+      <FloatingCTA />
       <Hero />
       <div className="mt-200 md:mt-150 lg:mt-[40rem]">
         <About />
