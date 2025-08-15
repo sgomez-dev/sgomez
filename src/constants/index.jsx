@@ -218,7 +218,7 @@ export const myProjects = [
       "Pronóstico detallado para varios días y persistencia de datos con localStorage.",
       "Interfaz moderna con TailwindCSS y animaciones suaves con Framer Motion.",
     ],
-    href: "https://packatrack.sgomez.dev",
+    href: "https://skyzen.sgomez.dev",
     image: "/models/assets/projects/skyzen.png",
     tags: [
       {
