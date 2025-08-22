@@ -289,7 +289,7 @@ export const mySocials = [
   },
   {
     name: "Hackerrank",
-    href: "https://www.hackerrank.com/profile/contacto185",
+    href: "https://www.hackerrank.com/profile/sgomezDev",
     icon: "/models/assets/socials/hackerrank.svg",
   },
 ];
