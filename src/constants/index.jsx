@@ -295,7 +295,7 @@ export const mySocials = [
   {
     name: "StackOverflow",
     href: "https://stackoverflow.com/users/31330047/santiago-gómez-de-la-torre?tab=profile",
-    icon: "/models/assets/socials/stackoverflow.svg",
+    icon: "/models/assets/socials/stack-overflow.svg",
   },
 ];
 
