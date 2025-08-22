@@ -292,6 +292,11 @@ export const mySocials = [
     href: "https://www.hackerrank.com/profile/sgomezDev",
     icon: "/models/assets/socials/hackerrank.svg",
   },
+  {
+    name: "StackOverflow",
+    href: "https://stackoverflow.com/users/31330047/santiago-gómez-de-la-torre?tab=profile",
+    icon: "/models/assets/socials/stackoverflow.svg",
+  },
 ];
 
 export const experiences = [
