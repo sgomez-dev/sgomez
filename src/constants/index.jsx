@@ -188,6 +188,27 @@ export const myProjects = [
   },
   {
     id: 6,
+    title: "sgomez CLI",
+    description:
+      "sgomez CLI es un asistente de línea de comandos que acelera la creación de proyectos frontend y backend, integrando frameworks y herramientas en una estructura lista para usar.",
+    subDescription: [
+      "CLI interactivo para inicializar proyectos frontend y backend en segundos.",
+      "Compatible con React (Vite), Next.js, Angular, Node.js, NestJS, Django y Go.",
+      "Soporte opcional para Tailwind CSS v4 y animaciones con Framer Motion.",
+      "Asistente paso a paso que configura frameworks, lenguajes y licencias automáticamente.",
+    ],
+    href: "https://www.npmjs.com/package/sgomez-cli",
+    image: "/models/assets/projects/sgomez-cli.png",
+    tags: [
+      {
+        id: 1,
+        name: "Node.js",
+        path: "/models/assets/logos/nodejs.svg",
+      },
+    ],
+  },
+  {
+    id: 7,
     title: "LandingPage",
     description:
       "Esta página profesional ha sido cuidadosamente diseñada para representar quién soy como desarrollador. Los visitantes pueden explorar mi trabajo, descargar mi currículum y acceder a mis perfiles de redes sociales.",
@@ -208,7 +229,7 @@ export const myProjects = [
     ],
   },
   {
-    id: 7,
+    id: 8,
     title: "Skyzen",
     description:
       "Una aplicación meteorológica moderna construida con React y Vite que proporciona información meteorológica en tiempo real con una interfaz de usuario intuitiva. La aplicación presenta geolocalización automática y pronóstico meteorológico.",
@@ -239,7 +260,7 @@ export const myProjects = [
     ],
   },
   {
-    id: 8,
+    id: 9,
     title: "Budget App",
     description:
       "Una aplicación de gestión financiera para rastrear gastos, establecer presupuestos y supervisar saldos. Su interfaz minimalista proporciona gráficos y informes para un manejo eficiente de los gastos.",
