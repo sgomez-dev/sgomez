@@ -386,6 +386,13 @@ export const experiences = [
 
 export const certifications = [
   {
+    title: "Software Engineer Intern",
+    company: "HackerRank",
+    date: "Septiembre 2025",
+    img: "/models/assets/certifications/hackerrank.png",
+    url: "https://drive.google.com/file/d/1IXV7yxijNfycqqqMvovNXFZMOV6fjJkK/view?usp=sharing",
+  },
+  {
     title: "McKensey.org Forward Program",
     company: "McKensey.org",
     date: "Julio 2025",
