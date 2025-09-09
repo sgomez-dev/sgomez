@@ -27,6 +27,7 @@ export function Frameworks() {
     { name: "postman", displayName: "Postman", experience: "3+ años" },
     { name: "sonarqube", displayName: "SonarQube", experience: "2+ año" },
     { name: "nextjs", displayName: "Next.js", experience: "2+ años" },
+    { name: "n8n", displayName: "n8n", experience: "1+ años" },
   ];
 
   return (
