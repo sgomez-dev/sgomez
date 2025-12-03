@@ -1,1 +1,78 @@
 @import "tailwindcss";
+
+:root {
+  --primary-blue: #3b82f6;
+  --primary-purple: #a855f7;
+  --dark-blue: #1e3a8a;
+  --dark-purple: #6b21a8;
+  --accent-cyan: #06b6d4;
+  --bg-dark: #0a0e1a;
+  --bg-darker: #050810;
+  --bg-card: rgba(15, 23, 42, 0.6);
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    var(--bg-darker) 0%,
+    var(--bg-dark) 50%,
+    #0f1729 100%
+  );
+  min-height: 100vh;
+}
+
+/* Gradientes personalizados */
+.gradient-text-primary {
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-bg-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(168, 85, 247, 0.1) 100%
+  );
+}
+
+.gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, #1e3a8a 0%, #6b21a8 100%);
+  padding: 1px;
+  border-radius: 1rem;
+}
+
+.gradient-border-content {
+  background: var(--bg-card);
+  border-radius: calc(1rem - 1px);
+}
+
+/* Efectos de brillo */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), 0 0 40px rgba(168, 85, 247, 0.1);
+}
+
+/* Animaciones suaves */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
