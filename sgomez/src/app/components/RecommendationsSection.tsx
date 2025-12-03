@@ -5,27 +5,32 @@ import { recommendations } from '../content'
 
 export default function RecommendationsSection() {
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center px-6 py-20">
-      <h2 className="text-5xl font-bold mb-16 gradient-text-primary">Recomendaciones</h2>
-      <div className="grid md:grid-cols-2 gap-8 max-w-6xl">
-        {recommendations.map((r, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: i * 0.2 }}
-            className="group backdrop-blur-sm bg-slate-900/40 p-8 rounded-2xl shadow-2xl border border-purple-500/10 hover:border-blue-500/30 transition-all duration-300 hover:scale-[1.02] relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
-            <div className="relative z-10">
-              <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 mb-1">{r.name}</h3>
-              <span className="text-gray-400/80 text-sm font-mono">{r.role}</span>
-              <p className="mt-4 text-gray-300/80 font-light leading-relaxed italic">"{r.comment}"</p>
-            </div>
-          </motion.div>
-        ))}
+    <section className="min-h-screen flex flex-col justify-center py-20">
+      <div className="container-custom">
+        <h2 className="text-4xl md:text-5xl font-bold mb-16 text-white">Recomendaciones</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          {recommendations.map((r, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="bg-slate-800 p-6 rounded-lg border border-slate-700 hover:border-purple-600/50 transition-all card-hover"
+            >
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-lg font-bold text-blue-400">{r.name.charAt(0)}</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">{r.name}</h3>
+                  <span className="text-gray-400 text-sm">{r.role}</span>
+                </div>
+              </div>
+              <p className="text-gray-400 leading-relaxed italic">"{r.comment}"</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   )

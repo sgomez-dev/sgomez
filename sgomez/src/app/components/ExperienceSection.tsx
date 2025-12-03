@@ -4,28 +4,56 @@ import { motion } from 'framer-motion'
 import { experience } from '../content'
 
 export default function ExperienceSection() {
+  const experienceIcons = ['💼', '🏢', '👥', '🎓', '🏆']
+  
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center px-6 py-20 relative">
-      <h2 className="text-5xl font-bold mb-16 gradient-text-primary">Experiencia</h2>
-      <div className="grid md:grid-cols-2 gap-8 max-w-6xl">
-        {experience.map((e, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
+    <section className="min-h-screen flex flex-col justify-center py-20 relative">
+      {/* Efecto de fondo */}
+      <div className="absolute top-1/4 left-0 w-72 h-72 bg-purple-600/5 rounded-full blur-3xl" />
+      
+      <div className="container-custom relative z-10">
+        <div className="flex items-center gap-4 mb-16">
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            whileInView={{ scale: 1, rotate: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: i * 0.2 }}
-            className="group backdrop-blur-sm bg-slate-900/40 p-8 rounded-2xl shadow-2xl border border-purple-500/10 hover:border-blue-500/30 transition-all duration-300 hover:scale-[1.02] relative overflow-hidden"
+            className="text-5xl"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
-            <div className="relative z-10">
-              <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 mb-2">{e.title}</h3>
-              <span className="text-gray-400/80 text-sm font-mono">{e.role} | {e.period}</span>
-              <p className="mt-4 text-gray-300/80 font-light leading-relaxed">{e.desc}</p>
-            </div>
+            💼
           </motion.div>
-        ))}
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Experiencia</h2>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          {experience.map((e, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="group bg-slate-800 p-6 rounded-lg border border-slate-700 hover:border-purple-600/50 transition-all card-hover relative overflow-hidden"
+            >
+              {/* Efecto visual */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-600/10 rounded-full blur-2xl group-hover:bg-blue-600/20 transition-colors duration-500" />
+              
+              <div className="relative z-10">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="text-3xl mt-1">{experienceIcons[i % experienceIcons.length]}</div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">{e.title}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-gray-400 text-sm">{e.role}</span>
+                      <span className="text-gray-600">•</span>
+                      <span className="text-purple-400 text-sm font-mono">{e.period}</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-400 leading-relaxed text-sm">{e.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   )
