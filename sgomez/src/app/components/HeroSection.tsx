@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { hero } from '../content'
 
 export default function HeroSection() {
@@ -62,8 +63,16 @@ export default function HeroSection() {
           transition={{ duration: 0.5 }}
           className="inline-block mb-6"
         >
-          <div className="w-32 h-32 mx-auto bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-5xl animate-pulse-glow">
-            👨‍💻
+          <div className="w-32 h-32 mx-auto rounded-full overflow-hidden ring-4 ring-blue-600/50 animate-pulse-glow">
+            <Image 
+              src="/Santiago_Gómez_de_la_Torre_Romero.png" 
+              alt="Santiago Gómez de la Torre Romero"
+              width={128}
+              height={128}
+              className="w-full h-full object-cover"
+              priority
+              unoptimized
+            />
           </div>
         </motion.div>
 
