@@ -81,12 +81,6 @@ const COMMANDS = {
   skills: {
     description: 'Stack tecnológico',
     execute: () => {
-      const createBar = (level: number) => {
-        const filled = Math.round(level / 5)
-        const empty = 20 - filled
-        return '█'.repeat(filled) + '░'.repeat(empty)
-      }
-      
       const lines: string[] = [
         '',
         '┌─────────────────────────────────────────────────────────────┐',
@@ -95,12 +89,19 @@ const COMMANDS = {
         ''
       ]
       
-      technologies.forEach(category => {
+      technologies.forEach((category, index) => {
+        if (index > 0) {
+          // Separador visual entre categorías de skills
+          lines.push('  ' + '─'.repeat(55))
+          lines.push('')
+        }
         lines.push(`  ${category.category === 'Frontend' ? '🎨' : category.category === 'Backend' ? '⚙️' : category.category === 'DevOps & Cloud' ? '☁️' : '📱'} ${category.category.toUpperCase()}`)
         lines.push('  ' + '─'.repeat(category.category.length + 2))
         category.skills.forEach(skill => {
           const paddedName = `${skill.icon} ${skill.name}`.padEnd(18)
-          lines.push(`  ${paddedName} ${createBar(skill.level)}  ${skill.level}%`)
+          const separator = '--'
+          const yearsLabel = `${skill.years} ${skill.years === 1 ? 'año' : 'años'}`
+          lines.push(`  ${paddedName} ${separator}  ${yearsLabel}`)
         })
         lines.push('')
       })

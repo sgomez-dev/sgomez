@@ -1,6 +1,6 @@
 // src/content/index.ts
 
-// Hero / Presentación
+// Hero / Presentación (optimizado con palabras clave SEO)
 export const hero = {
   name: 'Santiago Gómez de la Torre Romero',
   title: 'Ingeniero Informático | Desarrollador Full-Stack | Apasionado por crear soluciones digitales',
@@ -106,39 +106,39 @@ export const technologies = [
   {
     category: 'Frontend',
     skills: [
-      { name: 'React', level: 95, icon: '⚛️' },
-      { name: 'Angular', level: 90, icon: '🅰️' },
-      { name: 'Next.js', level: 88, icon: '▲' },
-      { name: 'TypeScript', level: 92, icon: '📘' },
-      { name: 'Tailwind CSS', level: 95, icon: '🎨' },
+      { name: 'React', years: 4, icon: '⚛️' },
+      { name: 'Angular', years: 3, icon: '🅰️' },
+      { name: 'Next.js', years: 3, icon: '▲' },
+      { name: 'TypeScript', years: 4, icon: '📘' },
+      { name: 'Tailwind CSS', years: 3, icon: '🎨' },
     ]
   },
   {
     category: 'Backend',
     skills: [
-      { name: 'Node.js', level: 90, icon: '🟢' },
-      { name: 'Firebase', level: 85, icon: '🔥' },
-      { name: 'Python', level: 80, icon: '🐍' },
-      { name: 'Express', level: 88, icon: '🚂' },
-      { name: 'PostgreSQL', level: 82, icon: '🐘' },
+      { name: 'Node.js', years: 3, icon: '🟢' },
+      { name: 'Firebase', years: 3, icon: '🔥' },
+      { name: 'Python', years: 2, icon: '🐍' },
+      { name: 'Express', years: 3, icon: '🚂' },
+      { name: 'PostgreSQL', years: 2, icon: '🐘' },
     ]
   },
   {
     category: 'DevOps & Cloud',
     skills: [
-      { name: 'Google Cloud', level: 85, icon: '☁️' },
-      { name: 'Docker', level: 80, icon: '🐳' },
-      { name: 'Git', level: 93, icon: '📦' },
-      { name: 'CI/CD', level: 78, icon: '🔄' },
+      { name: 'Google Cloud', years: 2, icon: '☁️' },
+      { name: 'Docker', years: 2, icon: '🐳' },
+      { name: 'Git', years: 5, icon: '📦' },
+      { name: 'CI/CD', years: 2, icon: '🔄' },
     ]
   },
   {
     category: 'Mobile & Tools',
     skills: [
-      { name: 'React Native', level: 75, icon: '📱' },
-      { name: 'PWA', level: 90, icon: '📲' },
-      { name: 'Figma', level: 85, icon: '🎯' },
-      { name: 'VS Code', level: 95, icon: '💻' },
+      { name: 'React Native', years: 2, icon: '📱' },
+      { name: 'PWA', years: 3, icon: '📲' },
+      { name: 'Figma', years: 3, icon: '🎯' },
+      { name: 'VS Code', years: 5, icon: '💻' },
     ]
   }
 ]

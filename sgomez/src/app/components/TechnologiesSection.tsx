@@ -29,16 +29,9 @@ export default function TechnologiesSection() {
                         <span className="text-2xl">{skill.icon}</span>
                         <span className="text-white font-medium">{skill.name}</span>
                       </div>
-                      <span className="text-blue-400 font-mono text-sm">{skill.level}%</span>
-                    </div>
-                    <div className="relative h-2 bg-slate-900 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: categoryIndex * 0.1 + skillIndex * 0.05, ease: "easeOut" }}
-                        className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
-                      />
+                      <span className="text-blue-400 font-mono text-sm">
+                        {skill.years} {skill.years === 1 ? 'año' : 'años'}
+                      </span>
                     </div>
                   </div>
                 ))}

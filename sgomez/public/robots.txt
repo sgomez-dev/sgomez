@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sgomez.dev/sitemap.xml
+
+
