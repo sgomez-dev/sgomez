@@ -17,6 +17,9 @@ export default function Desktop({ onOpenApp }: DesktopProps) {
     // Si es el ícono de portafolio, navegar en lugar de abrir ventana
     if (app.id === 'portfolio') {
       router.push('/')
+    } else if (app.id === 'cli') {
+      // Abrir sgomez-cli en una nueva pestaña
+      window.open('https://www.npmjs.com/package/sgomez-cli', '_blank')
     } else {
       onOpenApp(app.id)
     }

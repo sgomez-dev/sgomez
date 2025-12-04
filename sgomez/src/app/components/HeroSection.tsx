@@ -6,7 +6,7 @@ import { hero } from '../content'
 
 export default function HeroSection() {
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center relative overflow-hidden px-6">
+    <section id="hero" className="min-h-screen flex flex-col justify-center items-center relative overflow-hidden px-6">
       {/* Efectos de fondo animados */}
       <div className="absolute inset-0">
         <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-float" />

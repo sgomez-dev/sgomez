@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { projects } from '../content'
 
 export default function ProjectsSection() {
-  const projectIcons = ['🏠', '🌐', '📚']
+  const projectIcons = ['🏠', '🏢', '💼', '📚', '🔬', '⚡', '🎯', '☁️', '💰']
   
   return (
     <section id="projects" className="min-h-screen flex flex-col justify-center py-20 relative">

@@ -5,7 +5,7 @@ import { technologies } from '../content'
 
 export default function TechnologiesSection() {
   return (
-    <section className="min-h-screen flex flex-col justify-center py-20">
+    <section id="technologies" className="min-h-screen flex flex-col justify-center py-20">
       <div className="container-custom">
         <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Stack Tecnológico</h2>
         <p className="text-gray-400 mb-16 text-lg">Tecnologías que domino y utilizo en mis proyectos</p>
@@ -30,7 +30,7 @@ export default function TechnologiesSection() {
                         <span className="text-white font-medium">{skill.name}</span>
                       </div>
                       <span className="text-blue-400 font-mono text-sm">
-                        {skill.years} {skill.years === 1 ? 'año' : 'años'}
+                        {skill.years} años
                       </span>
                     </div>
                   </div>

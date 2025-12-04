@@ -58,7 +58,7 @@ export default function ContactSection() {
           <div className="text-3xl mb-3">✉️</div>
           <p className="text-gray-400 text-sm mb-2">O envíame un email directamente</p>
           <a href="mailto:santiago@example.com" className="text-blue-400 hover:text-blue-300 font-mono text-lg">
-            santiago@example.com
+            contacto@sgomez.dev
           </a>
         </motion.div>
       </div>

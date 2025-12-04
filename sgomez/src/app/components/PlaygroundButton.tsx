@@ -20,7 +20,7 @@ export default function PlaygroundButton() {
             href="/lab" 
             className="inline-block bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-lg text-lg font-medium transition-colors duration-200"
           >
-            Ir al Playground
+            Ir a SGOMEZ-OS 🖥️
           </a>
         </div>
       </div>

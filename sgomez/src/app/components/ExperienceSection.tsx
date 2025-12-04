@@ -7,7 +7,7 @@ export default function ExperienceSection() {
   const experienceIcons = ['💼', '🏢', '👥', '🎓', '🏆']
   
   return (
-    <section className="min-h-screen flex flex-col justify-center py-20 relative">
+    <section id="experience" className="min-h-screen flex flex-col justify-center py-20 relative">
       {/* Efecto de fondo */}
       <div className="absolute top-1/4 left-0 w-72 h-72 bg-purple-600/5 rounded-full blur-3xl" />
       

@@ -9,19 +9,23 @@ import ExperienceSection from './components/ExperienceSection'
 import RecommendationsSection from './components/RecommendationsSection'
 import ContactSection from './components/ContactSection'
 import PlaygroundButton from './components/PlaygroundButton'
+import BottomBar from './components/BottomBar'
+import DownloadCVButton from './components/DownloadCVButton'
 
 export default function HomePage() {
   return (
     <div className="scroll-smooth text-white">
       <HeroSection />
       <AboutSection />
-      <TechnologiesSection />
       <ExperienceSection />
+      <TechnologiesSection />
       <ProjectsSection />
       <RecommendationsSection />
       <EducationSection />
       <ContactSection />
       <PlaygroundButton />
+      <BottomBar />
+      <DownloadCVButton />
     </div>
   )
 }

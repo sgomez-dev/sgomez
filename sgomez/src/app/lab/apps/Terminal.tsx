@@ -100,7 +100,7 @@ const COMMANDS = {
         category.skills.forEach(skill => {
           const paddedName = `${skill.icon} ${skill.name}`.padEnd(18)
           const separator = '--'
-          const yearsLabel = `${skill.years} ${skill.years === 1 ? 'año' : 'años'}`
+          const yearsLabel = `${skill.years} años`
           lines.push(`  ${paddedName} ${separator}  ${yearsLabel}`)
         })
         lines.push('')
@@ -252,7 +252,7 @@ const COMMANDS = {
     description: 'Datos curiosos',
     execute: () => {
       const timeline = about.timeline || []
-      const firstAge = timeline.length > 0 ? timeline[0].age : 18
+      const firstYear = timeline.length > 0 ? timeline[0].year : '2021'
       
       return [
         '',
@@ -260,11 +260,11 @@ const COMMANDS = {
         '│                  DATOS CURIOSOS                             │',
         '└─────────────────────────────────────────────────────────────┘',
         '',
-        `  🎮 ${timeline[0]?.desc || 'Comencé a programar a los ' + firstAge + ' años'}`,
+        `  🎮 ${timeline[0]?.title || 'Comencé a programar en ' + firstYear}`,
         '  🌍 He trabajado con equipos internacionales',
         '  🎨 Me encanta el diseño UI/UX minimalista',
         '  🤖 Apasionado por la automatización',
-        `  📱 Fan de las ${technologies.find(t => t.category === 'Mobile & Tools')?.skills.find(s => s.name === 'PWA')?.name || 'PWAs'} y aplicaciones web progresivas`,
+        '  📱 Fan de las PWAs y aplicaciones web progresivas',
         '  🚀 Siempre aprendiendo nuevas tecnologías',
         '  ☕ Café + Código = Vida',
         '',

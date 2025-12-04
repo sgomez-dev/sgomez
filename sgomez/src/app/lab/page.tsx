@@ -11,6 +11,7 @@ import LandingPage from './apps/LandingPage'
 import SgomezCLI from './apps/sgomez-cli'
 import Docs from './apps/Docs'
 import Terminal from './apps/Terminal'
+import CVViewer from './apps/CVViewer'
 
 export interface WindowState {
   id: string
@@ -42,8 +43,9 @@ export const apps: AppConfig[] = [
   { id: 'skyzen', title: 'Skyzen', component: Skyzen, icon: '/lab/icons/skyzen.png', color: 'bg-cyan-500' },
   { id: 'sortlab', title: 'Sortlab', component: Sortlab, icon: '/lab/icons/sortlab.png', color: 'bg-purple-500' },
   { id: 'landing', title: 'Landing Page', component: LandingPage, icon: '/lab/icons/landing-page.png', color: 'bg-pink-500' },
-  { id: 'cli', title: 'sgomez-cli', component: SgomezCLI, icon: '/lab/icons/sgomez-cli.png', color: 'bg-gray-700' },
+  { id: 'cli', title: 'sgomez-cli', url: 'https://www.npmjs.com/package/sgomez-cli', icon: '/lab/icons/sgomez-cli.png', color: 'bg-gray-700' },
   { id: 'docs', title: 'Docs', component: Docs, icon: '/lab/icons/docs.png', color: 'bg-orange-500' },
+  { id: 'cv', title: 'Mi CV', component: CVViewer, icon: '/lab/icons/cv.svg', color: 'bg-red-600' },
   { id: 'portfolio', title: 'Portafolio', url: '/', icon: '/lab/icons/portfolio.svg', color: 'bg-blue-600' },
   
   // Apps externas (iframes) - Ejemplos comentados:
@@ -128,7 +130,7 @@ export default function LabPage() {
   }
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 relative">
+    <div className="h-screen w-screen overflow-hidden bg-linear-to-br from-blue-900 via-purple-900 to-pink-900 relative">
       <Desktop onOpenApp={openWindow} />
       
       {windows.map(window => (
