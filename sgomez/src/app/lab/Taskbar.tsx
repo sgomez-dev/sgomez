@@ -123,6 +123,16 @@ export default function Taskbar({ windows, onWindowClick }: TaskbarProps) {
         ))}
       </div>
 
+      {/* Return to Portfolio Button */}
+      <motion.a
+        href="/"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm font-medium transition-colors shadow-lg"
+      >
+        ← Portafolio
+      </motion.a>
+
       {/* System Tray */}
       <div className="flex items-center gap-3 px-3">
         {/* Quick Actions */}

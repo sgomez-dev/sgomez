@@ -10,6 +10,7 @@ import Sortlab from './apps/Sortlab'
 import LandingPage from './apps/LandingPage'
 import SgomezCLI from './apps/sgomez-cli'
 import Docs from './apps/Docs'
+import Terminal from './apps/Terminal'
 
 export interface WindowState {
   id: string
@@ -35,6 +36,7 @@ export interface AppConfig {
 
 export const apps: AppConfig[] = [
   // Apps integradas (componentes React)
+  { id: 'terminal', title: 'Terminal', component: Terminal, icon: '/lab/icons/terminal.svg', color: 'bg-gray-900' },
   { id: 'todo', title: 'To-Do App', component: ToDoApp, icon: '/lab/icons/todo-app.png', color: 'bg-green-500' },
   { id: 'budget', title: 'Budget App', url: 'https://budget.sgomez.dev', icon: '/lab/icons/budget.png', color: 'bg-yellow-500' },
   { id: 'skyzen', title: 'Skyzen', component: Skyzen, icon: '/lab/icons/skyzen.png', color: 'bg-cyan-500' },
@@ -42,6 +44,7 @@ export const apps: AppConfig[] = [
   { id: 'landing', title: 'Landing Page', component: LandingPage, icon: '/lab/icons/landing-page.png', color: 'bg-pink-500' },
   { id: 'cli', title: 'sgomez-cli', component: SgomezCLI, icon: '/lab/icons/sgomez-cli.png', color: 'bg-gray-700' },
   { id: 'docs', title: 'Docs', component: Docs, icon: '/lab/icons/docs.png', color: 'bg-orange-500' },
+  { id: 'portfolio', title: 'Portafolio', url: '/', icon: '/lab/icons/portfolio.svg', color: 'bg-blue-600' },
   
   // Apps externas (iframes) - Ejemplos comentados:
   // { id: 'github', title: 'GitHub', url: 'https://github.com/sgomez-dev', icon: '/lab/icons/github.png', color: 'bg-gray-800' },
