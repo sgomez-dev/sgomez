@@ -118,7 +118,7 @@ export default function Window({
   }
 
   // En móviles, forzar ventanas a pantalla completa
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const isMobile = typeof globalThis !== 'undefined' && globalThis.innerWidth < 768
   const isFullscreen = window.isMaximized || isMobile
 
   const style = isFullscreen
