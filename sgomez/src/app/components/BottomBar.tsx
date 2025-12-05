@@ -10,8 +10,8 @@ export default function BottomBar() {
     { id: 'hero', name: 'Inicio', icon: '🏠' },
     { id: 'about', name: 'Historia', icon: '📖' },
     { id: 'experience', name: 'Experiencia', icon: '💼' },
-    { id: 'projects', name: 'Proyectos', icon: '🚀' },
     { id: 'technologies', name: 'Stack', icon: '⚡' },
+    { id: 'projects', name: 'Proyectos', icon: '🚀' },
     { id: 'recommendations', name: 'Recomendaciones', icon: '⭐' },
     { id: 'contact', name: 'Contacto', icon: '📧' },
   ]
