@@ -38,13 +38,13 @@ export interface AppConfig {
 export const apps: AppConfig[] = [
   // Apps integradas (componentes React)
   { id: 'terminal', title: 'Terminal', component: Terminal, icon: '/lab/icons/terminal.svg', color: 'bg-gray-900' },
-  { id: 'todo', title: 'To-Do App', component: ToDoApp, icon: '/lab/icons/todo-app.png', color: 'bg-green-500' },
+  { id: 'todo', title: 'To-Do App', url: 'https://todo.sgomez.dev', icon: '/lab/icons/todo-app.png', color: 'bg-green-500' },
   { id: 'budget', title: 'Budget App', url: 'https://budget.sgomez.dev', icon: '/lab/icons/budget.png', color: 'bg-yellow-500' },
-  { id: 'skyzen', title: 'Skyzen', component: Skyzen, icon: '/lab/icons/skyzen.png', color: 'bg-cyan-500' },
-  { id: 'sortlab', title: 'Sortlab', component: Sortlab, icon: '/lab/icons/sortlab.png', color: 'bg-purple-500' },
-  { id: 'landing', title: 'Landing Page', component: LandingPage, icon: '/lab/icons/landing-page.png', color: 'bg-pink-500' },
+  { id: 'skyzen', title: 'Skyzen', url: 'https://skyzen.sgomez.dev', icon: '/lab/icons/skyzen.png', color: 'bg-cyan-500' },
+  { id: 'sortlab', title: 'Sortlab',url: 'https://sortlab.sgomez.dev', icon: '/lab/icons/sortlab.png', color: 'bg-purple-500' },
+  { id: 'landing', title: 'Landing Page', url: 'https://landing.sgomez.dev', icon: '/lab/icons/landing-page.png', color: 'bg-pink-500' },
   { id: 'cli', title: 'sgomez-cli', url: 'https://www.npmjs.com/package/sgomez-cli', icon: '/lab/icons/sgomez-cli.png', color: 'bg-gray-700' },
-  { id: 'docs', title: 'Docs', component: Docs, icon: '/lab/icons/docs.png', color: 'bg-orange-500' },
+  { id: 'docs', title: 'Docs', url: 'https://docs.sgomez.dev', icon: '/lab/icons/docs.png', color: 'bg-orange-500' },
   { id: 'cv', title: 'Mi CV', component: CVViewer, icon: '/lab/icons/cv.svg', color: 'bg-red-600' },
   { id: 'portfolio', title: 'Portafolio', url: '/', icon: '/lab/icons/portfolio.svg', color: 'bg-blue-600' },
   
