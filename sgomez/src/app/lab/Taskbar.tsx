@@ -37,13 +37,13 @@ export default function Taskbar({ windows, onWindowClick }: TaskbarProps) {
   }
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700 flex items-center px-2 gap-2 z-[10000]">
+    <div className="absolute bottom-0 left-0 right-0 h-14 sm:h-12 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700 flex items-center px-1 sm:px-2 gap-1 sm:gap-2 z-[10000]">
       {/* Start Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setShowStartMenu(!showStartMenu)}
-        className="w-12 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center text-white font-bold text-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg"
+        className="w-10 h-8 sm:w-12 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center text-white font-bold text-lg sm:text-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shrink-0"
       >
         ⊞
       </motion.button>
@@ -105,7 +105,7 @@ export default function Taskbar({ windows, onWindowClick }: TaskbarProps) {
             whileTap={{ scale: 0.98 }}
             onClick={() => onWindowClick(window.id)}
             className={`
-              flex items-center gap-2 px-3 py-2 rounded transition-all min-w-0 max-w-xs
+              flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded transition-all min-w-0 max-w-[120px] sm:max-w-xs
               ${window.isMinimized 
                 ? 'bg-gray-700/50 text-gray-400' 
                 : 'bg-gray-700 text-white border-b-2 border-blue-500'
@@ -114,11 +114,11 @@ export default function Taskbar({ windows, onWindowClick }: TaskbarProps) {
             `}
           >
             {window.icon?.startsWith('/') ? (
-              <img src={window.icon} alt={window.title} className="w-5 h-5 object-contain shrink-0" />
+              <img src={window.icon} alt={window.title} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
             ) : (
-              <span className="text-lg shrink-0">{window.icon}</span>
+              <span className="text-base sm:text-lg shrink-0">{window.icon}</span>
             )}
-            <span className="text-sm truncate">{window.title}</span>
+            <span className="text-xs sm:text-sm truncate hidden sm:inline">{window.title}</span>
           </motion.button>
         ))}
       </div>
@@ -128,13 +128,23 @@ export default function Taskbar({ windows, onWindowClick }: TaskbarProps) {
         href="/"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm font-medium transition-colors shadow-lg"
+        className="hidden sm:flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm font-medium transition-colors shadow-lg shrink-0"
       >
         ← Portafolio
       </motion.a>
 
+      {/* Mobile Home Button */}
+      <motion.a
+        href="/"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="sm:hidden w-10 h-8 bg-blue-600 hover:bg-blue-700 rounded flex items-center justify-center text-white transition-colors shadow-lg shrink-0"
+      >
+        🏠
+      </motion.a>
+
       {/* System Tray */}
-      <div className="flex items-center gap-3 px-3">
+      <div className="hidden md:flex items-center gap-3 px-3 shrink-0">
         {/* Quick Actions */}
         <div className="flex gap-1">
           <button className="w-8 h-8 hover:bg-gray-700 rounded flex items-center justify-center text-white transition-colors">
@@ -153,6 +163,13 @@ export default function Taskbar({ windows, onWindowClick }: TaskbarProps) {
           <div className="text-gray-400 text-xs leading-tight">
             {formatDate(time)}
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Clock */}
+      <div className="md:hidden text-right shrink-0">
+        <div className="text-white text-xs font-medium">
+          {formatTime(time)}
         </div>
       </div>
     </div>

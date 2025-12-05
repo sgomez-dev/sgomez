@@ -130,7 +130,7 @@ export default function LabPage() {
   }
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-linear-to-br from-blue-900 via-purple-900 to-pink-900 relative">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 relative">
       <Desktop onOpenApp={openWindow} />
       
       {windows.map(window => (

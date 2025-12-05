@@ -10,15 +10,17 @@ export const hero = {
 // About / Historia
 export const about = {
   description: `
-Soy Santiago Gómez de la Torre Romero, ingeniero informático con una sólida base en tecnologías de la información, desarrollo web y administración de sistemas. Mi trayectoria se ha construido sobre experiencia práctica en entornos reales, desde labores de SysAdmin y soporte TI hasta el diseño, desarrollo y despliegue de aplicaciones web escalables. Siempre guiado por una mentalidad autodidacta, orientada a la excelencia técnica y a la adopción de buenas prácticas. Domino ecosistemas modernos como React, Node.js, Firebase, Google Cloud y pipelines CI/CD, manteniéndome en mejora continua para aportar soluciones robustas y eficientes.
+Hay personas que llegan a la tecnología por casualidad. Yo no.
+A mí siempre me atrapó entender cómo funciona todo por dentro: cómo se despliega un servicio, por qué un sistema falla, qué hace que una interfaz fluya o se rompa. Con el tiempo, esa curiosidad dejó de ser un impulso y se convirtió en mi forma de trabajar: entender para construir, y construir para mejorar.
 
-Desde 2021 formé parte del programa de becas FUNIBER y posteriormente del programa PROFER en la Universidad Europea del Atlántico, donde consolidé mis fundamentos técnicos y reforcé mi capacidad de trabajar en equipos multidisciplinares orientados a la ingeniería de software.
+Mi trayectoria combina administración de sistemas, desarrollo web y arquitectura en la nube, siempre con una mentalidad autodidacta y orientada a buenas prácticas. A lo largo de los años he trabajado con React, Angular, Node.js, Firebase y Google Cloud, diseñando soluciones que no solo cumplen, sino que se mantienen y evolucionan.
 
-Actualmente, desempeño el rol de desarrollador de software en Evenbytes, donde construyo soluciones escalables utilizando Angular, Node.js, Firebase y Google Cloud. Mi trabajo se centra en desarrollar aplicaciones eficientes, mantenibles y alineadas a criterios de calidad propios de entornos profesionales.
+Mi formación se fortaleció en los programas FUNIBER y PROFER, experiencias que me dieron estructura técnica y visión de equipo. Hoy desarrollo software en Evenbytes, creando aplicaciones que deben ser eficientes, escalables y estables porque se usan en entornos reales.
 
-Además, participo activamente en la comunidad tecnológica. He concursado en eventos como Hack2Progress, que han reforzado mi capacidad para innovar bajo presión, y soy organizador de GDG Santander, desde donde contribuyo al crecimiento y difusión de tecnologías modernas en el entorno local.
+También participo activamente en la comunidad: competí en Hack2Progress y organizo eventos con GDG Santander, donde conecto con desarrolladores, estudiantes y profesionales que comparten mi pasión por construir.
 
-Uno de los proyectos más significativos de mi carrera ha sido EliteEstate Manager, una solución integral de gestión inmobiliaria desarrollada en colaboración con la agente Irma Romero Morales. Este reto real me permitió diseñar y construir una plataforma adaptada a la gestión de propiedades, citas, zonas y procesos internos, integrando necesidades del negocio con arquitectura de software, UI/UX y buenas prácticas de desarrollo. La experiencia fortaleció mi visión end-to-end de cómo se construyen soluciones que aportan valor tangible.`,
+Uno de mis proyectos más representativos es EliteEstate Manager, una solución inmobiliaria creada desde cero para resolver necesidades reales. Más que código, fue arquitectura, diseño, producto y visión end-to-end.
+`,
   timeline: [
     { 
       year: '2021', 
@@ -263,37 +265,37 @@ export const experience = [
   {
     title: 'Evenbytes - Santa Cruz de Bezana, Cantabria, España',
     role: 'Desarrollador de Software',
-    desc: 'Actualmente trabajo como desarrollador de software en Evenbytes, donde me encargo del diseño, desarrollo y mantenimiento de aplicaciones web robustas y escalables. Mi día a día gira en torno a Angular para crear interfaces interactivas y responsivas, y a Node.js para construir APIs eficientes y seguras. Aunque utilizo Firebase para servicios complementarios, la gestión principal de bases de datos y autenticación la realizo con Google Cloud Platform, aprovechando Datastore y el sistema de autenticación integrado de GCP para asegurar rendimiento, seguridad y escalabilidad. Mi rol también implica una colaboración constante con arquitectos, product managers y otros desarrolladores para diseñar soluciones centradas en el usuario, participar en la planificación técnica, aplicar buenas prácticas y contribuir a la mejora continua de los procesos, garantizando experiencias fluidas y resultados de alta calidad.',
+    desc: 'En Evenbytes desarrollo y mantengo aplicaciones web escalables utilizando Angular, Node.js y Google Cloud, construyendo interfaces fluidas, APIs eficientes y sistemas seguros basados en Datastore y autenticación corporativa. Participo activamente en decisiones de arquitectura, revisión de código y definición técnica, asegurando calidad y consistencia en cada entrega. Además de programar, optimizo rendimiento, mejoro procesos y colaboro estrechamente con product managers y arquitectos para transformar requisitos complejos en soluciones claras, funcionales y listas para producción.',
     period: 'Junio 2025 - Actualidad',
   },
   {
     title: 'Google Developer Group (GDG) Santander - Santander, Cantabria, España',
     role: 'Organizador',
-    desc: 'Como organizador del Google Developer Group (GDG) en Santander, lidero la planificación y ejecución de eventos y actividades orientadas a fortalecer la comunidad tecnológica local, promoviendo la colaboración, el aprendizaje y la innovación entre desarrolladores, estudiantes y profesionales interesados en la tecnología y el ecosistema open source. Soy responsable de coordinar charlas y talleres junto a ponentes expertos para garantizar contenido relevante y de calidad, además de gestionar la promoción de los eventos en redes sociales y plataformas digitales, impulsando así la participación, el alcance y el crecimiento continuo de la comunidad.',
+    desc: 'Como organizador de GDG Santander coordino charlas, talleres y eventos que fortalecen la comunidad tecnológica local, trabajando con ponentes y expertos para ofrecer contenido relevante y práctico. Me encargo de la planificación, logística y difusión de cada actividad, impulsando la participación, el aprendizaje y el crecimiento continuo de la comunidad de desarrolladores y entusiastas de la tecnología.',
     period: 'Noviembre 2024 - Actualidad',
   },
   {
     title: 'Irma Romero Morales - Santander, Cantabria, España',
     role: 'Desarrollador Full-Stack Freelance',
-    desc: 'Durante este período trabajé como desarrollador freelance para Irma Romero Morales, llevando a cabo el desarrollo completo de una Aplicación Web Progresiva (PWA) llamada EliteEstate – Manager, creada para optimizar la gestión de propiedades inmobiliarias mediante una interfaz moderna e intuitiva. Me ocupé del diseño, desarrollo y despliegue del proyecto utilizando tecnologías web actuales, garantizando una experiencia responsiva, accesible y fácil de usar tanto para agentes como para administradores. Implementé funcionalidades clave como la administración de múltiples zonas geográficas, gestión detallada de propiedades con atributos personalizados, organización de agendas y citas con clientes, y un sistema eficiente para visualizar el portafolio inmobiliario. Este proyecto fortaleció mis habilidades en desarrollo full stack, gestión de proyectos y atención al cliente, además de aportar experiencia en la creación de aplicaciones PWA orientadas al sector inmobiliario.',
+    desc: 'Desarrollé EliteEstate Manager como freelance para Irma Romero Morales, una PWA completa para la gestión inmobiliaria. Me encargué del diseño, desarrollo y despliegue de la aplicación, creando una interfaz moderna y responsiva con funcionalidades como gestión de propiedades, zonas, agendas y citas. Fue un proyecto end-to-end que reforzó mis habilidades full stack, mi capacidad para trabajar con clientes y mi experiencia construyendo soluciones web reales orientadas a negocio.',
     period: 'Febrero 2025 - Junio 2025',
   },
   {
     title: 'Universidad Europea del Atlántico - Santander, Cantabria, España',
     role: 'Técnico de Soporte IT',
-    desc: 'Formé parte del equipo de Tecnologías de la Información de la Universidad Europea del Atlántico, donde fui responsable de brindar soporte técnico integral para garantizar la operatividad y eficiencia de los sistemas informáticos de toda la institución. Mi labor abarcó desde la resolución de incidencias, asistencia a usuarios y mantenimiento preventivo, hasta la implementación y mejora de infraestructuras tecnológicas, siempre con el objetivo de mantener la continuidad operativa del campus y atender de forma ágil las necesidades del personal académico y administrativo. Además, elaboré documentación técnica y manuales de usuario para facilitar la resolución autónoma de problemas recurrentes. Esta experiencia consolidó mis habilidades en soporte técnico, trabajo en equipo y gestión de sistemas, y reforzó mi orientación hacia la satisfacción del usuario final y la mejora continua en entornos académicos.',
+    desc: 'Brindé soporte técnico integral en la Universidad Europea del Atlántico, resolviendo incidencias, asistiendo a usuarios y manteniendo la infraestructura informática del campus. Participé en la mejora de sistemas, documenté procesos y aseguré la continuidad operativa de los servicios tecnológicos. Esta experiencia fortaleció mis habilidades en soporte, trabajo en equipo y gestión de sistemas en un entorno académico de alta demanda.',
     period: 'Julio 2023 - Julio 2024',
   },
   {
     title: 'Fundación Universitaria Iberoamericana (FUNIBER) - Santander, Cantabria, España',
     role: 'Sysadmin & QA Tester',
-    desc: 'Durante mi tiempo en FUNIBER desempeñé un rol clave como administrador de sistemas (Sysadmin) y responsable de aseguramiento de la calidad (QA), liderando la gestión de la infraestructura tecnológica para garantizar su rendimiento y disponibilidad. Me encargué de la supervisión y mantenimiento de servidores, redes y servicios internos, asegurando una operación estable y segura que respaldara las actividades académicas y administrativas. Además, coordiné la planificación y ejecución de proyectos tecnológicos, alineando los objetivos técnicos con las metas organizacionales, y participé en la documentación y automatización de procesos para optimizar la gestión del entorno TI. Esta experiencia fortaleció mis competencias técnicas en administración de sistemas y calidad de software, así como mis habilidades en liderazgo, comunicación y gestión de proyectos en entornos colaborativos.',
+    desc: 'Desempeñé un rol híbrido de SysAdmin y QA en FUNIBER, gestionando la infraestructura tecnológica y asegurando la disponibilidad de servidores, redes y servicios internos. Realicé mantenimiento preventivo, supervisión de entornos críticos y automatización de procesos, además de coordinar proyectos tecnológicos alineados con los objetivos de la organización. Esta etapa reforzó mis competencias en administración de sistemas, calidad de software y gestión técnica en entornos colaborativos.',
     period: 'Julio 2022 - Julio 2023',
   },
   {
     title: 'Fundación Universitaria Iberoamericana (FUNIBER) - Santander, Cantabria, España',
     role: 'Equipo de Redacción de Correos y Guías Técnicas',
-    desc: 'Formé parte del equipo encargado de la redacción, revisión y estructuración de guías y correos académicos e internacionales dentro del Programa de Becas de FUNIBER, donde mi labor principal consistió en crear comunicaciones claras, formales y adaptadas a distintos contextos académicos y culturales, siguiendo los estándares corporativos y las mejores prácticas de comunicación escrita. Colaboré estrechamente con otros miembros del equipo para asegurar la coherencia y calidad de los textos, ajustando los mensajes según el público y los objetivos, y participé en la actualización continua de las guías, incorporando feedback y nuevas tendencias en comunicación institucional. Esta experiencia me permitió desarrollar habilidades avanzadas en redacción profesional, atención al detalle y trabajo en equipo, además de profundizar en la gestión documental y la comunicación corporativa en entornos educativos.',
+    desc: 'Formé parte del equipo del Programa de Becas de FUNIBER, creando y revisando comunicaciones académicas e internacionales adaptadas a distintos contextos culturales. Colaboré con el equipo para garantizar coherencia y calidad, actualizando guías y documentos según feedback y buenas prácticas. Esta experiencia reforzó mis habilidades en redacción profesional, atención al detalle y gestión documental en entornos educativos.',
     period: 'Septiembre 2021 - Julio 2022',
   },
 ]

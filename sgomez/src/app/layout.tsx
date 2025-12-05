@@ -29,6 +29,11 @@ export const metadata: Metadata = {
   applicationName: siteName,
   creator: "Santiago Gómez de la Torre Romero",
   authors: [{ name: "Santiago Gómez de la Torre Romero", url: siteUrl }],
+  icons: {
+    icon: "/Santiago_Gómez_de_la_Torre_Romero.png",
+    shortcut: "/Santiago_Gómez_de_la_Torre_Romero.png",
+    apple: "/Santiago_Gómez_de_la_Torre_Romero.png",
+  },
   keywords: [
     "Santiago Gómez de la Torre Romero",
     "Santiago Gómez de la Torre Romero developer",
