@@ -6,7 +6,7 @@ export default function PlaygroundButton() {
       {/* Botón flotante fijo */}
       <a 
         href="/lab" 
-        className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 group flex items-center gap-2"
+        className="fixed bottom-24 right-8 z-50 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 group flex items-center gap-2"
         title="Ir a SGOMEZ-OS"
       >
         <span className="text-2xl">🖥️</span>

@@ -10,7 +10,7 @@ export default function DownloadCVButton() {
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.5, delay: 1.2 }}
-      className="fixed bottom-32 right-6 z-40 group"
+      className="fixed bottom-6 right-6 z-40 group"
     >
       <div className="relative">
         {/* Efecto de pulso */}
