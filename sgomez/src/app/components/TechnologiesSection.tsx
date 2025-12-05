@@ -47,40 +47,46 @@ export default function TechnologiesSection() {
                   {category.category}
                 </h3>
                 <div className="space-y-4">
-                  {category.skills.map((skill, skillIndex) => (
-                    <motion.div
-                      key={skillIndex}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                      className="group/skill"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl group-hover/skill:scale-110 transition-transform">
-                            {skill.icon}
-                          </span>
-                          <span className="text-white font-medium text-sm group-hover/skill:text-blue-400 transition-colors">
-                            {skill.name}
+                  {category.skills.map((skill, skillIndex) => {
+                    // Calcular nivel basado en años de experiencia
+                    const yearsNum = parseInt(skill.years.replace('+', ''))
+                    const level = Math.min(yearsNum * 20 + 60, 100) // 1 año = 80%, 2 años = 100%
+                    
+                    return (
+                      <motion.div
+                        key={skillIndex}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
+                        className="group/skill"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl group-hover/skill:scale-110 transition-transform">
+                              {skill.icon}
+                            </span>
+                            <span className="text-white font-medium text-sm group-hover/skill:text-blue-400 transition-colors">
+                              {skill.name}
+                            </span>
+                          </div>
+                          <span className="text-blue-400 font-mono text-xs">
+                            {skill.years} años
                           </span>
                         </div>
-                        <span className="text-blue-400 font-mono text-xs">
-                          {skill.years} años
-                        </span>
-                      </div>
-                      {/* Barra de progreso animada */}
-                      <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.level}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1, delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                          className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
+                        {/* Barra de progreso animada */}
+                        <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${level}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1, delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
+                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                          />
+                        </div>
+                      </motion.div>
+                    )
+                  })}
                 </div>
               </div>
             </motion.div>
