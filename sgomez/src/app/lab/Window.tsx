@@ -117,8 +117,12 @@ export default function Window({
     return null
   }
 
-  const style = window.isMaximized
-    ? { top: 0, left: 0, width: '100%', height: 'calc(100% - 48px)' }
+  // En móviles, forzar ventanas a pantalla completa
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const isFullscreen = window.isMaximized || isMobile
+
+  const style = isFullscreen
+    ? { top: 0, left: 0, width: '100%', height: 'calc(100% - 56px)' }
     : {
         top: window.position.y,
         left: window.position.x,
@@ -132,41 +136,46 @@ export default function Window({
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.9, opacity: 0 }}
-      className="absolute flex flex-col bg-white rounded-lg shadow-2xl overflow-hidden"
+      className="absolute flex flex-col bg-white shadow-2xl overflow-hidden md:rounded-lg"
       style={{ ...style, zIndex: window.zIndex }}
       onMouseDown={onFocus}
     >
       {/* Title bar */}
       <div
-        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 flex items-center justify-between cursor-move select-none"
-        onMouseDown={handleDragStart}
+        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2 sm:px-4 py-2 flex items-center justify-between select-none"
+        onMouseDown={!isMobile ? handleDragStart : undefined}
+        style={{ cursor: isMobile ? 'default' : 'move' }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {window.icon?.startsWith('/') ? (
-            <img src={window.icon} alt={window.title} className="w-6 h-6 object-contain" />
+            <img src={window.icon} alt={window.title} className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0" />
           ) : (
-            <span className="text-xl">{window.icon}</span>
+            <span className="text-lg sm:text-xl shrink-0">{window.icon}</span>
           )}
-          <span className="font-medium">{window.title}</span>
+          <span className="font-medium text-sm sm:text-base truncate">{window.title}</span>
         </div>
-        <div className="window-controls flex gap-2">
-          <button
-            onClick={onMinimize}
-            className="w-8 h-8 rounded hover:bg-white/20 flex items-center justify-center transition-colors"
-          >
-            <span className="text-xl leading-none">−</span>
-          </button>
-          <button
-            onClick={onMaximize}
-            className="w-8 h-8 rounded hover:bg-white/20 flex items-center justify-center transition-colors"
-          >
-            <span className="text-lg leading-none">{window.isMaximized ? '❐' : '□'}</span>
-          </button>
+        <div className="window-controls flex gap-1 sm:gap-2 shrink-0">
+          {!isMobile && (
+            <>
+              <button
+                onClick={onMinimize}
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded hover:bg-white/20 flex items-center justify-center transition-colors"
+              >
+                <span className="text-lg sm:text-xl leading-none">−</span>
+              </button>
+              <button
+                onClick={onMaximize}
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded hover:bg-white/20 flex items-center justify-center transition-colors"
+              >
+                <span className="text-base sm:text-lg leading-none">{window.isMaximized ? '❐' : '□'}</span>
+              </button>
+            </>
+          )}
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded hover:bg-red-500 flex items-center justify-center transition-colors"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded hover:bg-red-500 flex items-center justify-center transition-colors"
           >
-            <span className="text-xl leading-none">×</span>
+            <span className="text-lg sm:text-xl leading-none">×</span>
           </button>
         </div>
       </div>
@@ -189,8 +198,8 @@ export default function Window({
         )}
       </div>
 
-      {/* Resize handles */}
-      {!window.isMaximized && (
+      {/* Resize handles - Solo en desktop */}
+      {!isFullscreen && (
         <>
           {/* Corners */}
           <div
