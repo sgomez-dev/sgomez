@@ -30,7 +30,11 @@ export const metadata: Metadata = {
   creator: "Santiago Gómez de la Torre Romero",
   authors: [{ name: "Santiago Gómez de la Torre Romero", url: siteUrl }],
   icons: {
-    icon: "/Santiago_Gómez_de_la_Torre_Romero.png",
+    icon: [
+      { url: "/Santiago_Gómez_de_la_Torre_Romero.png" },
+      { url: "/Santiago_Gómez_de_la_Torre_Romero.png", sizes: "32x32", type: "image/png" },
+      { url: "/Santiago_Gómez_de_la_Torre_Romero.png", sizes: "16x16", type: "image/png" },
+    ],
     shortcut: "/Santiago_Gómez_de_la_Torre_Romero.png",
     apple: "/Santiago_Gómez_de_la_Torre_Romero.png",
   },
