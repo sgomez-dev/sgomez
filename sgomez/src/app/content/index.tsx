@@ -197,22 +197,10 @@ export const certifications = [
 // Projects / Proyectos destacados
 export const projects = [
   {
-    title: 'Homepage Server',
-    desc: 'Servicio en mi servidor que muestra mi homelab con todos los servicios activos.',
-    stack: 'Homelab, Jenkins, Kubernetes, Docker',
-    link: 'https://home.sgomez.dev',
-  },
-  {
     title: 'EliteEstate Manager',
     desc: 'PWA de gestión inmobiliaria con autenticación, propiedades, citas y zonas.',
     stack: 'React, Vite, Firebase, TailwindCSS',
     link: 'https://elite-estate-manager.vercel.app/',
-  },
-  {
-    title: 'Portafolio Profesional',
-    desc: 'Portfolio interactivo con animaciones y diseño moderno.',
-    stack: 'Next.js, React, Framer Motion, TailwindCSS',
-    link: 'https://portfolio.sgomez.dev',
   },
   {
     title: 'Docs - SGOMEZ',
