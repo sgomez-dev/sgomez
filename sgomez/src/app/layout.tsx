@@ -40,22 +40,21 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Santiago Gómez de la Torre Romero",
-    "Santiago Gómez de la Torre Romero developer",
+    "sgomez.dev",
     "software engineer",
-    "frontend developer",
+    "senior frontend developer",
+    "full-stack developer",
     "TypeScript",
     "React",
+    "Angular",
     "Next.js",
+    "Node.js",
+    "Google Cloud",
     "portfolio",
     "desarrollador web",
     "ingeniero de software",
-    "Santiago Gómez de la Torre Romero",
-    "Santiago Gómez de la Torre Romero developer",
-    "software engineer",
-    "frontend developer",
-    "TypeScript",
-    "React",
-    "Next.js",
+    "Santander",
+    "España",
   ],
   openGraph: {
     title: siteTitle,
@@ -96,6 +95,23 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
       >
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Santiago Gómez de la Torre Romero",
+              url: siteUrl,
+              jobTitle: "Senior Software Engineer",
+              description: siteDescription,
+              sameAs: [
+                "https://linkedin.com/in/sgomez-dev",
+                "https://github.com/sgomez-dev",
+              ],
+            }),
+          }}
+        />
       </body>
     </html>
   );

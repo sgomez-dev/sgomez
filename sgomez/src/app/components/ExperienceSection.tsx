@@ -4,55 +4,35 @@ import { motion } from 'framer-motion'
 import { experience } from '../content'
 
 export default function ExperienceSection() {
-  const experienceIcons = ['💼', '🏢', '👥', '🎓', '🏆']
-  
   return (
-    <section id="experience" className="min-h-screen flex flex-col justify-center py-20 relative">
-      {/* Efecto de fondo */}
-      <div className="absolute top-1/4 left-0 w-72 h-72 bg-purple-600/5 rounded-full blur-3xl" />
-      
+    <section id="experience" className="py-24 md:py-32 relative">
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-600/[0.03] rounded-full blur-[128px] pointer-events-none" />
       <div className="container-custom relative z-10">
-        <div className="flex items-center gap-4 mb-16">
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            whileInView={{ scale: 1, rotate: 0 }}
-            viewport={{ once: true }}
-            className="text-5xl"
-          >
-            💼
-          </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Experiencia</h2>
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          {experience.map((e, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group bg-slate-800 p-6 rounded-lg border border-slate-700 hover:border-purple-600/50 transition-all card-hover relative overflow-hidden"
-            >
-              {/* Efecto visual */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-600/10 rounded-full blur-2xl group-hover:bg-blue-600/20 transition-colors duration-500" />
-              
-              <div className="relative z-10">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="text-3xl mt-1">{experienceIcons[i % experienceIcons.length]}</div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">{e.title}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-gray-400 text-sm">{e.role}</span>
-                      <span className="text-gray-600">•</span>
-                      <span className="text-purple-400 text-sm font-mono">{e.period}</span>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-16">
+          <p className="text-violet-400 text-sm font-mono tracking-wider uppercase mb-3">Trayectoria</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-white">Experiencia Profesional</h2>
+        </motion.div>
+        <div className="relative">
+          <div className="absolute left-[19px] md:left-[23px] top-0 bottom-0 w-px bg-gradient-to-b from-violet-500/40 via-indigo-500/20 to-transparent" />
+          <div className="space-y-6">
+            {experience.map((exp, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="relative pl-14 md:pl-16">
+                <div className="absolute left-[14px] md:left-[18px] top-6 w-[11px] h-[11px] rounded-full border-2 border-violet-500 bg-[var(--bg-primary)]" />
+                <div className="group glass rounded-xl p-6 card-hover relative overflow-hidden">
+                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-600/[0.06] rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative z-10">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4">
+                      <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                      <span className="text-violet-300 text-xs font-mono">{exp.period}</span>
                     </div>
+                    <h3 className="text-lg md:text-xl font-semibold text-white mb-1 group-hover:text-violet-300 transition-colors">{exp.role}</h3>
+                    <p className="text-gray-500 text-sm mb-4 font-light">{exp.title}</p>
+                    <p className="text-gray-400 text-sm leading-relaxed font-light">{exp.desc}</p>
                   </div>
                 </div>
-                <p className="text-gray-400 leading-relaxed text-sm">{e.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

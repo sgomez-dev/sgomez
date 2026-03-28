@@ -3,125 +3,53 @@
 import { motion } from 'framer-motion'
 import { technologies } from '../content'
 
+const categoryColors: Record<string, { bg: string; text: string; border: string; pill: string }> = {
+  Frontend: { bg: 'from-violet-500/[0.08] to-violet-500/[0.02]', text: 'text-violet-400', border: 'border-violet-500/20 hover:border-violet-500/40', pill: 'bg-violet-500/10 text-violet-300 border-violet-500/20' },
+  Backend: { bg: 'from-emerald-500/[0.08] to-emerald-500/[0.02]', text: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', pill: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' },
+  'DevOps & Cloud': { bg: 'from-cyan-500/[0.08] to-cyan-500/[0.02]', text: 'text-cyan-400', border: 'border-cyan-500/20 hover:border-cyan-500/40', pill: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/20' },
+  'Databases & Tools': { bg: 'from-amber-500/[0.08] to-amber-500/[0.02]', text: 'text-amber-400', border: 'border-amber-500/20 hover:border-amber-500/40', pill: 'bg-amber-500/10 text-amber-300 border-amber-500/20' },
+}
+const categoryIcons: Record<string, string> = { Frontend: '01', Backend: '02', 'DevOps & Cloud': '03', 'Databases & Tools': '04' }
+
 export default function TechnologiesSection() {
   return (
-    <section id="technologies" className="min-h-screen flex flex-col justify-center py-20 relative overflow-hidden">
-      {/* Efectos de fondo */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl" />
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="flex items-center gap-4 mb-16">
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            whileInView={{ scale: 1, rotate: 0 }}
-            viewport={{ once: true }}
-            className="text-5xl"
-          >
-            💻
-          </motion.div>
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white">Stack Tecnológico</h2>
-            <p className="text-gray-400 mt-2">Herramientas que uso para crear experiencias increíbles</p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {technologies.map((category, categoryIndex) => (
-            <motion.div
-              key={categoryIndex}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
-              className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 hover:border-blue-600/50 transition-all card-hover relative overflow-hidden group"
-            >
-              {/* Efecto de brillo en hover */}
-              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/10 rounded-full blur-2xl group-hover:bg-purple-600/20 transition-colors duration-500" />
-              
-              <div className="relative z-10">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  <span className="text-2xl">
-                    {categoryIndex === 0 ? '🎨' : categoryIndex === 1 ? '⚙️' : categoryIndex === 2 ? '☁️' : '📱'}
-                  </span>
-                  {category.category}
-                </h3>
-                <div className="space-y-4">
-                  {category.skills.map((skill, skillIndex) => {
-                    // Calcular nivel basado en años de experiencia
-                    const yearsNum = parseInt(skill.years.replace('+', ''))
-                    const level = Math.min(yearsNum * 20 + 60, 100) // 1 año = 80%, 2 años = 100%
-                    
-                    return (
-                      <motion.div
-                        key={skillIndex}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                        className="group/skill"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl group-hover/skill:scale-110 transition-transform">
-                              {skill.icon}
-                            </span>
-                            <span className="text-white font-medium text-sm group-hover/skill:text-blue-400 transition-colors">
-                              {skill.name}
-                            </span>
-                          </div>
-                          <span className="text-blue-400 font-mono text-xs">
-                            {skill.years} años
-                          </span>
-                        </div>
-                        {/* Barra de progreso animada */}
-                        <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${level}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1, delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                          />
-                        </div>
-                      </motion.div>
-                    )
-                  })}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Estadísticas mejoradas */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          <div className="bg-gradient-to-br from-blue-600/20 to-blue-600/5 p-6 rounded-xl border border-blue-600/30 text-center group hover:scale-105 transition-transform">
-            <div className="text-4xl mb-2">⏱️</div>
-            <div className="text-3xl font-bold text-blue-400 mb-1">5+</div>
-            <div className="text-gray-400 text-sm">Años de Experiencia</div>
-          </div>
-          <div className="bg-gradient-to-br from-purple-600/20 to-purple-600/5 p-6 rounded-xl border border-purple-600/30 text-center group hover:scale-105 transition-transform">
-            <div className="text-4xl mb-2">🚀</div>
-            <div className="text-3xl font-bold text-purple-400 mb-1">20+</div>
-            <div className="text-gray-400 text-sm">Proyectos Completados</div>
-          </div>
-          <div className="bg-gradient-to-br from-cyan-600/20 to-cyan-600/5 p-6 rounded-xl border border-cyan-600/30 text-center group hover:scale-105 transition-transform">
-            <div className="text-4xl mb-2">🛠️</div>
-            <div className="text-3xl font-bold text-cyan-400 mb-1">15+</div>
-            <div className="text-gray-400 text-sm">Tecnologías Dominadas</div>
-          </div>
-          <div className="bg-gradient-to-br from-pink-600/20 to-pink-600/5 p-6 rounded-xl border border-pink-600/30 text-center group hover:scale-105 transition-transform">
-            <div className="text-4xl mb-2">💪</div>
-            <div className="text-3xl font-bold text-pink-400 mb-1">100%</div>
-            <div className="text-gray-400 text-sm">Compromiso y Pasión</div>
-          </div>
+    <section id="technologies" className="py-24 md:py-32 relative overflow-hidden">
+      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-cyan-600/[0.03] rounded-full blur-[128px] pointer-events-none" />
+      <div className="container-custom relative z-10">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-16">
+          <p className="text-violet-400 text-sm font-mono tracking-wider uppercase mb-3">Tecnologias</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">Stack Tecnologico</h2>
+          <p className="text-gray-500 font-light max-w-lg">Herramientas y tecnologias que uso para crear experiencias digitales excepcionales.</p>
         </motion.div>
+        <div className="grid md:grid-cols-2 gap-5">
+          {technologies.map((category, ci) => {
+            const colors = categoryColors[category.category] || categoryColors.Frontend
+            return (
+              <motion.div key={ci} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: ci * 0.1 }}
+                className={`rounded-2xl border ${colors.border} bg-gradient-to-br ${colors.bg} p-6 md:p-8 transition-all duration-300 relative overflow-hidden group`}>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 overflow-hidden pointer-events-none">
+                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent" />
+                </div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-white">{category.category}</h3>
+                    <span className={`${colors.text} font-mono text-xs opacity-50`}>{categoryIcons[category.category]}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    {category.skills.map((skill, si) => (
+                      <motion.div key={si} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: ci * 0.05 + si * 0.04 }}
+                        className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border ${colors.pill} text-sm transition-all duration-200 hover:scale-105`}>
+                        <span className="text-base">{skill.icon}</span>
+                        <span className="font-medium">{skill.name}</span>
+                        <span className="text-[10px] opacity-50 font-mono">{skill.years}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
