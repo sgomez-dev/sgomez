@@ -7,6 +7,7 @@ import EducationSection from './components/EducationSection'
 import ExperienceSection from './components/ExperienceSection'
 import RecommendationsSection from './components/RecommendationsSection'
 import ContactSection from './components/ContactSection'
+import LatestPosts from './components/LatestPosts'
 import PlaygroundButton from './components/PlaygroundButton'
 import BottomBar from './components/BottomBar'
 import DownloadCVButton from './components/DownloadCVButton'
@@ -59,6 +60,8 @@ export default function HomePage() {
       <EducationSection />
       <div className="section-divider" />
       <ContactSection />
+      <div className="section-divider" />
+      <LatestPosts />
       <footer className="py-8 text-center">
         <p className="text-gray-700 text-xs font-light">&copy; {new Date().getFullYear()} Santiago Gomez de la Torre Romero</p>
       </footer>

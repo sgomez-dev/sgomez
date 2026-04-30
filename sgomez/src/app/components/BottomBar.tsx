@@ -56,6 +56,12 @@ export default function BottomBar() {
               </button>
             )
           })}
+          <span className="mx-0.5 h-4 w-px bg-white/10" aria-hidden="true" />
+          <a href="https://blog.sgomez.dev" target="_blank" rel="noopener noreferrer"
+            className="relative px-2.5 sm:px-3 md:px-4 py-2 rounded-full text-[10px] sm:text-xs font-medium text-gray-500 hover:text-gray-300 transition-all duration-300">
+            <span className="relative z-10 hidden sm:inline">Blog ↗</span>
+            <span className="relative z-10 sm:hidden">B</span>
+          </a>
         </div>
       </div>
     </motion.nav>
