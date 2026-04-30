@@ -46,7 +46,9 @@ export default async function LatestPosts() {
   if (posts.length === 0) return null
 
   return (
-    <section id="blog" className="section-container">
+    <section id="blog" className="py-24 md:py-32 relative">
+      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-violet-600/[0.03] rounded-full blur-[128px] pointer-events-none animate-orbit" />
+      <div className="container-custom relative z-10">
       <div className="flex items-end justify-between mb-12">
         <div>
           <p className="text-violet-400 font-mono text-sm mb-2">~/blog</p>
@@ -129,6 +131,7 @@ export default async function LatestPosts() {
         >
           Ver todos los artículos →
         </a>
+      </div>
       </div>
     </section>
   )
