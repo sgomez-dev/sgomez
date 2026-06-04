@@ -52,6 +52,7 @@ export const certifications = [
 ];
 
 export const projects = [
+  { title: 'NudaUI', desc: 'Librería open-source de 800+ animaciones y componentes UI copy-paste, framework-agnósticos (HTML + CSS, JS solo cuando hace falta). Cero dependencias, cero build. Creador y único mantenedor.', stack: 'Next.js, TypeScript, CSS, framework-agnostic', link: 'https://nudaui.dev' },
   { title: 'EliteEstate Manager', desc: 'PWA de gestión inmobiliaria completa con autenticación, propiedades, citas, zonas y panel de administración. Proyecto end-to-end para cliente real.', stack: 'React, Vite, Firebase, TailwindCSS', link: 'https://elite-estate-manager.vercel.app/' },
   { title: 'GeekLab', desc: 'E-commerce full-stack de productos IT con catálogo avanzado, carrito persistente, foro en tiempo real con WebSockets, API GraphQL y panel admin.', stack: 'Svelte 5, Node.js, Express, MongoDB, GraphQL, Socket.io', link: 'https://github.com/sgomez-dev/GeekLab' },
   { title: 'SyncCart', desc: 'Extensión de Chrome que unifica carritos de compra de múltiples tiendas (Amazon, PcComponentes, MediaMarkt) en una sola interfaz con calculadora de presupuesto.', stack: 'Plasmo, React 18, TypeScript, Chrome APIs', link: 'https://github.com/sgomez-dev/SyncCart' },
