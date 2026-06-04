@@ -2,8 +2,8 @@
 
 export const hero = {
   name: 'Santiago Gómez de la Torre Romero',
-  title: 'Ingeniero Informático | Desarrollador Full-Stack | Apasionado por crear soluciones digitales',
-  subtitle: 'Diseño soluciones que combinan funcionalidad, escalabilidad y experiencia de usuario.',
+  title: 'Ingeniero Informático | Desarrollador Full-Stack | Creador de NudaUI',
+  subtitle: 'Diseño software que combina funcionalidad, escalabilidad y experiencia de usuario — y construyo herramientas open-source, como NudaUI (800+ componentes) y sgomez-cli, que usan desarrolladores de cualquier stack.',
 }
 
 export const about = {
@@ -18,6 +18,8 @@ Mi formación se fortaleció en los programas FUNIBER y PROFER, experiencias que
 También participo activamente en la comunidad: competí en Hack2Progress y organizo eventos con GDG Santander, donde conecto con desarrolladores, estudiantes y profesionales que comparten mi pasión por construir.
 
 Uno de mis proyectos más representativos es EliteEstate Manager, una solución inmobiliaria creada desde cero para resolver necesidades reales. Más que código, fue arquitectura, diseño, producto y visión end-to-end.
+
+Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y mantenedor de NudaUI, una librería open-source con más de 800 componentes UI copy-paste que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando.
 `,
   timeline: [
     { year: '2021', title: 'Inicios en el Desarrollo', desc: 'Comienzo en FUNIBER como parte del equipo de redacción técnica. Primeros proyectos personales con React y PWAs.' },
