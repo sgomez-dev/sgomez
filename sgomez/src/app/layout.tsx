@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { personGraph } from "./seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -76,7 +77,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    creator: "@", // rellena tu @ de X/Twitter si quieres
     images: ["/Santiago_Gómez_de_la_Torre_Romero.png"],
   },
   alternates: {
@@ -97,21 +97,10 @@ export default function RootLayout({
         {children}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Santiago Gómez de la Torre Romero",
-              url: siteUrl,
-              jobTitle: "Senior Software Engineer",
-              description: siteDescription,
-              sameAs: [
-                "https://linkedin.com/in/sgomez-dev",
-                "https://github.com/sgomez-dev",
-                "https://blog.sgomez.dev",
-              ],
-            }),
-          }}
+          // Full identity @graph (Person + WebSite + project entities). Ties
+          // sgomez.dev to nudaui.dev, the blog, the CLI, GitHub and LinkedIn via
+          // sameAs + creator links so they resolve as one entity.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personGraph()) }}
         />
       </body>
     </html>

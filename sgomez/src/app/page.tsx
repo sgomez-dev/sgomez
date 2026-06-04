@@ -2,6 +2,7 @@ import HeroSection from './components/HeroSection'
 import AboutSection from './components/AboutSection'
 import TechnologiesSection from './components/TechnologiesSection'
 import ProjectsSection from './components/ProjectsSection'
+import OpenSourceSection from './components/OpenSourceSection'
 import CertificationsSection from './components/CertificationsSection'
 import EducationSection from './components/EducationSection'
 import ExperienceSection from './components/ExperienceSection'
@@ -52,6 +53,8 @@ export default function HomePage() {
       <MacInterlude {...INTERLUDE_PROJECTS} />
       <div className="section-divider" />
       <ProjectsSection />
+      <div className="section-divider" />
+      <OpenSourceSection />
       <div className="section-divider" />
       <CertificationsSection />
       <div className="section-divider" />
