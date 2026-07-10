@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # npm dependencies for the Next.js app (package.json lives in /sgomez).
+  - package-ecosystem: "npm"
+    directory: "/sgomez"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    # Group patch/minor bumps into a single PR to cut noise. Majors stay
+    # separate so version migrations (e.g. Next) are reviewed on purpose.
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Never auto-bump Next across a major: version is intentionally pinned.
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+
+  # Keep GitHub Actions workflows current, if/when any are added.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
