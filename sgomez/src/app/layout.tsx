@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { personGraph } from "./seo";
 import "./globals.css";
@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = "https://sgomez.dev";
-const siteName = "Santiago Gómez de la Torre Romero - Software Engineer";
+const siteName = "Santiago Gómez de la Torre Romero - Full-Stack Engineer";
 const siteTitle =
-  "Santiago Gómez de la Torre Romero – Senior Software Engineer & Frontend Developer";
+  "Santiago Gómez de la Torre Romero — Full-Stack Engineer shipping AI to production";
 const siteDescription =
-  "Portfolio de Santiago Gómez de la Torre Romero, Senior Software Engineer especializado en frontend moderno, UX y productos digitales de alto impacto. Proyectos reales, experiencia y contacto.";
+  "Full-stack engineer building and shipping AI/LLM features to production. Creator of NudaUI (1,000+ components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.";
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +29,29 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: siteName,
   creator: "Santiago Gómez de la Torre Romero",
+  publisher: "Santiago Gómez de la Torre Romero",
   authors: [{ name: "Santiago Gómez de la Torre Romero", url: siteUrl }],
+  category: "technology",
+  referrer: "origin-when-cross-origin",
+  manifest: "/manifest.webmanifest",
+  formatDetection: { email: false, address: false, telephone: false },
+  appleWebApp: {
+    capable: true,
+    title: "Santiago Gómez",
+    statusBarStyle: "black-translucent",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/Santiago_Gómez_de_la_Torre_Romero.png" },
@@ -42,20 +64,25 @@ export const metadata: Metadata = {
   keywords: [
     "Santiago Gómez de la Torre Romero",
     "sgomez.dev",
-    "software engineer",
-    "senior frontend developer",
+    "AI engineer",
+    "LLM engineer",
+    "RAG",
+    "retrieval augmented generation",
+    "semantic search",
+    "embeddings",
+    "evals",
+    "prompt engineering",
+    "MCP",
     "full-stack developer",
-    "TypeScript",
-    "React",
-    "Angular",
     "Next.js",
+    "React",
     "Node.js",
-    "Google Cloud",
-    "portfolio",
-    "desarrollador web",
-    "ingeniero de software",
-    "Santander",
-    "España",
+    "TypeScript",
+    "Python",
+    "NudaUI",
+    "Cantabria",
+    "Spain",
+    "remote",
   ],
   openGraph: {
     title: siteTitle,
@@ -64,12 +91,13 @@ export const metadata: Metadata = {
     siteName,
     type: "website",
     locale: "es_ES",
+    alternateLocale: ["en_US"],
     images: [
       {
         url: "/Santiago_Gómez_de_la_Torre_Romero.png",
         width: 1200,
         height: 630,
-        alt: "Foto de Santiago Gómez - Software Engineer",
+        alt: "Foto de Santiago Gómez - Full-Stack Engineer (AI/LLM)",
       },
     ],
   },
@@ -81,7 +109,18 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
+    languages: {
+      "es-ES": siteUrl,
+      "x-default": siteUrl,
+    },
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

@@ -18,10 +18,11 @@ const INTERLUDE_STATS = {
   command: 'neofetch',
   output: `santiago@sgomez.dev
 ───────────────────────────
-Role      Senior Software Engineer
+Role      Full-Stack Engineer (AI/LLM)
+Focus     Shipping AI to production
 Company   Evenbytes
 Location  Santander, Spain
-Years     5+ coding
+Years     5+ in tech
 Projects  20+ shipped
 Certs     18+ earned
 Stack     15+ technologies

@@ -16,18 +16,18 @@ const codeTokens = [
   { text: ',\n', color: 'text-gray-600' },
   { text: '  role', color: 'text-white/90' },
   { text: ': ', color: 'text-gray-600' },
-  { text: '"Senior Software Engineer"', color: 'text-emerald-400' },
+  { text: '"Full-Stack Engineer · AI in production"', color: 'text-emerald-400' },
   { text: ',\n', color: 'text-gray-600' },
   { text: '  stack', color: 'text-white/90' },
   { text: ': [', color: 'text-gray-600' },
   { text: '"React"', color: 'text-amber-300' },
   { text: ', ', color: 'text-gray-600' },
-  { text: '"Angular"', color: 'text-amber-300' },
-  { text: ', ', color: 'text-gray-600' },
   { text: '"Next.js"', color: 'text-amber-300' },
+  { text: ', ', color: 'text-gray-600' },
+  { text: '"Node.js"', color: 'text-amber-300' },
   { text: ',\n', color: 'text-gray-600' },
   { text: '          ', color: '' },
-  { text: '"Node.js"', color: 'text-amber-300' },
+  { text: '"Python"', color: 'text-amber-300' },
   { text: ', ', color: 'text-gray-600' },
   { text: '"TypeScript"', color: 'text-amber-300' },
   { text: ', ', color: 'text-gray-600' },
@@ -35,7 +35,7 @@ const codeTokens = [
   { text: '],\n', color: 'text-gray-600' },
   { text: '  passion', color: 'text-white/90' },
   { text: ': ', color: 'text-gray-600' },
-  { text: '"Building digital experiences"', color: 'text-emerald-400' },
+  { text: '"Shipping AI to production"', color: 'text-emerald-400' },
   { text: ',\n', color: 'text-gray-600' },
   { text: '  location', color: 'text-white/90' },
   { text: ': ', color: 'text-gray-600' },
@@ -113,7 +113,7 @@ export default function HeroSection() {
           </div>
           <div className="text-left">
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight">{hero.name}</h1>
-            <p className="text-violet-400 text-xs sm:text-sm font-medium">Senior Software Engineer</p>
+            <p className="text-violet-400 text-xs sm:text-sm font-medium">Full-Stack Engineer · AI/LLM en producción</p>
           </div>
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-[11px] text-gray-500 ml-2">
             <span className="relative flex h-1.5 w-1.5">

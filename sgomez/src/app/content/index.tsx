@@ -2,8 +2,8 @@
 
 export const hero = {
   name: 'Santiago Gómez de la Torre Romero',
-  title: 'Ingeniero Informático | Desarrollador Full-Stack | Creador de NudaUI',
-  subtitle: 'Diseño software que combina funcionalidad, escalabilidad y experiencia de usuario — y construyo herramientas open-source, como NudaUI (800+ componentes) y sgomez-cli, que usan desarrolladores de cualquier stack.',
+  title: 'Full-Stack Engineer | AI/LLM en producción | Creador de NudaUI',
+  subtitle: 'Full-stack engineer que lleva la IA a producción, no a demos. Creador de NudaUI y de una búsqueda semántica en vivo sobre su catálogo.',
 }
 
 export const about = {
@@ -15,11 +15,13 @@ Mi trayectoria combina administración de sistemas, desarrollo web y arquitectur
 
 Mi formación se fortaleció en los programas FUNIBER y PROFER, experiencias que me dieron estructura técnica y visión de equipo. Hoy desarrollo software en Evenbytes, creando aplicaciones que deben ser eficientes, escalables y estables porque se usan en entornos reales.
 
+Ahora construyo IA que llega a producto, no a demos. Diseño sistemas que se pueden medir: pipelines de RAG con embeddings y retrieval por coseno, evaluación con golden sets propios y modelos de lenguaje integrados en el producto real. La búsqueda semántica de NudaUI responde en lenguaje natural sobre más de 1.000 componentes, y con evals propias subí la precisión del primer resultado del 67% al 80%. También mantengo en producción un asistente conversacional B2B construido sobre la API de Claude. Todo esto sin frameworks mágicos, entendiendo cada pieza del pipeline.
+
 También participo activamente en la comunidad: competí en Hack2Progress y organizo eventos con GDG Santander, donde conecto con desarrolladores, estudiantes y profesionales que comparten mi pasión por construir.
 
 Uno de mis proyectos más representativos es EliteEstate Manager, una solución inmobiliaria creada desde cero para resolver necesidades reales. Más que código, fue arquitectura, diseño, producto y visión end-to-end.
 
-Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y mantenedor de NudaUI, una librería open-source con más de 800 componentes UI copy-paste que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando.
+Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando.
 `,
   timeline: [
     { year: '2021', title: 'Inicios en el Desarrollo', desc: 'Comienzo en FUNIBER como parte del equipo de redacción técnica. Primeros proyectos personales con React y PWAs.' },
@@ -54,7 +56,8 @@ export const certifications = [
 ];
 
 export const projects = [
-  { title: 'NudaUI', desc: 'Librería open-source de 800+ animaciones y componentes UI copy-paste, framework-agnósticos (HTML + CSS, JS solo cuando hace falta). Cero dependencias, cero build. Creador y único mantenedor.', stack: 'Next.js, TypeScript, CSS, framework-agnostic', link: 'https://nudaui.dev' },
+  { title: 'NudaUI Semantic Search (RAG)', desc: 'Búsqueda en lenguaje natural sobre 1.000+ componentes de NudaUI. Pipeline de RAG completo, sin frameworks de RAG: embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, servicio en FastAPI y UI en vivo. Subí la precisión del primer resultado del 67% al 80% (hit@1) y reporté hasta la categoría que empeoró.', stack: 'RAG, Embeddings, Python, FastAPI, Evals', link: 'https://blog.sgomez.dev/rag-busqueda-semantica-nudaui' },
+  { title: 'NudaUI', desc: 'Librería open-source de 1.000+ componentes y animaciones UI copy-paste, framework-agnósticos (HTML + CSS, JS solo cuando hace falta), organizados en 81 categorías. Cero dependencias, cero build. Creador y único mantenedor.', stack: 'Next.js, TypeScript, CSS, framework-agnostic', link: 'https://nudaui.dev' },
   { title: 'EliteEstate Manager', desc: 'PWA de gestión inmobiliaria completa con autenticación, propiedades, citas, zonas y panel de administración. Proyecto end-to-end para cliente real.', stack: 'React, Vite, Firebase, TailwindCSS', link: 'https://elite-estate-manager.vercel.app/' },
   { title: 'GeekLab', desc: 'E-commerce full-stack de productos IT con catálogo avanzado, carrito persistente, foro en tiempo real con WebSockets, API GraphQL y panel admin.', stack: 'Svelte 5, Node.js, Express, MongoDB, GraphQL, Socket.io', link: 'https://github.com/sgomez-dev/GeekLab' },
   { title: 'SyncCart', desc: 'Extensión de Chrome que unifica carritos de compra de múltiples tiendas (Amazon, PcComponentes, MediaMarkt) en una sola interfaz con calculadora de presupuesto.', stack: 'Plasmo, React 18, TypeScript, Chrome APIs', link: 'https://github.com/sgomez-dev/SyncCart' },

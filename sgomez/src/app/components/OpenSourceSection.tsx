@@ -6,10 +6,10 @@ const items = [
   {
     name: 'NudaUI',
     tagline: 'Librería de componentes UI copy-paste',
-    desc: 'Creador y único mantenedor. 800+ animaciones y componentes UI framework-agnósticos en HTML + CSS (JS solo cuando hace falta). Cero dependencias, cero build: copias, pegas y funciona en React, Vue, Svelte, Astro, Laravel, Django o un .html.',
+    desc: 'Creador y único mantenedor. 1.000+ componentes y animaciones UI framework-agnósticos en HTML + CSS (JS solo cuando hace falta), organizados en 81 categorías. Cero dependencias, cero build: copias, pegas y funciona en React, Vue, Svelte, Astro, Laravel, Django o un .html.',
     stats: [
-      { value: '800+', label: 'componentes' },
-      { value: '66', label: 'categorías' },
+      { value: '1.000+', label: 'componentes' },
+      { value: '81', label: 'categorías' },
       { value: 'MIT', label: 'licencia' },
     ],
     stack: ['Next.js', 'TypeScript', 'CSS', 'framework-agnostic'],

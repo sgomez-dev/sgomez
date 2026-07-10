@@ -13,11 +13,11 @@ export const IDENTITY = {
   givenName: "Santiago",
   familyName: "Gómez de la Torre Romero",
   url: "https://sgomez.dev",
-  jobTitle: "Software Engineer",
+  jobTitle: "Full-Stack Engineer (AI/LLM)",
   email: "contact@sgomez.dev",
   image: "https://sgomez.dev/Santiago_Gómez_de_la_Torre_Romero.png",
   description:
-    "Santiago Gómez de la Torre Romero — Software Engineer especializado en frontend moderno, cloud y producto. Creador de NudaUI. Developer en Evenbytes y organizador de GDG Santander.",
+    "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Developer en Evenbytes y organizador de GDG Santander.",
   location: { city: "Santander", region: "Cantabria", country: "ES" },
   // sameAs cluster — every profile/property that is "also him". This is what
   // merges the domains into a single entity graph.
@@ -30,16 +30,20 @@ export const IDENTITY = {
     "https://instagram.com/santigt1503",
   ],
   knowsAbout: [
-    "Software engineering",
-    "Frontend development",
+    "RAG (retrieval augmented generation)",
+    "Large Language Models (LLMs)",
+    "Embeddings",
+    "Semantic search",
+    "Evals",
+    "Prompt engineering",
+    "Full-stack development",
+    "Node.js",
     "React",
-    "Angular",
     "Next.js",
     "TypeScript",
-    "Node.js",
+    "Python",
+    "FastAPI",
     "Google Cloud",
-    "CSS animations",
-    "UI/UX",
     "Open source",
   ],
 } as const;
@@ -64,10 +68,15 @@ export function personGraph(): JsonLd {
       "@type": "ProfilePage",
       "@id": `${IDENTITY.url}/#profilepage`,
       url: IDENTITY.url,
-      name: `${IDENTITY.name} — Software Engineer`,
+      name: `${IDENTITY.name} — Full-Stack Engineer (AI/LLM)`,
       isPartOf: { "@id": WEBSITE },
       mainEntity: { "@id": PERSON },
+      primaryImageOfPage: IDENTITY.image,
       inLanguage: "es-ES",
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", "#about"],
+      },
     },
     {
       "@type": "Person",
@@ -103,10 +112,32 @@ export function personGraph(): JsonLd {
         "@type": "Organization",
         name: "Google Developer Group (GDG) Santander",
       },
+      hasOccupation: {
+        "@type": "Occupation",
+        name: "Full-Stack Engineer (AI/LLM)",
+        // O*NET-SOC code for Software Developers.
+        occupationalCategory: "15-1252.00",
+        skills:
+          "RAG, LLMs, embeddings, evals, prompt engineering, Node.js, React, Next.js, TypeScript, Python, FastAPI, Google Cloud",
+      },
+      homeLocation: {
+        "@type": "Place",
+        name: "Cantabria, España",
+      },
+      workLocation: {
+        "@type": "Place",
+        name: "Remote / Cantabria, España",
+      },
+      seeks: {
+        "@type": "Demand",
+        name: "Freelance and collaboration on AI/LLM and full-stack projects",
+      },
+      mainEntityOfPage: { "@id": `${IDENTITY.url}/#profilepage` },
       // The projects he authored — linking the Person to the project entities
       // (and their canonical domains) reinforces the whole cluster.
       subjectOf: [
         { "@id": `${IDENTITY.url}/#nudaui` },
+        { "@id": `${IDENTITY.url}/#nudaui-rag` },
         { "@id": `${IDENTITY.url}/#sgomez-cli` },
       ],
     },
@@ -119,10 +150,24 @@ export function personGraph(): JsonLd {
       url: "https://nudaui.dev",
       sameAs: ["https://github.com/sgomez-dev/nudaui"],
       description:
-        "Open-source library of 800+ copy-paste, framework-agnostic UI animations and components. Zero dependencies, zero build step.",
+        "Open-source library of 1,000+ copy-paste, framework-agnostic UI components and animations across 81 categories. Zero dependencies, zero build step.",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       isAccessibleForFree: true,
       license: "https://opensource.org/licenses/MIT",
+      author: { "@id": PERSON },
+      creator: { "@id": PERSON },
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": `${IDENTITY.url}/#nudaui-rag`,
+      name: "NudaUI Semantic Search (RAG)",
+      url: "https://blog.sgomez.dev/rag-busqueda-semantica-nudaui",
+      codeRepository: "https://github.com/sgomez-dev/nudaui-rag",
+      programmingLanguage: "Python",
+      runtimePlatform: "FastAPI",
+      description:
+        "Natural-language semantic search over 1,000+ NudaUI components. Full RAG pipeline built without RAG frameworks: Voyage embeddings, cosine retrieval, evaluation with a custom golden set, a FastAPI service and a live UI. Improved first-result precision from 67% to 80% (hit@1).",
+      about: { "@id": `${IDENTITY.url}/#nudaui` },
       author: { "@id": PERSON },
       creator: { "@id": PERSON },
     },
@@ -146,6 +191,75 @@ export function personGraph(): JsonLd {
       url: "https://blog.sgomez.dev",
       author: { "@id": PERSON },
       inLanguage: "es-ES",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${IDENTITY.url}/#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: IDENTITY.url },
+        { "@type": "ListItem", position: 2, name: "Proyectos", item: `${IDENTITY.url}/#projects` },
+        { "@type": "ListItem", position: 3, name: "Open Source", item: `${IDENTITY.url}/#open-source` },
+        { "@type": "ListItem", position: 4, name: "Contacto", item: `${IDENTITY.url}/#contact` },
+      ],
+    },
+    {
+      // FAQ = declarative Q&A that LLMs and search engines quote verbatim. Keep
+      // answers factual and self-contained so they can be cited out of context.
+      "@type": "FAQPage",
+      "@id": `${IDENTITY.url}/#faq`,
+      inLanguage: "es-ES",
+      isPartOf: { "@id": WEBSITE },
+      about: { "@id": PERSON },
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "¿Quién es Santiago Gómez de la Torre Romero?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Santiago Gómez de la Torre Romero es un full-stack engineer afincado en Cantabria, España. Lleva la IA a producción, no a demos. Es el creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Trabaja como developer en Evenbytes y organiza el GDG Santander.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Qué hace Santiago Gómez con IA y LLMs?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Construye sistemas de IA medibles en producción. Diseña pipelines de RAG con embeddings y retrieval, evalúa con golden sets propios e integra LLMs en producto real. Levantó la búsqueda semántica de NudaUI y subió la precisión del primer resultado del 67% al 80% (hit@1). También mantiene en producción un asistente conversacional B2B sobre la API de Claude.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Qué es NudaUI?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "NudaUI es una librería open-source creada y mantenida por Santiago Gómez. Reúne más de 1.000 componentes y animaciones UI copy-paste, framework-agnósticos, organizados en 81 categorías. No tiene dependencias ni paso de build y funciona en React, Vue, Svelte, Astro, Laravel, Django o un simple archivo HTML.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Qué es NudaUI Semantic Search (RAG)?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Es una búsqueda en lenguaje natural sobre más de 1.000 componentes de NudaUI. Es un pipeline de RAG completo construido sin frameworks de RAG: embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, un servicio en FastAPI y una UI en vivo.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Con qué tecnologías trabaja Santiago Gómez?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Trabaja con React, Next.js, Node.js, TypeScript, Python y FastAPI, además de Google Cloud. En IA usa RAG, embeddings, evals y prompt engineering.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Dónde está y está disponible para trabajar?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Santiago está en Cantabria, España, y trabaja en remoto. Está disponible para colaboraciones y proyectos freelance de IA/LLM y full-stack. Se le puede contactar por email en contact@sgomez.dev o por LinkedIn.",
+          },
+        },
+      ],
     },
   ];
 
