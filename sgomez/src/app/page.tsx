@@ -13,6 +13,7 @@ import PlaygroundButton from './components/PlaygroundButton'
 import BottomBar from './components/BottomBar'
 import DownloadCVButton from './components/DownloadCVButton'
 import MacInterlude from './components/MacInterlude'
+import SkyQuetzSection from './components/SkyQuetzSection'
 
 const INTERLUDE_STATS = {
   command: 'neofetch',
@@ -21,6 +22,7 @@ const INTERLUDE_STATS = {
 Role      Full-Stack Engineer (AI/LLM)
 Focus     Shipping AI to production
 Company   Evenbytes
+Venture   SkyQuetz Consulting (cofounder)
 Location  Santander, Spain
 Years     5+ in tech
 Projects  20+ shipped
@@ -49,6 +51,8 @@ export default function HomePage() {
       <MacInterlude {...INTERLUDE_STATS} />
       <div className="section-divider" />
       <ExperienceSection />
+      <div className="section-divider" />
+      <SkyQuetzSection />
       <div className="section-divider" />
       <TechnologiesSection />
       <MacInterlude {...INTERLUDE_PROJECTS} />
