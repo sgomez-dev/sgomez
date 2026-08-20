@@ -142,6 +142,39 @@ body::after {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 80px rgba(139, 92, 246, 0.04);
 }
 
+/* SkyQuetz — paleta de la marca cofundada, no la del portafolio.
+   El sitio entero va en violeta; esta seccion va en oro y esmeralda a
+   proposito, porque es OTRA entidad y no una seccion mas del portafolio. Los
+   valores son los mismos tokens que sirve skyquetz.com (--color-gold y
+   --color-emerald de su main.css), no una aproximacion a ojo. */
+:root {
+  --skyquetz-gold: #c8962b;
+  --skyquetz-gold-soft: #e0b661;
+  --skyquetz-emerald: #0e5c4c;
+}
+
+.skyquetz-card {
+  background: linear-gradient(160deg, rgba(14, 92, 76, 0.14) 0%, rgba(10, 10, 20, 0.6) 55%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(200, 150, 43, 0.18);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skyquetz-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(200, 150, 43, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 80px rgba(200, 150, 43, 0.06);
+}
+
+/* Filete dorado superior: el detalle que separa el bloque de SkyQuetz del
+   resto sin cambiar la retícula ni el ritmo de la página. */
+.skyquetz-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--skyquetz-gold), transparent);
+  opacity: 0.55;
+}
+
 /* Section divider */
 .section-divider {
   height: 1px;

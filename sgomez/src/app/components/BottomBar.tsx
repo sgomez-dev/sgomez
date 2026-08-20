@@ -41,14 +41,22 @@ export default function BottomBar() {
   if (!isVisible) return null
 
   return (
-    <motion.nav initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50" aria-label="Navegacion principal">
-      <div className="glass-strong rounded-full px-1.5 py-1.5 shadow-2xl shadow-black/40">
+    // Centrado con left-0/right-0 + justify-center, no con left-1/2 y
+    // -translate-x-1/2: un elemento fixed con solo `left: 50%` tiene como ancho
+    // disponible la MITAD de la pantalla, asi que la barra se quedaba sin sitio
+    // y los textos se partian en dos lineas ("Sobre / mi", "Blog / ↗") mucho
+    // antes de que la pantalla se quedase pequena de verdad. Con las dos
+    // anclas, la pastilla puede crecer hasta el ancho completo y sigue
+    // centrada. `whitespace-nowrap` es el cinturon: si algun dia no cabe,
+    // preferimos que se apriete el gap antes de romper una etiqueta.
+    <motion.nav initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="fixed bottom-5 left-0 right-0 z-50 flex justify-center px-3 pointer-events-none" aria-label="Navegacion principal">
+      <div className="glass-strong rounded-full px-1.5 py-1.5 shadow-2xl shadow-black/40 pointer-events-auto">
         <div className="flex items-center gap-0.5">
           {sections.map((section) => {
             const isActive = activeSection === section.id
             return (
               <button key={section.id} onClick={() => scrollToSection(section.id)}
-                className={`relative px-2.5 sm:px-3 md:px-4 py-2 rounded-full text-[10px] sm:text-xs font-medium transition-all duration-300 ${isActive ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+                className={`relative whitespace-nowrap px-2.5 sm:px-3 md:px-4 py-2 rounded-full text-[10px] sm:text-xs font-medium transition-all duration-300 ${isActive ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
                 aria-current={isActive ? 'true' : undefined}>
                 {isActive && <motion.div layoutId="active-nav" className="absolute inset-0 bg-violet-600/80 rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
                 <span className="relative z-10 hidden sm:inline">{section.label}</span>
@@ -58,9 +66,19 @@ export default function BottomBar() {
           })}
           <span className="mx-0.5 h-4 w-px bg-white/10" aria-hidden="true" />
           <a href="https://blog.sgomez.dev" target="_blank" rel="noopener noreferrer"
-            className="relative px-2.5 sm:px-3 md:px-4 py-2 rounded-full text-[10px] sm:text-xs font-medium text-gray-500 hover:text-gray-300 transition-all duration-300">
+            className="relative whitespace-nowrap px-2.5 sm:px-3 md:px-4 py-2 rounded-full text-[10px] sm:text-xs font-medium text-gray-500 hover:text-gray-300 transition-all duration-300">
             <span className="relative z-10 hidden sm:inline">Blog ↗</span>
             <span className="relative z-10 sm:hidden">B</span>
+          </a>
+          {/* SkyQuetz va aqui, con el blog, y no en `sections`: es una
+              propiedad externa, no un ancla de esta pagina. En movil se abrevia
+              "SQ" y no "S" porque "Sobre mi" y "Stack" ya se muestran como "S"
+              y una tercera colision dejaria la barra ilegible. En oro, el color
+              de esa marca. */}
+          <a href="https://skyquetz.com" target="_blank" rel="noopener noreferrer"
+            className="relative whitespace-nowrap px-2.5 sm:px-3 md:px-4 py-2 rounded-full text-[10px] sm:text-xs font-medium text-[#c8962b]/70 hover:text-[#e0b661] transition-all duration-300">
+            <span className="relative z-10 hidden sm:inline">SkyQuetz ↗</span>
+            <span className="relative z-10 sm:hidden">SQ</span>
           </a>
         </div>
       </div>

@@ -17,6 +17,8 @@ Mi formación se fortaleció en los programas FUNIBER y PROFER, experiencias que
 
 Ahora construyo IA que llega a producto, no a demos. Diseño sistemas que se pueden medir: pipelines de RAG con embeddings y retrieval por coseno, evaluación con golden sets propios y modelos de lenguaje integrados en el producto real. La búsqueda semántica de NudaUI responde en lenguaje natural sobre más de 1.000 componentes, y con evals propias subí la precisión del primer resultado del 67% al 80%. También mantengo en producción un asistente conversacional B2B construido sobre la API de Claude. Todo esto sin frameworks mágicos, entendiendo cada pieza del pipeline.
 
+En 2026 di el paso de dejar de construir solo para otros y cofundé SkyQuetz Consulting con tres socios más: una consultora de software a medida para negocios de habla hispana, en remoto y sin intermediarios. Llevo la ingeniería, y de ahí han salido dos productos propios: Synentria, un motor de auditoría SEO y GEO cuyos hallazgos son deterministas y no los decide ningún modelo, y Packatrack, un SaaS de conciliación de liquidaciones. Cofundar cambia el trabajo más de lo que parece: ya no basta con que el código esté bien, hay que decidir el alcance, hablar con el cliente y responder del resultado.
+
 También participo activamente en la comunidad: competí en Hack2Progress y organizo eventos con GDG Santander, donde conecto con desarrolladores, estudiantes y profesionales que comparten mi pasión por construir.
 
 Uno de mis proyectos más representativos es EliteEstate Manager, una solución inmobiliaria creada desde cero para resolver necesidades reales. Más que código, fue arquitectura, diseño, producto y visión end-to-end.
@@ -29,6 +31,51 @@ Y cuando no construyo para clientes, construyo para la comunidad: soy el creador
     { year: '2023', title: 'Soporte IT Universitario', desc: 'Técnico de Soporte IT en Universidad Europea del Atlántico. Portafolio 3D con Next.js y Framer Motion.' },
     { year: '2024', title: 'Comunidad & Eventos', desc: 'Organizador de GDG Santander. Participación en Hack2Progress. Consolidación como desarrollador full-stack.' },
     { year: '2025', title: 'Desarrollador Profesional', desc: 'EliteEstate Manager para Irma Romero. Developer en Evenbytes con Angular, Node.js y GCP. Múltiples recomendaciones profesionales.' },
+    { year: '2026', title: 'Cofundador de SkyQuetz', desc: 'Cofundé SkyQuetz Consulting con tres socios. Llevo la ingeniería y los productos propios: Synentria, motor de auditoría SEO y GEO, y Packatrack.' },
+  ],
+}
+
+/**
+ * SkyQuetz Consulting — la consultora que cofundé.
+ *
+ * Los datos de aquí son los MISMOS que declara skyquetz.com en su propio
+ * JSON-LD (fecha de fundación, número de socios, eslogan, productos). No se
+ * escriben "a ojo": si las dos webs dicen cosas distintas de la misma
+ * empresa, un motor no las resuelve como una sola entidad y el enlace entre
+ * los dos dominios deja de valer lo que tiene que valer.
+ */
+export const skyquetz = {
+  name: 'SkyQuetz Consulting',
+  role: 'Cofundador',
+  slogan: 'Estándar internacional, trato cercano.',
+  url: 'https://skyquetz.com',
+  cta: 'skyquetz.com',
+  logo: '/brand/skyquetz-logo.webp',
+  logoAlt: 'Logotipo de SkyQuetz Consulting',
+  desc: 'Consultora tecnológica que fundé en 2026 con tres socios más. Construimos software a medida para negocios de habla hispana: sistemas, plataformas, automatizaciones, tiendas y páginas web. Todo en remoto y sin intermediarios, porque cada proyecto lo lidera en persona el ingeniero que lo escribe.',
+  myPart: 'Mi parte es la ingeniería: la arquitectura, el código y los productos propios que salen de la casa.',
+  stats: [
+    { value: '2026', label: 'fundada' },
+    { value: '4', label: 'socios' },
+    { value: '100%', label: 'remoto' },
+  ],
+  products: [
+    {
+      name: 'Synentria',
+      tagline: 'Motor de auditoría SEO y GEO',
+      desc: 'Le pasas la URL de un sitio y devuelve hallazgos priorizados más parches aplicables. Ningún hallazgo lo decide un modelo de lenguaje: todos salen de comprobaciones deterministas, y un modelo solo redacta prosa alrededor de un hallazgo que ya existe. Escribí el motor.',
+      stack: ['TypeScript', 'Nuxt', 'Node', 'Evals'],
+      url: 'https://synentria.skyquetz.com',
+      cta: 'synentria.skyquetz.com',
+    },
+    {
+      name: 'Packatrack',
+      tagline: 'Conciliación de liquidaciones B2B',
+      desc: 'SaaS para operadores de última milla: calcula lo que una operación debía facturar a partir de sus rutas, tarifas e incidencias, lo compara con la liquidación que recibió del carrier y documenta cada diferencia con su dato de origen.',
+      stack: ['React', 'Docker', 'Jenkins', 'SonarQube'],
+      url: 'https://packatrack.skyquetz.com',
+      cta: 'packatrack.skyquetz.com',
+    },
   ],
 }
 
@@ -75,6 +122,7 @@ export const education = [
 ]
 
 export const experience = [
+  { title: 'SkyQuetz Consulting - Remoto (España y Latinoamérica)', role: 'Cofundador', desc: 'Cofundé SkyQuetz Consulting con tres socios más para llevar ingeniería de software con estándar internacional a negocios de habla hispana, en remoto y sin intermediarios. Llevo la parte técnica: arquitectura, desarrollo y decisiones de producto, además de los productos propios de la casa. De ahí salen Synentria, un motor de auditoría SEO y GEO cuyos hallazgos son deterministas y no los decide ningún modelo de lenguaje, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla. Aquí no solo escribo el código: decido el alcance, hablo con el cliente y respondo del resultado.', period: '2026 - Actualidad' },
   { title: 'Evenbytes - Santa Cruz de Bezana, Cantabria, España', role: 'Desarrollador de Software', desc: 'En Evenbytes desarrollo y mantengo aplicaciones web escalables utilizando Angular, Node.js y Google Cloud, construyendo interfaces fluidas, APIs eficientes y sistemas seguros basados en Datastore y autenticación corporativa. Participo activamente en decisiones de arquitectura, revisión de código y definición técnica, asegurando calidad y consistencia en cada entrega. Además de programar, optimizo rendimiento, mejoro procesos y colaboro estrechamente con product managers y arquitectos para transformar requisitos complejos en soluciones claras, funcionales y listas para producción.', period: 'Junio 2025 - Actualidad' },
   { title: 'Google Developer Group (GDG) Santander - Santander, Cantabria, España', role: 'Organizador', desc: 'Como organizador de GDG Santander coordino charlas, talleres y eventos que fortalecen la comunidad tecnológica local, trabajando con ponentes y expertos para ofrecer contenido relevante y práctico. Me encargo de la planificación, logística y difusión de cada actividad, impulsando la participación, el aprendizaje y el crecimiento continuo de la comunidad de desarrolladores y entusiastas de la tecnología.', period: 'Noviembre 2024 - Actualidad' },
   { title: 'Irma Romero Morales - Santander, Cantabria, España', role: 'Desarrollador Full-Stack Freelance', desc: 'Desarrollé EliteEstate Manager como freelance para Irma Romero Morales, una PWA completa para la gestión inmobiliaria. Me encargué del diseño, desarrollo y despliegue de la aplicación, creando una interfaz moderna y responsiva con funcionalidades como gestión de propiedades, zonas, agendas y citas. Fue un proyecto end-to-end que reforzó mis habilidades full stack, mi capacidad para trabajar con clientes y mi experiencia construyendo soluciones web reales orientadas a negocio.', period: 'Febrero 2025 - Junio 2025' },
