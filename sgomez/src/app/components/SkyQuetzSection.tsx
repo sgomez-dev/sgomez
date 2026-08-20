@@ -14,8 +14,12 @@ import { skyquetz } from '../content'
  * son enlaces reales, no adorno: skyquetz.com ya declara a Santiago como
  * cofundador con `sameAs: ['https://sgomez.dev']` en su JSON-LD, y hasta ahora
  * sgomez.dev no devolvía nada. Un enlace en un solo sentido lo tratan como una
- * afirmación sin confirmar; en los dos, como una relación entre entidades. El
- * reflejo en datos estructurados está en seo.ts (nodo #skyquetz-org).
+ * afirmación sin confirmar; en los dos, como una relación entre entidades.
+ *
+ * Relación, no identidad: este portafolio es una persona y SkyQuetz es una
+ * empresa de cuatro socios. El reflejo en datos estructurados (seo.ts, nodo
+ * #skyquetz-org) las declara como dos entidades unidas por founder/worksFor, y
+ * `skyquetz.com` NO entra en el `sameAs` de la persona.
  */
 export default function SkyQuetzSection() {
   return (

@@ -106,17 +106,32 @@ Detalle en `sgomez/src/app/layout.tsx` y en `sgomez/src/app/seo.ts`.
 
 ### Relación con SkyQuetz
 
-`seo.ts` declara un nodo `Organization` (`#skyquetz-org`) cuya `sameAs` apunta al
-`@id` que skyquetz.com usa para sí misma (`https://skyquetz.com/#org`), más
-`founder`/`member` de vuelta al `Person`. La otra mitad ya existía: skyquetz.com
-declara a Santiago como cofundador con `sameAs: ["https://sgomez.dev"]`.
+**Son dos entidades distintas y el grafo las mantiene separadas.** sgomez.dev es
+el perfil de una persona; SkyQuetz Consulting es una empresa en la que esa
+persona es uno de cuatro socios fundadores. Lo único que se declara entre las dos
+es la relación, nunca una identidad:
 
-Las dos mitades importan. Una afirmación en un solo sentido es una afirmación sin
-confirmar; con los dos dominios diciendo lo mismo y con los mismos
-identificadores, deja de ser un enlace y pasa a ser una relación entre entidades.
-Por eso los datos de `content/index.tsx` (fecha de fundación, número de socios,
-eslogan) tienen que ser los MISMOS que publica skyquetz.com: si se contradicen,
-el emparejamiento se rompe y no vale nada.
+- `Person` (`#person`) — el desarrollador. Su `sameAs` lleva **solo sus propias
+  propiedades**: nudaui.dev, el blog, GitHub, LinkedIn, npm. `skyquetz.com` NO
+  está ahí, y no debe estarlo: `sameAs` significa "esto también es él", y una
+  empresa con tres socios más no es él.
+- `Organization` (`#skyquetz-org`) — la empresa. Su `sameAs` apunta al `@id` que
+  skyquetz.com usa para sí misma (`https://skyquetz.com/#org`). Eso es lo único
+  que ese `sameAs` dice: que este nodo y ese nodo son la misma EMPRESA, no que
+  los dos dominios sean lo mismo.
+- Entre las dos, `worksFor` / `memberOf` / `affiliation` en un sentido y
+  `founder` / `member` en el otro. Una relación laboral y de fundación, que es
+  exactamente lo que hay.
+
+La otra mitad ya existía: skyquetz.com declara a Santiago como cofundador con
+`sameAs: ["https://sgomez.dev"]`. Las dos mitades importan, porque una afirmación
+en un solo sentido es una afirmación sin confirmar. Por eso los datos de
+`content/index.tsx` (fecha de fundación, número de socios, eslogan) tienen que
+ser los MISMOS que publica skyquetz.com: si se contradicen, el emparejamiento de
+la empresa se rompe.
+
+Y por eso **"cofundador", nunca "fundador"**: son cuatro socios. `/llms.txt` lo
+dice tres veces a propósito, porque es el error que un modelo comete solo.
 
 ---
 

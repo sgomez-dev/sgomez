@@ -17,8 +17,11 @@ const siteUrl = "https://sgomez.dev";
 const siteName = "Santiago Gómez de la Torre Romero - Full-Stack Engineer";
 const siteTitle =
   "Santiago Gómez de la Torre Romero — Full-Stack Engineer shipping AI to production";
+// Tiene que decir lo mismo que IDENTITY.description en seo.ts: son la meta
+// description y el JSON-LD de la MISMA pagina, y si una menciona el rol de
+// cofundador y la otra no, el propio documento se contradice.
 const siteDescription =
-  "Full-stack engineer building and shipping AI/LLM features to production. Creator of NudaUI (1,000+ components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.";
+  "Full-stack engineer building and shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (1,000+ components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.";
 
 export const metadata: Metadata = {
   title: {
@@ -80,6 +83,9 @@ export const metadata: Metadata = {
     "TypeScript",
     "Python",
     "NudaUI",
+    "SkyQuetz",
+    "SkyQuetz Consulting",
+    "cofundador",
     "Cantabria",
     "Spain",
     "remote",

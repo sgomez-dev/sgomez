@@ -55,10 +55,16 @@ export const IDENTITY = {
 /**
  * SkyQuetz Consulting — la organización que cofundó.
  *
- * `SKYQUETZ_ORG_ID` NO es un @id inventado para este sitio: es el @id que
- * skyquetz.com usa para sí misma en su propio @graph. Al declararlo aquí como
- * `sameAs` del nodo local, los dos grafos se resuelven como UNA organización
- * en vez de dos con el mismo nombre.
+ * DOS ENTIDADES, NO UNA. Este sitio es el perfil de una persona; SkyQuetz es una
+ * empresa con cuatro socios fundadores. Lo que se declara entre ellas es la
+ * relación (founder / worksFor / memberOf), nunca una identidad: `skyquetz.com`
+ * no aparece en el `sameAs` del Person, y no debe aparecer, porque ese campo
+ * significa "esto también es él".
+ *
+ * `orgId` NO es un @id inventado para este sitio: es el @id que skyquetz.com usa
+ * para sí misma en su propio @graph. Al declararlo como `sameAs` del nodo local
+ * de la ORGANIZACIÓN, los dos grafos coinciden en que hablan de la misma
+ * empresa, en vez de tratarla como dos compañías distintas con el mismo nombre.
  *
  * La otra mitad de la relación ya existía: skyquetz.com declara su nodo
  * `#founder` (Santiago, jobTitle "Cofundador") con `sameAs` apuntando a
@@ -209,10 +215,10 @@ export function personGraph(): JsonLd {
       ],
     },
     {
-      // La empresa cofundada. `sameAs` apunta al @id que skyquetz.com usa para
-      // sí misma: eso es lo que hace que los dos grafos hablen de la MISMA
-      // organización. `founder` la devuelve a la persona, cerrando el círculo
-      // que skyquetz.com ya abría desde su lado.
+      // La empresa cofundada, como entidad propia y separada de la persona.
+      // `sameAs` apunta al @id que skyquetz.com usa para sí misma: eso empareja
+      // esta ORGANIZACIÓN con esa, y nada más. `founder` la devuelve a la
+      // persona, cerrando el círculo que skyquetz.com ya abría desde su lado.
       "@type": ["Organization", "ProfessionalService"],
       "@id": SKYQUETZ_NODE,
       name: SKYQUETZ.name,
