@@ -86,6 +86,21 @@ export const SKYQUETZ = {
   // entre los dos idiomas.
   descriptionEn:
     "A software consultancy building custom systems, platforms, automations and integrations, plus websites, online stores, apps and maintenance. Fully remote, serving Spanish-speaking clients.",
+  /**
+   * Contacto y sede que ESTE sitio declara de la empresa.
+   *
+   * El email es el de Santiago, no un buzón corporativo inventado: es el que
+   * ya publica este dominio y es cierto que llega a un socio fundador. Si
+   * skyquetz.com publica algún día su propio `contactPoint`, este debe pasar a
+   * ser ese, no seguir siendo el personal.
+   *
+   * La dirección es de ciudad, sin calle ni número: la empresa es 100% remota
+   * y una calle inventada sería peor que una dirección incompleta, porque una
+   * dirección que no se puede verificar es justo lo contrario de lo que un
+   * agente viene a comprobar aquí.
+   */
+  contactEmail: "contact@sgomez.dev",
+  address: { city: "Santander", region: "Cantabria", country: "ES" },
   synentria: {
     name: "Synentria",
     url: "https://synentria.skyquetz.com",
@@ -169,7 +184,20 @@ export function personGraph(): JsonLd {
       // repetida en línea) para que la organización exista UNA vez en el grafo
       // y todo lo que la señale apunte al mismo sitio.
       worksFor: [
-        { "@type": "Organization", name: "Evenbytes", url: "https://evenbytes.com" },
+        {
+          "@type": "Organization",
+          name: "Evenbytes",
+          url: "https://evenbytes.com",
+          // La localidad no es un dato nuevo: la sección de experiencia ya la
+          // publica en texto. Aquí solo se declara en el formato que una
+          // máquina puede leer.
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Santa Cruz de Bezana",
+            addressRegion: "Cantabria",
+            addressCountry: "ES",
+          },
+        },
         { "@id": SKYQUETZ_NODE },
       ],
       affiliation: { "@id": SKYQUETZ_NODE },
@@ -179,7 +207,16 @@ export function personGraph(): JsonLd {
         url: "https://www.uneatlantico.es",
       },
       memberOf: [
-        { "@type": "Organization", name: "Google Developer Group (GDG) Santander" },
+        {
+          "@type": "Organization",
+          name: "Google Developer Group (GDG) Santander",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Santander",
+            addressRegion: "Cantabria",
+            addressCountry: "ES",
+          },
+        },
         { "@id": SKYQUETZ_NODE },
       ],
       hasOccupation: {
@@ -240,6 +277,27 @@ export function personGraph(): JsonLd {
         { "@type": "AdministrativeArea", name: "Latinoamérica" },
       ],
       knowsLanguage: ["Spanish", "English"],
+      // contactPoint + address: las dos propiedades con las que un agente
+      // comprueba que detrás del nombre hay una empresa a la que se puede
+      // escribir y un sitio donde opera. Sin ellas el nodo describe una marca,
+      // no un negocio.
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "business inquiries",
+          email: SKYQUETZ.contactEmail,
+          url: SKYQUETZ.url,
+          availableLanguage: ["Spanish", "English"],
+          areaServed: ["ES", "419"],
+        },
+      ],
+      email: SKYQUETZ.contactEmail,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: SKYQUETZ.address.city,
+        addressRegion: SKYQUETZ.address.region,
+        addressCountry: SKYQUETZ.address.country,
+      },
       owns: [
         { "@id": `${IDENTITY.url}/#synentria` },
         { "@id": `${IDENTITY.url}/#packatrack` },

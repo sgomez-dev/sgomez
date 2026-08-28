@@ -1,6 +1,15 @@
 # robots.txt — sgomez.dev
 # Full crawl access. AI/generative crawlers are explicitly welcome (GEO).
-# Factual on-ramp for LLMs: https://sgomez.dev/llms.txt
+#
+# On-ramps for agents, in the order they are useful:
+#   https://sgomez.dev/llms.txt      factual summary of the site
+#   https://sgomez.dev/agents.md     when to use this site, and how to call it
+#   https://sgomez.dev/openapi.json  OpenAPI 3.1 spec of the public API
+#   https://sgomez.dev/developers    developer portal
+#
+# Pages also answer `Accept: text/markdown` on their canonical URL, and every
+# path additionally serves a `.md` variant. Those variants are noindex on
+# purpose: they are the same content as their canonical HTML page.
 
 User-agent: *
 Allow: /

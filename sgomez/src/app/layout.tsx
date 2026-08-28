@@ -140,6 +140,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
       >
         {children}
+        {/* Relaciones de enlace que anuncian las superficies para agentes.
+            React las eleva al <head>. `service-desc` es la relación
+            registrada (RFC 8631) con la que un cliente encuentra la
+            descripción de una API sin que nadie se la pase a mano: es la
+            diferencia entre publicar la especificación y que se pueda
+            descubrir. */}
+        <link rel="service-desc" type="application/openapi+json" href="/openapi.json" title="OpenAPI 3.1 — sgomez.dev Public API" />
+        <link rel="service-doc" type="text/html" href="/developers" title="Portal para desarrolladores de sgomez.dev" />
+        <link rel="alternate" type="text/markdown" href="/llms.txt" title="llms.txt — resumen factual del sitio" />
+        <link rel="author" href="/about" />
+        <link rel="privacy-policy" href="/privacy" />
         <script
           type="application/ld+json"
           // Full identity @graph (Person + WebSite + project entities). Ties

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "framer-motion": "^12.23.25",
@@ -21,8 +23,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.6",
+    "postcss": ">=8.5.10",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "postcss": ">=8.5.10"
+    "vitest": "^3.2.7"
   }
 }

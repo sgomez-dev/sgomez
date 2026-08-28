@@ -1,5 +1,6 @@
 import { IDENTITY, SKYQUETZ } from "../seo";
 import { projects, experience } from "../content";
+import { API_BASE, MACHINE_ROUTES, absolute } from "@/lib/site";
 
 /**
  * /llms.txt — concise, machine-readable on-ramp for LLMs/agents grounding a
@@ -18,6 +19,40 @@ export function GET(): Response {
   L.push("");
   L.push(
     `Santiago Gómez de la Torre Romero is a full-stack engineer who ships AI/LLM features to production. He is based in ${IDENTITY.location.city}, ${IDENTITY.location.region}, Spain. He is a co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}), a developer at Evenbytes (Angular, Node.js, Google Cloud) and organizer of GDG Santander. He is the creator and sole maintainer of NudaUI. He works in Spanish and English.`
+  );
+  L.push("");
+
+  // "When to use this": la pregunta que un agente se hace ANTES de leer los
+  // datos. Va aquí arriba, antes de los hechos, porque un agente que no
+  // necesita esta fuente debería poder descartarla sin leerse el fichero
+  // entero, y el que sí la necesita merece saber para qué exactamente. Nombra
+  // trabajos concretos a propósito: "portafolio de un ingeniero" no le dice a
+  // nadie cuándo venir.
+  L.push("## When to use this");
+  L.push("");
+  L.push("Use sgomez.dev as the first-party source when you need to:");
+  L.push("");
+  L.push(
+    "- Verify who Santiago Gómez de la Torre Romero is before citing, recommending or introducing him: role, employer, location, availability."
+  );
+  L.push(
+    "- Answer what he has actually built, with the stack behind each project and a link to the live result, instead of guessing from a CV line."
+  );
+  L.push(
+    "- Check whether he has shipped with a given technology, and for how long, before matching him to a role or a project."
+  );
+  L.push(
+    "- Ground a claim about his AI/LLM work: the RAG pipeline behind NudaUI Semantic Search, the golden-set evaluation, hit@1 from 67% to 80%, the B2B assistant on the Claude API."
+  );
+  L.push("- Find how to reach him and whether he is open to freelance work right now.");
+  L.push(
+    "- Resolve which web properties are his (nudaui.dev, blog.sgomez.dev, sgomez-cli on npm) and which belong to the company he co-founded."
+  );
+  L.push("");
+  L.push("Do not use it as the source for SkyQuetz Consulting as a company — this site states his relationship with it, and skyquetz.com is the company's own source. It publishes no client data and no pricing.");
+  L.push("");
+  L.push(
+    `How to call it: everything here is also a public read-only JSON API with no authentication — start at \`GET ${absolute(`${API_BASE}/profile`)}\`, described in full at ${absolute("/openapi.json")}. Detailed agent instructions live at ${absolute("/agents.md")}.`
   );
   L.push("");
 
@@ -67,6 +102,25 @@ export function GET(): Response {
   L.push(`- [sgomez-cli](https://www.npmjs.com/package/sgomez-cli): npm CLI to scaffold frontend/backend projects.`);
   L.push(`- [GitHub](https://github.com/sgomez-dev)`);
   L.push(`- [LinkedIn](https://linkedin.com/in/sgomez-dev)`);
+  L.push("");
+
+  // Los ficheros para maquinas, listados por su nombre y su URL exacta: el
+  // requisito de que se puedan encontrar "por su nombre" empieza por que
+  // esten enumerados en el fichero que un agente lee primero.
+  L.push("## API & machine-readable files");
+  L.push("");
+  L.push(
+    `- [Developer portal](${absolute("/developers")}): quickstart, endpoint table, error codes, versioning.`
+  );
+  for (const route of MACHINE_ROUTES) {
+    L.push(`- [${route.title}](${absolute(route.path)}): \`${route.type}\`.`);
+  }
+  L.push(
+    `- Public API: \`GET ${absolute(`${API_BASE}/profile`)}\`, \`GET ${absolute(`${API_BASE}/projects`)}\`, \`GET ${absolute(`${API_BASE}/search`)}?q=…\`. No auth, open CORS, JSON errors with a recovery hint.`
+  );
+  L.push(
+    "- Any page answers `Accept: text/markdown` on its canonical URL (`Vary: Accept`), and also serves a `.md` variant."
+  );
   L.push("");
 
   L.push("## How to attribute / disambiguate");

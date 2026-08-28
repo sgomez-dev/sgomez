@@ -51,13 +51,24 @@ sgomez/
 ├── README.md               ← este archivo
 └── sgomez/                 ← proyecto Next.js
     ├── src/
-    │   └── app/
-    │       ├── components/
-    │       ├── content/
-    │       ├── lab/
-    │       ├── layout.tsx
-    │       ├── page.tsx
-    │       └── sitemap.ts
+    │   ├── app/
+    │   │   ├── about/  contact/  privacy/  developers/   ← páginas de contenido
+    │   │   ├── api/                                      ← API pública v1 + OpenAPI
+    │   │   ├── components/
+    │   │   ├── content/
+    │   │   ├── lab/
+    │   │   ├── agents.md/  llms.txt/  openapi.json/      ← ficheros para agentes
+    │   │   ├── layout.tsx
+    │   │   ├── not-found.tsx
+    │   │   ├── page.tsx
+    │   │   └── sitemap.ts
+    │   ├── lib/
+    │   │   ├── api/          ← datos, respuestas, errores y especificación
+    │   │   ├── content/      ← texto de las páginas, como datos
+    │   │   ├── markdown/     ← negociación de contenido y render markdown
+    │   │   └── site.ts       ← catálogo de rutas y constantes canónicas
+    │   └── proxy.ts          ← negociación Accept: text/markdown
+    ├── tests/                ← vitest
     ├── public/
     │   ├── CV_Santiago_Gómez_de_la_Torre_Romero.pdf
     │   ├── Santiago_Gómez_de_la_Torre_Romero.png
@@ -65,6 +76,7 @@ sgomez/
     │   ├── lab/
     │   └── robots.txt
     ├── next.config.ts
+    ├── vercel.json
     ├── package.json
     └── tsconfig.json
 ```
@@ -89,6 +101,7 @@ Scripts disponibles:
 | `npm run build` | Build de producción |
 | `npm run start` | Sirve el build de producción |
 | `npm run lint` | ESLint |
+| `npm test` | Tests (vitest) |
 
 ---
 
@@ -134,6 +147,35 @@ Y por eso **"cofundador", nunca "fundador"**: son cuatro socios. `/llms.txt` lo
 dice tres veces a propósito, porque es el error que un modelo comete solo.
 
 ---
+
+## Para agentes
+
+La web se publica dos veces: en HTML para una persona y en formato legible por
+máquina para un agente. Las dos salidas se generan del MISMO dato (`content/` y
+`seo.ts`), así que no pueden contradecirse.
+
+| Superficie | Qué es |
+|---|---|
+| `/llms.txt` | Resumen factual del sitio, con una sección **when to use this**. |
+| `/agents.md` | Instrucciones de uso: cuándo es esta la fuente correcta y cómo llamarla. |
+| `/openapi.json`, `/api/openapi.yaml` | Especificación OpenAPI 3.1 de la API pública. |
+| `/api/v1/*` | API REST de solo lectura, sin autenticación y con CORS abierto. |
+| `/developers` | Portal: quickstart, tabla de endpoints, errores, versionado. |
+| `Accept: text/markdown` | Cualquier página responde en markdown en su URL canónica. También sirve `/about.md`. |
+
+Tres decisiones que conviene no deshacer sin querer:
+
+- **Los errores de `/api` son siempre JSON**, incluidos los 404 y los 405. El
+  comodín `api/[...path]` existe justo para eso: sin él, un endpoint mal
+  escrito devolvería la página de error en HTML, que un agente no sabe leer.
+- **El 404 lleva cuerpo.** Publica el mapa del sitio (páginas, ficheros para
+  máquinas y puntos de entrada de la API) en HTML y en markdown. Un 404 vacío
+  obliga al agente a adivinar la siguiente URL.
+- **`Vary: Accept` en las páginas lo fija `vercel.json`.** Next 16 sobreescribe
+  esa cabecera al final del pipeline, así que ni el proxy ni `headers()` de
+  `next.config.ts` bastan. Los tres declaran el mismo valor —con los cuatro
+  tokens de RSC dentro, o se rompe el prefetch— y hay un test que comprueba que
+  no se separan.
 
 ## Ecosistema
 
