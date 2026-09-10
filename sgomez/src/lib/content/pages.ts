@@ -1,4 +1,4 @@
-import { IDENTITY, SKYQUETZ } from "@/app/seo";
+import { CLAUDE_CANVAS, IDENTITY, SKYQUETZ } from "@/app/seo";
 import { about } from "@/app/content";
 import { API_BASE, SITE_URL } from "@/lib/site";
 
@@ -78,6 +78,10 @@ export const aboutPage: StaticPage = {
         {
           kind: "paragraph",
           text: "Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y único mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando. Además organizo eventos con GDG Santander y he competido en Hack2Progress.",
+        },
+        {
+          kind: "paragraph",
+          text: `El tercero es ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), un plugin de Claude Code que le da al modelo una pantalla propia: abre un panel interactivo de terminal junto a la conversación —eliges un fichero, apruebas hunk a hunk un diff, rellenas un formulario— y tu respuesta le vuelve como un valor exacto en vez de prosa que tenga que interpretar. Son nueve tipos de panel, un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Partí del proof of concept de ${CLAUDE_CANVAS.basedOnAuthor} (${CLAUDE_CANVAS.basedOn}), que lo publicó como prueba de concepto sin soporte, y lo llevé a algo que aguanta el uso diario. Lo digo siempre que lo cuento: la idea es suya, la licencia es MIT y conserva su copyright. Es un proyecto mío, no un producto de ${SKYQUETZ.name}.`,
         },
       ],
     },

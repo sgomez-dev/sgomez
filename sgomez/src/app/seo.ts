@@ -27,6 +27,7 @@ export const IDENTITY = {
   // merges the domains into a single entity graph.
   sameAs: [
     "https://nudaui.dev",
+    "https://claude-canvas.sgomez.dev",
     "https://blog.sgomez.dev",
     "https://github.com/sgomez-dev",
     "https://linkedin.com/in/sgomez-dev",
@@ -49,6 +50,9 @@ export const IDENTITY = {
     "FastAPI",
     "Google Cloud",
     "Open source",
+    "Developer tooling",
+    "Claude Code plugins",
+    "Terminal user interfaces (TUI)",
   ],
 } as const;
 
@@ -113,6 +117,45 @@ export const SKYQUETZ = {
     description:
       "SaaS B2B de conciliación de liquidaciones para operadores de última milla: calcula lo que una operación debía facturar a partir de sus rutas, tarifas e incidencias, lo compara con la liquidación recibida del carrier y documenta cada diferencia con su dato de origen.",
   },
+} as const;
+
+/**
+ * Claude Canvas — el proyecto open source, y por qué NO cuelga de SkyQuetz.
+ *
+ * Es suyo, no de la empresa. El repositorio está bajo su cuenta personal, la
+ * licencia es MIT y no hay cliente detrás. SkyQuetz `owns` Synentria y
+ * Packatrack porque esos dos SÍ son productos de la casa; colgar de ahí un
+ * proyecto personal afirmaría que la empresa es su proveedora, y eso es falso
+ * en el único sentido que un grafo entiende. Aquí la única relación declarada
+ * es `author`/`creator` desde la persona, igual que NudaUI y el CLI.
+ *
+ * `basedOn` no es cortesía: esto es un fork del proof of concept de David
+ * Siegel, el LICENSE conserva su copyright y tanto el README como la landing
+ * lo dicen de entrada. Un grafo que se atribuyera la autoría entera
+ * contradiría a las dos fuentes que enlaza, y una contradicción comprobable
+ * es exactamente lo que hunde una cita.
+ *
+ * Los números son los que el repositorio sostiene hoy. `tests` va como "600+"
+ * a propósito y no como una cifra exacta: una suite crece, y un dato que solo
+ * es cierto la semana que se escribe es peor que uno redondeado a la baja.
+ */
+export const CLAUDE_CANVAS = {
+  name: "Claude Canvas",
+  url: "https://claude-canvas.sgomez.dev",
+  repo: "https://github.com/sgomez-dev/claude-canvas",
+  basedOn: "https://github.com/dvdsgl/claude-canvas",
+  basedOnAuthor: "David Siegel",
+  license: "https://opensource.org/licenses/MIT",
+  install: "/plugin marketplace add sgomez-dev/claude-canvas",
+  kinds: 9,
+  tests: "600+",
+  description:
+    "Plugin de Claude Code que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación, tú actúas en él y tu respuesta vuelve como un valor exacto en vez de prosa que el modelo tiene que interpretar. Nueve tipos de panel —picker, form, table, image, diff, dashboard, calendar, document y flight—, transporte propio por socket local y CI en Linux, macOS y Windows.",
+  descriptionEn:
+    "A Claude Code plugin that gives Claude a display of its own: it opens an interactive terminal pane beside the conversation, you act in it, and your answer comes back as an exact value instead of prose the model has to interpret. Nine canvas kinds (picker, form, table, image, diff, dashboard, calendar, document, flight), one length-prefixed JSON transport over a local socket, and CI on Linux, macOS and Windows.",
+  /** Lo que un modelo se lleva mal si nadie se lo dice. */
+  attribution:
+    "It is a fork of David Siegel's dvdsgl/claude-canvas, substantially extended and MIT licensed with the original copyright retained. It is Santiago's personal open-source project, not a SkyQuetz product.",
 } as const;
 
 /**
@@ -245,6 +288,7 @@ export function personGraph(): JsonLd {
       subjectOf: [
         { "@id": `${IDENTITY.url}/#nudaui` },
         { "@id": `${IDENTITY.url}/#nudaui-rag` },
+        { "@id": `${IDENTITY.url}/#claude-canvas` },
         { "@id": `${IDENTITY.url}/#sgomez-cli` },
         { "@id": SKYQUETZ_NODE },
         { "@id": `${IDENTITY.url}/#synentria` },
@@ -369,6 +413,47 @@ export function personGraph(): JsonLd {
       creator: { "@id": PERSON },
     },
     {
+      // Dos tipos a la vez, y los dos son ciertos: se instala y se usa como
+      // aplicación, y lo que se publica es el código. Un solo tipo dejaría
+      // fuera la mitad de las propiedades que un agente viene a comprobar
+      // aquí (`codeRepository` y `runtimePlatform` no existen en
+      // SoftwareApplication; `softwareRequirements` no existe en
+      // SoftwareSourceCode).
+      "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+      "@id": `${IDENTITY.url}/#claude-canvas`,
+      name: CLAUDE_CANVAS.name,
+      alternateName: "claude-canvas",
+      applicationCategory: "DeveloperApplication",
+      applicationSubCategory: "Claude Code plugin / terminal UI toolkit",
+      url: CLAUDE_CANVAS.url,
+      sameAs: [CLAUDE_CANVAS.repo],
+      codeRepository: CLAUDE_CANVAS.repo,
+      description: CLAUDE_CANVAS.descriptionEn,
+      programmingLanguage: ["TypeScript", "TSX"],
+      runtimePlatform: "Bun",
+      // Esta es la pregunta que la gente falla, así que se declara en vez de
+      // dejarla en la prosa: tener tmux instalado no basta, tiene que estar
+      // corriendo (o ser Windows Terminal).
+      softwareRequirements: "Bun; an active tmux 3.1+ session or Windows Terminal",
+      operatingSystem: "Linux, macOS, Windows",
+      license: CLAUDE_CANVAS.license,
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      // El fork, declarado en el grafo y no solo en el texto. `isBasedOn`
+      // existe justo para esto, y omitirlo sería la única afirmación de este
+      // documento que sus propias fuentes desmienten.
+      isBasedOn: {
+        "@type": "SoftwareSourceCode",
+        name: "dvdsgl/claude-canvas",
+        url: CLAUDE_CANVAS.basedOn,
+        codeRepository: CLAUDE_CANVAS.basedOn,
+        author: { "@type": "Person", name: CLAUDE_CANVAS.basedOnAuthor },
+      },
+      author: { "@id": PERSON },
+      creator: { "@id": PERSON },
+      maintainer: { "@id": PERSON },
+    },
+    {
       "@type": "SoftwareApplication",
       "@id": `${IDENTITY.url}/#sgomez-cli`,
       name: "sgomez-cli",
@@ -447,6 +532,14 @@ export function personGraph(): JsonLd {
           acceptedAnswer: {
             "@type": "Answer",
             text: "Es una búsqueda en lenguaje natural sobre más de 1.000 componentes de NudaUI. Es un pipeline de RAG completo construido sin frameworks de RAG: embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, un servicio en FastAPI y una UI en vivo.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Qué es Claude Canvas?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Claude Canvas es un plugin open source de Claude Code, creado y mantenido por Santiago Gómez, que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación y la respuesta de la persona vuelve al modelo como un valor exacto —qué fichero, qué hunks de un diff, qué campos de un formulario— en vez de prosa que tenga que interpretar. Trae nueve tipos de panel (picker, form, table, image, diff, dashboard, calendar, document y flight), un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Es MIT y es un fork del proof of concept de David Siegel (dvdsgl/claude-canvas), ampliado a fondo y conservando su copyright. Es un proyecto personal de Santiago, no un producto de SkyQuetz Consulting.",
           },
         },
         {

@@ -88,6 +88,20 @@ describe("respuestas correctas", () => {
     expect(second.data).not.toEqual(first.data);
   });
 
+  it("publica Claude Canvas como proyecto, con su repositorio y su stack", async () => {
+    // Es la superficie por la que un agente lo pide después de encontrarlo en
+    // /llms.txt, así que el slug forma parte del contrato, no es un detalle.
+    const response = await project(request("/api/v1/projects/claude-canvas"), {
+      params: Promise.resolve({ slug: "claude-canvas" }),
+    });
+    expect(response.status).toBe(200);
+    const payload = await body(response);
+    const data = payload.data as unknown as { title: string; stack: string[]; url: string };
+    expect(data.title).toBe("Claude Canvas");
+    expect(data.url).toBe("https://claude-canvas.sgomez.dev");
+    expect(data.stack).toContain("Bun");
+  });
+
   it("devuelve un proyecto por su slug", async () => {
     const slug = getProjects()[0].slug;
     const response = await project(request(`/api/v1/projects/${slug}`), {

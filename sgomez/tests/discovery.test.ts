@@ -5,7 +5,7 @@ import { GET as agentsMd } from "@/app/agents.md/route";
 import { GET as openApiJson } from "@/app/openapi.json/route";
 import { GET as openApiYaml } from "@/app/api/openapi.yaml/route";
 import sitemap from "@/app/sitemap";
-import { personGraph } from "@/app/seo";
+import { CLAUDE_CANVAS, personGraph } from "@/app/seo";
 import { HTML_ROUTES, MACHINE_ROUTES, PAGE_VARY } from "@/lib/site";
 
 type Node = Record<string, unknown>;
@@ -159,6 +159,80 @@ describe("JSON-LD de la organización", () => {
     expect((evenbytes.address as Node).addressLocality).toBe("Santa Cruz de Bezana");
     const gdg = (person.memberOf as Node[])[0];
     expect((gdg.address as Node).addressLocality).toBe("Santander");
+  });
+});
+
+describe("Claude Canvas en el grafo", () => {
+  const person = nodeOfType("Person");
+  const canvas = graph.find((node) => node["@id"] === "https://sgomez.dev/#claude-canvas");
+
+  it("existe como nodo propio y la persona lo firma", () => {
+    expect(canvas).toBeDefined();
+    if (!canvas) return;
+    expect(canvas.author).toEqual({ "@id": "https://sgomez.dev/#person" });
+    expect(canvas.creator).toEqual({ "@id": "https://sgomez.dev/#person" });
+    expect(canvas.codeRepository).toBe(CLAUDE_CANVAS.repo);
+    expect(canvas.license).toBe(CLAUDE_CANVAS.license);
+    expect(person.subjectOf).toContainEqual({ "@id": "https://sgomez.dev/#claude-canvas" });
+  });
+
+  it("declara el fork, que es la mitad de la atribución", () => {
+    // El README del repositorio acredita el original en su primer párrafo y
+    // el LICENSE conserva su copyright. Un grafo que se atribuyera la autoría
+    // entera contradiría a las dos fuentes que enlaza.
+    const basedOn = canvas?.isBasedOn as Node | undefined;
+    expect(basedOn?.url).toBe(CLAUDE_CANVAS.basedOn);
+    expect((basedOn?.author as Node)?.name).toBe(CLAUDE_CANVAS.basedOnAuthor);
+  });
+
+  it("NO cuelga de SkyQuetz: es un proyecto de la persona, no de la empresa", () => {
+    // Lo que esta prueba protege es una afirmación, no un campo. La empresa
+    // `owns` Synentria y Packatrack porque son suyos; si alguien añadiera
+    // aquí este nodo, el grafo pasaría a decir que un proyecto personal es
+    // producto de la consultora.
+    const organization = nodeOfType("ProfessionalService");
+    expect(organization.owns).not.toContainEqual({ "@id": "https://sgomez.dev/#claude-canvas" });
+    expect(canvas?.provider).toBeUndefined();
+    expect(canvas?.publisher).toBeUndefined();
+  });
+
+  it("los tipos de panel que se cuentan son los que se nombran", () => {
+    // `kinds` sale en las estadísticas de la home y las descripciones los
+    // enumeran una a una: si alguien añade un canvas al plugin y toca solo
+    // uno de los dos sitios, la web se contradice consigo misma.
+    const kinds = [
+      "picker",
+      "form",
+      "table",
+      "image",
+      "diff",
+      "dashboard",
+      "calendar",
+      "document",
+      "flight",
+    ];
+    expect(CLAUDE_CANVAS.kinds).toBe(kinds.length);
+    for (const kind of kinds) {
+      expect(CLAUDE_CANVAS.description, kind).toContain(kind);
+      expect(CLAUDE_CANVAS.descriptionEn, kind).toContain(kind);
+    }
+  });
+
+  it("/llms.txt lo publica con su origen y sin confundir de dueño", async () => {
+    const text = await llmsTxt().text();
+    expect(text).toContain("## Open source");
+    expect(text).toContain(CLAUDE_CANVAS.url);
+    expect(text).toContain(CLAUDE_CANVAS.repo);
+    expect(text).toContain(CLAUDE_CANVAS.basedOn);
+    expect(text).toMatch(/not a SkyQuetz Consulting product/);
+  });
+
+  it("/agents.md avisa de los dos errores que un modelo comete solo", async () => {
+    const text = await agentsMd().text();
+    // Atribuírselo entero, o atribuírselo a la empresa.
+    expect(text).toContain(CLAUDE_CANVAS.basedOn);
+    expect(text).toMatch(/is a fork/);
+    expect(text).toMatch(/is his, not SkyQuetz Consulting's/);
   });
 });
 
