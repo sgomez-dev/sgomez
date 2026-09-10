@@ -1,5 +1,7 @@
 // src/content/index.ts
 
+import { CLAUDE_CANVAS } from '../seo'
+
 export const hero = {
   name: 'Santiago Gómez de la Torre Romero',
   title: 'Full-Stack Engineer | AI/LLM en producción | Creador de NudaUI',
@@ -23,7 +25,7 @@ También participo activamente en la comunidad: competí en Hack2Progress y orga
 
 Uno de mis proyectos más representativos es EliteEstate Manager, una solución inmobiliaria creada desde cero para resolver necesidades reales. Más que código, fue arquitectura, diseño, producto y visión end-to-end.
 
-Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando.
+Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando. En 2026 se sumó Claude Canvas, un plugin de Claude Code que le da al modelo una pantalla propia: un panel de terminal interactivo donde eliges, apruebas o rellenas, y tu respuesta le vuelve como un valor exacto. Partí del proof of concept de David Siegel y lo llevé a algo que aguanta el uso diario: una sola capa de IPC donde había dos incompatibles, cuatro primitivas reutilizables, composición, más de 600 tests y CI en Linux, macOS y Windows donde no había ni un test.
 `,
   timeline: [
     { year: '2021', title: 'Inicios en el Desarrollo', desc: 'Comienzo en FUNIBER como parte del equipo de redacción técnica. Primeros proyectos personales con React y PWAs.' },
@@ -31,7 +33,7 @@ Y cuando no construyo para clientes, construyo para la comunidad: soy el creador
     { year: '2023', title: 'Soporte IT Universitario', desc: 'Técnico de Soporte IT en Universidad Europea del Atlántico. Portafolio 3D con Next.js y Framer Motion.' },
     { year: '2024', title: 'Comunidad & Eventos', desc: 'Organizador de GDG Santander. Participación en Hack2Progress. Consolidación como desarrollador full-stack.' },
     { year: '2025', title: 'Desarrollador Profesional', desc: 'EliteEstate Manager para Irma Romero. Developer en Evenbytes con Angular, Node.js y GCP. Múltiples recomendaciones profesionales.' },
-    { year: '2026', title: 'Cofundador de SkyQuetz', desc: 'Cofundé SkyQuetz Consulting con tres socios. Llevo la ingeniería y los productos propios: Synentria, motor de auditoría SEO y GEO, y Packatrack.' },
+    { year: '2026', title: 'Cofundador de SkyQuetz', desc: 'Cofundé SkyQuetz Consulting con tres socios. Llevo la ingeniería y los productos propios: Synentria, motor de auditoría SEO y GEO, y Packatrack. En paralelo publico Claude Canvas, un plugin open source que le da a Claude Code una pantalla propia.' },
   ],
 }
 
@@ -103,6 +105,7 @@ export const certifications = [
 ];
 
 export const projects = [
+  { title: 'Claude Canvas', desc: `${CLAUDE_CANVAS.description} Es un fork del proof of concept de David Siegel, ampliado a fondo: una sola capa de IPC donde había dos incompatibles, primitivas reutilizables, composición, más de 600 tests y CI en tres sistemas operativos donde no había ninguno.`, stack: 'TypeScript, Bun, React, Ink, tmux', link: 'https://claude-canvas.sgomez.dev' },
   { title: 'NudaUI Semantic Search (RAG)', desc: 'Búsqueda en lenguaje natural sobre 1.000+ componentes de NudaUI. Pipeline de RAG completo, sin frameworks de RAG: embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, servicio en FastAPI y UI en vivo. Subí la precisión del primer resultado del 67% al 80% (hit@1) y reporté hasta la categoría que empeoró.', stack: 'RAG, Embeddings, Python, FastAPI, Evals', link: 'https://blog.sgomez.dev/rag-busqueda-semantica-nudaui' },
   { title: 'NudaUI', desc: 'Librería open-source de 1.000+ componentes y animaciones UI copy-paste, framework-agnósticos (HTML + CSS, JS solo cuando hace falta), organizados en 81 categorías. Cero dependencias, cero build. Creador y único mantenedor.', stack: 'Next.js, TypeScript, CSS, framework-agnostic', link: 'https://nudaui.dev' },
   { title: 'EliteEstate Manager', desc: 'PWA de gestión inmobiliaria completa con autenticación, propiedades, citas, zonas y panel de administración. Proyecto end-to-end para cliente real.', stack: 'React, Vite, Firebase, TailwindCSS', link: 'https://elite-estate-manager.vercel.app/' },

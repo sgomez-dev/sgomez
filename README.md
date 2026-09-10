@@ -32,6 +32,7 @@ La home compone, en orden:
 - `SkyQuetzSection` — la consultora cofundada, con sus dos productos propios.
 - `TechnologiesSection` — stack y herramientas.
 - `ProjectsSection` — proyectos destacados con enlaces.
+- `OpenSourceSection` — lo open source, con Claude Canvas destacado.
 - `CertificationsSection` — 18+ certificaciones.
 - `RecommendationsSection` — recomendaciones de compañeros y clientes.
 - `EducationSection` — formación.
@@ -117,6 +118,26 @@ Scripts disponibles:
 
 Detalle en `sgomez/src/app/layout.tsx` y en `sgomez/src/app/seo.ts`.
 
+### Proyectos open source en el grafo
+
+Cada proyecto propio es un nodo con su `@id`, y la persona lo firma con
+`author`/`creator`. Dos reglas que ya han hecho falta:
+
+- **Un proyecto personal no cuelga de SkyQuetz.** La empresa `owns` Synentria y
+  Packatrack porque son productos de la casa. Claude Canvas está bajo la cuenta
+  personal, es MIT y no tiene cliente detrás: si se colgara del nodo de la
+  empresa, el grafo afirmaría que la consultora es su proveedora. Hay un test
+  que lo impide.
+- **Un fork se declara como fork.** El nodo de Claude Canvas lleva `isBasedOn`
+  apuntando al repositorio de David Siegel, y /llms.txt y /agents.md lo repiten
+  en prosa. El README del proyecto acredita el original en su primer párrafo y
+  su LICENSE conserva el copyright: un grafo que se atribuyera la autoría
+  entera contradiría a las dos fuentes que enlaza, y una contradicción que
+  cualquiera puede comprobar es lo que hunde una cita.
+
+Los datos del proyecto viven UNA vez, en `CLAUDE_CANVAS` (`seo.ts`), y de ahí
+salen el JSON-LD, /llms.txt, la carta de la home y la entrada de `projects`.
+
 ### Relación con SkyQuetz
 
 **Son dos entidades distintas y el grafo las mantiene separadas.** sgomez.dev es
@@ -185,6 +206,9 @@ Este repo es la **landing**. Otros proyectos relacionados:
 - [`skyquetz.com`](https://skyquetz.com) — la consultora cofundada (repo independiente),
   con [`synentria.skyquetz.com`](https://synentria.skyquetz.com) y
   [`packatrack.skyquetz.com`](https://packatrack.skyquetz.com) como productos propios.
+- [`claude-canvas.sgomez.dev`](https://claude-canvas.sgomez.dev) — Claude Canvas, el plugin
+  open source de Claude Code (repo independiente:
+  [`sgomez-dev/claude-canvas`](https://github.com/sgomez-dev/claude-canvas)).
 - Otros proyectos enlazados desde la sección `Projects` de la home.
 
 ---

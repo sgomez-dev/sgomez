@@ -46,7 +46,8 @@ Status    Available ✓`,
 
 const INTERLUDE_PROJECTS = {
   command: 'ls ~/projects --sort=impact',
-  output: `drwxr-xr-x  EliteEstate-Manager/    ★★★★★
+  output: `drwxr-xr-x  claude-canvas/          ★★★★★
+drwxr-xr-x  EliteEstate-Manager/    ★★★★★
 drwxr-xr-x  GeekLab/                ★★★★★
 drwxr-xr-x  SyncCart/               ★★★★☆
 drwxr-xr-x  Sortlab/               ★★★★☆
