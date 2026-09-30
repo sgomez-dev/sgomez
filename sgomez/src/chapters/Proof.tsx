@@ -75,7 +75,7 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
                         <>
                           <p className="mb-3 text-[length:var(--step--1)] uppercase tracking-[0.12em] text-[color:var(--text-2)]">{v.translatedLabel}</p>
                           <Paragraphs text={v.translation} lang="en" />
-                          <details className="mt-5">
+                          <details className="group/orig mt-5">
                             <summary className={`inline-flex min-h-11 cursor-pointer items-center text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline ${focus}`}>
                               {d.recommendations.readOriginal}
                             </summary>

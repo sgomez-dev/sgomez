@@ -62,7 +62,7 @@ export default async function LatestPosts({ lang }: { lang: Lang }) {
               {post.coverImage ? (
                 <div className="relative aspect-video overflow-hidden bg-[color:var(--bg-3)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={post.coverImage} alt="" loading="eager" decoding="async" className="h-full w-full object-cover" />
+                  <img src={post.coverImage} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                 </div>
               ) : null}
               <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">

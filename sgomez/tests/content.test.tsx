@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { STATIC_PAGES, aboutPage, contactPage, developersPage, privacyPage } from "@/lib/content/pages";
+import { renderToStaticMarkup } from "react-dom/server";
+import StaticPageLayout from "@/components/StaticPageLayout";
+import NotFoundBody from "@/app/components/NotFoundBody";
+import { findStaticPage, staticPages, STATIC_PAGES, aboutPage, contactPage, developersPage, privacyPage } from "@/lib/content/pages";
 import { renderPageMarkdown } from "@/lib/markdown/render";
 import { MARKDOWN_PATHS, markdownForPath, notFoundMarkdown } from "@/lib/markdown/documents";
 import { tokenizeInline } from "@/lib/content/inline";
@@ -161,7 +164,7 @@ describe("marcado en línea", () => {
   });
 });
 
-import { staticPages, findStaticPage } from "@/lib/content/pages";
+
 
 describe("páginas en inglés", () => {
   it("cada página española tiene su gemela inglesa bajo /en", () => {
@@ -196,5 +199,34 @@ describe("páginas en inglés", () => {
     expect(markdownForPath("/en")).toContain("## Projects");
     expect(markdownForPath("/en")).toContain("Canonical URL: https://sgomez.dev/en");
     expect(notFoundMarkdown("/en/x", "en")).toContain("`/en/x`");
+  });
+});
+
+describe("diseño de las páginas de contenido", () => {
+  it("las tablas y el código se desplazan dentro de su región, no la página", () => {
+    const html = renderToStaticMarkup(<StaticPageLayout page={findStaticPage("/en/developers")!} />);
+    expect(html).toMatch(/role="region"[^>]*tabindex="0"|tabindex="0"[^>]*role="region"/i);
+    expect(html).toContain('href="/en/developers.md"');
+  });
+
+  it("el lead es la frase de respuesta y no hay segundo pie de página", () => {
+    const page = findStaticPage("/privacy")!;
+    const html = renderToStaticMarkup(<StaticPageLayout page={page} />);
+    expect(html).toContain("<p data-answer");
+    expect(html).not.toContain("<footer");
+    expect(html.match(/<h1/g)).toHaveLength(1);
+  });
+
+  it("el 404 inglés enlaza los ficheros /en y tiene un solo h1 en la página", () => {
+    const html = renderToStaticMarkup(
+      <>
+        <NotFoundBody lang="es" />
+        <NotFoundBody lang="en" />
+      </>,
+    );
+    expect(html).toContain('href="/en/llms.txt"');
+    expect(html).toContain('href="/en/agents.md"');
+    expect(html).toContain("OpenAPI 3.1 specification");
+    expect(html.match(/<h1/g)).toHaveLength(1);
   });
 });

@@ -37,49 +37,70 @@ export const MACHINE_ROUTES = [
   {
     path: "/llms.txt",
     title: "llms.txt",
-    description: "Resumen factual del sitio, con la sección de cuándo usarlo.",
+    description: {
+      es: "Resumen factual del sitio, con la sección de cuándo usarlo.",
+      en: "Factual summary of the site, including when to use it.",
+    },
     type: "text/markdown",
     markdown: true,
   },
   {
     path: "/agents.md",
     title: "agents.md",
-    description: "Instrucciones para agentes: cuándo venir aquí y cómo llamar al sitio.",
+    description: {
+      es: "Instrucciones para agentes: cuándo venir aquí y cómo llamar al sitio.",
+      en: "Instructions for agents: when to come here and how to call the site.",
+    },
     type: "text/markdown",
     markdown: true,
   },
   {
     path: "/openapi.json",
     title: "openapi.json",
-    description: "Especificación OpenAPI 3.1 de la API pública.",
+    description: {
+      es: "Especificación OpenAPI 3.1 de la API pública.",
+      en: "OpenAPI 3.1 specification of the public API.",
+    },
     type: "application/json",
     markdown: false,
   },
   {
     path: "/api/openapi.yaml",
     title: "openapi.yaml",
-    description: "La misma especificación, en YAML.",
+    description: {
+      es: "La misma especificación, en YAML.",
+      en: "The same specification, in YAML.",
+    },
     type: "application/yaml",
     markdown: false,
   },
   {
     path: "/sitemap.xml",
     title: "sitemap.xml",
-    description: "Todas las URLs publicadas.",
+    description: {
+      es: "Todas las URLs publicadas.",
+      en: "Every published URL.",
+    },
     type: "application/xml",
     markdown: false,
   },
   {
     path: "/robots.txt",
     title: "robots.txt",
-    description: "Reglas de rastreo. Los crawlers de IA están permitidos por nombre.",
+    description: {
+      es: "Reglas de rastreo. Los crawlers de IA están permitidos por nombre.",
+      en: "Crawl rules. AI crawlers are allowed by name.",
+    },
     type: "text/plain",
     markdown: false,
   },
   {
     path: "/manifest.webmanifest",
     title: "manifest.webmanifest",
-    description: "Manifiesto de la aplicación web.",
+    description: {
+      es: "Manifiesto de la aplicación web.",
+      en: "Web app manifest.",
+    },
     type: "application/manifest+json",
     markdown: false,
   },

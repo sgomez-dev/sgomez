@@ -76,6 +76,9 @@ const es = {
   },
   staticPage: {
     viewMarkdown: "Ver en markdown",
+    tableRegion: "Tabla, desplazable horizontalmente",
+    codeRegion: "Código, desplazable horizontalmente",
+    home: "Volver al inicio",
   },
   cta: {
     talk: "Hablemos",
@@ -127,6 +130,12 @@ const es = {
     heading: "Esta página no existe",
     body: "Puede que el enlace esté mal escrito o que la página se haya movido. Prueba con alguna de estas.",
     home: "Volver al inicio",
+    pages: "Páginas",
+    machine: "Ficheros legibles por máquina",
+    agents: "Para agentes",
+    agentsBefore: "El mismo mapa en markdown. Pidiendo",
+    agentsAfter: " se recibe solo esto, sin el HTML.",
+    markdownRegion: "Mapa del sitio en markdown, desplazable",
   },
 } as const;
 

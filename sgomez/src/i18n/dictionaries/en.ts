@@ -78,6 +78,9 @@ const en: Dictionary = {
   },
   staticPage: {
     viewMarkdown: "View as markdown",
+    tableRegion: "Table, horizontally scrollable",
+    codeRegion: "Code, horizontally scrollable",
+    home: "Back to home",
   },
   cta: {
     talk: "Let's talk",
@@ -129,6 +132,12 @@ const en: Dictionary = {
     heading: "This page doesn't exist",
     body: "The link may be mistyped, or the page may have moved. Try one of these instead.",
     home: "Back to home",
+    pages: "Pages",
+    machine: "Machine-readable files",
+    agents: "For agents",
+    agentsBefore: "The same map in markdown. Sending",
+    agentsAfter: " returns only this, without the HTML.",
+    markdownRegion: "Site map in markdown, scrollable",
   },
 };
 

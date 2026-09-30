@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import StaticPageLayout from "@/app/components/StaticPageLayout";
+import StaticPageLayout from "@/components/StaticPageLayout";
 import { findStaticPage } from "@/lib/content/pages";
 import { pageMetadata } from "@/lib/content/metadata";
 import { localizedPath, type Lang } from "@/i18n/languages";
