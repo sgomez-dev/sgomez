@@ -27,12 +27,16 @@
   color: var(--text);
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
+  overflow-x: clip;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 /* Custom scrollbar */

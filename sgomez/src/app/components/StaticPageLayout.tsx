@@ -131,16 +131,16 @@ export default function StaticPageLayout({ page }: { page: StaticPage }) {
           ))}
         </div>
 
-        <footer className="mt-20 pt-8 border-t border-white/[0.06] flex flex-wrap gap-x-5 gap-y-2 text-xs font-mono text-gray-600">
-          <Link prefetch={false} href="/" className="hover:text-violet-400 transition-colors">Inicio</Link>
-          <Link prefetch={false} href="/about" className="hover:text-violet-400 transition-colors">Sobre mí</Link>
-          <Link prefetch={false} href="/contact" className="hover:text-violet-400 transition-colors">Contacto</Link>
-          <Link prefetch={false} href="/developers" className="hover:text-violet-400 transition-colors">Developers</Link>
-          <Link prefetch={false} href="/privacy" className="hover:text-violet-400 transition-colors">Privacidad</Link>
+        <footer className="mt-20 pt-8 border-t border-white/[0.06] flex flex-wrap gap-x-3 gap-y-0 text-xs font-mono text-gray-600">
+          <Link prefetch={false} href="/" className="inline-flex min-h-11 min-w-11 items-center hover:text-violet-400 transition-colors">Inicio</Link>
+          <Link prefetch={false} href="/about" className="inline-flex min-h-11 min-w-11 items-center hover:text-violet-400 transition-colors">Sobre mí</Link>
+          <Link prefetch={false} href="/contact" className="inline-flex min-h-11 min-w-11 items-center hover:text-violet-400 transition-colors">Contacto</Link>
+          <Link prefetch={false} href="/developers" className="inline-flex min-h-11 min-w-11 items-center hover:text-violet-400 transition-colors">Developers</Link>
+          <Link prefetch={false} href="/privacy" className="inline-flex min-h-11 min-w-11 items-center hover:text-violet-400 transition-colors">Privacidad</Link>
           {/* La variante markdown, anunciada también en el <head> y en el
               header Link: quien lee esta página en un navegador puede querer
               la versión que leen los agentes. */}
-          <a href={variant} className="hover:text-violet-400 transition-colors">Esta página en markdown</a>
+          <a href={variant} className="inline-flex min-h-11 min-w-11 items-center hover:text-violet-400 transition-colors">Esta página en markdown</a>
         </footer>
         </div>
       </div>

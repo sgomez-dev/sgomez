@@ -3,7 +3,7 @@ import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
 import LangSwitch from "./LangSwitch";
 
-const LINK = "text-[color:var(--text-2)] hover:text-[color:var(--text)] transition-colors";
+const LINK = "inline-flex min-h-11 min-w-11 items-center justify-center text-[color:var(--text-2)] hover:text-[color:var(--text)] transition-colors";
 
 export default function Footer({ lang }: { lang: Lang }) {
   const d = getDictionary(lang);
@@ -21,10 +21,10 @@ export default function Footer({ lang }: { lang: Lang }) {
   ];
 
   return (
-    <footer className="border-t border-[color:var(--line)] bg-[color:var(--bg-2)] py-12">
-      <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
+    <footer className="border-t border-[color:var(--line)] bg-[color:var(--bg-2)] pt-12 pb-[calc(3rem+var(--safe-bottom))]">
+      <div className="mx-auto w-full max-w-[1200px] pl-[max(var(--gutter),var(--safe-left))] pr-[max(var(--gutter),var(--safe-right))]">
         <p className="text-sm text-[color:var(--serif-ink)]">{d.footer.tagline}</p>
-        <nav aria-label="Footer" className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+        <nav aria-label="Footer" className="mt-6 flex flex-wrap gap-x-6 gap-y-0 text-sm">
           {internal.map((l) => (
             <Link prefetch={false} key={l.href} href={l.href} className={LINK}>
               {l.label}

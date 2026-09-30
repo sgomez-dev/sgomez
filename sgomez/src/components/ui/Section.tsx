@@ -12,7 +12,7 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section id={id} aria-labelledby={labelledBy} className={`scroll-mt-20 py-20 md:py-28 ${className}`}>
+    <section id={id} aria-labelledby={labelledBy} className={`scroll-mt-20 py-[var(--space-section)] ${className}`}>
       {children}
     </section>
   );

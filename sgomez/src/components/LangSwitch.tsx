@@ -20,7 +20,7 @@ export default function LangSwitch({ lang, label }: { lang: string; label: strin
       href={href}
       hrefLang={other}
       lang={other}
-      className="rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-medium text-[color:var(--text)] hover:bg-white/5"
+      className="rounded-full border border-[color:var(--line)] inline-flex min-h-11 min-w-11 items-center justify-center px-4 text-sm font-medium text-[color:var(--text)] hover:bg-white/5"
     >
       {label}
     </a>

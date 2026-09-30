@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 const BASE =
-  "inline-flex h-11 items-center justify-center rounded-full px-6 text-sm font-medium transition-colors";
+  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-6 py-2 text-[length:var(--step-0)] font-medium transition-colors";
 const VARIANTS = {
   primary: "bg-[color:var(--text)] text-[color:var(--bg)] hover:bg-white",
   ghost: "border border-[color:var(--line)] text-[color:var(--text)] hover:bg-white/5",

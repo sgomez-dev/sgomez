@@ -12,7 +12,7 @@ export function Display({
 }) {
   return (
     <Tag
-      className={`font-semibold leading-[1.02] tracking-[-0.055em] text-[color:var(--text)] text-[clamp(2.5rem,7vw,5.5rem)] ${className}`}
+      className={`font-semibold leading-[1.02] tracking-[-0.055em] text-[color:var(--text)] text-[length:var(--step-5)] ${className}`}
     >
       {lead}{" "}
       <span className="font-normal italic tracking-[-0.02em] text-[color:var(--serif-ink)] [font-family:var(--font-serif),serif]">
