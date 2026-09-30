@@ -3,18 +3,18 @@ import { localizedPath, type Lang } from '@/i18n/languages'
 import Hero from '@/chapters/Hero'
 import About from '@/chapters/About'
 import Build from '@/chapters/Build'
-import ProjectsSection from '../components/ProjectsSection'
-import OpenSourceSection from '../components/OpenSourceSection'
+import Experience from '@/chapters/Experience'
+import Projects from '@/chapters/Projects'
+import OpenSource from '@/chapters/OpenSource'
+import SkyQuetz from '@/chapters/SkyQuetz'
 import CertificationsSection from '../components/CertificationsSection'
 import EducationSection from '../components/EducationSection'
-import ExperienceSection from '../components/ExperienceSection'
 import RecommendationsSection from '../components/RecommendationsSection'
 import ContactSection from '../components/ContactSection'
 import LatestPosts from '../components/LatestPosts'
 import BottomBar from '../components/BottomBar'
 import DownloadCVButton from '../components/DownloadCVButton'
 import MacInterlude from '../components/MacInterlude'
-import SkyQuetzSection from '../components/SkyQuetzSection'
 
 // La home publica su propia variante markdown: el resto de páginas lo
 // declara `pageMetadata`, y sin esto la única página que no lo anunciaría
@@ -59,7 +59,7 @@ drwxr-xr-x  Packatrack/            ★★★☆☆
 -rw-r--r--  ...and 35+ more repos`,
 }
 
-// Temporal: los capítulos 01-03 ya son bilingües; el resto sigue en español hasta las tareas 7-8.
+// Temporal: los capítulos 01-07 ya son bilingües; el resto sigue en español hasta la tarea 8.
 export default async function HomePage({ params }: { params: Promise<{ lang: Lang }> }) {
   const { lang } = await params
   return (
@@ -67,17 +67,12 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
       <Hero lang={lang} />
       <About lang={lang} />
       <MacInterlude {...INTERLUDE_STATS} />
-      <div className="section-divider" />
-      <ExperienceSection />
-      <div className="section-divider" />
-      <SkyQuetzSection />
-      <div className="section-divider" />
       <Build lang={lang} />
+      <Experience lang={lang} />
       <MacInterlude {...INTERLUDE_PROJECTS} />
-      <div className="section-divider" />
-      <ProjectsSection />
-      <div className="section-divider" />
-      <OpenSourceSection />
+      <Projects lang={lang} />
+      <OpenSource lang={lang} />
+      <SkyQuetz lang={lang} />
       <div className="section-divider" />
       <CertificationsSection />
       <div className="section-divider" />

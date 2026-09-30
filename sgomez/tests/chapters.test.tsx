@@ -3,6 +3,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import Hero from "@/chapters/Hero";
 import About from "@/chapters/About";
 import Build from "@/chapters/Build";
+import Experience from "@/chapters/Experience";
+import Projects from "@/chapters/Projects";
+import OpenSource from "@/chapters/OpenSource";
+import SkyQuetz from "@/chapters/SkyQuetz";
+import { getExperience, getProjects } from "@/lib/api/data";
+import { CLAUDE_CANVAS } from "@/app/seo";
 import { siteFigures } from "@/lib/content/figures";
 import { getDictionary } from "@/i18n";
 import { fill } from "@/i18n/fill";
@@ -69,4 +75,55 @@ describe("capítulos 01–03 en HTML de servidor", () => {
   it("el retrato localizado difiere entre idiomas", () => {
     expect(getDictionary("es").chapters.hero.portraitAlt).not.toBe(getDictionary("en").chapters.hero.portraitAlt);
   });
+});
+
+/** renderToStaticMarkup escapa el texto; se compara contra lo que de verdad sale. */
+const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/'/g, "&#x27;");
+
+describe("capítulos 04–07", () => {
+  for (const lang of ["es", "en"] as const) {
+    const d = getDictionary(lang);
+    const html = renderToStaticMarkup(
+      <>
+        <Experience lang={lang} />
+        <Projects lang={lang} />
+        <OpenSource lang={lang} />
+        <SkyQuetz lang={lang} />
+      </>,
+    );
+    it(`${lang}: todas las experiencias y todos los proyectos`, () => {
+      for (const e of getExperience(lang)) expect(html).toContain(esc(e.role));
+      for (const p of getProjects(lang)) expect(html).toContain(esc(p.title));
+    });
+    it(`${lang}: anclas estables`, () => {
+      for (const id of ["experience", "work", "open-source", "skyquetz"]) expect(html).toContain(`id="${id}"`);
+    });
+    it(`${lang}: Claude Canvas conserva su atribución`, () => {
+      expect(html).toMatch(/David Siegel/);
+      if (lang === "en") expect(html).toContain(esc(CLAUDE_CANVAS.attribution));
+    });
+    it(`${lang}: enlace a skills.sgomez.dev`, () => expect(html).toContain('href="https://skills.sgomez.dev"'));
+    it(`${lang}: ningún hueco de reel vacío`, () => {
+      const reels = [...html.matchAll(/data-motion="reel"[^>]*>([\s\S]*?)<\/div>/g)];
+      expect(reels).toHaveLength(3);
+      for (const m of reels) expect(m[1]!.replace(/<[^>]+>/g, "").trim()).not.toBe("");
+    });
+    it(`${lang}: pista de experiencia y enlaces de proyecto accesibles`, () => {
+      expect(html).toContain('data-motion="timeline"');
+      for (const p of getProjects(lang)) {
+        expect(html).toContain(`aria-label="${esc(p.title)} — ${d.projects.open}"`);
+      }
+      expect(html).toContain('rel="noopener"');
+    });
+    it(`${lang}: SkyQuetz con logo, monograma y dos productos`, () => {
+      const sq = html.slice(html.indexOf('id="skyquetz"'));
+      expect(sq).toContain("/brand/skyquetz-logo.webp");
+      expect(sq).toContain('data-motion="monogram"');
+      expect(sq).toContain("Synentria");
+      expect(sq).toContain("Packatrack");
+    });
+    it(`${lang}: Open source con tres bloques build`, () => {
+      expect(html.match(/data-motion="build"/g)).toHaveLength(3);
+    });
+  }
 });

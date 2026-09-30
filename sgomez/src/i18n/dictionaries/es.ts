@@ -46,10 +46,12 @@ const es = {
     openSource: {
       eyebrow: "Open source",
       heading: "Código que comparto y que otros ya usan",
+      skillsDesc: "Colección de comandos y skills para Claude Code, con el catálogo completo para explorar en la web.",
     },
     skyquetz: {
       eyebrow: "Skyquetz",
       heading: "Mi propio producto, de la idea a los usuarios",
+      products: "Productos propios",
     },
     proof: {
       eyebrow: "Pruebas",

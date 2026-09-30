@@ -48,10 +48,12 @@ const en: Dictionary = {
     openSource: {
       eyebrow: "Open source",
       heading: "Code I share, and that others already rely on",
+      skillsDesc: "A collection of commands and skills for Claude Code, with the full catalogue to browse on the web.",
     },
     skyquetz: {
       eyebrow: "Skyquetz",
       heading: "My own product, from idea to users",
+      products: "In-house products",
     },
     proof: {
       eyebrow: "Proof",
