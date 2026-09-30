@@ -29,10 +29,10 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
           <stop offset="1" stopColor="#5B6CFF" stopOpacity="0" />
         </radialGradient>
         <filter id="glass-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="16" />
+          <feGaussianBlur stdDeviation="11" />
         </filter>
       </defs>
-      <g transform="translate(248 164) scale(0.8) translate(-200 -200)">
+      <g transform="translate(238 166) scale(0.95) translate(-200 -200)">
       <path
         d="M214 52c62-10 124 30 136 92 10 54-12 98-44 138-34 42-96 74-150 52-58-24-102-72-96-132 6-60 50-130 154-150z"
         fill="url(#glass-body)"

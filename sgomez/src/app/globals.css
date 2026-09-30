@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "./styles/tokens.css";
 
+/* Movil apaisado: ancho de tablet pero muy poca altura. */
+@custom-variant sl (@media (min-width: 700px) and (max-height: 500px));
+
 :root {
   /* Alias heredados: los usan las secciones antiguas hasta que las Tasks 6-8
      las sustituyan. No añadir usos nuevos; los tokens vigentes están en

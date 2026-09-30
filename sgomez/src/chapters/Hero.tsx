@@ -16,12 +16,12 @@ export default function Hero({ lang }: { lang: Lang }) {
   return (
     <Section id="top" className="!pt-6 sm:!pt-10 lg:!pt-14">
       <Container>
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-10">
-          <div className="relative isolate mx-auto aspect-square w-[min(320px,100%)] lg:order-2 lg:ml-auto lg:w-full lg:max-w-[560px]">
-            <GlassPoster className="absolute right-0 top-0 -z-10 h-full w-full" />
-            <Portrait alt={d.chapters.hero.portraitAlt} className="absolute bottom-0 left-0 w-[86%]" />
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-10 sl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] sl:gap-8">
+          <div className="relative isolate mx-auto aspect-square w-[min(320px,100%)] lg:order-2 lg:ml-auto lg:w-full lg:max-w-[560px] sl:order-2 sl:w-[min(62svh,100%)]">
+            <GlassPoster className="absolute inset-0 -z-10 h-full w-full" />
+            <Portrait alt={d.chapters.hero.portraitAlt} className="absolute bottom-0 left-0 w-[70%]" />
           </div>
-          <div className="min-w-0 lg:order-1">
+          <div className="min-w-0 lg:order-1 sl:order-1">
             <Eyebrow>{d.chapters.hero.eyebrow}</Eyebrow>
             <Display
               as="h1"
