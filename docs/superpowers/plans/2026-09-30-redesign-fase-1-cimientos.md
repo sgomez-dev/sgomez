@@ -27,6 +27,13 @@
 - No se pasan funciones a componentes `'use client'`. Las cadenas con variables se escriben como plantilla con `{name}` y se rellenan con `fill()`.
 - JSON-LD siempre con `serializeJsonLd()`, que escapa `<`, `>`, `&`, U+2028 y U+2029 como `\\u003c` y compañía, nunca `JSON.stringify` a pelo en un `<script>`.
 - Presupuesto de JS inicial ≤ 170 KB gzip en `/` y `/en`.
+- **Responsive en cualquier dispositivo** (petición de Santiago, 2026-09-30).
+  - Todo debe verse bien a 320, 375, 414, 768, 1024, 1280, 1440 y 1920 px, y en móvil en horizontal (844×390).
+  - Sin scroll horizontal de página en ninguno de esos anchos.
+  - Tipografía y espaciados fluidos con `clamp()`, sin tamaños fijos que rompan en pantallas pequeñas.
+  - Zonas pulsables de al menos 44×44 px, y nada que dependa solo de `:hover`: la misma información o acción tiene que ser accesible al tocar o con el teclado.
+  - Se respetan los márgenes seguros del notch (`env(safe-area-inset-*)`) en la nav fija y el pie.
+  - Las imágenes llevan `sizes` correctos para no bajar de más en móvil.
 
 ## Review Focus
 
@@ -1286,7 +1293,7 @@ git commit -m "feat(seo): un @graph por página y por idioma, hreflang, OG por i
 
 - `playwright.config.ts`:
   - `webServer: { command: 'npm run build && npm run start', url: 'http://localhost:3000', reuseExistingServer: true, timeout: 300_000 }`;
-  - projects `desktop` (1280×800) and `mobile` (375×812, `isMobile: true`).
+  - projects `desktop` (1280×800), `mobile` (375×812, `isMobile: true`), `small` (320×640), `tablet` (768×1024) and `landscape` (844×390, `isMobile: true`). The overflow test runs at every one of these widths, plus 414, 1024, 1440 and 1920 through `page.setViewportSize`. A test also checks that every `a` and `button` in the nav, the footer and the CTAs has a bounding box of at least 44×44 px on the `mobile` project.
 - `e2e/routes.spec.ts`:
   - every URL in Global Constraints returns its expected status and `content-type`; for redirects, check the `location` header with `maxRedirects: 0`;
   - `/`, `/about`, `/en` and `/en/about` have `<link rel="alternate" hreflang="es|en|x-default">` with the right hrefs;
