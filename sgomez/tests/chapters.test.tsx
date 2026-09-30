@@ -215,3 +215,10 @@ describe("últimas entradas del blog", () => {
     expect(html).toContain("T b");
   });
 });
+
+describe("Proof: disclosure del original", () => {
+  it("en: el summary lleva un chevron svg aria-hidden", () => {
+    const html = renderToStaticMarkup(<Proof lang="en" />);
+    expect(html).toMatch(/<summary[^>]*>[^<]*<svg[^>]*aria-hidden="true"/);
+  });
+});

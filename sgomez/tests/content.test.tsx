@@ -164,8 +164,6 @@ describe("marcado en línea", () => {
   });
 });
 
-
-
 describe("páginas en inglés", () => {
   it("cada página española tiene su gemela inglesa bajo /en", () => {
     const es = staticPages("es").map((p) => p.path);
