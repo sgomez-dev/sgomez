@@ -1,10 +1,12 @@
+const DEFAULT_SIZE = "text-[length:var(--step-5)]";
+
 /** Titular: `lead` en Inter Tight 600 y `serif` en Instrument Serif cursiva. Sin degradado. */
 export function Display({
   as: Tag = "h1",
   lead,
   serif,
   id,
-  size = "text-[length:var(--step-5)]",
+  size = DEFAULT_SIZE,
   motion,
   className = "",
 }: {
@@ -22,7 +24,7 @@ export function Display({
     <Tag
       id={id}
       data-motion={motion}
-      className={`font-semibold leading-[1.02] [overflow-wrap:anywhere] tracking-[-0.055em] text-[color:var(--text)] ${size} ${className}`}
+      className={`font-semibold leading-[1.02] [overflow-wrap:anywhere] ${size === DEFAULT_SIZE ? "tracking-[-0.055em]" : "tracking-[-0.03em]"} text-[color:var(--text)] ${size} ${className}`}
     >
       {lead}
       {serif ? (

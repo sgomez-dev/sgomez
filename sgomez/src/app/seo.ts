@@ -167,6 +167,8 @@ export const CLAUDE_CANVAS = {
   descriptionEn:
     "A Claude Code plugin that gives Claude a display of its own: it opens an interactive terminal pane beside the conversation, you act in it, and your answer comes back as an exact value instead of prose the model has to interpret. Nine canvas kinds (picker, form, table, image, diff, dashboard, calendar, document, flight), one length-prefixed JSON transport over a local socket, and CI on Linux, macOS and Windows.",
   /** Lo que un modelo se lleva mal si nadie se lo dice. */
+  attributionEs:
+    "Es un fork de dvdsgl/claude-canvas, de David Siegel, ampliado a fondo y con licencia MIT conservando el copyright original. Es un proyecto open source personal de Santiago, no un producto de SkyQuetz.",
   attribution:
     "It is a fork of David Siegel's dvdsgl/claude-canvas, substantially extended and MIT licensed with the original copyright retained. It is Santiago's personal open-source project, not a SkyQuetz product.",
 } as const;
@@ -492,7 +494,7 @@ export function personGraph(): JsonLd {
       "@id": `${IDENTITY.url}/#breadcrumb`,
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Inicio", item: IDENTITY.url },
-        { "@type": "ListItem", position: 2, name: "Proyectos", item: `${IDENTITY.url}/#projects` },
+        { "@type": "ListItem", position: 2, name: "Proyectos", item: `${IDENTITY.url}/#work` },
         { "@type": "ListItem", position: 3, name: "SkyQuetz", item: `${IDENTITY.url}/#skyquetz` },
         { "@type": "ListItem", position: 4, name: "Open Source", item: `${IDENTITY.url}/#open-source` },
         { "@type": "ListItem", position: 5, name: "Contacto", item: `${IDENTITY.url}/#contact` },

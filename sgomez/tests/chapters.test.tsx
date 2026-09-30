@@ -78,7 +78,7 @@ describe("capítulos 01–03 en HTML de servidor", () => {
 });
 
 /** renderToStaticMarkup escapa el texto; se compara contra lo que de verdad sale. */
-const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/'/g, "&#x27;");
+const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
 
 describe("capítulos 04–07", () => {
   for (const lang of ["es", "en"] as const) {
@@ -100,7 +100,7 @@ describe("capítulos 04–07", () => {
     });
     it(`${lang}: Claude Canvas conserva su atribución`, () => {
       expect(html).toMatch(/David Siegel/);
-      if (lang === "en") expect(html).toContain(esc(CLAUDE_CANVAS.attribution));
+      expect(html).toContain(esc(lang === "en" ? CLAUDE_CANVAS.attribution : CLAUDE_CANVAS.attributionEs));
     });
     it(`${lang}: enlace a skills.sgomez.dev`, () => expect(html).toContain('href="https://skills.sgomez.dev"'));
     it(`${lang}: ningún hueco de reel vacío`, () => {

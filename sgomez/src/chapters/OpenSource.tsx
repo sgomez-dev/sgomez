@@ -11,15 +11,8 @@ const SKILLS_URL = "https://skills.sgomez.dev";
 const NUDAUI_URL = "https://nudaui.dev";
 const CANVAS_REPO = "sgomez-dev/claude-canvas";
 
-/**
- * Atribución de Claude Canvas. En inglés es la frase de `CLAUDE_CANVAS`, tal cual;
- * en español, su equivalente con los mismos datos. Nunca se abrevia: es un fork y
- * el repositorio y su LICENSE dicen de quién.
- */
-const attribution = (lang: Lang) =>
-  lang === "en"
-    ? CLAUDE_CANVAS.attribution
-    : `Es un fork de dvdsgl/claude-canvas, de ${CLAUDE_CANVAS.basedOnAuthor}, ampliado a fondo y con licencia MIT conservando el copyright original. Es un proyecto open source personal de Santiago, no un producto de SkyQuetz.`;
+/** Atribución de Claude Canvas, completa y sin abreviar; cada idioma usa su constante de seo.ts. */
+const attribution = (lang: Lang) => (lang === "en" ? CLAUDE_CANVAS.attribution : CLAUDE_CANVAS.attributionEs);
 
 function Links({ links }: { links: { href: string; label: string }[] }) {
   return (
