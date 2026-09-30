@@ -103,13 +103,13 @@ export default function StaticPageLayout({ page }: { page: StaticPage }) {
   const variant = markdownVariantOf(page.path);
 
   return (
-    <main className="min-h-screen py-20 md:py-28">
+    <div className="min-h-screen py-20 md:py-28">
       {/* La columna de lectura va DENTRO de container-custom: `max-w-3xl`
           en el mismo elemento no gana, porque `.container-custom` se define
           después en globals.css y fija su propio max-width. */}
       <div className="container-custom">
         <div className="mx-auto max-w-3xl">
-        <Link href="/" className="font-mono text-xs uppercase tracking-wider text-gray-500 hover:text-violet-400 transition-colors">
+        <Link prefetch={false} href="/" className="font-mono text-xs uppercase tracking-wider text-gray-500 hover:text-violet-400 transition-colors">
           ← sgomez.dev
         </Link>
 
@@ -132,11 +132,11 @@ export default function StaticPageLayout({ page }: { page: StaticPage }) {
         </div>
 
         <footer className="mt-20 pt-8 border-t border-white/[0.06] flex flex-wrap gap-x-5 gap-y-2 text-xs font-mono text-gray-600">
-          <Link href="/" className="hover:text-violet-400 transition-colors">Inicio</Link>
-          <Link href="/about" className="hover:text-violet-400 transition-colors">Sobre mí</Link>
-          <Link href="/contact" className="hover:text-violet-400 transition-colors">Contacto</Link>
-          <Link href="/developers" className="hover:text-violet-400 transition-colors">Developers</Link>
-          <Link href="/privacy" className="hover:text-violet-400 transition-colors">Privacidad</Link>
+          <Link prefetch={false} href="/" className="hover:text-violet-400 transition-colors">Inicio</Link>
+          <Link prefetch={false} href="/about" className="hover:text-violet-400 transition-colors">Sobre mí</Link>
+          <Link prefetch={false} href="/contact" className="hover:text-violet-400 transition-colors">Contacto</Link>
+          <Link prefetch={false} href="/developers" className="hover:text-violet-400 transition-colors">Developers</Link>
+          <Link prefetch={false} href="/privacy" className="hover:text-violet-400 transition-colors">Privacidad</Link>
           {/* La variante markdown, anunciada también en el <head> y en el
               header Link: quien lee esta página en un navegador puede querer
               la versión que leen los agentes. */}
@@ -144,6 +144,6 @@ export default function StaticPageLayout({ page }: { page: StaticPage }) {
         </footer>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

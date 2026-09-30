@@ -38,3 +38,15 @@ export function switchLangHref(pathname: string, to: Lang, knownPaths: readonly 
   const { path } = splitLang(pathname);
   return localizedPath(to, knownPaths.includes(path) ? path : "/");
 }
+
+/**
+ * Ruta lista para `switchLangHref`: sin barra final (salvo "/") y sin el prefijo
+ * interno `/es`. El español se sirve reescribiendo `/about` a `/es/about`, y
+ * `usePathname()` puede devolver la ruta reescrita; `splitLang` solo reconoce
+ * los idiomas con prefijo público, así que sin esto `/es/about` no casaría.
+ */
+export function normalizePathname(pathname: string): string {
+  let p = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  p = p.replace(/^\/es(?=\/|$)/, "");
+  return p === "" ? "/" : p;
+}

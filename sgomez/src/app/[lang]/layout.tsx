@@ -1,19 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { LANGS, isLang, localizedPath, type Lang } from "@/i18n/languages";
 import { personGraph } from "../seo";
+import { getDictionary } from "@/i18n";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", weight: ["400", "500", "600"], display: "swap" });
+const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrument-serif", weight: "400", style: ["normal", "italic"], display: "swap" });
 
 const siteUrl = "https://sgomez.dev";
 const siteName = "Santiago Gómez de la Torre Romero - Full-Stack Engineer";
@@ -150,7 +146,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#05060a",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -168,9 +164,16 @@ export default async function LangLayout({
   return (
     <html lang={lang === "es" ? "es-ES" : "en"}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        className={`${sans.variable} ${serif.variable} antialiased`}
       >
-        {children}
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-[color:var(--text)] focus:px-4 focus:py-2 focus:text-sm focus:text-[color:var(--bg)]">
+          {getDictionary(lang).nav.skip}
+        </a>
+        <Nav lang={lang} />
+        <main id="main" className="pt-16">
+          {children}
+        </main>
+        <Footer lang={lang} />
         {/* Relaciones de enlace que anuncian las superficies para agentes.
             React las eleva al <head>. `service-desc` es la relación
             registrada (RFC 8631) con la que un cliente encuentra la

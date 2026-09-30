@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { localizedPath, type Lang } from '@/i18n/languages'
 import HeroSection from '../components/HeroSection'
 import AboutSection from '../components/AboutSection'
@@ -90,22 +89,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
       <ContactSection />
       <div className="section-divider" />
       <LatestPosts />
-      {/* Pie con las páginas que no son anclas de la home. Hasta ahora la web
-          era una sola página y estas cuatro no tenían desde dónde enlazarse:
-          una página de privacidad que nadie enlaza es, a efectos de quien la
-          busca, una página que no existe. El portal de desarrolladores va
-          aquí por lo mismo. */}
-      <footer className="py-10">
-        <nav className="container-custom flex flex-wrap justify-center gap-x-6 gap-y-2 mb-5" aria-label="Enlaces del pie">
-          <Link href={localizedPath(lang, '/about')} className="text-gray-600 hover:text-violet-400 text-xs font-light transition-colors">Sobre mi</Link>
-          <Link href={localizedPath(lang, '/contact')} className="text-gray-600 hover:text-violet-400 text-xs font-light transition-colors">Contacto</Link>
-          <Link href={localizedPath(lang, '/developers')} className="text-gray-600 hover:text-violet-400 text-xs font-light transition-colors">Developers &amp; API</Link>
-          <Link href={localizedPath(lang, '/privacy')} className="text-gray-600 hover:text-violet-400 text-xs font-light transition-colors">Privacidad</Link>
-          <a href="/llms.txt" className="text-gray-600 hover:text-violet-400 text-xs font-light transition-colors">llms.txt</a>
-          <a href="/openapi.json" className="text-gray-600 hover:text-violet-400 text-xs font-light transition-colors">OpenAPI</a>
-        </nav>
-        <p className="text-gray-700 text-xs font-light text-center">&copy; {new Date().getFullYear()} Santiago Gomez de la Torre Romero</p>
-      </footer>
       <BottomBar />
       <DownloadCVButton />
     </div>

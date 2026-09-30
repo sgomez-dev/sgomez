@@ -1,9 +1,13 @@
 @import "tailwindcss";
+@import "./styles/tokens.css";
 
 :root {
-  --bg-primary: #030712;
-  --bg-surface: #0a0a14;
-  --bg-elevated: #111827;
+  /* Alias heredados: los usan las secciones antiguas hasta que las Tasks 6-8
+     las sustituyan. No añadir usos nuevos; los tokens vigentes están en
+     styles/tokens.css. */
+  --bg-primary: #05060a;
+  --bg-surface: #0b0d14;
+  --bg-elevated: #121624;
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-hover: rgba(139, 92, 246, 0.3);
   --accent-violet: #8b5cf6;
@@ -19,25 +23,16 @@
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
-  color: #f1f5f9;
+  background: color-mix(in oklab, var(--light-1) 35%, transparent);
+  color: var(--text);
 }
 
 body {
-  background: var(--bg-primary);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-}
-
-/* Film grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.018;
 }
 
 /* Custom scrollbar */
@@ -184,8 +179,7 @@ body::after {
 }
 
 /* Focus styles */
-a:focus-visible, button:focus-visible {
-  outline: 2px solid var(--accent-violet);
-  outline-offset: 2px;
-  border-radius: 4px;
+:focus-visible {
+  outline: 2px solid var(--light-1);
+  outline-offset: 3px;
 }

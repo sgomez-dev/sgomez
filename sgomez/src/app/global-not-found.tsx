@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import NotFoundBody from "@/app/components/NotFoundBody";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", weight: ["400", "500", "600"], display: "swap" });
+const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrument-serif", weight: "400", style: ["normal", "italic"], display: "swap" });
 
 /**
  * 404 global. Con `app/[lang]/layout.tsx` como layout raíz, Next 16 no
@@ -24,13 +26,15 @@ export const metadata: Metadata = {
 export default function GlobalNotFound() {
   return (
     <html lang="es-ES">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}>
-        <main>
+      <body className={`${sans.variable} ${serif.variable} antialiased`}>
+        <Nav lang="es" />
+        <main id="main" className="pt-16">
           <NotFoundBody lang="es" />
           <div lang="en">
             <NotFoundBody lang="en" />
           </div>
         </main>
+        <Footer lang="es" />
       </body>
     </html>
   );

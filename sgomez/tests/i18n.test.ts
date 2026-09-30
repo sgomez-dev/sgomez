@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LANGS, isLang, localizedPath, splitLang, hreflangAlternates, switchLangHref } from "@/i18n/languages";
+import { LANGS, isLang, localizedPath, splitLang, hreflangAlternates, switchLangHref, normalizePathname } from "@/i18n/languages";
 import { fill } from "@/i18n/fill";
 import { getDictionary } from "@/i18n";
 import es from "@/i18n/dictionaries/es";
@@ -66,5 +66,18 @@ describe("diccionarios", () => {
   it("getDictionary devuelve el de cada idioma", () => {
     expect(getDictionary("en")).toBe(en);
     expect(getDictionary("es")).toBe(es);
+  });
+});
+
+describe("normalizePathname + switchLangHref", () => {
+  const known = ["/", "/about"];
+  const go = (p: string, to: "es" | "en") => switchLangHref(normalizePathname(p), to, known);
+  it("quita la barra final y el prefijo interno /es", () => {
+    expect(go("/about/", "en")).toBe("/en/about");
+    expect(go("/es/about", "en")).toBe("/en/about");
+    expect(go("/en/about/", "es")).toBe("/about");
+    expect(go("/es", "en")).toBe("/en");
+    expect(go("/en/", "es")).toBe("/");
+    expect(go("/no-existe/", "en")).toBe("/en");
   });
 });

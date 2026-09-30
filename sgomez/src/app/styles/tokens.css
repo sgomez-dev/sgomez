@@ -1,0 +1,14 @@
+:root {
+  --bg: #05060a;
+  --bg-2: #0b0d14;
+  --bg-3: #121624;
+  --text: #f4f6fb;
+  --text-2: #aab2c6;
+  --serif-ink: #c9d1e6;
+  --light-1: #8fa8ff;
+  --light-2: #6ef0dc;
+  --line: #ffffff14;
+  --radius: 14px;
+  --font-sans: var(--font-inter-tight);
+  --font-serif: var(--font-instrument-serif);
+}

@@ -34,6 +34,7 @@ export default function NotFoundBody({ lang }: { lang: Lang }) {
             {localizedHtmlRoutes(lang).map((route) => (
               <li key={route.path}>
                 <Link
+                  prefetch={false}
                   href={route.path}
                   className="glass rounded-xl px-4 py-3 flex items-center justify-between gap-3 hover:bg-white/[0.04] hover:border-violet-500/20 transition-all duration-300 card-hover"
                 >
