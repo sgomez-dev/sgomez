@@ -54,8 +54,9 @@ export function renderPageMarkdown(page: StaticPage): string {
   }
 
   lines.push("---", "");
+  const formats = `${link("llms.txt", "/llms.txt")}, ${link("agents.md", "/agents.md")}, ${link("OpenAPI", "/openapi.json")}, ${link("sitemap", "/sitemap.xml")}`;
   lines.push(
-    `Más formatos legibles por máquina: ${link("llms.txt", "/llms.txt")}, ${link("agents.md", "/agents.md")}, ${link("OpenAPI", "/openapi.json")}, ${link("sitemap", "/sitemap.xml")}.`,
+    page.lang === "es" ? `Más formatos legibles por máquina: ${formats}.` : `More machine-readable formats: ${formats}.`,
     "",
   );
 

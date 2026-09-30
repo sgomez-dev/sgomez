@@ -88,7 +88,8 @@ describe("portal de desarrolladores", () => {
 
 describe("markdown de las páginas", () => {
   it("hay variante markdown para todas las rutas HTML", () => {
-    for (const route of HTML_ROUTES) {
+    // /lab es una experiencia interactiva sin variante markdown (ni versión inglesa).
+    for (const route of HTML_ROUTES.filter((r) => r.path !== "/lab")) {
       expect(MARKDOWN_PATHS, route.path).toContain(route.path);
       expect(markdownForPath(route.path)).toBeTruthy();
     }
@@ -158,5 +159,43 @@ describe("marcado en línea", () => {
 
   it("deja el texto sin marcas en una sola pieza", () => {
     expect(tokenizeInline("texto llano")).toEqual([{ kind: "text", value: "texto llano" }]);
+  });
+});
+
+import { staticPages, findStaticPage } from "@/lib/content/pages";
+
+describe("páginas en inglés", () => {
+  it("cada página española tiene su gemela inglesa bajo /en", () => {
+    const es = staticPages("es").map((p) => p.path);
+    const en = staticPages("en").map((p) => p.path);
+    expect(en).toEqual(es.map((p) => `/en${p}`));
+  });
+  it("el markdown en inglés sale en inglés y con su canónica", () => {
+    const md = markdownForPath("/en/about")!;
+    expect(md).toMatch(/^# About Santiago Gómez de la Torre Romero/m);
+    expect(md).toContain("https://sgomez.dev/en/about");
+  });
+  it("hay markdown para la home en los dos idiomas y ninguno para /lab", () => {
+    expect(MARKDOWN_PATHS).toContain("/");
+    expect(MARKDOWN_PATHS).toContain("/en");
+    expect(MARKDOWN_PATHS.some((p) => p.includes("lab"))).toBe(false);
+  });
+  it("la privacidad ya no menciona /lab y nombra las fuentes reales", () => {
+    for (const lang of ["es", "en"] as const) {
+      const text = JSON.stringify(findStaticPage(lang === "es" ? "/privacy" : "/en/privacy"));
+      expect(text).not.toMatch(/\/lab/);
+      expect(text).toMatch(/Inter Tight/);
+      expect(text).toMatch(/Instrument Serif/);
+    }
+  });
+  it("findStaticPage resuelve rutas localizadas y las páginas inglesas no llevan texto español", () => {
+    expect(findStaticPage("/en/contact")?.lang).toBe("en");
+    expect(findStaticPage("/contact")?.lang).toBe("es");
+    expect(JSON.stringify(findStaticPage("/en/about"))).not.toMatch(/Quién soy|Trayectoria/);
+  });
+  it("home y 404 existen en inglés", () => {
+    expect(markdownForPath("/en")).toContain("## Projects");
+    expect(markdownForPath("/en")).toContain("Canonical URL: https://sgomez.dev/en");
+    expect(notFoundMarkdown("/en/x", "en")).toContain("`/en/x`");
   });
 });
