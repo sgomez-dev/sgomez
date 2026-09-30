@@ -7,6 +7,11 @@ import Experience from "@/chapters/Experience";
 import Projects from "@/chapters/Projects";
 import OpenSource from "@/chapters/OpenSource";
 import SkyQuetz from "@/chapters/SkyQuetz";
+import Proof from "@/chapters/Proof";
+import Contact from "@/chapters/Contact";
+import { contactMailto } from "@/lib/contact/mailto";
+import { getRecommendations } from "@/lib/api/data";
+import { IDENTITY } from "@/app/seo";
 import { getExperience, getProjects } from "@/lib/api/data";
 import { CLAUDE_CANVAS } from "@/app/seo";
 import { siteFigures } from "@/lib/content/figures";
@@ -124,6 +129,51 @@ describe("capítulos 04–07", () => {
     });
     it(`${lang}: Open source con tres bloques build`, () => {
       expect(html.match(/data-motion="build"/g)).toHaveLength(3);
+    });
+  }
+});
+
+describe("capítulos 08–09 en HTML de servidor", () => {
+  const CV = "/CV_Santiago_Gómez_de_la_Torre_Romero.pdf";
+  for (const lang of ["es", "en"] as const) {
+    const d = getDictionary(lang);
+    const proof = renderToStaticMarkup(<Proof lang={lang} />);
+    const contact = renderToStaticMarkup(<Contact lang={lang} />);
+    it(`${lang}: anclas #proof y #contact`, () => {
+      expect(proof).toContain('id="proof"');
+      expect(contact).toContain('id="contact"');
+    });
+    it(`${lang}: la cita original lleva lang="es"`, () => {
+      expect(proof).toMatch(/<(p|blockquote)[^>]*lang="es"/);
+    });
+    it(`${lang}: traducción solo en inglés, etiquetada y después del original`, () => {
+      const r = getRecommendations(lang)[0]!;
+      if (lang === "en") {
+        expect(proof).toContain(d.recommendations.translated);
+        const first = proof.indexOf('lang="es"');
+        expect(first).toBeGreaterThan(0);
+        expect(proof.indexOf(d.recommendations.translated)).toBeGreaterThan(first);
+        expect(r.comment_translation).toBeTruthy();
+      } else {
+        expect(proof).not.toContain(getDictionary("en").recommendations.translated);
+      }
+    });
+    it(`${lang}: insignias de certificación`, () => {
+      expect(proof.match(/data-motion="badge"/g)!.length).toBeGreaterThan(5);
+    });
+    it(`${lang}: tres enlaces de intención con el mailto exacto`, () => {
+      for (const intent of ["freelance", "job", "other"] as const) {
+        expect(contact).toContain(`href="${esc(contactMailto(intent, lang))}"`);
+      }
+    });
+    it(`${lang}: CV, correo en texto y sin Facebook`, () => {
+      expect(contact).toContain(`href="${CV}"`);
+      expect(contact).toContain(IDENTITY.email);
+      expect(contact).not.toMatch(/facebook|fb\.com/i);
+      expect(contact).toContain("linkedin.com/in/sgomez-dev");
+    });
+    it(`${lang}: hueco de cristal decorativo`, () => {
+      expect(contact).toMatch(/<svg[^>]*aria-hidden="true"[^>]*data-motion="glass"/);
     });
   }
 });

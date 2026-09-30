@@ -62,6 +62,10 @@ const en: Dictionary = {
       certifications: "Certifications",
       education: "Education",
       blog: "Blog",
+      blogAll: "See all posts",
+      minutes: "{n} min read",
+      credential: "View credential",
+      categories: { PROYECTO: "Project", PODCAST: "Podcast", REFLEXION: "Reflection", TUTORIAL: "Tutorial", NOTICIA: "News", GENERAL: "General" },
     },
     contact: {
       eyebrow: "Contact",
@@ -81,19 +85,24 @@ const en: Dictionary = {
     cv: "Download CV",
   },
   contact: {
+    emailLabel: "Or write to me directly",
+    profiles: "Profiles",
     intent: {
       freelance: {
         label: "Freelance project",
+        desc: "Tell me what you want to build, the timeline and the budget.",
         subject: "Freelance project",
         body: "Hi Santiago,\n\nI have a project in mind and I'd like to talk it through with you.\n\nWhat I want to achieve:\nRough timeline:\nIndicative budget:\n\nBest regards,",
       },
       job: {
         label: "Job opportunity",
+        desc: "Tell me about the company, the role and the working model.",
         subject: "Job opportunity",
         body: "Hi Santiago,\n\nWe're looking for someone with your profile and I think you'd be a great fit.\n\nCompany and role:\nWorking model and location:\n\nBest regards,",
       },
       other: {
         label: "Something else",
+        desc: "Write to me for any other reason.",
         subject: "Writing from your website",
         body: "Hi Santiago,\n\nI'm writing because...\n\nBest regards,",
       },

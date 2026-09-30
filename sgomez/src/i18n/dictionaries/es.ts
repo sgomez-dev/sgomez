@@ -60,6 +60,10 @@ const es = {
       certifications: "Certificaciones",
       education: "Formación",
       blog: "Blog",
+      blogAll: "Ver todas las entradas",
+      minutes: "{n} min de lectura",
+      credential: "Ver credencial",
+      categories: { PROYECTO: "Proyecto", PODCAST: "Podcast", REFLEXION: "Reflexión", TUTORIAL: "Tutorial", NOTICIA: "Noticia", GENERAL: "General" },
     },
     contact: {
       eyebrow: "Contacto",
@@ -79,19 +83,24 @@ const es = {
     cv: "Descargar CV",
   },
   contact: {
+    emailLabel: "O escríbeme directamente",
+    profiles: "Perfiles",
     intent: {
       freelance: {
         label: "Proyecto freelance",
+        desc: "Cuéntame qué quieres construir, en qué plazos y con qué presupuesto.",
         subject: "Proyecto freelance",
         body: "Hola, Santiago:\n\nTengo un proyecto en mente y me gustaría comentarlo contigo.\n\nQué quiero conseguir:\nPlazos aproximados:\nPresupuesto orientativo:\n\nUn saludo.",
       },
       job: {
         label: "Oportunidad laboral",
+        desc: "Cuéntame la empresa, el puesto y la modalidad.",
         subject: "Oportunidad laboral",
         body: "Hola, Santiago:\n\nEstamos buscando un perfil como el tuyo y creo que encajarías.\n\nEmpresa y puesto:\nModalidad y ubicación:\n\nUn saludo.",
       },
       other: {
         label: "Otra cosa",
+        desc: "Escríbeme por cualquier otro motivo.",
         subject: "Te escribo desde tu web",
         body: "Hola, Santiago:\n\nTe escribo porque…\n\nUn saludo.",
       },

@@ -9,7 +9,7 @@ import { markdownVariantOf } from "@/lib/markdown/routing";
  *
  * Render de servidor y sin animaciones: son páginas de texto que un agente
  * también va a leer, y la home ya carga suficiente JavaScript. Los tokens
- * visuales (glass, gradient-text, la retícula de container-custom) son los
+ * visuales (glass y la retícula de container-custom) son los
  * mismos que el resto del sitio, así que se lee como una página más y no como
  * un anexo pegado por fuera.
  */
