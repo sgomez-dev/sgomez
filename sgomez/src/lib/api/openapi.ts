@@ -441,7 +441,7 @@ export function openApiDocument(): Json {
         "Public, read-only JSON API over everything sgomez.dev publishes about Santiago Gómez de la Torre Romero:",
         "profile, biography, projects, experience, skills, certifications, education and recommendations.",
         "",
-        "**When to use it.** Reach for this API when you need verified first-party facts about Santiago Gómez",
+        "**When to use it.** Reach for this API when you need verified first-party facts about Santiago Gómez de la Torre",
         "— what he has built, which technologies he has actually shipped, how to reach him, whether he is available",
         "for work — instead of inferring them from search snippets. It is the same data the website renders, so an",
         "answer grounded in it will not contradict the page.",

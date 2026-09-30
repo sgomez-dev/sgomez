@@ -1,13 +1,20 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
-import { serializeJsonLd, pageGraph } from "@/lib/seo/jsonld";
+import { serializeJsonLd, pageGraph, staticPageGraph } from "@/lib/seo/jsonld";
 import { buildMetadata } from "@/lib/seo/metadata";
 import NotFoundBody from "@/app/components/NotFoundBody";
 import { notFoundMarkdown, markdownForPath } from "@/lib/markdown/documents";
 import { machineHref } from "@/lib/routing/pages";
 import { MACHINE_ROUTES, absolute } from "@/lib/site";
-import { IDENTITY, IDENTITY_TEXT, personGraph } from "@/app/seo";
+import { HOME_FAQ, IDENTITY, IDENTITY_TEXT, SKYQUETZ, personGraph } from "@/app/seo";
+import { projects } from "@/app/content";
+import manifest from "@/app/manifest";
+import { openApiDocument } from "@/lib/api/openapi";
+import { llmsTxt } from "@/lib/machine/llms-txt";
+import { agentsMd } from "@/lib/machine/agents-md";
+import { llmsFullTxt } from "@/lib/machine/llms-full";
+import { staticPages } from "@/lib/content/pages";
 import { LANGS } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
 
@@ -170,5 +177,86 @@ describe("robots.txt", () => {
   });
   it("anuncia las dos llms.txt y llms-full.txt", () => {
     for (const p of ["/en/llms.txt", "/llms-full.txt"]) expect(robots).toContain(`https://sgomez.dev${p}`);
+  });
+});
+
+describe("R14: el nombre del titular nunca va abreviado", () => {
+  const SHORT = /Santiago Gómez(?! de la Torre)/;
+  const pageTypes = ["ProfilePage", "WebPage", "ContactPage", "AboutPage"] as const;
+
+  it("ningún grafo, en ningún idioma ni tipo de página, abrevia el nombre", () => {
+    for (const lang of LANGS) {
+      for (const type of pageTypes) {
+        const text = JSON.stringify(pageGraph({ lang, path: "/", title: "t", description: "d", type }));
+        expect(text, `${lang} ${type}`).not.toMatch(SHORT);
+      }
+      expect(JSON.stringify(personGraph(lang))).not.toMatch(SHORT);
+    }
+  });
+  it("ni los ficheros de máquina", () => {
+    for (const lang of LANGS) {
+      expect(llmsTxt(lang), `llms ${lang}`).not.toMatch(SHORT);
+      expect(agentsMd(lang), `agents ${lang}`).not.toMatch(SHORT);
+      expect(llmsFullTxt(lang), `llms-full ${lang}`).not.toMatch(SHORT);
+    }
+  });
+  it("ni el manifiesto, ni OpenAPI, ni los diccionarios", () => {
+    expect(JSON.stringify(manifest())).not.toMatch(SHORT);
+    expect(JSON.stringify(openApiDocument())).not.toMatch(SHORT);
+    for (const lang of LANGS) expect(JSON.stringify(getDictionary(lang)), lang).not.toMatch(SHORT);
+  });
+});
+
+describe("/en/llms.txt y /en/agents.md no arrastran español", () => {
+  it("sin signos de apertura ni descripciones españolas de los proyectos", () => {
+    const en = [llmsTxt("en"), agentsMd("en")];
+    for (const text of en) {
+      expect(text).not.toContain("¿");
+      for (const project of projects) expect(text).not.toContain(project.desc.es);
+    }
+    expect(llmsTxt("en")).not.toContain(SKYQUETZ.synentria.description);
+    expect(llmsTxt("en")).not.toContain(SKYQUETZ.packatrack.description);
+  });
+  it("el FAQ de llms.txt sale de la misma fuente que el del JSON-LD", () => {
+    for (const lang of LANGS) for (const { q, a } of HOME_FAQ[lang]) {
+      expect(llmsTxt(lang)).toContain(`**${q}**`);
+      expect(llmsTxt(lang)).toContain(a);
+    }
+  });
+});
+
+describe("tipos del grafo de cada página", () => {
+  const expected: Record<string, string> = { about: "AboutPage", contact: "ContactPage", developers: "WebPage", privacy: "WebPage" };
+  for (const lang of LANGS) {
+    for (const page of staticPages(lang)) {
+      it(`${page.path}`, () => {
+        const types = ((staticPageGraph(page)["@graph"]) as { "@type": string | string[] }[]).map((n) => n["@type"]);
+        expect(types).toContain(expected[page.slug]);
+        for (const t of ["WebSite", "Person", "BreadcrumbList"]) expect(types).toContain(t);
+        expect(types.includes("FAQPage")).toBe(page.slug === "contact");
+        expect(types.filter((t) => t === "Person")).toHaveLength(1);
+      });
+    }
+    it(`la home ${lang}: ProfilePage con FAQ`, () => {
+      const g = pageGraph({ lang, path: "/", title: "t", description: "d", type: "ProfilePage" }) as { "@graph": { "@type": string }[] };
+      const types = g["@graph"].map((n) => n["@type"]);
+      for (const t of ["WebSite", "ProfilePage", "Person", "FAQPage"]) expect(types).toContain(t);
+    });
+  }
+  it("el layout no renderiza ningún ld+json", () => {
+    const src = read("src/app/[lang]/layout.tsx");
+    expect(src).not.toMatch(/ld\+json|personGraph|dangerouslySetInnerHTML/);
+  });
+});
+
+describe("robots.txt: Content-Signal en cada grupo de IA", () => {
+  const groups = read("public/robots.txt").split(/\n\n+/).filter((g) => /^User-agent:/m.test(g));
+  const AI = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-Web", "Claude-SearchBot", "anthropic-ai", "PerplexityBot", "Perplexity-User", "Google-Extended", "Applebot-Extended", "Amazonbot", "Bytespider", "CCBot", "cohere-ai", "Meta-ExternalAgent", "Meta-ExternalFetcher", "YouBot", "Diffbot", "DuckAssistBot", "MistralAI-User"];
+  it("cada bot de IA lo repite, porque un grupo propio no lee el de *", () => {
+    for (const bot of AI) {
+      const group = groups.find((g) => new RegExp(`^User-agent: ${bot}$`, "m").test(g));
+      expect(group, bot).toBeDefined();
+      expect(group, bot).toContain("Content-Signal: search=yes, ai-input=yes, ai-train=yes");
+    }
   });
 });

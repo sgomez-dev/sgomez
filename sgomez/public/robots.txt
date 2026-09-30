@@ -31,68 +31,90 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
-# Crawlers de IA / motores generativos — permitidos para que me describan bien
+# Crawlers de IA / motores generativos — permitidos para que me describan bien.
+# Cada grupo repite Content-Signal: un bot con grupo propio no lee el de `*` (RFC 9309).
 User-agent: GPTBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: OAI-SearchBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: ChatGPT-User
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: ClaudeBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Claude-Web
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Claude-SearchBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: anthropic-ai
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: PerplexityBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Perplexity-User
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Google-Extended
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Applebot-Extended
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Amazonbot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Bytespider
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: CCBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: cohere-ai
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Meta-ExternalAgent
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Meta-ExternalFetcher
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: YouBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Diffbot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: DuckAssistBot
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: MistralAI-User
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 Sitemap: https://sgomez.dev/sitemap.xml

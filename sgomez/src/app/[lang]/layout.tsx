@@ -3,6 +3,7 @@ import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { LANGS, isLang, localizedPath, type Lang } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
+import { machineHref } from "@/lib/routing/pages";
 import { OG_ALT, OG_SIZE, SITE_NAME, ogImagePath } from "@/lib/seo/metadata";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -45,7 +46,7 @@ function siteMetadata(lang: Lang): Metadata {
   formatDetection: { email: false, address: false, telephone: false },
   appleWebApp: {
     capable: true,
-    title: "Santiago Gómez",
+    title: "sgomez.dev",
     statusBarStyle: "black-translucent",
   },
   robots: {
@@ -168,8 +169,9 @@ export default async function LangLayout({
             diferencia entre publicar la especificación y que se pueda
             descubrir. */}
         <link rel="service-desc" type="application/openapi+json" href="/openapi.json" title="OpenAPI 3.1 — sgomez.dev Public API" />
-        <link rel="service-doc" type="text/html" href={localizedPath(lang, "/developers")} title="Portal para desarrolladores de sgomez.dev" />
-        <link rel="alternate" type="text/markdown" href={localizedPath(lang, "/llms.txt")} title="llms.txt — resumen factual del sitio" />
+        <link rel="service-doc" type="text/html" href={localizedPath(lang, "/developers")} title={lang === "es" ? "Portal para desarrolladores de sgomez.dev" : "sgomez.dev developer portal"} />
+        {/* Sin `type="text/markdown"`: el único alternate de ese tipo debe ser el `.md` de la propia página. */}
+        <link rel="alternate" href={machineHref("/llms.txt", lang)} title={lang === "es" ? "llms.txt — resumen factual del sitio" : "llms.txt — factual summary of the site"} />
         <link rel="author" href={localizedPath(lang, "/about")} />
         <link rel="privacy-policy" href={localizedPath(lang, "/privacy")} />
         {/* El JSON-LD ya no vive aquí: lo pinta cada página (un solo @graph por

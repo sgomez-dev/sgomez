@@ -3,6 +3,7 @@ import { about } from "@/app/content";
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { t } from "./localized";
 import { API_BASE, SITE_URL } from "@/lib/site";
+import { machineHref } from "@/lib/routing/pages";
 
 /**
  * Contenido de las páginas estáticas, como datos y no como JSX.
@@ -306,12 +307,12 @@ function buildContact(lang: Lang): StaticPage {
               },
               {
                 label: "/llms.txt",
-                href: "/llms.txt",
+                href: machineHref("/llms.txt", lang),
                 note: x("Resumen factual del sitio en markdown.", "Factual summary of the site in markdown."),
               },
               {
                 label: "/agents.md",
-                href: "/agents.md",
+                href: machineHref("/agents.md", lang),
                 note: x("Cuándo usar este sitio y cómo llamarlo.", "When to use this site and how to call it."),
               },
             ],

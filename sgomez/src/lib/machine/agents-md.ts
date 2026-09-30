@@ -112,7 +112,7 @@ export function agentsMd(lang: Lang): string {
 
   L.push("## Flagship work, in one line each");
   L.push("");
-  for (const project of getProjects().slice(0, 5)) {
+  for (const project of getProjects(lang).slice(0, 5)) {
     L.push(`- **${project.title}** — ${project.description} (${project.stack.join(", ")}) ${project.url}`);
   }
   L.push("");

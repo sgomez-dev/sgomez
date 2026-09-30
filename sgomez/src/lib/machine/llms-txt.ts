@@ -1,4 +1,4 @@
-import { CLAUDE_CANVAS, IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
+import { CLAUDE_CANVAS, HOME_FAQ, IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
 import { projects, experience } from "@/app/content";
 import { t } from "@/lib/content/localized";
 import { localizedPath, type Lang } from "@/i18n/languages";
@@ -118,8 +118,8 @@ export function llmsTxt(lang: Lang): string {
   L.push(
     `Santiago co-founded ${SKYQUETZ.name} in ${SKYQUETZ.foundingDate} with three other partners (four founders in total). ${SKYQUETZ.descriptionEn} Every project is led in person by the engineer who builds it. Santiago leads the engineering side: architecture, code and the company's own products. Two of those products are his builds:`
   );
-  L.push(`- [${SKYQUETZ.synentria.name}](${SKYQUETZ.synentria.url}): ${SKYQUETZ.synentria.description}`);
-  L.push(`- [${SKYQUETZ.packatrack.name}](${SKYQUETZ.packatrack.url}): ${SKYQUETZ.packatrack.description}`);
+  L.push(`- [${SKYQUETZ.synentria.name}](${SKYQUETZ.synentria.url}): ${lang === "es" ? SKYQUETZ.synentria.description : SKYQUETZ.synentria.descriptionEn}`);
+  L.push(`- [${SKYQUETZ.packatrack.name}](${SKYQUETZ.packatrack.url}): ${lang === "es" ? SKYQUETZ.packatrack.description : SKYQUETZ.packatrack.descriptionEn}`);
   L.push("");
 
   L.push("## Profiles & properties");
@@ -167,14 +167,14 @@ export function llmsTxt(lang: Lang): string {
   L.push("## Selected projects");
   L.push("");
   for (const p of projects) {
-    L.push(`- **${p.title}** — ${t(p.desc, "es")} (${p.stack}) ${p.link}`);
+    L.push(`- **${p.title}** — ${t(p.desc, lang)} (${p.stack}) ${p.link}`);
   }
   L.push("");
 
   L.push("## Experience");
   L.push("");
   for (const e of experience) {
-    L.push(`- **${t(e.role, "es")}**, ${e.organization} - ${t(e.location, "es")} (${t(e.period, "es")})`);
+    L.push(`- **${t(e.role, lang)}**, ${e.organization} - ${t(e.location, lang)} (${t(e.period, lang)})`);
   }
   L.push("");
 
@@ -186,30 +186,14 @@ export function llmsTxt(lang: Lang): string {
   L.push(`- Cloud & DevOps: Google Cloud, Docker, Kubernetes, Jenkins, CI/CD.`);
   L.push("");
 
+  // Misma fuente que el FAQPage del JSON-LD: no pueden discrepar.
   L.push("## FAQ");
   L.push("");
-  L.push(`**¿Quién es Santiago Gómez de la Torre Romero?**`);
-  L.push(`Es un full-stack engineer en Cantabria, España, que lleva la IA a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo. Developer en Evenbytes y organizador de GDG Santander.`);
-  L.push("");
-  L.push(`**¿Qué es SkyQuetz Consulting y cuál es su papel en ella?**`);
-  L.push(
-    `SkyQuetz Consulting es una consultora de software a medida que Santiago cofundó en ${SKYQUETZ.foundingDate} con tres socios más, cuatro en total. Trabaja 100% en remoto para clientes de habla hispana y cada proyecto lo lidera en persona el ingeniero que lo construye. Santiago lleva la ingeniería: arquitectura, código y los productos propios de la casa, entre ellos Synentria (motor de auditoría SEO y GEO) y Packatrack (conciliación de liquidaciones para última milla). Es cofundador, no fundador único.`
-  );
-  L.push("");
-  L.push(`**¿Qué hace con IA y LLMs?**`);
-  L.push(`Construye sistemas de IA medibles: pipelines de RAG con embeddings y retrieval, evaluación con golden sets propios y LLMs en producto real. Subió la precisión del primer resultado de NudaUI Semantic Search del 67% al 80% (hit@1). Mantiene un asistente conversacional B2B en producción sobre la API de Claude.`);
-  L.push("");
-  L.push(`**¿Qué es NudaUI?**`);
-  L.push(`Una librería open-source de más de 1.000 componentes y animaciones UI copy-paste, framework-agnósticos, en 81 categorías. Cero dependencias, cero build. La creó y la mantiene Santiago.`);
-  L.push("");
-  L.push(`**¿Qué es Claude Canvas?**`);
-  L.push(
-    `Un plugin open source de Claude Code, creado y mantenido por Santiago, que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación y la respuesta de la persona le vuelve como un valor exacto —qué fichero, qué hunks de un diff, qué campos— en vez de prosa que tenga que interpretar. Nueve tipos de panel, transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Es MIT y es un fork del proof of concept de ${CLAUDE_CANVAS.basedOnAuthor}, ampliado a fondo. Es un proyecto personal, no un producto de ${SKYQUETZ.name}.`
-  );
-  L.push("");
-  L.push(`**¿Está disponible para trabajar?**`);
-  L.push(`Sí. Trabaja en remoto desde Cantabria, España, y está abierto a freelance y colaboraciones de IA/LLM y full-stack. Contacto: contact@sgomez.dev.`);
-  L.push("");
+  for (const entry of HOME_FAQ[lang]) {
+    L.push(`**${entry.q}**`);
+    L.push(entry.a);
+    L.push("");
+  }
 
   L.push("## Contact");
   L.push("");

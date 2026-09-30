@@ -44,7 +44,7 @@ describe("páginas de confianza", () => {
     for (const page of STATIC_PAGES) {
       expect(page.metaTitle.length).toBeGreaterThan(20);
       // El nombre tiene que estar en el título para las búsquedas por nombre.
-      expect(page.metaTitle).toMatch(/sgomez\.dev|Santiago Gómez/);
+      expect(page.metaTitle).toMatch(/sgomez\.dev|Santiago Gómez de la Torre/);
       expect(page.description.length).toBeGreaterThan(80);
     }
   });

@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
-import { hero } from "@/app/content";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { OG_SIZE } from "@/lib/seo/metadata";
@@ -22,6 +21,9 @@ import { OG_SIZE } from "@/lib/seo/metadata";
 const FONTS_DIR = path.join(process.cwd(), "src", "lib", "seo", "fonts");
 const PORTRAIT = path.join(process.cwd(), "public", "Santiago_Gómez_de_la_Torre_Romero.png");
 
+/** Nombre del titular en dos líneas: «Gómez de la Torre» es UN apellido y no se parte. */
+const NAME_LINES = ["Santiago", "Gómez de la Torre."] as const;
+
 const COLORS = {
   bg: "#05060a",
   text: "#f4f6fb",
@@ -39,7 +41,6 @@ export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
     readFile(PORTRAIT),
   ]);
   const d = getDictionary(lang).chapters.hero;
-  const title = `${hero.name.replace(/ Romero$/, "")}.`;
   const portraitSrc = `data:image/png;base64,${portrait.toString("base64")}`;
 
   return new ImageResponse(
@@ -58,7 +59,7 @@ export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
           fontFamily: "Inter Tight",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", width: 680 }}>
+        <div style={{ display: "flex", flexDirection: "column", width: 720 }}>
           <div
             style={{
               display: "flex",
@@ -74,14 +75,20 @@ export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
             style={{
               display: "flex",
               marginTop: 28,
-              fontSize: 92,
+              flexDirection: "column",
+              fontSize: 84,
               fontWeight: 600,
-              lineHeight: 0.98,
+              lineHeight: 1,
               letterSpacing: -3,
+              whiteSpace: "nowrap",
               color: COLORS.text,
             }}
           >
-            {title}
+            {NAME_LINES.map((line) => (
+              <div key={line} style={{ display: "flex" }}>
+                {line}
+              </div>
+            ))}
           </div>
           <div
             style={{
@@ -113,16 +120,16 @@ export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
         <div
           style={{
             display: "flex",
-            width: 380,
-            height: 380,
-            borderRadius: 190,
+            width: 340,
+            height: 340,
+            borderRadius: 170,
             overflow: "hidden",
             border: `2px solid ${COLORS.line}`,
             backgroundColor: "#0b0d14",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- next/og renderiza con satori, no con next/image */}
-          <img src={portraitSrc} width={380} height={380} alt="" style={{ objectFit: "cover" }} />
+          <img src={portraitSrc} width={340} height={340} alt="" style={{ objectFit: "cover" }} />
         </div>
       </div>
     ),

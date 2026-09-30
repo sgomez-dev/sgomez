@@ -100,7 +100,7 @@ export const skyquetz = {
 
 export const certifications = [
   { title: "Software Engineer Intern", institution: "HackerRank", date: { es: "Septiembre 2025", en: "September 2025" }, img: "/models/assets/certifications/hackerrank.png", url: "https://drive.google.com/file/d/1IXV7yxijNfycqqqMvovNXFZMOV6fjJkK/view?usp=sharing" },
-  { title: "McKensey.org Forward Program", institution: "McKensey.org", date: { es: "Julio 2025", en: "July 2025" }, img: "/models/assets/certifications/mckinsey.png", url: "https://drive.google.com/file/d/1hbWX1oyBi8zUXPsgUtvgZ8ueekno31pz/view?usp=sharing" },
+  { title: "McKinsey.org Forward Program", institution: "McKinsey.org", date: { es: "Julio 2025", en: "July 2025" }, img: "/models/assets/certifications/mckinsey.png", url: "https://drive.google.com/file/d/1hbWX1oyBi8zUXPsgUtvgZ8ueekno31pz/view?usp=sharing" },
   { title: "Angular (basic)", institution: "HackerRank", date: { es: "Junio 2025", en: "June 2025" }, img: "/models/assets/certifications/hackerrank.png", url: "https://drive.google.com/file/d/1DqpO9M0GigJT43VKkulbZuwKg6-HT1Ab/view?usp=sharing" },
   { title: "Software Engineer", institution: "HackerRank", date: { es: "Mayo 2025", en: "May 2025" }, img: "/models/assets/certifications/hackerrank.png", url: "https://drive.google.com/file/d/10MHq7lyYelaamoLLJhwOc_BVsdtK3qQ4/view?usp=sharing" },
   { title: "Frontend Developer (React)", institution: "HackerRank", date: { es: "Mayo 2025", en: "May 2025" }, img: "/models/assets/certifications/hackerrank.png", url: "https://drive.google.com/file/d/1CQH076Ss81QmlBZJ9wSyvOx7HTk-gK-y/view?usp=sharing" },

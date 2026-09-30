@@ -14,8 +14,9 @@ import { CONTENT_UPDATED, ROUTE_CATALOGUE, latestContentUpdate, type LogicalPath
 
 /**
  * Textos de la identidad que se muestran a una persona y por tanto existen en
- * los dos idiomas. `IDENTITY.description` sigue siendo la versión en español
- * (la que consumen el JSON-LD y los documentos markdown, que no cambian).
+ * los dos idiomas. `IDENTITY.description` y `IDENTITY.coFounderTitle` son la
+ * versión española (compatibilidad); el JSON-LD y los documentos markdown leen
+ * `IDENTITY_TEXT[campo][lang]`, así que nada en inglés cae al español.
  */
 export const IDENTITY_TEXT = {
   description: {
@@ -232,23 +233,23 @@ const HOME_PAGE: GraphPage = {
  * contexto. La versión española es la de siempre, palabra por palabra; la
  * inglesa dice lo mismo y no añade ninguna afirmación.
  */
-const HOME_FAQ: Record<Lang, GraphFaq[]> = {
+export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
   es: [
     {
       q: "¿Quién es Santiago Gómez de la Torre Romero?",
       a: "Santiago Gómez de la Torre Romero es un full-stack engineer afincado en Cantabria, España. Lleva la IA a producción, no a demos. Cofundó SkyQuetz Consulting, una consultora de software a medida, y es el creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Trabaja como developer en Evenbytes y organiza el GDG Santander.",
     },
     {
-      q: "¿Qué hace Santiago Gómez con IA y LLMs?",
+      q: "¿Qué hace Santiago Gómez de la Torre con IA y LLMs?",
       a: "Construye sistemas de IA medibles en producción. Diseña pipelines de RAG con embeddings y retrieval, evalúa con golden sets propios e integra LLMs en producto real. Levantó la búsqueda semántica de NudaUI y subió la precisión del primer resultado del 67% al 80% (hit@1). También mantiene en producción un asistente conversacional B2B sobre la API de Claude.",
     },
     {
-      q: "¿Qué es SkyQuetz Consulting y qué papel tiene Santiago Gómez en ella?",
-      a: "SkyQuetz Consulting es una consultora de software a medida que Santiago Gómez cofundó en 2026 con tres socios más, cuatro fundadores en total. Trabaja 100% en remoto para clientes de habla hispana y cada proyecto lo lidera en persona el ingeniero que lo construye. Santiago lleva la ingeniería: arquitectura, código y los productos propios de la casa, entre ellos Synentria, un motor de auditoría SEO y GEO, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla. Es cofundador, no fundador único.",
+      q: "¿Qué es SkyQuetz Consulting y qué papel tiene Santiago Gómez de la Torre en ella?",
+      a: "SkyQuetz Consulting es una consultora de software a medida que Santiago Gómez de la Torre cofundó en 2026 con tres socios más, cuatro fundadores en total. Trabaja 100% en remoto para clientes de habla hispana y cada proyecto lo lidera en persona el ingeniero que lo construye. Santiago lleva la ingeniería: arquitectura, código y los productos propios de la casa, entre ellos Synentria, un motor de auditoría SEO y GEO, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla. Es cofundador, no fundador único.",
     },
     {
       q: "¿Qué es NudaUI?",
-      a: "NudaUI es una librería open-source creada y mantenida por Santiago Gómez. Reúne más de 1.000 componentes y animaciones UI copy-paste, framework-agnósticos, organizados en 81 categorías. No tiene dependencias ni paso de build y funciona en React, Vue, Svelte, Astro, Laravel, Django o un simple archivo HTML.",
+      a: "NudaUI es una librería open-source creada y mantenida por Santiago Gómez de la Torre. Reúne más de 1.000 componentes y animaciones UI copy-paste, framework-agnósticos, organizados en 81 categorías. No tiene dependencias ni paso de build y funciona en React, Vue, Svelte, Astro, Laravel, Django o un simple archivo HTML.",
     },
     {
       q: "¿Qué es NudaUI Semantic Search (RAG)?",
@@ -256,10 +257,10 @@ const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "¿Qué es Claude Canvas?",
-      a: "Claude Canvas es un plugin open source de Claude Code, creado y mantenido por Santiago Gómez, que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación y la respuesta de la persona vuelve al modelo como un valor exacto —qué fichero, qué hunks de un diff, qué campos de un formulario— en vez de prosa que tenga que interpretar. Trae nueve tipos de panel (picker, form, table, image, diff, dashboard, calendar, document y flight), un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Es MIT y es un fork del proof of concept de David Siegel (dvdsgl/claude-canvas), ampliado a fondo y conservando su copyright. Es un proyecto personal de Santiago, no un producto de SkyQuetz Consulting.",
+      a: "Claude Canvas es un plugin open source de Claude Code, creado y mantenido por Santiago Gómez de la Torre, que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación y la respuesta de la persona vuelve al modelo como un valor exacto —qué fichero, qué hunks de un diff, qué campos de un formulario— en vez de prosa que tenga que interpretar. Trae nueve tipos de panel (picker, form, table, image, diff, dashboard, calendar, document y flight), un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Es MIT y es un fork del proof of concept de David Siegel (dvdsgl/claude-canvas), ampliado a fondo y conservando su copyright. Es un proyecto personal de Santiago, no un producto de SkyQuetz Consulting.",
     },
     {
-      q: "¿Con qué tecnologías trabaja Santiago Gómez?",
+      q: "¿Con qué tecnologías trabaja Santiago Gómez de la Torre?",
       a: "Trabaja con React, Next.js, Node.js, TypeScript, Python y FastAPI, además de Google Cloud. En IA usa RAG, embeddings, evals y prompt engineering.",
     },
     {
@@ -478,7 +479,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
         { "@type": "Country", name: x("España", "Spain") },
         { "@type": "AdministrativeArea", name: x("Latinoamérica", "Latin America") },
       ],
-      knowsLanguage: ["Spanish", "English"],
+      knowsLanguage: ["es", "en"],
       // contactPoint + address: las dos propiedades con las que un agente
       // comprueba que detrás del nombre hay una empresa a la que se puede
       // escribir y un sitio donde opera. Sin ellas el nodo describe una marca,
@@ -629,7 +630,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
     {
       "@type": "Blog",
       "@id": `${IDENTITY.url}/#blog`,
-      name: "Blog — Santiago Gómez",
+      name: "Blog — Santiago Gómez de la Torre",
       url: "https://blog.sgomez.dev",
       author: { "@id": PERSON },
       inLanguage: "es-ES",
