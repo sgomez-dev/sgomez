@@ -3,7 +3,25 @@ import { test, expect } from "./fixtures";
 
 const CHAPTERS = ["top", "about", "build", "experience", "work", "open-source", "skyquetz", "proof", "contact"];
 
+/**
+ * Estilos calculados del elemento y de todos sus ancestros hasta <body>: lo que
+ * esconde contenido sin JS es justo un `opacity: 0` (o visibility/display) a la
+ * espera de un script, y `toBeVisible()` / `innerText` lo ignoran.
+ */
+function hiddenBy(el: Element): string[] {
+  const problems: string[] = [];
+  for (let n: Element | null = el; n && n !== document.documentElement; n = n.parentElement) {
+    const cs = getComputedStyle(n);
+    const name = n.tagName.toLowerCase() + (n.id ? "#" + n.id : "");
+    if (parseFloat(cs.opacity) <= 0) problems.push(name + " opacity " + cs.opacity);
+    if (cs.visibility === "hidden") problems.push(name + " visibility hidden");
+    if (cs.display === "none") problems.push(name + " display none");
+  }
+  return problems;
+}
+
 test.describe("sin JavaScript", () => {
+  test.beforeEach(({}, info) => test.skip(!["desktop", "mobile"].includes(info.project.name), "solo desktop y mobile"));
   test.use({ javaScriptEnabled: false });
 
   for (const path of ["/", "/en"]) {
@@ -14,8 +32,19 @@ test.describe("sin JavaScript", () => {
         await expect(section, id).toHaveCount(1);
         const text = await section.evaluate((el) => (el as HTMLElement).innerText.trim());
         expect(text.length, `#${id} sin texto`).toBeGreaterThan(0);
+        // Texto que no sea un titular: los h1-h3 solos no bastan.
+        const body = await section.evaluate((el) =>
+          Array.from(el.querySelectorAll<HTMLElement>("p, li, a, span, blockquote, dd, dt, small, figcaption"))
+            .filter((n) => !n.closest("h1, h2, h3"))
+            .map((n) => n.innerText.trim())
+            .join("")
+            .length,
+        );
+        expect(body, `#${id} solo tiene titulares`).toBeGreaterThan(0);
+        expect(await section.evaluate(hiddenBy), `#${id} oculta por estilo`).toEqual([]);
       }
       await expect(page.locator("[data-answer]").first()).toBeVisible();
+      expect(await page.locator("[data-answer]").first().evaluate(hiddenBy), "[data-answer] oculto por estilo").toEqual([]);
     });
   }
 
@@ -25,7 +54,7 @@ test.describe("sin JavaScript", () => {
       await page.goto(path);
       const { scroll, inner } = await page.evaluate(() => ({
         scroll: document.documentElement.scrollWidth,
-        inner: window.innerWidth,
+        inner: document.documentElement.clientWidth,
       }));
       expect(scroll).toBeLessThanOrEqual(inner);
     });
@@ -35,6 +64,7 @@ test.describe("sin JavaScript", () => {
     for (const path of ["/about", "/en/contact"]) {
       await page.goto(path);
       await expect(page.locator("[data-answer]").first()).toBeVisible();
+      expect(await page.locator("[data-answer]").first().evaluate(hiddenBy)).toEqual([]);
     }
   });
 });
@@ -58,7 +88,11 @@ test.describe("recomendaciones en inglés (Review Focus 5, R12)", () => {
     await expect(details).not.toHaveAttribute("open", /.*/);
     const original = details.locator('[lang="es"]');
     await expect(original).toHaveCount(1);
-    expect(((await original.textContent()) ?? "").length).toBeGreaterThan(40);
+    const originalText = ((await original.textContent()) ?? "").trim();
+    expect(originalText.length).toBeGreaterThan(40);
+    // Es el original en español y no una copia de la traducción.
+    expect(originalText).not.toBe(((await translation.textContent()) ?? "").trim());
+    expect(originalText).toMatch(/[áéíóúñ¿¡]|(que|de|la|el|con|para)/i);
     await expect(original).toBeHidden();
     await details.locator("summary").click();
     await expect(original).toBeVisible();

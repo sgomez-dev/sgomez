@@ -38,6 +38,26 @@ jobs:
       - name: Unit tests
         run: npx vitest run
 
+      - name: Read Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      - name: Cache Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: sgomez/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('sgomez/package-lock.json') }}-${{ hashFiles('sgomez/src/**', 'sgomez/public/**') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('sgomez/package-lock.json') }}-
+
+      # With a cache hit the browser is already there; --with-deps still
+      # installs the system libraries, which are not cached.
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
@@ -64,5 +84,7 @@ jobs:
         run: |
           export CHROME_PATH="$(node -e 'console.log(require("@playwright/test").chromium.executablePath())')"
           npx next start -p 3000 &
-          for i in $(seq 1 60); do curl -fs http://localhost:3000/ >/dev/null && break; sleep 1; done
+          up=0
+          for i in $(seq 1 60); do curl -fs http://localhost:3000/ >/dev/null && { up=1; break; }; sleep 1; done
+          [ "$up" = 1 ] || { echo "server did not start"; exit 1; }
           npx lhci autorun --config=./lighthouserc.ci.json

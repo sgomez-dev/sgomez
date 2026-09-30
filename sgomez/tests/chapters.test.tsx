@@ -9,7 +9,7 @@ import OpenSource from "@/chapters/OpenSource";
 import SkyQuetz from "@/chapters/SkyQuetz";
 import Proof from "@/chapters/Proof";
 import Contact from "@/chapters/Contact";
-import LatestPosts from "@/chapters/LatestPosts";
+import LatestPosts, { blogApiDisabled } from "@/chapters/LatestPosts";
 import { contactMailto } from "@/lib/contact/mailto";
 import { getRecommendations } from "@/lib/api/data";
 import { IDENTITY } from "@/app/seo";
@@ -193,7 +193,22 @@ describe("capítulos 08–09 en HTML de servidor", () => {
 describe("últimas entradas del blog", () => {
   const post = (slug: string, coverImage: string | null) => ({ slug, title: `T ${slug}`, excerpt: "", coverImage, coverAlt: null, category: "PROYECTO", readingTime: 3, publishedAt: "2026-09-11T00:00:00Z" });
   const render = async (lang: "es" | "en") => renderToStaticMarkup(await LatestPosts({ lang }));
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+  it("BLOG_API_DISABLED=1: no llama al blog y no renderiza nada; sin la variable sí llama", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [post("a", null)] }) });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("BLOG_API_DISABLED", "1");
+    expect(blogApiDisabled()).toBe(true);
+    expect(await LatestPosts({ lang: "es" })).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.unstubAllEnvs();
+    expect(blogApiDisabled()).toBe(false);
+    expect(await LatestPosts({ lang: "es" })).not.toBeNull();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
   it("respuesta no ok: nada", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
     expect(await LatestPosts({ lang: "es" })).toBeNull();

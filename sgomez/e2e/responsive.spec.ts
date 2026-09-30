@@ -15,7 +15,7 @@ const WIDTHS = [
 ];
 
 const overflow = (page: Page) =>
-  page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
+  page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: document.documentElement.clientWidth }));
 
 test.describe("sin desborde horizontal", () => {
   // El proyecto desktop recorre todos los anchos con setViewportSize; los demás

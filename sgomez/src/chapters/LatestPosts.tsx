@@ -19,12 +19,22 @@ interface BlogPost {
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
 
+export function blogApiDisabled(): boolean {
+  return process.env.BLOG_API_DISABLED === "1";
+}
+
 /**
  * Últimas entradas del blog, dentro del capítulo 08. Si el blog no responde,
  * la API falla o no hay entradas, no renderiza nada: la página no se rompe.
  * Las entradas están escritas en español, y así se marcan en `lang`.
  */
 export default async function LatestPosts({ lang }: { lang: Lang }) {
+  // Interruptor para los e2e (playwright.config.ts): el fetch ocurre en el
+  // servidor al construir o revalidar, así que el navegador no puede
+  // interceptarlo. Con BLOG_API_DISABLED=1 no se llama al blog y no se pinta
+  // nada, y las pruebas no dependen de blog.sgomez.dev. Sin la variable el
+  // comportamiento de producción no cambia.
+  if (blogApiDisabled()) return null;
   let posts: BlogPost[] = [];
   try {
     const res = await fetch(`${BLOG_API}?pageSize=3`, { next: { revalidate: 3600 } });

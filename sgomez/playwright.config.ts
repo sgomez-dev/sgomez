@@ -23,6 +23,8 @@ export default defineConfig({
     command: `npm run build && npx next start -p ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: true,
+    // El build y el servidor no llaman a blog.sgomez.dev (ver LatestPosts).
+    env: { BLOG_API_DISABLED: "1" },
     timeout: 300_000,
   },
   projects: [
