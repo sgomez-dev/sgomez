@@ -14,6 +14,7 @@ const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
 
 const nextConfig: NextConfig = {
+  experimental: { globalNotFound: true },
   async headers() {
     return [
       {

@@ -5,7 +5,8 @@ import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { getProjects } from "@/lib/api/data";
 import { findStaticPage, staticPages } from "@/lib/content/pages";
 import { renderPageMarkdown } from "@/lib/markdown/render";
-import { API_BASE, HTML_ROUTES, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib/site";
+import { localizedHtmlRoutes } from "@/lib/routing/pages";
+import { API_BASE, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib/site";
 
 /**
  * Catálogo de representaciones markdown del sitio.
@@ -16,14 +17,6 @@ import { API_BASE, HTML_ROUTES, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib
  * permite que el test compruebe que TODAS las rutas HTML del sitio tienen su
  * variante.
  */
-
-/** Títulos en inglés de las rutas de `HTML_ROUTES`, para los listados en markdown. */
-const PAGE_TITLES_EN: Record<string, string> = {
-  "/about": "About me",
-  "/contact": "Contact",
-  "/developers": "Portal for developers and agents",
-  "/privacy": "Privacy",
-};
 
 function homeMarkdown(lang: Lang): string {
   const es = lang === "es";
@@ -59,12 +52,9 @@ function homeMarkdown(lang: Lang): string {
   lines.push("");
 
   lines.push(x("## Páginas", "## Pages"), "");
-  for (const route of HTML_ROUTES) {
-    if (route.path === "/") continue;
-    // /lab no tiene versión inglesa ni markdown.
-    if (!es && route.path === "/lab") continue;
-    const title = es ? route.title : (PAGE_TITLES_EN[route.path] ?? route.title);
-    lines.push(`- [${title}](${absolute(localizedPath(lang, route.path))})`);
+  for (const route of localizedHtmlRoutes(lang)) {
+    if (route.logical === "/") continue;
+    lines.push(`- [${route.title}](${absolute(route.path)})`);
   }
   lines.push("");
 
@@ -123,10 +113,8 @@ export function notFoundMarkdown(requestedPath?: string, lang: Lang = "es"): str
   );
 
   lines.push(x("## Páginas", "## Pages"), "");
-  for (const route of HTML_ROUTES) {
-    if (!es && route.path === "/lab") continue;
-    const title = es ? route.title : route.path === "/" ? "Home" : (PAGE_TITLES_EN[route.path] ?? route.title);
-    lines.push(`- [${title}](${absolute(localizedPath(lang, route.path))})`);
+  for (const route of localizedHtmlRoutes(lang)) {
+    lines.push(`- [${route.title}](${absolute(route.path)})`);
   }
   lines.push("");
 

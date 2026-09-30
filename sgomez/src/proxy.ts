@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { markdownForPath, notFoundMarkdown } from "@/lib/markdown/documents";
 import { decide } from "@/lib/markdown/routing";
+import { isRscRequest, routeRequest, type RouteDecision } from "@/lib/routing/request";
+import { splitLang } from "@/i18n/languages";
 import { CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
 
 /**
@@ -18,6 +20,12 @@ import { CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
  *    variante que entre en la caché de la CDN se le sirve a todo el mundo: al
  *    agente la página HTML, o al navegador un markdown en crudo, según quién
  *    llegara primero. Es el fallo que la convención señala como el grave.
+ *
+ * Además enruta por idioma (`routeRequest`): el español se sirve sin prefijo
+ * reescribiendo a `/es/...`, `/es/*` redirige a la URL sin prefijo y `/lab`,
+ * retirada, redirige a la home. Eso se aplica también a las peticiones RSC: la
+ * navegación de cliente pide `/about` y tiene que llegar a `/es/about`. Lo único
+ * que las peticiones RSC se saltan es la negociación de markdown.
  *
  * El markdown se genera aquí en vez de reescribir a una ruta interna porque
  * esa ruta sería una URL pública más, visible en el sitemap de cualquiera que
@@ -43,23 +51,35 @@ function markdownResponse(body: string, status: number, canonical: string, index
 }
 
 export default function proxy(request: NextRequest): NextResponse {
-  const { pathname } = request.nextUrl;
-  const isRsc = request.headers.has("rsc") || request.headers.has("next-router-prefetch");
+  const { pathname, search } = request.nextUrl;
+  const isRsc = isRscRequest(request.headers, request.nextUrl.searchParams);
+
+  const route = routeRequest(pathname);
+  if (route.kind === "redirect") {
+    return NextResponse.redirect(new URL(route.to + search, request.url), route.status);
+  }
+
+  // `decide` recibe siempre la ruta PÚBLICA (`/about`, `/en/about`), no la reescrita.
   const decision = decide(pathname, request.headers.get("accept"), isRsc);
 
-  if (decision.kind === "skip") return NextResponse.next();
+  if (decision.kind === "skip") return passThrough(request, route);
 
   if (decision.kind === "markdown") {
     const document = markdownForPath(decision.path);
     if (document === undefined) {
       // Un agente que pide markdown y se equivoca de ruta recibe markdown
       // también en el error, con el mapa del sitio para recuperarse.
-      return markdownResponse(notFoundMarkdown(decision.path), 404, decision.canonical, false);
+      return markdownResponse(
+        notFoundMarkdown(decision.path, splitLang(decision.path).lang),
+        404,
+        decision.canonical,
+        false,
+      );
     }
     return markdownResponse(document, 200, decision.canonical, decision.indexable);
   }
 
-  const response = NextResponse.next();
+  const response = passThrough(request, route);
   // Next sobreescribe esta cabecera en las respuestas de página, así que hoy
   // quien la hace valer es `vercel.json`. Se declara igualmente: es el valor
   // correcto para esta respuesta, y el día que Next deje de pisarla ya está.
@@ -71,6 +91,14 @@ export default function proxy(request: NextRequest): NextResponse {
   return response;
 }
 
+/** Continúa la petición, reescribiéndola a `/es/...` cuando el enrutado lo pide. */
+function passThrough(request: NextRequest, route: RouteDecision): NextResponse {
+  if (route.kind === "rewrite") {
+    return NextResponse.rewrite(new URL(route.to + request.nextUrl.search, request.url));
+  }
+  return NextResponse.next();
+}
+
 export const config = {
   /**
    * Se excluyen los assets y las rutas que ya sirven su propio formato. El
@@ -78,6 +106,6 @@ export const config = {
    * pero mantenerlo fuera del matcher ahorra una invocación por petición.
    */
   matcher: [
-    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt|agents.md|openapi.json).*)",
+    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt|agents.md|en/llms.txt|en/agents.md|openapi.json).*)",
   ],
 };

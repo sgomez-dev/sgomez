@@ -15,14 +15,17 @@ export const API_VERSION = "1.0.0";
 /** Prefijo de todos los endpoints de datos. */
 export const API_BASE = "/api/v1";
 
-/** Rutas HTML del sitio. `changeFrequency`/`priority` los consume el sitemap. */
+/**
+ * Rutas HTML del sitio, en español (las URLs sin prefijo). El catálogo con los
+ * dos idiomas vive en `lib/routing/pages.ts`; este fichero no importa `@/i18n`.
+ * `changeFrequency`/`priority` los consume el sitemap.
+ */
 export const HTML_ROUTES = [
   { path: "/", title: "Inicio", changeFrequency: "weekly", priority: 1 },
   { path: "/about", title: "Sobre mí", changeFrequency: "monthly", priority: 0.8 },
   { path: "/contact", title: "Contacto", changeFrequency: "monthly", priority: 0.8 },
   { path: "/developers", title: "Portal para desarrolladores y agentes", changeFrequency: "weekly", priority: 0.8 },
   { path: "/privacy", title: "Privacidad", changeFrequency: "yearly", priority: 0.4 },
-  { path: "/lab", title: "Lab", changeFrequency: "monthly", priority: 0.6 },
 ] as const;
 
 /**
@@ -116,6 +119,10 @@ export function absolute(path: string): string {
  * ficheros con su propio Content-Type que un agente no debe recibir
  * reescrito.
  */
-export const NEGOTIATION_EXEMPT_PATHS: readonly string[] = MACHINE_ROUTES.map(
-  (route) => route.path,
-);
+export const NEGOTIATION_EXEMPT_PATHS: readonly string[] = [
+  ...MACHINE_ROUTES.map((route) => route.path),
+  // Las versiones inglesas de los dos ficheros en markdown. `/en/agents.md`
+  // acaba en .md y sin esta excepción se leería como la variante de `/en/agents`.
+  "/en/llms.txt",
+  "/en/agents.md",
+];

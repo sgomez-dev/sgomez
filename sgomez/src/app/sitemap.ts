@@ -1,36 +1,37 @@
 import type { MetadataRoute } from "next";
-import { HTML_ROUTES, SITE_URL, absolute } from "@/lib/site";
+import { hreflangAlternates } from "@/i18n/languages";
+import { CONTENT_UPDATED, latestContentUpdate, localizedHtmlRoutes } from "@/lib/routing/pages";
+import { SITE_URL, absolute } from "@/lib/site";
 
 /**
- * Sitemap generado desde el catálogo de rutas de `lib/site.ts`.
+ * Sitemap generado desde el catálogo localizado de `lib/routing/pages.ts`.
  *
- * Antes la lista estaba escrita a mano aquí y solo tenía tres URLs; publicar
- * una página nueva y olvidarse de añadirla era cuestión de tiempo. Ahora el
- * sitemap y el 404 leen el mismo catálogo, así que no pueden discrepar.
+ * Publica cada página en sus dos idiomas y cada entrada lleva los `alternates`
+ * recíprocos (hreflang), que es lo que permite a un buscador emparejarlas.
+ * `lastModified` sale de `CONTENT_UPDATED`, fijo y editado a mano: un
+ * `new Date()` por petición declararía que todo cambia en cada rastreo.
  *
  * Los ficheros para agentes (llms.txt, agents.md, la especificación OpenAPI)
- * también van dentro: son documentos publicados con URL propia, y el
- * requisito de que se puedan encontrar por su nombre empieza por que estén
- * anunciados donde un buscador mira.
+ * también van dentro: son documentos publicados con URL propia.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
-  const pages: MetadataRoute.Sitemap = HTML_ROUTES.map((route) => ({
+  const pages: MetadataRoute.Sitemap = localizedHtmlRoutes().map((route) => ({
     url: absolute(route.path),
-    lastModified,
+    lastModified: new Date(CONTENT_UPDATED[route.logical]),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
-    ...(route.path === "/"
-      ? { images: [`${SITE_URL}/Santiago_Gómez_de_la_Torre_Romero.png`] }
-      : {}),
+    alternates: { languages: hreflangAlternates(route.logical) },
+    ...(route.logical === "/" ? { images: [`${SITE_URL}/Santiago_Gómez_de_la_Torre_Romero.png`] } : {}),
   }));
 
+  const lastModified = new Date(latestContentUpdate());
   const machineReadable: MetadataRoute.Sitemap = [
-    { url: absolute("/llms.txt"), lastModified, changeFrequency: "weekly", priority: 0.5 },
-    { url: absolute("/agents.md"), lastModified, changeFrequency: "weekly", priority: 0.5 },
-    { url: absolute("/openapi.json"), lastModified, changeFrequency: "weekly", priority: 0.5 },
-  ];
+    "/llms.txt",
+    "/en/llms.txt",
+    "/agents.md",
+    "/en/agents.md",
+    "/openapi.json",
+  ].map((path) => ({ url: absolute(path), lastModified, changeFrequency: "weekly" as const, priority: 0.5 }));
 
   return [...pages, ...machineReadable];
 }

@@ -88,8 +88,7 @@ describe("portal de desarrolladores", () => {
 
 describe("markdown de las páginas", () => {
   it("hay variante markdown para todas las rutas HTML", () => {
-    // /lab es una experiencia interactiva sin variante markdown (ni versión inglesa).
-    for (const route of HTML_ROUTES.filter((r) => r.path !== "/lab")) {
+    for (const route of HTML_ROUTES) {
       expect(MARKDOWN_PATHS, route.path).toContain(route.path);
       expect(markdownForPath(route.path)).toBeTruthy();
     }
