@@ -87,7 +87,7 @@ const LANG_PARAM: Json = {
   in: "query",
   required: false,
   description:
-    "Language of the response text: es (Spanish, the default) or en (English). Without it, an Accept-Language header starting with en selects English. Slugs are identical in both languages. Unknown values fall back to es.",
+    "Language of the response text: es (Spanish, the default) or en (English). The value is case-insensitive; any other value returns 400 invalid_parameter. Without it, an Accept-Language header starting with en selects English, otherwise Spanish. Responses carry Content-Language and Vary: Accept-Language. Slugs are identical in both languages.",
   schema: { type: "string", enum: ["es", "en"], default: "es" },
   example: "en",
 };
@@ -374,7 +374,7 @@ const SCHEMAS: Json = {
     properties: {
       slug: { type: "string", description: "Stable identifier." },
       name: { type: "string", description: "Who wrote it." },
-      date: { type: "string", description: "Date it was written, in Spanish." },
+      date: { type: "string", description: "Date it was written, human-readable, in the requested language." },
       comment: {
         type: "string",
         description: "Full text of the recommendation, always in the language its author wrote it (Spanish).",

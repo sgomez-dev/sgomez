@@ -1,5 +1,5 @@
 import { collectionMeta } from "@/lib/api/data";
-import { jsonOk, readInt, resolveLang } from "@/lib/api/http";
+import { jsonOk, readInt, readLang } from "@/lib/api/http";
 import type { Lang } from "@/i18n/languages";
 
 /**
@@ -20,12 +20,15 @@ export function collectionHandler<T>(path: string, load: (lang: Lang) => T[]) {
     const offset = readInt(url, "offset", { fallback: 0, min: 0, max: 1000 });
     if (!offset.ok) return offset.response;
 
-    const all = load(resolveLang(request));
+    const lang = readLang(request);
+    if (!lang.ok) return lang.response;
+
+    const all = load(lang.lang);
     const page = all.slice(offset.value, offset.value + limit.value);
 
     return jsonOk({
       data: page,
       meta: { ...collectionMeta(page.length, path), total: all.length, limit: limit.value, offset: offset.value },
-    });
+    }, { lang: lang.lang });
   };
 }

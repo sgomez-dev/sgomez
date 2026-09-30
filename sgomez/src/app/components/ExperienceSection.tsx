@@ -27,7 +27,7 @@ export default function ExperienceSection() {
                       <span className="text-violet-300 text-xs font-mono">{t(exp.period, 'es')}</span>
                     </div>
                     <h3 className="text-lg md:text-xl font-semibold text-white mb-1 group-hover:text-violet-300 transition-colors">{t(exp.role, 'es')}</h3>
-                    <p className="text-gray-500 text-sm mb-4 font-light">{exp.title}</p>
+                    <p className="text-gray-500 text-sm mb-4 font-light">{`${exp.organization} - ${t(exp.location, 'es')}`}</p>
                     <p className="text-gray-400 text-sm leading-relaxed font-light">{t(exp.desc, 'es')}</p>
                   </div>
                 </div>

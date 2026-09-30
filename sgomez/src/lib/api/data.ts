@@ -171,13 +171,13 @@ export function getProject(slug: string, lang: Lang = ES): Project | undefined {
 
 export function getExperience(lang: Lang = ES): ExperienceEntry[] {
   return experience.map((entry) => {
-    // `title` del contenido es "Organización - Ubicación"; la organización es
+    // El título público es "Organización - Ubicación"; la organización sola es
     // lo que va antes del primer guion.
-    const organization = entry.title.split(" - ")[0].trim();
+    const organization = entry.organization;
     return {
       slug: slugify(`${t(entry.role, "es")}-${organization}`),
       role: t(entry.role, lang),
-      organization: entry.title,
+      organization: `${entry.organization} - ${t(entry.location, lang)}`,
       period: t(entry.period, lang),
       description: collapse(t(entry.desc, lang)),
     };
@@ -219,7 +219,7 @@ export function getRecommendations(lang: Lang = ES): Recommendation[] {
   return recommendations.map((entry) => ({
     slug: slugify(entry.name),
     name: entry.name,
-    date: entry.date,
+    date: t(entry.date, lang),
     // El comentario es siempre el original: una cita no se atribuye en un
     // idioma que su autor no escribió. La traducción va en un campo aparte.
     comment: joinParagraphs(entry.comment),

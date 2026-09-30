@@ -30,7 +30,8 @@ describe("contenido bilingüe", () => {
 
 describe("API por idioma", () => {
   it("sin idioma responde en español, como hasta ahora", () => {
-    expect(getProfile().availability.statement).toBe(getProfile("es").availability.statement);
+    expect(getProfile().headline).toBe(content.hero.title.es);
+    expect(getProfile("en").headline).not.toBe(getProfile().headline);
   });
   it("los slugs son los mismos en los dos idiomas", () => {
     expect(getProjects("en").map((p) => p.slug)).toEqual(getProjects("es").map((p) => p.slug));

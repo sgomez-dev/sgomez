@@ -70,7 +70,7 @@ export default function SkyQuetzSection() {
               >
                 <Image
                   src={skyquetz.logo}
-                  alt={skyquetz.logoAlt}
+                  alt={t(skyquetz.logoAlt, 'es')}
                   width={425}
                   height={253}
                   className="h-14 md:h-16 w-auto"

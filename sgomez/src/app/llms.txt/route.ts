@@ -169,7 +169,7 @@ export function GET(): Response {
   L.push("## Experience");
   L.push("");
   for (const e of experience) {
-    L.push(`- **${t(e.role, "es")}**, ${e.title} (${t(e.period, "es")})`);
+    L.push(`- **${t(e.role, "es")}**, ${e.organization} - ${t(e.location, "es")} (${t(e.period, "es")})`);
   }
   L.push("");
 

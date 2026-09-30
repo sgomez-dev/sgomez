@@ -154,9 +154,9 @@ const COMMANDS = {
       ]
       
       experience.forEach((exp, index) => {
-        lines.push(`  ${icons[index] || '💼'} ${exp.title}`)
+        lines.push(`  ${icons[index] || '💼'} ${exp.organization} - ${t(exp.location, 'es')}`)
         lines.push(`     ${t(exp.role, 'es')} | ${t(exp.period, 'es')}`)
-        lines.push('     ' + '─'.repeat(Math.max(t(exp.role, 'es').length, exp.title.length) + t(exp.period, 'es').length + 3))
+        lines.push('     ' + '─'.repeat(Math.max(t(exp.role, 'es').length, `${exp.organization} - ${t(exp.location, 'es')}`.length) + t(exp.period, 'es').length + 3))
         
         // Split desc into multiple lines if needed
         const descLines = t(exp.desc, 'es').match(/.{1,55}/g) || [t(exp.desc, 'es')]
@@ -224,10 +224,10 @@ const COMMANDS = {
     description: 'Logros y participaciones',
     execute: () => {
       const achievements = [
-        { icon: '🏆', text: `Organizador de ${experience.find(e => e.title === 'GDG Santander')?.title || 'GDG Santander'}` },
+        { icon: '🏆', text: `Organizador de ${experience.find(e => e.organization === 'GDG Santander')?.organization || 'GDG Santander'}` },
         { icon: '🎯', text: 'Participante en Hack2Progress' },
-        { icon: '🌟', text: `Becario ${experience.find(e => e.title === 'PROFER')?.title} - Universidad Europea del Atlántico` },
-        { icon: '📚', text: `Becario ${experience.find(e => e.title === 'FUNIBER')?.title}` },
+        { icon: '🌟', text: `Becario ${experience.find(e => e.organization === 'PROFER')?.organization} - Universidad Europea del Atlántico` },
+        { icon: '📚', text: `Becario ${experience.find(e => e.organization === 'FUNIBER')?.organization}` },
         { icon: '💻', text: `+${projects.length} proyectos destacados completados` },
         { icon: '🚀', text: 'PWAs y aplicaciones web en producción' },
       ]

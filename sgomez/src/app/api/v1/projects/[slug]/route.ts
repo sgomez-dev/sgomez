@@ -1,5 +1,5 @@
 import { collectionMeta, getProject, getProjects } from "@/lib/api/data";
-import { jsonOk, notFound, resolveLang } from "@/lib/api/http";
+import { jsonOk, notFound, readLang } from "@/lib/api/http";
 import { API_BASE } from "@/lib/site";
 
 export { POST, PUT, PATCH, DELETE, OPTIONS } from "@/lib/api/http";
@@ -9,7 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Response> {
   const { slug } = await params;
-  const lang = resolveLang(request);
+  const parsed = readLang(request);
+  if (!parsed.ok) return parsed.response;
+  const lang = parsed.lang;
   const project = getProject(slug, lang);
 
   if (!project) {
@@ -22,5 +24,5 @@ export async function GET(
     );
   }
 
-  return jsonOk({ data: project, meta: collectionMeta(1, `${API_BASE}/projects/${slug}`) });
+  return jsonOk({ data: project, meta: collectionMeta(1, `${API_BASE}/projects/${slug}`) }, { lang });
 }

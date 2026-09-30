@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { recommendations } from '../content'
+import { t } from '@/lib/content/localized'
 
 export default function RecommendationsSection() {
   return (
@@ -24,7 +25,7 @@ export default function RecommendationsSection() {
                   </a>
                   <div className="flex-1 min-w-0">
                     <a href={rec.recommenderUrl} target="_blank" rel="noopener noreferrer" className="text-white font-semibold hover:text-violet-300 transition-colors block truncate">{rec.name}</a>
-                    <span className="text-gray-600 text-xs font-light">{rec.date}</span>
+                    <span className="text-gray-600 text-xs font-light">{t(rec.date, 'es')}</span>
                   </div>
                 </div>
                 <div className="text-gray-400 leading-relaxed font-light text-sm space-y-3">
