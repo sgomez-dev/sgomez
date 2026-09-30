@@ -730,7 +730,8 @@ git commit -m "feat(routing): páginas bajo [lang]; español sin prefijo por el 
     - `<Display as="h1"|"h2" lead={string} serif={string}>`. It renders `lead` in Inter Tight 600 (tracking -0.055em, `--text`) followed by `serif` in Instrument Serif italic (`--serif-ink`).
     - `<ButtonLink href variant="primary"|"ghost">`
     - `<Section id labelledBy>`
-  - `<Nav lang pathname>`
+  - `<Nav lang>` (a server component rendered once in the layout)
+  - `<LangSwitch lang>` (the ONLY `'use client'` component of this phase: it reads `usePathname()` and renders `<a href={switchLangHref(pathname, other, PAGES)} hrefLang lang>`; it receives plain strings only)
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -821,7 +822,7 @@ const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrumen
 `Nav`:
 - fixed to the top, height 64 px, background `color-mix(in oklab, var(--bg) 78%, transparent)` with `backdrop-filter: blur(12px)`, a bottom border in `--line`, and `z-50`;
 - left: the wordmark «Santiago Gómez de la Torre», linking to `localizedPath(lang, '/')`;
-- center/right: anchors to `#work`, `#about`, `#open-source` and `#contact` on the home, the external «Skills» link (`https://skills.sgomez.dev`) and «Blog» (`https://blog.sgomez.dev`), then `<LangSwitch>`, whose href is `switchLangHref(pathname, other, PAGES)` and which carries `hrefLang` and `lang` on the `<a>`;
+- center/right: anchors to `#work`, `#about`, `#open-source` and `#contact` on the home (written as `localizedPath(lang,'/') + '#work'`, so they work from any page), the external «Skills» link (`https://skills.sgomez.dev`) and «Blog» (`https://blog.sgomez.dev`), then `<LangSwitch lang>`;
 - below `md` the links collapse into a `<details>` disclosure. That needs no JS and stays accessible.
 - Add the test `switchLangHref('/no-existe','en',PAGES) === '/en'`: it is already in `tests/i18n.test.ts`, so re-check it passes.
 
@@ -829,7 +830,7 @@ The layout renders:
 - a skip link, `<a href="#main" class="sr-only focus:not-sr-only">{d.nav.skip}</a>`;
 - then `<Nav>`, `<main id="main" class="pt-16">`, `{children}` and `<Footer>`.
 
-`Nav` needs the current pathname to build the switch link. Pass it from each page as a prop, NOT through `usePathname`, so Nav stays a server component. Each page file passes its logical path; the 404 passes `null`, which makes the switch go home.
+`Nav` lives in the layout, which cannot know the current page, so the language switch is the small client component `<LangSwitch>`. It uses `usePathname()`, which also covers the 404: an unknown path goes to that language's home through `switchLangHref`. Without JS, the server-rendered href points to the other language's home, and it's corrected on hydration. That is acceptable, and the e2e for Review Focus 4 runs with JS.
 
 Add `prefetch={false}` to every `<Link>` in `src/` (StaticPageLayout, not-found, any other).
 
@@ -1104,6 +1105,7 @@ git commit -m "feat(home): prueba social con citas originales, contacto por inte
   - section headings in Inter Tight 600, 28 px;
   - tables with `--line` borders and a horizontal scroll **inside** a wrapper (`overflow-x:auto`, `tabIndex={0}`, `role="region"`, `aria-label`) so they never overflow the page;
   - code blocks the same way.
+- The page `lead` renders as `<p data-answer>`, the answer-first sentence of spec §8.1 that `speakable` points to.
 - Keep the «Ver en markdown» / «View as markdown» link to `markdownVariantOf(page.path)`.
 - The 404 keeps its full site map (pages in the current language, the machine files and the API) and its literal markdown block.
 
