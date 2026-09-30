@@ -135,10 +135,50 @@ video/                      proyecto Remotion aparte (NO se despliega)
 
 ## 8. SEO y GEO
 
-- Un JSON-LD `@graph` por página con `Person` (con `sameAs` a skills.sgomez.dev, GitHub, LinkedIn e Instagram), `WebSite`, `WebPage` y `ProfilePage`; `CreativeWork` en cada caso de estudio y `Organization` para SkyQuetz, como entidad separada.
-- Enlace visible a **skills.sgomez.dev** en la navegación o en Open source, y en el `sameAs`. Es el paso L2.4 del lanzamiento de claude-skills.
-- Imágenes OG por página y por idioma, con el titular y el retrato.
-- Se conservan el `Vary` de `vercel.json` y la negociación `Accept: text/markdown`.
+**Objetivo.** Que cualquier buscador o asistente de IA (Google, AI Overviews, ChatGPT, Perplexity, Claude, Copilot) que responda sobre Santiago Gómez de la Torre, o sobre «ingeniero full-stack que lleva IA a producción en España», use sgomez.dev como fuente primaria y la cite. No podemos controlar el ranking de Google; sí podemos ser la fuente más clara, rápida, estructurada y verificable sobre ti.
+
+**Se conserva** (ya es un punto fuerte): `llms.txt` con «When to use this», `agents.md`, OpenAPI, las variantes `.md` con `noindex` y su negociación `Accept: text/markdown`, el grafo de `seo.ts` (con `Person`, `ProfilePage`, `Speakable` y SkyQuetz como entidad separada) y el `Vary` de `vercel.json`.
+
+**Se añade:**
+
+1. **Texto que contesta primero.**
+   - Cada página abre con una frase de respuesta directa en HTML real: quién eres, qué haces y dónde. Es la frase que citan los asistentes.
+   - El titular creativo va encima, pero la respuesta está en el DOM desde el SSR.
+   - `Speakable` apunta a esas frases.
+2. **Grafo de entidad completo**, un `@graph` por página:
+   - `Person` con `sameAs` a skills.sgomez.dev, GitHub, LinkedIn e Instagram, más `knowsAbout`, `worksFor` (Evenbytes), `founder` (SkyQuetz), `alumniOf` y `hasCredential` desde las certificaciones;
+   - `WebSite`, `WebPage` o `ProfilePage` con `dateModified` real;
+   - `CreativeWork` o `SoftwareSourceCode` para proyectos y open source;
+   - `FAQPage` en contacto, con las preguntas reales de cada intención: disponibilidad, modalidad, zona horaria e idiomas.
+   - Nada de `aggregateRating` ni de reseñas inventadas.
+3. **Bilingüe de verdad:**
+   - `hreflang` es/en/x-default en HTML, en el sitemap y en las variantes `.md`;
+   - `llms.txt` y `/en/llms.txt`, más `llms-full.txt` con todo el contenido en Markdown;
+   - `agents.md` en los dos idiomas.
+4. **Fechas honestas:**
+   - `lastmod` del sitemap y `dateModified` desde la fecha real de cambio del contenido (git), nunca la hora del build;
+   - `<time datetime>` visible en los casos de estudio.
+5. **`robots.txt` al día:**
+   - añade `Content-Signal: search=yes, ai-input=yes, ai-train=yes`, la misma decisión que en claude-skills;
+   - quita `Host:`, que no es estándar;
+   - añade `DuckAssistBot` y `MistralAI-User`;
+   - mantiene la lista actual de bots de IA y el sitemap.
+6. **Enlazado:**
+   - enlace visible y recíproco con **skills.sgomez.dev** (paso L2.4 del lanzamiento de claude-skills) y con blog.sgomez.dev;
+   - los casos de estudio enlazan su stack y su proyecto open source relacionado;
+   - cada caso de estudio recibe al menos 3 enlaces internos.
+7. **Rendimiento como SEO:** los presupuestos del §7. El LCP es texto o retrato servido en el HTML, nunca el 3D.
+8. **Descubrimiento activo, tras el lanzamiento:**
+   - IndexNow (fichero de clave en `public/` y envío de las URLs cambiadas en cada despliegue, desde CI);
+   - pasos manuales para Santiago en Google Search Console, Bing Webmaster (AI Performance) y Brave;
+   - comprobación de que Vercel no bloquea a los bots de IA (con curl de cada user agent, esperando 200).
+9. **Imágenes OG** por página e idioma, con el titular y el retrato, y `og:image:alt`.
+10. **Tests:**
+    - `@graph` válido y con los tipos esperados en cada página;
+    - `hreflang` recíproco;
+    - `llms.txt` por debajo de 100 KB y con la estructura de llmstxt.org;
+    - `robots.txt` con Content-Signal y sin `Host`;
+    - cada página tiene su frase de respuesta visible sin JS.
 
 ## 9. Pruebas y verificación
 
