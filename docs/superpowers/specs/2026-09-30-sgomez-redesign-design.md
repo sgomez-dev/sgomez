@@ -73,7 +73,7 @@ Un test compara las tres con `data.ts`.
 ```
 sgomez/
   src/
-    app/[lang]/…            páginas (home, work/[slug], about, contact, developers, privacy)
+    app/[lang]/…            páginas (home, work/[slug], about, contact, developers, privacy); es sin prefijo vía proxy
     app/api/…               sin cambios de contrato
     chapters/               un componente por capítulo del guion
     components/             nav, footer, cards, CTA, retrato
@@ -105,7 +105,12 @@ video/                      proyecto Remotion aparte (NO se despliega)
 
 ## 5. Idiomas
 
-- Rutas `/es` y `/en` bajo `[lang]`. `/` redirige según `Accept-Language` (307). Cada página lleva `hreflang` es/en/x-default y el sitemap incluye las dos versiones.
+- **El español se queda en las URLs de hoy, sin prefijo** (`/`, `/about`, `/contact`…), y el **inglés vive en `/en/…`**.
+  - Motivo: todas las URLs indexadas y enlazadas siguen funcionando sin redirecciones, y `https://sgomez.dev` sigue siendo la URL de la entidad a la que apuntan los `sameAs` de claude-skills y skyquetz.com. Una raíz que redirige perdería esa señal.
+  - Internamente, el proxy reescribe las rutas sin prefijo a `[lang]=es`.
+  - `/es` y `/es/*` redirigen con 308 a la versión sin prefijo, para que no haya duplicados.
+  - No se redirige por `Accept-Language`: se ofrece el cambio de idioma en la navegación.
+- Cada página lleva `hreflang` es/en/x-default (x-default → español) y el sitemap incluye las dos versiones.
 - En `data.ts`, cada texto visible pasa a ser `{ es, en }`. Un test falla si falta alguna traducción.
 - Las cadenas de interfaz viven en `i18n/{es,en}.ts`, como plantillas con `fill()` y sin funciones pasadas a componentes cliente (lección de claude-skills).
 - La API responde en español por defecto, como hoy, y acepta `?lang=en` o `Accept-Language: en`. `llms.txt` y `agents.md` se publican en los dos idiomas. La versión en español queda en la ruta actual.
@@ -195,7 +200,7 @@ video/                      proyecto Remotion aparte (NO se despliega)
   - axe sin violaciones;
   - el presupuesto de JS;
   - los tres caminos de contacto generan el `mailto` correcto;
-  - `hreflang` y redirección de `/`.
+  - `hreflang` recíproco, rutas españolas de hoy intactas y redirección de `/es/*` y `/lab`.
 - **Lighthouse CI** con los presupuestos del §7 contra la preview de Vercel de cada PR. Se mide con Chromium de Playwright y no con el Chrome del equipo, porque el filtro SSL de ESET invalida el LCP.
 - **Pasada real en navegador** al final de cada fase, antes de darla por terminada: escritorio y móvil, capturas de cada capítulo en estado inicial, intermedio y final.
 
