@@ -12,40 +12,61 @@ const es = {
   chapters: {
     hero: {
       eyebrow: "Full-stack engineer · Santander",
-      heading: "IA que llega a producción.",
-    },
-    work: {
-      eyebrow: "Proyectos",
-      heading: "Lo que he construido y lo que hace hoy",
+      serif: "IA que llega a producción.",
+      heading: "Ingeniero full-stack que lleva la IA a producción",
+      available: "Disponible para nuevos proyectos",
     },
     about: {
       eyebrow: "Sobre mí",
       heading: "Ingeniero de software, con la IA como herramienta de trabajo",
     },
+    build: {
+      eyebrow: "Cómo construyo",
+      heading: "Un producto con IA tiene seis capas, y cuido todas",
+      layers: {
+        interface: "Interfaz",
+        api: "API",
+        model: "Modelo",
+        data: "Datos",
+        evaluation: "Evaluación",
+        infrastructure: "Infraestructura",
+      },
+    },
+    experience: {
+      eyebrow: "Experiencia",
+      heading: "Dónde he trabajado y qué he dejado funcionando",
+    },
+    work: {
+      eyebrow: "Proyectos",
+      heading: "Lo que he construido y lo que hace hoy",
+    },
     openSource: {
       eyebrow: "Open source",
       heading: "Código que comparto y que otros ya usan",
     },
-    skills: {
-      eyebrow: "Skills",
-      heading: "Las skills que uso cada día con Claude Code",
+    skyquetz: {
+      eyebrow: "Skyquetz",
+      heading: "Mi propio producto, de la idea a los usuarios",
     },
-    certifications: {
-      eyebrow: "Certificaciones",
-      heading: "Formación que he validado con examen",
-    },
-    recommendations: {
-      eyebrow: "Recomendaciones",
-      heading: "Lo que dicen quienes han trabajado conmigo",
-    },
-    blog: {
-      eyebrow: "Blog",
-      heading: "Notas sobre construir con IA sin perder el rumbo",
+    proof: {
+      eyebrow: "Pruebas",
+      heading: "Lo que respalda lo que cuento",
+      recommendations: "Recomendaciones",
+      certifications: "Certificaciones",
+      education: "Formación",
+      blog: "Blog",
     },
     contact: {
       eyebrow: "Contacto",
-      heading: "¿Hablamos de tu proyecto?",
+      serif: "Hablemos.",
+      heading: "¿Tienes un proyecto en mente?",
     },
+  },
+  projects: {
+    open: "Abrir proyecto",
+  },
+  staticPage: {
+    viewMarkdown: "Ver en markdown",
   },
   cta: {
     talk: "Hablemos",

@@ -14,40 +14,61 @@ const en: Dictionary = {
   chapters: {
     hero: {
       eyebrow: "Full-stack engineer · Santander",
-      heading: "AI that reaches production.",
-    },
-    work: {
-      eyebrow: "Work",
-      heading: "What I've built and what it does today",
+      serif: "AI that reaches production.",
+      heading: "A full-stack engineer who takes AI to production",
+      available: "Available for new projects",
     },
     about: {
       eyebrow: "About",
       heading: "A software engineer who treats AI as a working tool",
     },
+    build: {
+      eyebrow: "How I build",
+      heading: "An AI product has six layers, and I look after all of them",
+      layers: {
+        interface: "Interface",
+        api: "API",
+        model: "Model",
+        data: "Data",
+        evaluation: "Evaluation",
+        infrastructure: "Infrastructure",
+      },
+    },
+    experience: {
+      eyebrow: "Experience",
+      heading: "Where I've worked and what I've left running",
+    },
+    work: {
+      eyebrow: "Work",
+      heading: "What I've built and what it does today",
+    },
     openSource: {
       eyebrow: "Open source",
       heading: "Code I share, and that others already rely on",
     },
-    skills: {
-      eyebrow: "Skills",
-      heading: "The skills I use every day with Claude Code",
+    skyquetz: {
+      eyebrow: "Skyquetz",
+      heading: "My own product, from idea to users",
     },
-    certifications: {
-      eyebrow: "Certifications",
-      heading: "Training I've proven by exam",
-    },
-    recommendations: {
-      eyebrow: "Recommendations",
-      heading: "What people I've worked with say",
-    },
-    blog: {
-      eyebrow: "Blog",
-      heading: "Notes on building with AI without losing the plot",
+    proof: {
+      eyebrow: "Proof",
+      heading: "What backs up what I say",
+      recommendations: "Recommendations",
+      certifications: "Certifications",
+      education: "Education",
+      blog: "Blog",
     },
     contact: {
       eyebrow: "Contact",
-      heading: "Shall we talk about your project?",
+      serif: "Let's talk.",
+      heading: "Have a project in mind?",
     },
+  },
+  projects: {
+    open: "Open project",
+  },
+  staticPage: {
+    viewMarkdown: "View as markdown",
   },
   cta: {
     talk: "Let's talk",

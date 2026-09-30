@@ -56,6 +56,13 @@ describe("diccionarios", () => {
     const values = (o: object): unknown[] => Object.values(o).flatMap((v) => (v && typeof v === "object" ? values(v) : [v]));
     for (const d of [es, en]) for (const v of values(d)) expect(String(v).trim()).not.toBe("");
   });
+  it("cada clave usa los mismos {placeholders} en es y en", () => {
+    const flat = (o: object, p = ""): Record<string, string> =>
+      Object.fromEntries(Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" ? Object.entries(flat(v, `${p}${k}.`)) : [[`${p}${k}`, String(v)]])));
+    const vars = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+    const fe = flat(es), fn = flat(en);
+    for (const key of Object.keys(fe)) expect(vars(fn[key]), key).toEqual(vars(fe[key]));
+  });
   it("getDictionary devuelve el de cada idioma", () => {
     expect(getDictionary("en")).toBe(en);
     expect(getDictionary("es")).toBe(es);
