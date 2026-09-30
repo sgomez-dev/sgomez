@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { localizedPath, type Lang } from '@/i18n/languages'
-import HeroSection from '../components/HeroSection'
-import AboutSection from '../components/AboutSection'
-import TechnologiesSection from '../components/TechnologiesSection'
+import Hero from '@/chapters/Hero'
+import About from '@/chapters/About'
+import Build from '@/chapters/Build'
 import ProjectsSection from '../components/ProjectsSection'
 import OpenSourceSection from '../components/OpenSourceSection'
 import CertificationsSection from '../components/CertificationsSection'
@@ -59,21 +59,20 @@ drwxr-xr-x  Packatrack/            ★★★☆☆
 -rw-r--r--  ...and 35+ more repos`,
 }
 
-// Temporal: las secciones siguen en español hasta que las tareas 6-8 las sustituyan.
+// Temporal: los capítulos 01-03 ya son bilingües; el resto sigue en español hasta las tareas 7-8.
 export default async function HomePage({ params }: { params: Promise<{ lang: Lang }> }) {
   const { lang } = await params
   return (
     <div className="text-white">
-      <HeroSection />
-      <div className="section-divider" />
-      <AboutSection />
+      <Hero lang={lang} />
+      <About lang={lang} />
       <MacInterlude {...INTERLUDE_STATS} />
       <div className="section-divider" />
       <ExperienceSection />
       <div className="section-divider" />
       <SkyQuetzSection />
       <div className="section-divider" />
-      <TechnologiesSection />
+      <Build lang={lang} />
       <MacInterlude {...INTERLUDE_PROJECTS} />
       <div className="section-divider" />
       <ProjectsSection />

@@ -17,6 +17,7 @@ const es = {
       serif: "IA que llega a producción.",
       heading: "Ingeniero full-stack que lleva la IA a producción",
       available: "Disponible para nuevos proyectos",
+      portraitAlt: "Retrato de Santiago Gómez de la Torre",
     },
     about: {
       eyebrow: "Sobre mí",

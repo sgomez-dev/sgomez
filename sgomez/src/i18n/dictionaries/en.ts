@@ -19,6 +19,7 @@ const en: Dictionary = {
       serif: "AI that reaches production.",
       heading: "A full-stack engineer who takes AI to production",
       available: "Available for new projects",
+      portraitAlt: "Portrait of Santiago Gómez de la Torre",
     },
     about: {
       eyebrow: "About",

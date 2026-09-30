@@ -163,15 +163,13 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   return (
-    <html lang={lang === "es" ? "es-ES" : "en"}>
-      <body
-        className={`${sans.variable} ${serif.variable} antialiased`}
-      >
+    <html lang={lang === "es" ? "es-ES" : "en"} className={`${sans.variable} ${serif.variable}`}>
+      <body className="antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-[color:var(--text)] focus:px-4 focus:py-2 focus:text-sm focus:text-[color:var(--bg)]">
           {getDictionary(lang).nav.skip}
         </a>
         <Nav lang={lang} />
-        <main id="main" className="pt-16">
+        <main id="main" className="pt-[calc(4rem+var(--safe-top))]">
           {children}
         </main>
         <Footer lang={lang} />

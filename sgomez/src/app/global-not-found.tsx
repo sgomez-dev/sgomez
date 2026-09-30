@@ -34,13 +34,13 @@ export const viewport: Viewport = {
 
 export default function GlobalNotFound() {
   return (
-    <html lang="es-ES">
-      <body className={`${sans.variable} ${serif.variable} antialiased`}>
+    <html lang="es-ES" className={`${sans.variable} ${serif.variable}`}>
+      <body className="antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-[color:var(--text)] focus:px-4 focus:py-2 focus:text-sm focus:text-[color:var(--bg)]">
           {getDictionary("es").nav.skip}
         </a>
         <Nav lang="es" />
-        <main id="main" className="pt-16">
+        <main id="main" className="pt-[calc(4rem+var(--safe-top))]">
           <NotFoundBody lang="es" />
           <div lang="en">
             <NotFoundBody lang="en" />
