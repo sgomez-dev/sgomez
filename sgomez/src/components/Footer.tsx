@@ -24,7 +24,7 @@ export default function Footer({ lang }: { lang: Lang }) {
     <footer className="border-t border-[color:var(--line)] bg-[color:var(--bg-2)] pt-12 pb-[calc(3rem+var(--safe-bottom))]">
       <div className="mx-auto w-full max-w-[1200px] pl-[max(var(--gutter),var(--safe-left))] pr-[max(var(--gutter),var(--safe-right))]">
         <p className="text-sm text-[color:var(--serif-ink)]">{d.footer.tagline}</p>
-        <nav aria-label="Footer" className="mt-6 flex flex-wrap gap-x-6 gap-y-0 text-sm">
+        <nav aria-label={d.footer.ariaLabel} className="mt-6 flex flex-wrap gap-x-6 gap-y-0 text-sm">
           {internal.map((l) => (
             <Link prefetch={false} key={l.href} href={l.href} className={LINK}>
               {l.label}

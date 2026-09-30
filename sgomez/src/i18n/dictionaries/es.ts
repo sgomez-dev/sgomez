@@ -8,6 +8,8 @@ const es = {
     blog: "Blog",
     switchTo: "English",
     skip: "Saltar al contenido",
+    ariaMain: "Principal",
+    menu: "Menú",
   },
   chapters: {
     hero: {
@@ -101,6 +103,7 @@ const es = {
     translated: "Original en español",
   },
   footer: {
+    ariaLabel: "Pie de página",
     tagline: "Hecho en Santander por Santiago Gómez de la Torre.",
     privacy: "Privacidad",
     developers: "Para desarrolladores",

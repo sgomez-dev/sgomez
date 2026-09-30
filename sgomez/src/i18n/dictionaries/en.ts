@@ -10,6 +10,8 @@ const en: Dictionary = {
     blog: "Blog",
     switchTo: "Español",
     skip: "Skip to content",
+    ariaMain: "Main",
+    menu: "Menu",
   },
   chapters: {
     hero: {
@@ -103,6 +105,7 @@ const en: Dictionary = {
     translated: "Translated from Spanish",
   },
   footer: {
+    ariaLabel: "Footer",
     tagline: "Made in Santander by Santiago Gómez de la Torre.",
     privacy: "Privacy",
     developers: "For developers",

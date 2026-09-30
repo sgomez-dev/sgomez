@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import NotFoundBody from "@/app/components/NotFoundBody";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { getDictionary } from "@/i18n";
 import "./globals.css";
 
 const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", weight: ["400", "500", "600"], display: "swap" });
@@ -23,10 +24,21 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#05060a",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function GlobalNotFound() {
   return (
     <html lang="es-ES">
       <body className={`${sans.variable} ${serif.variable} antialiased`}>
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-[color:var(--text)] focus:px-4 focus:py-2 focus:text-sm focus:text-[color:var(--bg)]">
+          {getDictionary("es").nav.skip}
+        </a>
         <Nav lang="es" />
         <main id="main" className="pt-16">
           <NotFoundBody lang="es" />

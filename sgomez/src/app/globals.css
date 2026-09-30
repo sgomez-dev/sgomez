@@ -18,8 +18,10 @@
   --text-muted: #475569;
 }
 
-* {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 ::selection {
@@ -27,12 +29,8 @@
   color: var(--text);
 }
 
-html {
-  overflow-x: clip;
-}
-
 body {
-  overflow-x: clip;
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans), system-ui, sans-serif;
