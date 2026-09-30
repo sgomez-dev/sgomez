@@ -3,6 +3,9 @@
 #
 # On-ramps for agents, in the order they are useful:
 #   https://sgomez.dev/llms.txt      factual summary of the site
+#   https://sgomez.dev/en/llms.txt   the same summary, linking the English pages
+#   https://sgomez.dev/llms-full.txt the whole site content in one markdown file
+#                                    (English: https://sgomez.dev/en/llms-full.txt)
 #   https://sgomez.dev/agents.md     when to use this site, and how to call it
 #   https://sgomez.dev/openapi.json  OpenAPI 3.1 spec of the public API
 #   https://sgomez.dev/developers    developer portal
@@ -13,6 +16,7 @@
 
 User-agent: *
 Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # Buscadores tradicionales
 User-agent: Googlebot
@@ -85,5 +89,10 @@ Allow: /
 User-agent: Diffbot
 Allow: /
 
-Host: https://sgomez.dev
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
 Sitemap: https://sgomez.dev/sitemap.xml

@@ -28,6 +28,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const machineReadable: MetadataRoute.Sitemap = [
     "/llms.txt",
     "/en/llms.txt",
+    "/llms-full.txt",
+    "/en/llms-full.txt",
     "/agents.md",
     "/en/agents.md",
     "/openapi.json",

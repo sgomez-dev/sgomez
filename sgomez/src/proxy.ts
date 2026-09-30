@@ -106,6 +106,6 @@ export const config = {
    * pero mantenerlo fuera del matcher ahorra una invocación por petición.
    */
   matcher: [
-    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt|agents.md|en/llms.txt|en/agents.md|openapi.json).*)",
+    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt|llms-full.txt|agents.md|en/llms.txt|en/llms-full.txt|en/agents.md|openapi.json).*)",
   ],
 };

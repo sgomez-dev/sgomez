@@ -45,6 +45,16 @@ export const MACHINE_ROUTES = [
     markdown: true,
   },
   {
+    path: "/llms-full.txt",
+    title: "llms-full.txt",
+    description: {
+      es: "Todo el contenido del sitio en markdown, en un solo documento.",
+      en: "The whole site content in markdown, in a single document.",
+    },
+    type: "text/markdown",
+    markdown: true,
+  },
+  {
     path: "/agents.md",
     title: "agents.md",
     description: {
@@ -136,14 +146,23 @@ export function absolute(path: string): string {
 }
 
 /**
+ * Ficheros de máquina que existen también bajo `/en`. `lib/routing/pages.ts`
+ * (`machineHref`) y la lista de exentos de más abajo salen de esta misma lista
+ * para que el HTML, el markdown y el proxy no puedan discrepar.
+ */
+export const LOCALIZED_MACHINE_PATHS = ["/llms.txt", "/llms-full.txt", "/agents.md"] as const;
+
+/** Imágenes Open Graph generadas: las sirve Next, no pasan por la negociación de markdown. */
+export const OG_IMAGE_PATHS: readonly string[] = ["/opengraph-image", "/en/opengraph-image"];
+
+/**
  * Rutas que el middleware no debe tocar nunca: o ya son markdown, o son
  * ficheros con su propio Content-Type que un agente no debe recibir
  * reescrito.
  */
 export const NEGOTIATION_EXEMPT_PATHS: readonly string[] = [
   ...MACHINE_ROUTES.map((route) => route.path),
-  // Las versiones inglesas de los dos ficheros en markdown. `/en/agents.md`
+  // Las versiones inglesas de los ficheros en markdown. `/en/agents.md`
   // acaba en .md y sin esta excepción se leería como la variante de `/en/agents`.
-  "/en/llms.txt",
-  "/en/agents.md",
+  ...LOCALIZED_MACHINE_PATHS.map((path) => `/en${path}`),
 ];

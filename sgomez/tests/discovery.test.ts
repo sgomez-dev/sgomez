@@ -107,7 +107,7 @@ describe("sitemap", () => {
 });
 
 describe("robots.txt", () => {
-  const text = readFileSync("public/robots.txt", "utf8");
+  const text = readFileSync("public/robots.txt", "utf8").replace(/\r\n/g, "\n");
 
   it("anuncia las rampas de entrada para agentes", () => {
     for (const path of ["/llms.txt", "/agents.md", "/openapi.json", "/developers"]) {

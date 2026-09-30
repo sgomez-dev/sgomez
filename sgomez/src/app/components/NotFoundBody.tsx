@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
 import { notFoundMarkdown } from "@/lib/markdown/documents";
-import { localizedHtmlRoutes } from "@/lib/routing/pages";
+import { localizedHtmlRoutes, machineHref } from "@/lib/routing/pages";
 import { MACHINE_ROUTES } from "@/lib/site";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
@@ -22,12 +22,6 @@ const FOCUS =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
 const LINK = `text-[color:var(--light-1)] underline underline-offset-4 decoration-[color:var(--line)] hover:decoration-current ${FOCUS}`;
 const H = "mb-4 text-[length:var(--step-2)] font-semibold tracking-[-0.02em] text-[color:var(--text)]";
-
-/** Los ficheros de texto con versión inglesa se enlazan bajo /en en el bloque inglés. */
-const ENGLISH_PATHS: Record<string, string> = {
-  "/llms.txt": "/en/llms.txt",
-  "/agents.md": "/en/agents.md",
-};
 
 export default function NotFoundBody({ lang, primary = lang === "es" }: { lang: Lang; primary?: boolean }) {
   const dict = getDictionary(lang).notFound;
@@ -71,7 +65,8 @@ export default function NotFoundBody({ lang, primary = lang === "es" }: { lang: 
           <Sub id={ids.machine} className={H}>{dict.machine}</Sub>
           <ul className="flex list-none flex-col gap-1">
             {MACHINE_ROUTES.map((route) => {
-              const href = lang === "en" ? (ENGLISH_PATHS[route.path] ?? route.path) : route.path;
+              // Los ficheros con versión inglesa se enlazan bajo /en en el bloque inglés.
+              const href = machineHref(route.path, lang);
               return (
                 <li key={route.path} className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)] [overflow-wrap:anywhere]">
                   <a href={href} className={`inline-flex min-h-11 items-center ${LINK}`}>

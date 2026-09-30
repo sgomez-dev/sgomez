@@ -5,7 +5,7 @@ import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { getProjects } from "@/lib/api/data";
 import { findStaticPage, staticPages } from "@/lib/content/pages";
 import { renderPageMarkdown } from "@/lib/markdown/render";
-import { localizedHtmlRoutes } from "@/lib/routing/pages";
+import { localizedHtmlRoutes, machineHref } from "@/lib/routing/pages";
 import { API_BASE, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib/site";
 
 /**
@@ -32,7 +32,7 @@ function homeMarkdown(lang: Lang): string {
   lines.push(x(`- Rol: ${IDENTITY.jobTitle}, en Evenbytes.`, `- Role: ${IDENTITY.jobTitle}, at Evenbytes.`));
   lines.push(
     x(
-      `- ${IDENTITY.coFounderTitle} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios: no fundador único.`,
+      `- ${IDENTITY_TEXT.coFounderTitle.es} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios: no fundador único.`,
       `- Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}). Co-founder, one of four partners: not the sole founder.`,
     ),
   );
@@ -60,7 +60,7 @@ function homeMarkdown(lang: Lang): string {
 
   lines.push(x("## Para agentes", "## For agents"), "");
   for (const route of MACHINE_ROUTES) {
-    lines.push(`- [${route.title}](${absolute(route.path)}) — \`${route.type}\``);
+    lines.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}) — \`${route.type}\``);
   }
   lines.push(`- ${x("API pública", "Public API")}: \`GET ${absolute(`${API_BASE}/profile`)}\``);
   lines.push("");
@@ -120,7 +120,7 @@ export function notFoundMarkdown(requestedPath?: string, lang: Lang = "es"): str
 
   lines.push(x("## Ficheros legibles por máquina", "## Machine-readable files"), "");
   for (const route of MACHINE_ROUTES) {
-    lines.push(`- [${route.title}](${absolute(route.path)}) — \`${route.type}\``);
+    lines.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}) — \`${route.type}\``);
   }
   lines.push("");
 

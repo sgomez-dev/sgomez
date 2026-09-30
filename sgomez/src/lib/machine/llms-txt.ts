@@ -1,7 +1,8 @@
-import { CLAUDE_CANVAS, IDENTITY, SKYQUETZ } from "@/app/seo";
+import { CLAUDE_CANVAS, IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
 import { projects, experience } from "@/app/content";
 import { t } from "@/lib/content/localized";
 import { localizedPath, type Lang } from "@/i18n/languages";
+import { machineHref } from "@/lib/routing/pages";
 import { API_BASE, MACHINE_ROUTES, absolute } from "@/lib/site";
 
 /**
@@ -20,7 +21,7 @@ export function llmsTxt(lang: Lang): string {
   const page = (path: string) => absolute(localizedPath(lang, path));
   L.push(`# ${IDENTITY.name}`);
   L.push("");
-  L.push(`> ${IDENTITY.description}`);
+  L.push(`> ${IDENTITY_TEXT.description[lang]}`);
   L.push("");
   L.push(
     `Santiago Gómez de la Torre Romero is a full-stack engineer who ships AI/LLM features to production. He is based in ${IDENTITY.location.city}, ${IDENTITY.location.region}, Spain. He is a co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}), a developer at Evenbytes (Angular, Node.js, Google Cloud) and organizer of GDG Santander. He is the creator and sole maintainer of NudaUI. He works in Spanish and English.`
@@ -146,7 +147,7 @@ export function llmsTxt(lang: Lang): string {
     `- [Developer portal](${page("/developers")}): quickstart, endpoint table, error codes, versioning.`
   );
   for (const route of MACHINE_ROUTES) {
-    L.push(`- [${route.title}](${absolute(route.path)}): \`${route.type}\`.`);
+    L.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}): \`${route.type}\`.`);
   }
   L.push(
     `- Public API: \`GET ${absolute(`${API_BASE}/profile`)}\`, \`GET ${absolute(`${API_BASE}/projects`)}\`, \`GET ${absolute(`${API_BASE}/search`)}?q=…\`. No auth, open CORS, JSON errors with a recovery hint.`

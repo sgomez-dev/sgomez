@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { LANGS, isLang, localizedPath, type Lang } from "@/i18n/languages";
-import { personGraph } from "../seo";
 import { getDictionary } from "@/i18n";
+import { OG_ALT, OG_SIZE, SITE_NAME, ogImagePath } from "@/lib/seo/metadata";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import "../globals.css";
@@ -12,7 +12,7 @@ const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", w
 const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrument-serif", weight: "400", style: ["normal", "italic"], display: "swap" });
 
 const siteUrl = "https://sgomez.dev";
-const siteName = "Santiago Gómez de la Torre Romero - Full-Stack Engineer";
+const siteName = SITE_NAME;
 const siteTitle =
   "Santiago Gómez de la Torre Romero — Full-Stack Engineer shipping AI to production";
 // Tiene que decir lo mismo que IDENTITY.description en seo.ts: son la meta
@@ -99,36 +99,24 @@ function siteMetadata(lang: Lang): Metadata {
     "Spain",
     "remote",
   ],
+  // Valores por defecto del sitio. Cada página los sustituye por los suyos con
+  // `buildMetadata` (canónica, hreflang, Open Graph): `alternates`,
+  // `openGraph` y `twitter` de una página REEMPLAZAN a estos, no se mezclan.
   openGraph: {
     title: siteTitle,
     description: siteDescription,
-    url: siteUrl,
+    url: home,
     siteName,
     type: "website",
     locale: lang === "es" ? "es_ES" : "en_US",
     alternateLocale: [lang === "es" ? "en_US" : "es_ES"],
-    images: [
-      {
-        url: "/Santiago_Gómez_de_la_Torre_Romero.png",
-        width: 1200,
-        height: 630,
-        alt: "Foto de Santiago Gómez - Full-Stack Engineer (AI/LLM)",
-      },
-    ],
+    images: [{ url: ogImagePath(lang), ...OG_SIZE, alt: OG_ALT[lang] }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/Santiago_Gómez_de_la_Torre_Romero.png"],
-  },
-  alternates: {
-    canonical: home,
-    languages: {
-      "es-ES": siteUrl,
-      en: `${siteUrl}${localizedPath("en", "/")}`,
-      "x-default": siteUrl,
-    },
+    images: [{ url: ogImagePath(lang), alt: OG_ALT[lang] }],
   },
   };
 }
@@ -184,13 +172,8 @@ export default async function LangLayout({
         <link rel="alternate" type="text/markdown" href={localizedPath(lang, "/llms.txt")} title="llms.txt — resumen factual del sitio" />
         <link rel="author" href={localizedPath(lang, "/about")} />
         <link rel="privacy-policy" href={localizedPath(lang, "/privacy")} />
-        <script
-          type="application/ld+json"
-          // Full identity @graph (Person + WebSite + project entities). Ties
-          // sgomez.dev to nudaui.dev, the blog, the CLI, GitHub and LinkedIn via
-          // sameAs + creator links so they resolve as one entity.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personGraph()) }}
-        />
+        {/* El JSON-LD ya no vive aquí: lo pinta cada página (un solo @graph por
+            página, con sus propios nodos). Ver `lib/seo/jsonld.ts`. */}
       </body>
     </html>
   );

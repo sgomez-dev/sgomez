@@ -137,6 +137,27 @@ const es = {
     agentsAfter: " se recibe solo esto, sin el HTML.",
     markdownRegion: "Mapa del sitio en markdown, desplazable",
   },
+  // Preguntas frecuentes de /contact. Son las del JSON-LD (FAQPage) de esa
+  // página: cada respuesta repite lo que /contact ya dice en su texto, no añade
+  // ninguna afirmación nueva.
+  contactFaq: {
+    availability: {
+      q: "¿Está Santiago disponible para nuevos proyectos?",
+      a: "Sí. Está abierto a freelance y a colaboraciones seleccionadas de IA/LLM y full-stack. Si el encargo requiere equipo, contrato y continuidad, lo natural es canalizarlo por SkyQuetz Consulting, la consultora que cofundó.",
+    },
+    engagement: {
+      q: "¿Trabaja como freelance o solo por cuenta ajena?",
+      a: "Hoy es developer en Evenbytes y está abierto a freelance y a colaboraciones seleccionadas. Los encargos que necesitan un equipo, un contrato y continuidad se canalizan por SkyQuetz Consulting, la consultora de software a medida que cofundó.",
+    },
+    timezone: {
+      q: "¿En qué zona horaria trabaja y en qué idiomas?",
+      a: "Trabaja en remoto desde Santander, Cantabria (España), en horario europeo (CET/CEST), y responde en español o en inglés.",
+    },
+    reach: {
+      q: "¿Cómo se contacta con Santiago?",
+      a: "Por email en contact@sgomez.dev, la vía preferente para propuestas de trabajo. También está en LinkedIn (linkedin.com/in/sgomez-dev) y en GitHub (github.com/sgomez-dev). La web no tiene formulario de contacto.",
+    },
+  },
 } as const;
 
 export default es;

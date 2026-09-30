@@ -24,6 +24,12 @@ describe("routeRequest", () => {
     ["/agents.md", { kind: "next" }],
     ["/openapi.json", { kind: "next" }],
     ["/about.md", { kind: "next" }],
+    ["/es.md", { kind: "redirect", to: "/index.md", status: 308 }],
+    ["/es/about.md", { kind: "redirect", to: "/about.md", status: 308 }],
+    ["/es/index.md", { kind: "redirect", to: "/index.md", status: 308 }],
+    ["/en/index.md", { kind: "next" }],
+    ["/en/llms-full.txt", { kind: "next" }],
+    ["/llms-full.txt", { kind: "next" }],
     ["/Santiago_Gómez_de_la_Torre_Romero.png", { kind: "next" }],
     ["/_next/static/x.js", { kind: "next" }],
   ])("%s", (path, expected) => {
@@ -40,6 +46,14 @@ describe("negociación localizada", () => {
   });
   it("/en.md es la variante de la home inglesa", () => {
     expect(decide("/en.md", null, false)).toMatchObject({ kind: "markdown", canonical: "/en" });
+  });
+  it("/en/index.md también resuelve a la home inglesa, y /index.md sigue siendo la española", () => {
+    expect(decide("/en/index.md", null, false)).toEqual({ kind: "markdown", path: "/en", canonical: "/en", indexable: false });
+    expect(decide("/index.md", null, false)).toEqual({ kind: "markdown", path: "/", canonical: "/", indexable: false });
+  });
+  it("la imagen Open Graph no entra en la negociación de markdown", () => {
+    expect(decide("/opengraph-image", "text/markdown", false)).toEqual({ kind: "skip" });
+    expect(decide("/en/opengraph-image", null, false)).toEqual({ kind: "skip" });
   });
 });
 

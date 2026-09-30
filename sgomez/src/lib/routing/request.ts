@@ -15,6 +15,13 @@ const FILE = /\.[a-z0-9]+$/i;
  */
 export function routeRequest(pathname: string): RouteDecision {
   if (pathname.startsWith("/_next") || pathname === "/api" || pathname.startsWith("/api/")) return { kind: "next" };
+  // `/es/*` redirige SIEMPRE, también las variantes .md: si el chequeo de ficheros
+  // fuera primero, `/es/about.md` escaparía del redirect y serviría una segunda
+  // URL para el mismo documento.
+  if (pathname === "/es.md") return { kind: "redirect", to: "/index.md", status: 308 };
+  if (pathname.startsWith("/es/") && pathname.endsWith(".md")) {
+    return { kind: "redirect", to: pathname.slice(3), status: 308 };
+  }
   if (NEGOTIATION_EXEMPT_PATHS.includes(pathname) || FILE.test(pathname)) return { kind: "next" };
 
   if (pathname === "/lab" || pathname.startsWith("/lab/")) return { kind: "redirect", to: "/", status: 301 };

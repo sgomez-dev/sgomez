@@ -6,6 +6,8 @@ import { getDictionary } from "@/i18n";
 import { localizedPath } from "@/i18n/languages";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
+import { JsonLd } from "@/lib/seo/JsonLdScript";
+import { staticPageGraph } from "@/lib/seo/jsonld";
 
 /**
  * Maqueta compartida de las páginas de contenido (/about, /contact, /privacy,
@@ -125,6 +127,8 @@ export default function StaticPageLayout({ page }: { page: StaticPage }) {
 
   return (
     <div className="py-12 md:py-20">
+      {/* El único @graph de la página: persona, sitio, esta página y, en /contact, su FAQ. */}
+      <JsonLd data={staticPageGraph(page)} />
       <Container>
         <article className="max-w-[68ch]">
           <Link prefetch={false} href={localizedPath(page.lang, "/")} className={`inline-flex min-h-11 items-center text-[length:var(--step--1)] uppercase tracking-[0.14em] text-[color:var(--text-2)] hover:text-[color:var(--text)] ${FOCUS}`}>

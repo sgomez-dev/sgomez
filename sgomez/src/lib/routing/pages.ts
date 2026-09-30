@@ -1,4 +1,5 @@
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
+import { LOCALIZED_MACHINE_PATHS } from "@/lib/site";
 
 /**
  * Catálogo localizado de rutas HTML.
@@ -67,6 +68,18 @@ export function localizedHtmlRoutes(lang?: Lang): LocalizedHtmlRoute[] {
       priority: ROUTE_CATALOGUE[logical].priority,
     })),
   );
+}
+
+/**
+ * Enlace a un fichero de máquina en el idioma pedido. Los que tienen versión
+ * inglesa (`LOCALIZED_MACHINE_PATHS`) cuelgan de `/en`; el resto (openapi,
+ * sitemap, robots…) es el mismo en los dos idiomas. Es el ÚNICO sitio que
+ * decide esto: el 404 en HTML, el 404 en markdown y la home en markdown lo
+ * llaman, y un test comprueba que enlazan lo mismo.
+ */
+export function machineHref(route: string, lang: Lang): string {
+  const localized = (LOCALIZED_MACHINE_PATHS as readonly string[]).includes(route);
+  return lang === "en" && localized ? `/en${route}` : route;
 }
 
 /** La fecha de contenido más reciente del sitio. */

@@ -1,7 +1,7 @@
 import { CLAUDE_CANVAS, IDENTITY, SKYQUETZ } from "@/app/seo";
 import { API_BASE, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib/site";
 import { localizedPath, type Lang } from "@/i18n/languages";
-import { localizedHtmlRoutes } from "@/lib/routing/pages";
+import { localizedHtmlRoutes, machineHref } from "@/lib/routing/pages";
 import { getProjects } from "@/lib/api/data";
 
 /**
@@ -88,7 +88,7 @@ export function agentsMd(lang: Lang): string {
     L.push(`- [${route.title}](${absolute(route.path)})`);
   }
   for (const route of MACHINE_ROUTES) {
-    L.push(`- [${route.title}](${absolute(route.path)}) — \`${route.type}\``);
+    L.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}) — \`${route.type}\``);
   }
   L.push(`- [Developer portal](${page("/developers")}) — quickstart, endpoint table, error codes.`);
   L.push("");

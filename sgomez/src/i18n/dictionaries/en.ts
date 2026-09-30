@@ -139,6 +139,26 @@ const en: Dictionary = {
     agentsAfter: " returns only this, without the HTML.",
     markdownRegion: "Site map in markdown, scrollable",
   },
+  // FAQ of /contact, the source of that page's FAQPage JSON-LD: every answer
+  // repeats what /contact already says in its text and adds no new claim.
+  contactFaq: {
+    availability: {
+      q: "Is Santiago available for new projects?",
+      a: "Yes. He is open to freelance work and selected collaborations on AI/LLM and full-stack projects. If a commission needs a team, a contract and continuity, the natural route is SkyQuetz Consulting, the consultancy he co-founded.",
+    },
+    engagement: {
+      q: "Does he take freelance work, or only employment?",
+      a: "He is currently a developer at Evenbytes and is open to freelance work and selected collaborations. Commissions that need a team, a contract and continuity go through SkyQuetz Consulting, the custom software consultancy he co-founded.",
+    },
+    timezone: {
+      q: "Which time zone does he work in, and in which languages?",
+      a: "He works remotely from Santander, Cantabria (Spain), on European hours (CET/CEST), and replies in Spanish or English.",
+    },
+    reach: {
+      q: "How can I contact Santiago?",
+      a: "By email at contact@sgomez.dev, the preferred route for work proposals. He is also on LinkedIn (linkedin.com/in/sgomez-dev) and GitHub (github.com/sgomez-dev). The website has no contact form.",
+    },
+  },
 };
 
 export default en;
