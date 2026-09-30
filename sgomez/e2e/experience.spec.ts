@@ -92,7 +92,7 @@ test.describe("recomendaciones en inglés (Review Focus 5, R12)", () => {
     expect(originalText.length).toBeGreaterThan(40);
     // Es el original en español y no una copia de la traducción.
     expect(originalText).not.toBe(((await translation.textContent()) ?? "").trim());
-    expect(originalText).toMatch(/[áéíóúñ¿¡]|(que|de|la|el|con|para)/i);
+    expect(originalText).toMatch(/[áéíóúñ¿¡]/i);
     await expect(original).toBeHidden();
     await details.locator("summary").click();
     await expect(original).toBeVisible();

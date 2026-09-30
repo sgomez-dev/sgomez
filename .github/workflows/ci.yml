@@ -78,6 +78,15 @@ jobs:
       - name: Allow Chromium's sandbox (AppArmor)
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
+      # The e2e build sets BLOG_API_DISABLED=1 (no blog block, no cover images),
+      # so it is lighter than production. Rebuild WITHOUT it before auditing, or
+      # the LCP/TBT/CLS budgets would be checked against a page nobody serves.
+      # .next/cache keeps this cheap.
+      - name: Production build for Lighthouse
+        run: npm run build
+        env:
+          BLOG_API_DISABLED: ""
+
       # LCP is an error here (lighthouserc.ci.json); locally it is a warning
       # because antivirus SSL filtering distorts it.
       - name: Lighthouse budgets
