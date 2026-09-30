@@ -115,6 +115,7 @@ const en: Dictionary = {
   },
   recommendations: {
     translated: "Translated from Spanish",
+    readOriginal: "Read the original in Spanish",
   },
   footer: {
     ariaLabel: "Footer",

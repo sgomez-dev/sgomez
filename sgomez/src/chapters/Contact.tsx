@@ -44,19 +44,17 @@ export default function Contact({ lang }: { lang: Lang }) {
               {INTENTS.map((intent) => {
                 const c = d.contact.intent[intent];
                 return (
-                  <li key={intent} className="flex min-w-0 flex-col gap-1">
+                  <li key={intent} className="relative flex min-w-0 flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 transition-colors focus-within:bg-[color:var(--bg-3)] hover:bg-[color:var(--bg-3)]">
                     <a
                       href={contactMailto(intent, lang)}
-                      className={`group flex min-h-11 w-full flex-1 flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 transition-colors hover:bg-[color:var(--bg-3)] ${focus}`}
+                      className={`group flex min-h-11 items-start justify-between gap-3 rounded-[var(--radius)] text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)] after:absolute after:inset-0 after:rounded-[var(--radius)] after:content-[''] ${focus}`}
                     >
-                      <span className="flex items-start justify-between gap-3 text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)]">
-                        {c.label}
-                        <span aria-hidden="true" className="text-[color:var(--text-2)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
-                      </span>
-                      <span className="text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text-2)]">{c.desc}</span>
+                      {c.label}
+                      <span aria-hidden="true" className="text-[color:var(--text-2)]">↗</span>
                     </a>
+                    <p className="flex-1 text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text-2)]">{c.desc}</p>
                     {intent === "job" ? (
-                      <a href={CV} download className={linkClass}>
+                      <a href={CV} download className={`${linkClass} relative z-10 self-start`}>
                         {d.cta.cv}
                         <span aria-hidden="true">↓</span>
                       </a>

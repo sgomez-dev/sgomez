@@ -19,9 +19,25 @@ function Label({ children, id }: { children: ReactNode; id: string }) {
   );
 }
 
+const QUOTE = "text-[length:clamp(1.125rem,1.05rem+0.4vw,1.375rem)] leading-[1.5] tracking-[-0.005em] text-[color:var(--serif-ink)] [font-family:var(--font-serif),serif] [overflow-wrap:anywhere]";
+
+/** Párrafos de una cita: cursiva solo en el primero. */
+function Paragraphs({ text, lang }: { text: string; lang: string }) {
+  return (
+    <div className="flex flex-col gap-4">
+      {text.split("\n\n").map((para, i) => (
+        <p key={para} lang={lang} className={`${QUOTE} ${i === 0 ? "italic" : ""}`}>
+          {para}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 /**
  * Capítulo 08. Recomendaciones (la cita es siempre el original en español; en
- * inglés la traducción va después y etiquetada), certificaciones, formación y,
+ * inglés la traducción es la cita visible, etiquetada, y el original va en un
+ * `<details>` cerrado), certificaciones, formación y,
  * como `children`, las últimas entradas del blog (componente asíncrono que el
  * servidor resuelve en la página).
  */
@@ -54,28 +70,27 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
                       </a>
                       <span className="text-[length:var(--step--1)] uppercase tracking-[0.1em] text-[color:var(--text-2)]">{r.date}</span>
                     </figcaption>
-                    <blockquote className="min-w-0">
-                      <div className="flex flex-col gap-5">
-                        {v.quote.split("\n\n").map((para) => (
-                          <p
-                            key={para}
-                            lang={v.quoteLang}
-                            className="text-[length:clamp(1.625rem,1.4rem+0.6vw,1.875rem)] italic leading-[1.3] tracking-[-0.01em] text-[color:var(--serif-ink)] [font-family:var(--font-serif),serif] [overflow-wrap:anywhere]"
-                          >
-                            {para}
-                          </p>
-                        ))}
-                      </div>
+                    <blockquote className="min-w-0 max-w-[62ch]">
                       {v.translation ? (
-                        <div className="mt-6 flex flex-col gap-3 border-l-2 border-[color:var(--line)] pl-4">
-                          <p className="text-[length:var(--step--1)] uppercase tracking-[0.12em] text-[color:var(--text-2)]">{v.translatedLabel}</p>
-                          {v.translation.split("\n\n").map((para) => (
-                            <p key={para} lang="en" className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">
-                              {para}
-                            </p>
-                          ))}
-                        </div>
-                      ) : null}
+                        <>
+                          <p className="mb-3 text-[length:var(--step--1)] uppercase tracking-[0.12em] text-[color:var(--text-2)]">{v.translatedLabel}</p>
+                          <Paragraphs text={v.translation} lang="en" />
+                          <details className="mt-5">
+                            <summary className={`inline-flex min-h-11 cursor-pointer items-center text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline ${focus}`}>
+                              {d.recommendations.readOriginal}
+                            </summary>
+                            <div lang={v.quoteLang} className="mt-2 flex flex-col gap-3 border-l-2 border-[color:var(--line)] pl-4">
+                              {v.quote.split("\n\n").map((para) => (
+                                <p key={para} className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">
+                                  {para}
+                                </p>
+                              ))}
+                            </div>
+                          </details>
+                        </>
+                      ) : (
+                        <Paragraphs text={v.quote} lang={v.quoteLang} />
+                      )}
                     </blockquote>
                   </figure>
                 </li>

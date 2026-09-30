@@ -59,16 +59,12 @@ export default async function LatestPosts({ lang }: { lang: Lang }) {
               rel="noopener"
               className={`group flex min-h-11 w-full flex-col overflow-hidden rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] transition-colors hover:bg-[color:var(--bg-3)] ${focus}`}
             >
-              <div className="relative aspect-video overflow-hidden bg-[color:var(--bg-3)]">
-                {post.coverImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={post.coverImage} alt={post.coverAlt ?? ""} loading="lazy" className="h-full w-full object-cover" />
-                ) : (
-                  <div aria-hidden="true" className="flex h-full w-full items-center justify-center">
-                    <span className="text-[length:var(--step-4)] font-semibold text-white/5">sg</span>
-                  </div>
-                )}
-              </div>
+              {post.coverImage ? (
+                <div className="relative aspect-video overflow-hidden bg-[color:var(--bg-3)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={post.coverImage} alt="" loading="eager" decoding="async" className="h-full w-full object-cover" />
+                </div>
+              ) : null}
               <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">
                 <span className="text-[length:var(--step--1)] font-medium uppercase tracking-[0.1em] text-[color:var(--light-1)]">
                   {categories[post.category] ?? post.category}

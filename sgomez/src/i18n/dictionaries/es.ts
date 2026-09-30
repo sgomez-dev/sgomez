@@ -113,6 +113,7 @@ const es = {
   },
   recommendations: {
     translated: "Original en español",
+    readOriginal: "Leer el original",
   },
   footer: {
     ariaLabel: "Pie de página",

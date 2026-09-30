@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import Hero from "@/chapters/Hero";
 import About from "@/chapters/About";
@@ -9,6 +9,7 @@ import OpenSource from "@/chapters/OpenSource";
 import SkyQuetz from "@/chapters/SkyQuetz";
 import Proof from "@/chapters/Proof";
 import Contact from "@/chapters/Contact";
+import LatestPosts from "@/chapters/LatestPosts";
 import { contactMailto } from "@/lib/contact/mailto";
 import { getRecommendations } from "@/lib/api/data";
 import { IDENTITY } from "@/app/seo";
@@ -143,18 +144,28 @@ describe("capítulos 08–09 en HTML de servidor", () => {
       expect(proof).toContain('id="proof"');
       expect(contact).toContain('id="contact"');
     });
-    it(`${lang}: la cita original lleva lang="es"`, () => {
-      expect(proof).toMatch(/<(p|blockquote)[^>]*lang="es"/);
-    });
-    it(`${lang}: traducción solo en inglés, etiquetada y después del original`, () => {
+    it(`${lang}: la cita visible y el original`, () => {
       const r = getRecommendations(lang)[0]!;
       if (lang === "en") {
-        expect(proof).toContain(d.recommendations.translated);
-        const first = proof.indexOf('lang="es"');
-        expect(first).toBeGreaterThan(0);
-        expect(proof.indexOf(d.recommendations.translated)).toBeGreaterThan(first);
-        expect(r.comment_translation).toBeTruthy();
+        const label = proof.indexOf(d.recommendations.translated);
+        const tr = proof.indexOf(esc(r.comment_translation!.split("\n\n")[0]!));
+        expect(label).toBeGreaterThan(0);
+        expect(tr).toBeGreaterThan(label);
+        expect(proof).toMatch(/<p[^>]*lang="en"[^>]*>/);
+        const details = proof.match(/<details[\s\S]*?<\/details>/)![0];
+        expect(details).toMatch(/<summary(?![^>]*lang=)[^>]*>/);
+        expect(details).toContain(d.recommendations.readOriginal);
+        expect(details).toMatch(/<div[^>]*lang="es"[^>]*>[\s\S]*<\/div>/);
+        expect(details).toContain(esc(r.comment.split("\n\n")[0]!));
+        expect(details).not.toContain(esc(r.comment_translation!.split("\n\n")[0]!));
+        expect(details).not.toMatch(/<details[^>]*open/);
+        // la traducción nunca queda dentro de un elemento lang="es"
+        const outside = proof.replace(/<details[\s\S]*?<\/details>/g, "");
+        expect(outside).not.toMatch(/lang="es"/);
+        expect(outside).toContain(esc(r.comment_translation!.split("\n\n")[0]!));
       } else {
+        expect(proof).toMatch(/<p[^>]*lang="es"[^>]*>/);
+        expect(proof).not.toContain("<details");
         expect(proof).not.toContain(getDictionary("en").recommendations.translated);
       }
     });
@@ -176,4 +187,31 @@ describe("capítulos 08–09 en HTML de servidor", () => {
       expect(contact).toMatch(/<svg[^>]*aria-hidden="true"[^>]*data-motion="glass"/);
     });
   }
+});
+
+describe("últimas entradas del blog", () => {
+  const post = (slug: string, coverImage: string | null) => ({ slug, title: `T ${slug}`, excerpt: "", coverImage, coverAlt: null, category: "PROYECTO", readingTime: 3, publishedAt: "2026-09-11T00:00:00Z" });
+  const render = async (lang: "es" | "en") => renderToStaticMarkup(await LatestPosts({ lang }));
+  afterEach(() => vi.unstubAllGlobals());
+  it("respuesta no ok: nada", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
+    expect(await LatestPosts({ lang: "es" })).toBeNull();
+  });
+  it("fetch que lanza: nada", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
+    expect(await LatestPosts({ lang: "en" })).toBeNull();
+  });
+  it("sin entradas: nada", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [] }) }));
+    expect(await LatestPosts({ lang: "es" })).toBeNull();
+  });
+  it("con y sin portada: imagen solo cuando la hay", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [post("a", "https://x.test/a.webp"), post("b", null)] }) }));
+    const html = await render("en");
+    expect(html.match(/<img/g)).toHaveLength(1);
+    expect(html).toContain('src="https://x.test/a.webp"');
+    expect(html).toMatch(/<img[^>]*alt=""/);
+    expect(html).not.toContain("aspect-video overflow-hidden bg-[color:var(--bg-3)]\"></div>");
+    expect(html).toContain("T b");
+  });
 });
