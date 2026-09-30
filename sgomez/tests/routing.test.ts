@@ -77,11 +77,14 @@ describe("sitemap", () => {
 });
 
 describe("catálogo de rutas", () => {
-  it("cada ruta declara su título en español y en inglés, distintos salvo nombres propios", () => {
+  it("cada ruta declara su título en español y en inglés, y son distintos", () => {
     for (const logical of PAGES) {
       const { title } = ROUTE_CATALOGUE[logical];
       expect(title.es, logical).toBeTruthy();
       expect(title.en, logical).toBeTruthy();
+      // Hoy ningún título es un nombre propio igual en los dos idiomas. Si
+      // llegara uno, se exime aquí de forma explícita.
+      expect(title.en, logical).not.toBe(title.es);
     }
     expect(ROUTE_CATALOGUE["/about"].title.en).toBe("About me");
   });
@@ -114,12 +117,17 @@ describe("llms.txt y agents.md por idioma", () => {
   });
 });
 
-describe("peticiones RSC", () => {
-  it("nunca reciben markdown, ni con Accept: text/markdown", () => {
+// Defensivo (R9): Next elimina las cabeceras rsc / next-router-* antes de que la
+// petición llegue al proxy, así que en ejecución `isRsc` nunca es true allí. Estos
+// tests cubren solo la lógica pura de `decide` / `isRscRequest`, por si una
+// versión futura de Next las conserva. No prueban comportamiento observable: la
+// navegación de cliente real la fija el e2e de Review Focus 2.
+describe("peticiones RSC (solo lógica defensiva, R9)", () => {
+  it("decide() no da markdown a una petición marcada como RSC (camino que el proxy no ve en ejecución)", () => {
     expect(decide("/about", "text/markdown", true)).toEqual({ kind: "skip" });
     expect(decide("/en/about", "text/markdown", true)).toEqual({ kind: "skip" });
   });
-  it("se reconocen por cabecera o por el parámetro _rsc", () => {
+  it("isRscRequest reconoce cabecera o parámetro _rsc (defensivo: el proxy no ve las cabeceras)", () => {
     expect(isRscRequest(new Headers({ rsc: "1" }), "")).toBe(true);
     expect(isRscRequest(new Headers({ "next-router-prefetch": "1" }), "")).toBe(true);
     expect(isRscRequest(new Headers(), "?_rsc=abc")).toBe(true);

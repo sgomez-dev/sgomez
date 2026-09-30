@@ -117,7 +117,8 @@ describe("capítulos 04–07", () => {
     it(`${lang}: pista de experiencia y enlaces de proyecto accesibles`, () => {
       expect(html).toContain('data-motion="timeline"');
       for (const p of getProjects(lang)) {
-        expect(html).toContain(`aria-label="${esc(p.title)} — ${d.projects.open}"`);
+        // Sin aria-label (WCAG 2.5.3): la acción es texto solo para lectores dentro del enlace.
+        expect(html).toContain(`${esc(p.title)}<span class="sr-only"> — ${d.projects.open}</span>`);
       }
       expect(html).toContain('rel="noopener"');
     });

@@ -31,7 +31,6 @@ export default function Projects({ lang }: { lang: Lang }) {
                   href={p.url}
                   target="_blank"
                   rel="noopener"
-                  aria-label={`${p.title} — ${d.projects.open}`}
                   className={`group flex h-full min-h-11 flex-col gap-4 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-4 transition-colors hover:border-[color-mix(in_oklab,var(--light-1)_45%,transparent)] hover:bg-[color:var(--bg-3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)] sm:p-5 ${featured ? "lg:flex-row" : ""}`}
                 >
                   {featured ? (
@@ -56,7 +55,11 @@ export default function Projects({ lang }: { lang: Lang }) {
                   ) : null}
                   <div className="flex flex-1 flex-col gap-3">
                     <h3 className="flex items-start justify-between gap-3 text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)]">
-                      <span className="min-w-0 [overflow-wrap:anywhere]">{p.title}</span>
+                      <span className="min-w-0 [overflow-wrap:anywhere]">
+                        {p.title}
+                        {/* WCAG 2.5.3: el nombre accesible debe contener el texto visible, así que no se usa aria-label; la acción va como texto solo para lectores. */}
+                        <span className="sr-only"> — {d.projects.open}</span>
+                      </span>
                       <span aria-hidden="true" className="shrink-0 text-[color:var(--text-2)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
                     </h3>
                     <p className="flex-1 text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{p.description}</p>
