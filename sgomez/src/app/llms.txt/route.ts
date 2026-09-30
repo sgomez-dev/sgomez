@@ -1,5 +1,6 @@
 import { CLAUDE_CANVAS, IDENTITY, SKYQUETZ } from "../seo";
 import { projects, experience } from "../content";
+import { t } from "@/lib/content/localized";
 import { API_BASE, MACHINE_ROUTES, absolute } from "@/lib/site";
 
 /**
@@ -161,14 +162,14 @@ export function GET(): Response {
   L.push("## Selected projects");
   L.push("");
   for (const p of projects) {
-    L.push(`- **${p.title}** — ${p.desc} (${p.stack}) ${p.link}`);
+    L.push(`- **${p.title}** — ${t(p.desc, "es")} (${p.stack}) ${p.link}`);
   }
   L.push("");
 
   L.push("## Experience");
   L.push("");
   for (const e of experience) {
-    L.push(`- **${e.role}**, ${e.title} (${e.period})`);
+    L.push(`- **${t(e.role, "es")}**, ${e.title} (${t(e.period, "es")})`);
   }
   L.push("");
 

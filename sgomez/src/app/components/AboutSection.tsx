@@ -2,6 +2,7 @@
 
 import { motion, useInView } from 'framer-motion'
 import { about } from '../content'
+import { t } from '@/lib/content/localized'
 import { useRef, useEffect, useState } from 'react'
 
 function AnimatedCounter({ target, suffix = '' }: { target: number; suffix: string }) {
@@ -31,7 +32,7 @@ const stats = [
 ]
 
 export default function AboutSection() {
-  const paragraphs = about.description.trim().split('\n\n').filter(Boolean)
+  const paragraphs = t(about.description, 'es').trim().split('\n\n').filter(Boolean)
   return (
     <section id="about" className="py-24 md:py-32 relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-600/[0.03] rounded-full blur-[128px] pointer-events-none" />
@@ -66,8 +67,8 @@ export default function AboutSection() {
                   <span className="text-violet-400 font-bold text-xs md:text-sm font-mono">{item.year}</span>
                 </div>
                 <div className="glass rounded-xl p-5 card-hover">
-                  <h3 className="text-white font-semibold mb-1.5">{item.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed font-light">{item.desc}</p>
+                  <h3 className="text-white font-semibold mb-1.5">{t(item.title, 'es')}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed font-light">{t(item.desc, 'es')}</p>
                 </div>
               </motion.div>
             ))}

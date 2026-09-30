@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { hero } from '../content'
+import { t } from '@/lib/content/localized'
 import Image from 'next/image'
 import MacBook from './MacBook'
 
@@ -130,7 +131,7 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: typingComplete ? 1 : 0 }} transition={{ duration: 0.6 }} className="text-gray-500 text-sm md:text-base font-light text-center max-w-md">{hero.subtitle}</motion.p>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: typingComplete ? 1 : 0 }} transition={{ duration: 0.6 }} className="text-gray-500 text-sm md:text-base font-light text-center max-w-md">{t(hero.subtitle, 'es')}</motion.p>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: typingComplete ? 1 : 0, y: typingComplete ? 0 : 10 }} transition={{ duration: 0.5 }} className="flex gap-3 sm:gap-4 flex-wrap justify-center">
           <a href="#contact" className="group relative px-6 sm:px-7 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 transition-all duration-300 text-sm font-medium overflow-hidden">

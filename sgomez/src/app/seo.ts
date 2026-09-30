@@ -8,6 +8,20 @@
  * nudaui.dev, blog.sgomez.dev and the CLI landing so everything stays "in line".
  */
 
+import type { Localized } from "@/lib/content/localized";
+
+/**
+ * Textos de la identidad que se muestran a una persona y por tanto existen en
+ * los dos idiomas. `IDENTITY.description` sigue siendo la versión en español
+ * (la que consumen el JSON-LD y los documentos markdown, que no cambian).
+ */
+export const IDENTITY_TEXT = {
+  description: {
+    es: "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Developer en Evenbytes y organizador de GDG Santander.",
+    en: "Santiago Gómez de la Torre Romero is a full-stack engineer who takes AI to production. Co-founder of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Developer at Evenbytes and organizer of GDG Santander.",
+  } satisfies Localized,
+};
+
 export const IDENTITY = {
   name: "Santiago Gómez de la Torre Romero",
   givenName: "Santiago",
@@ -20,8 +34,7 @@ export const IDENTITY = {
   coFounderTitle: "Cofundador de SkyQuetz Consulting",
   email: "contact@sgomez.dev",
   image: "https://sgomez.dev/Santiago_Gómez_de_la_Torre_Romero.png",
-  description:
-    "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Developer en Evenbytes y organizador de GDG Santander.",
+  description: IDENTITY_TEXT.description.es,
   location: { city: "Santander", region: "Cantabria", country: "ES" },
   // sameAs cluster — every profile/property that is "also him". This is what
   // merges the domains into a single entity graph.

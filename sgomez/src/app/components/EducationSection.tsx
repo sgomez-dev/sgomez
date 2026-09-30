@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { education } from '../content'
+import { t } from '@/lib/content/localized'
 
 export default function EducationSection() {
   return (
@@ -22,7 +23,7 @@ export default function EducationSection() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-violet-300 transition-colors">{edu.title}</h3>
-                  <p className="text-gray-400 text-sm font-light leading-relaxed">{edu.desc}</p>
+                  <p className="text-gray-400 text-sm font-light leading-relaxed">{t(edu.desc, 'es')}</p>
                 </div>
               </div>
             </motion.div>

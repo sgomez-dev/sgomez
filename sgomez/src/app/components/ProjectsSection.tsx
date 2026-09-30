@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { projects } from '../content'
+import { t } from '@/lib/content/localized'
 
 const featuredProjects = projects.slice(0, 3)
 const otherProjects = projects.slice(3)
@@ -24,7 +25,7 @@ export default function ProjectsSection() {
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-5"><div className="w-2 h-2 rounded-full bg-violet-400" /><span className="text-violet-400 text-[10px] font-mono uppercase tracking-wider">Destacado</span></div>
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-violet-300 transition-colors leading-tight">{project.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed font-light mb-5 flex-1">{project.desc}</p>
+                <p className="text-gray-400 text-sm leading-relaxed font-light mb-5 flex-1">{t(project.desc, 'es')}</p>
                 <div className="flex flex-wrap gap-1.5 mb-5">
                   {project.stack.split(',').map((tech, idx) => (
                     <span key={idx} className="text-[10px] px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/15 font-mono">{tech.trim()}</span>
@@ -51,7 +52,7 @@ export default function ProjectsSection() {
                   <svg className="w-3.5 h-3.5 text-gray-700 group-hover:text-violet-400 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
                 </div>
                 <h3 className="text-sm font-semibold text-white mb-1.5 group-hover:text-violet-300 transition-colors">{project.title}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed font-light mb-3 line-clamp-2">{project.desc}</p>
+                <p className="text-gray-500 text-xs leading-relaxed font-light mb-3 line-clamp-2">{t(project.desc, 'es')}</p>
                 <div className="flex flex-wrap gap-1">
                   {project.stack.split(',').slice(0, 3).map((tech, idx) => (
                     <span key={idx} className="text-[9px] px-1.5 py-0.5 rounded bg-white/[0.03] text-gray-600 font-mono">{tech.trim()}</span>

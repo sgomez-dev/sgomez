@@ -1,4 +1,5 @@
 import { hero } from "@/app/content";
+import { t } from "@/lib/content/localized";
 import { IDENTITY, SKYQUETZ } from "@/app/seo";
 import { getProjects } from "@/lib/api/data";
 import { STATIC_PAGES, findStaticPage } from "@/lib/content/pages";
@@ -18,7 +19,7 @@ import { API_BASE, HTML_ROUTES, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib
 function homeMarkdown(): string {
   const lines: string[] = [];
   lines.push(`# ${IDENTITY.name}`, "");
-  lines.push(`> ${hero.subtitle}`, "");
+  lines.push(`> ${t(hero.subtitle, "es")}`, "");
   lines.push(IDENTITY.description, "");
   lines.push(`Canonical URL: ${SITE_URL}`, "");
 

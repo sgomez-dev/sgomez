@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { skyquetz } from '../content'
+import { t } from '@/lib/content/localized'
 
 /**
  * SkyQuetz Consulting — la única sección del portafolio que no habla de un
@@ -38,7 +39,7 @@ export default function SkyQuetzSection() {
           className="mb-12"
         >
           <p className="text-[#e0b661] text-sm font-mono tracking-wider uppercase mb-3">
-            {skyquetz.role}
+            {t(skyquetz.role, 'es')}
           </p>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">
             No solo escribo el código. También la empresa.
@@ -77,25 +78,25 @@ export default function SkyQuetzSection() {
               </a>
 
               <p className="mt-5 text-[#e0b661] text-sm font-light italic">
-                {skyquetz.slogan}
+                {t(skyquetz.slogan, 'es')}
               </p>
 
               <p className="mt-4 text-gray-400 text-sm leading-relaxed font-light">
-                {skyquetz.desc}
+                {t(skyquetz.desc, 'es')}
               </p>
               <p className="mt-3 text-gray-300 text-sm leading-relaxed font-light">
-                {skyquetz.myPart}
+                {t(skyquetz.myPart, 'es')}
               </p>
 
               <div className="grid grid-cols-3 gap-3 mt-7">
                 {skyquetz.stats.map((s) => (
                   <div
-                    key={s.label}
+                    key={t(s.label, 'es')}
                     className="rounded-xl bg-white/[0.03] border border-[#c8962b]/[0.14] px-3 py-3 text-center"
                   >
                     <div className="text-xl font-bold text-white tabular-nums">{s.value}</div>
                     <div className="text-[10px] text-gray-500 font-mono uppercase tracking-wider mt-0.5">
-                      {s.label}
+                      {t(s.label, 'es')}
                     </div>
                   </div>
                 ))}
@@ -141,14 +142,14 @@ export default function SkyQuetzSection() {
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#c8962b]" />
                     <span className="text-[#e0b661] text-[10px] font-mono uppercase tracking-wider">
-                      {prod.tagline}
+                      {t(prod.tagline, 'es')}
                     </span>
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#e0b661] transition-colors">
                     {prod.name}
                   </h3>
                   <p className="text-gray-400 text-[13px] leading-relaxed font-light flex-1">
-                    {prod.desc}
+                    {t(prod.desc, 'es')}
                   </p>
                   <div className="flex flex-wrap gap-1.5 mt-4">
                     {prod.stack.map((tech) => (

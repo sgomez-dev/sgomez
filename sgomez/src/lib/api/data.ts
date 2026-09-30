@@ -1,4 +1,4 @@
-import { IDENTITY, SKYQUETZ } from "@/app/seo";
+import { IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
 import {
   about,
   certifications,
@@ -12,6 +12,8 @@ import {
 } from "@/app/content";
 import { API_BASE, SITE_URL, absolute } from "@/lib/site";
 import { slugify } from "@/lib/api/slug";
+import { DEFAULT_LANG, type Lang } from "@/i18n/languages";
+import { t } from "@/lib/content/localized";
 
 /**
  * Capa de datos de la API pública.
@@ -79,7 +81,11 @@ export type Recommendation = {
   slug: string;
   name: string;
   date: string;
+  /** Siempre el texto original, en el idioma en que lo escribió su autor. */
   comment: string;
+  original_language: "es";
+  /** Solo con `lang=en`: traducción al inglés, que no son palabras del autor. */
+  comment_translation?: string;
   recommender_url: string;
 };
 
@@ -97,12 +103,15 @@ function collapse(text: string): string {
   return text.replace(/\s+/g, " ").trim();
 }
 
-export function getProfile(): Profile {
+/** Idioma por defecto de todos los getters: lo que la API devolvía antes de tener idioma. */
+const ES: Lang = DEFAULT_LANG;
+
+export function getProfile(lang: Lang = ES): Profile {
   return {
     name: IDENTITY.name,
     given_name: IDENTITY.givenName,
     family_name: IDENTITY.familyName,
-    headline: hero.title,
+    headline: t(hero.title, lang),
     job_title: IDENTITY.jobTitle,
     co_founder_of: {
       name: SKYQUETZ.name,
@@ -112,7 +121,7 @@ export function getProfile(): Profile {
       role: "Co-founder (one of four founding partners), leads engineering",
     },
     employer: { name: "Evenbytes", url: "https://evenbytes.com" },
-    summary: IDENTITY.description,
+    summary: t(IDENTITY_TEXT.description, lang),
     location: {
       city: IDENTITY.location.city,
       region: IDENTITY.location.region,
@@ -139,13 +148,13 @@ export function getProfile(): Profile {
   };
 }
 
-export function getProjects(): Project[] {
+export function getProjects(lang: Lang = ES): Project[] {
   return projects.map((project) => {
     const slug = slugify(project.title);
     return {
       slug,
       title: project.title,
-      description: project.desc,
+      description: t(project.desc, lang),
       // `stack` llega como una cadena separada por comas en el contenido de la
       // página; la API la publica como array porque un cliente que filtre por
       // tecnología no debería tener que partir cadenas.
@@ -156,69 +165,77 @@ export function getProjects(): Project[] {
   });
 }
 
-export function getProject(slug: string): Project | undefined {
-  return getProjects().find((project) => project.slug === slug);
+export function getProject(slug: string, lang: Lang = ES): Project | undefined {
+  return getProjects(lang).find((project) => project.slug === slug);
 }
 
-export function getExperience(): ExperienceEntry[] {
+export function getExperience(lang: Lang = ES): ExperienceEntry[] {
   return experience.map((entry) => {
     // `title` del contenido es "Organización - Ubicación"; la organización es
     // lo que va antes del primer guion.
     const organization = entry.title.split(" - ")[0].trim();
     return {
-      slug: slugify(`${entry.role}-${organization}`),
-      role: entry.role,
+      slug: slugify(`${t(entry.role, "es")}-${organization}`),
+      role: t(entry.role, lang),
       organization: entry.title,
-      period: entry.period,
-      description: collapse(entry.desc),
+      period: t(entry.period, lang),
+      description: collapse(t(entry.desc, lang)),
     };
   });
 }
 
-export function getSkills(): SkillCategory[] {
+export function getSkills(lang: Lang = ES): SkillCategory[] {
   return technologies.map((group) => ({
-    category: group.category,
-    slug: slugify(group.category),
+    category: t(group.category, lang),
+    slug: slugify(t(group.category, "es")),
     skills: group.skills.map((skill) => ({ name: skill.name, years: skill.years })),
   }));
 }
 
-export function getCertifications(): Certification[] {
+export function getCertifications(lang: Lang = ES): Certification[] {
   return certifications.map((certification) => ({
     slug: slugify(`${certification.title}-${certification.institution}`),
     title: certification.title,
     institution: certification.institution,
-    date: certification.date,
+    date: t(certification.date, lang),
     credential_url: certification.url,
   }));
 }
 
-export function getEducation(): EducationEntry[] {
+export function getEducation(lang: Lang = ES): EducationEntry[] {
   return education.map((entry) => ({
     slug: slugify(entry.title),
     institution: entry.title,
-    detail: entry.desc,
+    detail: t(entry.desc, lang),
   }));
 }
 
-export function getRecommendations(): Recommendation[] {
+/** Algunas recomendaciones son un array de párrafos y otras una cadena. */
+function joinParagraphs(text: string | string[]): string {
+  return Array.isArray(text) ? text.join("\n\n") : text;
+}
+
+export function getRecommendations(lang: Lang = ES): Recommendation[] {
   return recommendations.map((entry) => ({
     slug: slugify(entry.name),
     name: entry.name,
     date: entry.date,
-    // Algunas recomendaciones son un array de párrafos y otras una cadena.
-    comment: Array.isArray(entry.comment) ? entry.comment.join("\n\n") : entry.comment,
+    // El comentario es siempre el original: una cita no se atribuye en un
+    // idioma que su autor no escribió. La traducción va en un campo aparte.
+    comment: joinParagraphs(entry.comment),
+    original_language: "es" as const,
+    ...(lang === "en" ? { comment_translation: joinParagraphs(entry.commentEn) } : {}),
     recommender_url: entry.recommenderUrl,
   }));
 }
 
-export function getAbout(): { summary: string; timeline: { year: string; title: string; description: string }[] } {
+export function getAbout(lang: Lang = ES): { summary: string; timeline: { year: string; title: string; description: string }[] } {
   return {
-    summary: collapse(about.description),
+    summary: collapse(t(about.description, lang)),
     timeline: about.timeline.map((item) => ({
       year: item.year,
-      title: item.title,
-      description: item.desc,
+      title: t(item.title, lang),
+      description: t(item.desc, lang),
     })),
   };
 }
@@ -232,7 +249,7 @@ export function getAbout(): { summary: string; timeline: { year: string; title: 
  * agente necesita para localizar el recurso concreto que va a pedir después
  * por su endpoint.
  */
-export function search(query: string, limit: number): SearchResult[] {
+export function search(query: string, limit: number, lang: Lang = ES): SearchResult[] {
   const terms = query
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -244,7 +261,7 @@ export function search(query: string, limit: number): SearchResult[] {
 
   const documents: { result: Omit<SearchResult, "score">; haystack: string; title: string }[] = [];
 
-  for (const project of getProjects()) {
+  for (const project of getProjects(lang)) {
     documents.push({
       result: {
         type: "project",
@@ -257,7 +274,7 @@ export function search(query: string, limit: number): SearchResult[] {
       haystack: `${project.title} ${project.description} ${project.stack.join(" ")}`,
     });
   }
-  for (const entry of getExperience()) {
+  for (const entry of getExperience(lang)) {
     documents.push({
       result: {
         type: "experience",
@@ -270,14 +287,17 @@ export function search(query: string, limit: number): SearchResult[] {
       haystack: `${entry.role} ${entry.organization} ${entry.description} ${entry.period}`,
     });
   }
-  for (const group of getSkills()) {
+  for (const group of getSkills(lang)) {
     for (const skill of group.skills) {
       documents.push({
         result: {
           type: "skill",
           slug: slugify(skill.name),
           title: skill.name,
-          snippet: `${group.category} — ${skill.years} años de experiencia`,
+          snippet:
+            lang === "en"
+              ? `${group.category} — ${skill.years} years of experience`
+              : `${group.category} — ${skill.years} años de experiencia`,
           url: absolute(`${API_BASE}/skills`),
         },
         title: skill.name,
@@ -285,7 +305,7 @@ export function search(query: string, limit: number): SearchResult[] {
       });
     }
   }
-  for (const certification of getCertifications()) {
+  for (const certification of getCertifications(lang)) {
     documents.push({
       result: {
         type: "certification",
@@ -298,17 +318,17 @@ export function search(query: string, limit: number): SearchResult[] {
       haystack: `${certification.title} ${certification.institution}`,
     });
   }
-  for (const recommendation of getRecommendations()) {
+  for (const recommendation of getRecommendations(lang)) {
     documents.push({
       result: {
         type: "recommendation",
         slug: recommendation.slug,
-        title: `Recomendación de ${recommendation.name}`,
-        snippet: recommendation.comment.slice(0, 240),
+        title: lang === "en" ? `Recommendation from ${recommendation.name}` : `Recomendación de ${recommendation.name}`,
+        snippet: (recommendation.comment_translation ?? recommendation.comment).slice(0, 240),
         url: absolute(`${API_BASE}/recommendations`),
       },
       title: recommendation.name,
-      haystack: `${recommendation.name} ${recommendation.comment}`,
+      haystack: `${recommendation.name} ${recommendation.comment} ${recommendation.comment_translation ?? ""}`,
     });
   }
 

@@ -1,5 +1,6 @@
 import { CLAUDE_CANVAS, IDENTITY, SKYQUETZ } from "@/app/seo";
 import { about } from "@/app/content";
+import { t } from "./localized";
 import { API_BASE, SITE_URL } from "@/lib/site";
 
 /**
@@ -91,7 +92,7 @@ export const aboutPage: StaticPage = {
       blocks: [
         {
           kind: "list",
-          items: about.timeline.map((item) => `**${item.year}** — ${item.title}: ${item.desc}`),
+          items: about.timeline.map((item) => `**${item.year}** — ${t(item.title, "es")}: ${t(item.desc, "es")}`),
         },
       ],
     },

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { technologies } from '../content'
+import { t } from '@/lib/content/localized'
 
 const categoryColors: Record<string, { bg: string; text: string; border: string; pill: string }> = {
   Frontend: { bg: 'from-violet-500/[0.08] to-violet-500/[0.02]', text: 'text-violet-400', border: 'border-violet-500/20 hover:border-violet-500/40', pill: 'bg-violet-500/10 text-violet-300 border-violet-500/20' },
@@ -23,7 +24,7 @@ export default function TechnologiesSection() {
         </motion.div>
         <div className="grid md:grid-cols-2 gap-5">
           {technologies.map((category, ci) => {
-            const colors = categoryColors[category.category] || categoryColors.Frontend
+            const colors = categoryColors[t(category.category, 'es')] || categoryColors.Frontend
             return (
               <motion.div key={ci} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: ci * 0.1 }}
                 className={`rounded-2xl border ${colors.border} bg-gradient-to-br ${colors.bg} p-6 md:p-8 transition-all duration-300 relative overflow-hidden group`}>
@@ -32,8 +33,8 @@ export default function TechnologiesSection() {
                 </div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-white">{category.category}</h3>
-                    <span className={`${colors.text} font-mono text-xs opacity-50`}>{categoryIcons[category.category]}</span>
+                    <h3 className="text-lg font-semibold text-white">{t(category.category, 'es')}</h3>
+                    <span className={`${colors.text} font-mono text-xs opacity-50`}>{categoryIcons[t(category.category, 'es')]}</span>
                   </div>
                   <div className="flex flex-wrap gap-2.5">
                     {category.skills.map((skill, si) => (

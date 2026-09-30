@@ -1,3 +1,4 @@
+import { isLang, type Lang } from "@/i18n/languages";
 import { absolute } from "@/lib/site";
 
 /**
@@ -75,6 +76,18 @@ export function jsonError(
 
 export function notFound(message: string, hint: string): Response {
   return jsonError("not_found", message, hint);
+}
+
+/**
+ * Idioma de la respuesta. `?lang=` manda; si no viene, una cabecera
+ * Accept-Language que empiece por "en" pide inglés; en cualquier otro caso,
+ * español, que es lo que la API devolvía antes de tener idioma.
+ */
+export function resolveLang(request: Request): Lang {
+  const param = new URL(request.url).searchParams.get("lang");
+  if (param !== null) return isLang(param) ? param : "es";
+  const accept = request.headers.get("accept-language") ?? "";
+  return /^\s*en\b/i.test(accept) ? "en" : "es";
 }
 
 const ALLOWED_METHODS = "GET, HEAD, OPTIONS";

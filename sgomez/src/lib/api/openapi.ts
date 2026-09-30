@@ -81,6 +81,17 @@ const OFFSET_PARAM: Json = {
   example: 0,
 };
 
+/** Idioma de la respuesta, común a todas las operaciones de datos. */
+const LANG_PARAM: Json = {
+  name: "lang",
+  in: "query",
+  required: false,
+  description:
+    "Language of the response text: es (Spanish, the default) or en (English). Without it, an Accept-Language header starting with en selects English. Slugs are identical in both languages. Unknown values fall back to es.",
+  schema: { type: "string", enum: ["es", "en"], default: "es" },
+  example: "en",
+};
+
 /** Envoltorio `{ data, meta }` de una colección. */
 function collectionResponse(description: string, itemRef: string): Json {
   return {
@@ -136,7 +147,7 @@ function collectionOperation(config: {
       tags: [config.tag],
       summary: config.summary,
       description: config.description,
-      parameters: [LIMIT_PARAM, OFFSET_PARAM],
+      parameters: [LIMIT_PARAM, OFFSET_PARAM, LANG_PARAM],
       responses: {
         "200": collectionResponse(config.responseDescription, config.itemRef),
         "400": BAD_REQUEST_RESPONSE,
@@ -358,13 +369,25 @@ const SCHEMAS: Json = {
   Recommendation: {
     type: "object",
     description: "A written recommendation from a colleague or client.",
-    required: ["slug", "name", "date", "comment", "recommender_url"],
+    required: ["slug", "name", "date", "comment", "original_language", "recommender_url"],
     additionalProperties: false,
     properties: {
       slug: { type: "string", description: "Stable identifier." },
       name: { type: "string", description: "Who wrote it." },
       date: { type: "string", description: "Date it was written, in Spanish." },
-      comment: { type: "string", description: "Full text of the recommendation." },
+      comment: {
+        type: "string",
+        description: "Full text of the recommendation, always in the language its author wrote it (Spanish).",
+      },
+      original_language: {
+        type: "string",
+        enum: ["es"],
+        description: "Language the recommendation was originally written in. Quotes are never attributed in another language.",
+      },
+      comment_translation: {
+        type: "string",
+        description: "English translation of the comment. Present only when lang=en; it is a translation, not the author's words.",
+      },
       recommender_url: { type: "string", format: "uri", description: "Profile of the person who wrote it." },
     },
   },
@@ -461,7 +484,11 @@ export function openApiDocument(): Json {
           summary: "Get the professional profile",
           description:
             "Returns name, headline, current role, employer, co-founded company, location, working languages, contact address, availability and the canonical list of profiles that belong to him. This is the endpoint to ground any factual claim about who he is.",
-          responses: { "200": objectResponse("The profile.", "#/components/schemas/Profile") },
+          parameters: [LANG_PARAM],
+          responses: {
+            "200": objectResponse("The profile.", "#/components/schemas/Profile"),
+            "400": BAD_REQUEST_RESPONSE,
+          },
         },
       },
       [`${API_BASE}/about`]: {
@@ -471,7 +498,11 @@ export function openApiDocument(): Json {
           summary: "Get the biography and career timeline",
           description:
             "Returns the long-form biography and a year-by-year timeline of career milestones. Use it when a short profile is not enough — for example to explain how he moved from systems administration into shipping AI features.",
-          responses: { "200": objectResponse("Biography and timeline.", "#/components/schemas/About") },
+          parameters: [LANG_PARAM],
+          responses: {
+            "200": objectResponse("Biography and timeline.", "#/components/schemas/About"),
+            "400": BAD_REQUEST_RESPONSE,
+          },
         },
       },
       [`${API_BASE}/projects`]: collectionOperation({
@@ -499,9 +530,11 @@ export function openApiDocument(): Json {
               schema: { type: "string", pattern: "^[a-z0-9-]+$" },
               example: exampleSlug,
             },
+            LANG_PARAM,
           ],
           responses: {
             "200": objectResponse("The project.", "#/components/schemas/Project"),
+            "400": BAD_REQUEST_RESPONSE,
             "404": NOT_FOUND_RESPONSE,
           },
         },
@@ -574,6 +607,7 @@ export function openApiDocument(): Json {
               schema: { type: "integer", minimum: 1, maximum: 50, default: 10 },
               example: 10,
             },
+            LANG_PARAM,
           ],
           responses: {
             "200": collectionResponse("Ranked search hits, best first.", "#/components/schemas/SearchResult"),

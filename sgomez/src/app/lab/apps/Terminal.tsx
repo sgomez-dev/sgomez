@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { t } from '@/lib/content/localized'
 import { hero, about, projects, experience, education, technologies, contactLinks } from '@/app/content'
 
 interface CommandHistory {
@@ -47,7 +48,7 @@ const COMMANDS = {
   about: {
     description: 'Información sobre Santiago Gómez',
     execute: () => {
-      const descriptionLines = about.description.trim().split('\n').map(line => `  ${line}`)
+      const descriptionLines = t(about.description, 'es').trim().split('\n').map(line => `  ${line}`)
       return [
         '',
         '┌─────────────────────────────────────────────────────────────┐',
@@ -55,7 +56,7 @@ const COMMANDS = {
         '└─────────────────────────────────────────────────────────────┘',
         '',
         `  Nombre: ${hero.name}`,
-        `  Rol: ${hero.title.split('|')[0].trim()} | ${hero.title.split('|')[1].trim()}`,
+        `  Rol: ${t(hero.title, 'es').split('|')[0].trim()} | ${t(hero.title, 'es').split('|')[1].trim()}`,
         '  Edad: 22 años',
         '  Ubicación: Santander, España',
         '',
@@ -72,7 +73,7 @@ const COMMANDS = {
       '',
       '  santiago@sgomez-os ~ $ whoami',
       `  ${hero.name}`,
-      `  > ${hero.title.split('|')[1].trim()}`,
+      `  > ${t(hero.title, 'es').split('|')[1].trim()}`,
       '  > Tech Enthusiast',
       '  > Community Organizer',
       ''
@@ -95,8 +96,8 @@ const COMMANDS = {
           lines.push('  ' + '─'.repeat(55))
           lines.push('')
         }
-        lines.push(`  ${category.category === 'Frontend' ? '🎨' : category.category === 'Backend' ? '⚙️' : category.category === 'DevOps & Cloud' ? '☁️' : '📱'} ${category.category.toUpperCase()}`)
-        lines.push('  ' + '─'.repeat(category.category.length + 2))
+        lines.push(`  ${t(category.category, 'es') === 'Frontend' ? '🎨' : t(category.category, 'es') === 'Backend' ? '⚙️' : t(category.category, 'es') === 'DevOps & Cloud' ? '☁️' : '📱'} ${t(category.category, 'es').toUpperCase()}`)
+        lines.push('  ' + '─'.repeat(t(category.category, 'es').length + 2))
         category.skills.forEach(skill => {
           const paddedName = `${skill.icon} ${skill.name}`.padEnd(18)
           const separator = '--'
@@ -124,7 +125,7 @@ const COMMANDS = {
       projects.forEach((project, index) => {
         lines.push(`  ${index + 1}. ${icons[index] || '💻'} ${project.title}`)
         lines.push('     ' + '─'.repeat(project.title.length))
-        lines.push(`     ${project.desc}`)
+        lines.push(`     ${t(project.desc, 'es')}`)
         lines.push(`     Stack: ${project.stack}`)
         lines.push(`     GitHub: ${project.link.replace('https://', '')}`)
         lines.push('')
@@ -154,11 +155,11 @@ const COMMANDS = {
       
       experience.forEach((exp, index) => {
         lines.push(`  ${icons[index] || '💼'} ${exp.title}`)
-        lines.push(`     ${exp.role} | ${exp.period}`)
-        lines.push('     ' + '─'.repeat(Math.max(exp.role.length, exp.title.length) + exp.period.length + 3))
+        lines.push(`     ${t(exp.role, 'es')} | ${t(exp.period, 'es')}`)
+        lines.push('     ' + '─'.repeat(Math.max(t(exp.role, 'es').length, exp.title.length) + t(exp.period, 'es').length + 3))
         
         // Split desc into multiple lines if needed
-        const descLines = exp.desc.match(/.{1,55}/g) || [exp.desc]
+        const descLines = t(exp.desc, 'es').match(/.{1,55}/g) || [t(exp.desc, 'es')]
         descLines.forEach(line => {
           lines.push(`     • ${line.trim()}`)
         })
@@ -181,7 +182,7 @@ const COMMANDS = {
       
       education.forEach((edu, index) => {
         lines.push(`  ${index === 0 ? '🎓' : '📖'} ${edu.title}`)
-        lines.push(`     ${edu.desc}`)
+        lines.push(`     ${t(edu.desc, 'es')}`)
         lines.push('     ' + '─'.repeat(edu.title.length))
         lines.push('')
       })
