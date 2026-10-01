@@ -10,7 +10,10 @@ const PATH = "/en/no-existe";
 const SAFARI_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15";
 
-test.beforeEach(({}, info) => test.skip(info.project.name !== "desktop", "solo escritorio"));
+test.beforeEach(({}, info) => {
+  test.skip(info.project.name !== "desktop", "solo escritorio");
+  test.setTimeout(90_000); // WebGL por software en paralelo con otros workers es lento
+});
 
 async function forceGate(page: Page) {
   await page.addInitScript(() => {
@@ -20,18 +23,33 @@ async function forceGate(page: Page) {
 
 /** Aborta el chunk 3D por su CONTENIDO (el nombre del fichero cambia en cada build). */
 async function blockSceneChunk(page: Page) {
+  const state = { aborted: false };
   await page.route("**/_next/static/chunks/**/*.js", async (route) => {
     const res = await route.fetch();
     const body = await res.text();
-    if (body.includes("PMREMGenerator")) await route.abort();
-    else await route.fulfill({ response: res, body });
+    if (body.includes("PMREMGenerator")) {
+      state.aborted = true;
+      await route.abort();
+    } else await route.fulfill({ response: res, body });
   });
+  return state;
 }
 
 test("escena bloqueada: constelación estática completa, sin botón de pausa y sin quedarse en el vídeo", async ({ page, consoleErrors }) => {
   await forceGate(page);
-  await blockSceneChunk(page);
+  const blocked = await blockSceneChunk(page);
+  // el vídeo puede montarse y retirarse entre dos comprobaciones: un observador lo registra
+  await page.addInitScript(() => {
+    const w = window as unknown as { __sawVideo?: boolean };
+    new MutationObserver(() => {
+      if (document.querySelector("[data-lost-video]")) w.__sawVideo = true;
+    }).observe(document, { childList: true, subtree: true });
+  });
   await page.goto(PATH);
+
+  // la puerta pasó (el vídeo llegó a montarse, aunque se retire enseguida al fallar la escena) y el chunk 3D se abortó de verdad: si no, el test pasaría en vacío
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __sawVideo?: boolean }).__sawVideo === true), { timeout: 20_000 }).toBe(true);
+  await expect.poll(() => blocked.aborted, { timeout: 20_000 }).toBe(true);
 
   const stage = page.locator('[data-stage="lost"]');
   // Pase lo que pase con el vídeo, la capa de vídeo acaba retirada y la estática visible.
@@ -49,8 +67,24 @@ test("escena bloqueada: constelación estática completa, sin botón de pausa y 
   await expect(page.locator("button[aria-pressed]")).toHaveCount(0);
   await expect(page.locator('[data-lost-static]').first()).toHaveCSS("opacity", "1");
   // el aborto del chunk 3D es lo que provoca este único mensaje de consola: se espera, se filtra solo ese
+  expect(blocked.aborted).toBe(true);
   const rest = consoleErrors.filter((e) => !/ERR_FAILED \(.*\/_next\/static\/chunks\/.+\.js\)/.test(e));
   consoleErrors.splice(0, consoleErrors.length, ...rest);
+});
+
+test("ruta 3D feliz: el lienzo aparece y el botón de pausa alterna aria-pressed", async ({ page }) => {
+  await forceGate(page);
+  await page.goto(PATH);
+  await expect(page.locator("[data-lost-video]")).toBeAttached({ timeout: 10_000 });
+  await expect(page.locator("[data-lost-canvas]")).toBeAttached({ timeout: 30_000 });
+  const pause = page.locator("button[aria-pressed]");
+  await expect(pause).toBeVisible();
+  await expect(pause).toHaveAttribute("aria-pressed", "false");
+  await pause.click();
+  await expect(pause).toHaveAttribute("aria-pressed", "true");
+  await pause.click();
+  await expect(pause).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("a[data-shard-id]")).toHaveCount(7);
 });
 
 test("movimiento reducido: ni vídeo ni lienzo ni pausa", async ({ page }) => {
@@ -67,7 +101,7 @@ test("movimiento reducido: ni vídeo ni lienzo ni pausa", async ({ page }) => {
 test("activar movimiento reducido a mitad de visita retira el vídeo y deja lo estático", async ({ page }) => {
   await forceGate(page);
   await page.goto(PATH);
-  await expect(page.locator("[data-lost-video]")).toHaveCount(1);
+  await expect(page.locator("[data-lost-video]")).toHaveCount(1, { timeout: 20_000 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.locator("[data-lost-video]")).toHaveCount(0);
   await expect(page.locator("canvas")).toHaveCount(0);
@@ -78,9 +112,9 @@ test("activar movimiento reducido a mitad de visita retira el vídeo y deja lo e
 test("cruzar el breakpoint con el vídeo en marcha lo abandona y no vuelve", async ({ page }) => {
   await forceGate(page);
   await page.goto(PATH);
-  await expect(page.locator("[data-lost-video]")).toHaveCount(1);
+  await expect(page.locator("[data-lost-video]")).toHaveCount(1, { timeout: 20_000 });
   await page.setViewportSize({ width: 800, height: 900 });
-  await expect(page.locator("[data-lost-video]")).toHaveCount(0);
+  await expect(page.locator("[data-lost-video]")).toHaveCount(0, { timeout: 25_000 });
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.waitForTimeout(1000);
   await expect(page.locator("[data-lost-video]")).toHaveCount(0);
@@ -95,7 +129,7 @@ test.describe("ruta de Safari (MP4 con mix-blend-mode: screen)", () => {
     await forceGate(page);
     await page.goto(PATH);
     const video = page.locator('[data-lost-video="mp4"]');
-    await expect(video).toHaveCount(1);
+    await expect(video).toHaveCount(1, { timeout: 20_000 });
     const chain = await video.evaluate((v) => {
       const out: { tag: string; transform: string; zIndex: string; position: string }[] = [];
       for (let n: Element | null = v.parentElement; n && n.tagName !== "SECTION"; n = n.parentElement) {

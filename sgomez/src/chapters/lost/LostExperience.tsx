@@ -120,7 +120,8 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     setEnabled(true);
     setDesktop(lg.matches);
     setVideoWanted(lg.matches);
-    setLayer(root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null);
+    // la capa solo existe en escritorio (en móvil está oculta): se decide UNA vez, así un cambio de breakpoint posterior no remonta el Canvas
+    setLayer(lg.matches ? (root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null) : null);
     setOpaque(needsOpaqueVideo(navigator.userAgent, navigator.maxTouchPoints));
     if (lg.matches) dispatch("motionAllowed");
 
@@ -345,7 +346,7 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   ) : null;
 
   // L8: en escritorio vídeo y lienzo viven en una capa hermana del escenario (sin transform ni z-index) y pintan bajo el texto.
-  const inLayer = layer !== null && desktop;
+  const inLayer = layer !== null;
   const media = (
     <>
       {videoEl}
