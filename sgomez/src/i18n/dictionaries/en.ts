@@ -141,6 +141,20 @@ const en: Dictionary = {
     agentsAfter: " returns only this, without the HTML.",
     markdownRegion: "Site map in markdown, scrollable",
   },
+  // 404 como experiencia: los fragmentos del cristal roto, cada uno un enlace real.
+  lost: {
+    here: "You are here, off the map",
+    group: "Fragments that lead to pages of the site",
+    shard: {
+      home: "Home",
+      about: "About",
+      work: "Work",
+      openSource: "Open source",
+      contact: "Contact",
+      developers: "Developers",
+      agents: "For agents",
+    },
+  },
   // FAQ of /contact, the source of that page's FAQPage JSON-LD: every answer
   // repeats what /contact already says in its text and adds no new claim.
   contactFaq: {

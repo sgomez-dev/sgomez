@@ -139,6 +139,20 @@ const es = {
     agentsAfter: " se recibe solo esto, sin el HTML.",
     markdownRegion: "Mapa del sitio en markdown, desplazable",
   },
+  // 404 como experiencia: los fragmentos del cristal roto, cada uno un enlace real.
+  lost: {
+    here: "Estás aquí, fuera del mapa",
+    group: "Fragmentos que llevan a páginas del sitio",
+    shard: {
+      home: "Inicio",
+      about: "Sobre mí",
+      work: "Proyectos",
+      openSource: "Open source",
+      contact: "Contacto",
+      developers: "Developers",
+      agents: "Para agentes",
+    },
+  },
   // Preguntas frecuentes de /contact. Son las del JSON-LD (FAQPage) de esa
   // página: cada respuesta repite lo que /contact ya dice en su texto, no añade
   // ninguna afirmación nueva.
