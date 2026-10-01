@@ -1,4 +1,4 @@
-import { CLAUDE_CANVAS, IDENTITY, SKYQUETZ } from "@/app/seo";
+import { CLAUDE_CANVAS, FORGIA, IDENTITY, SKYQUETZ } from "@/app/seo";
 import { about } from "@/app/content";
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { t } from "./localized";
@@ -148,6 +148,10 @@ function buildAbout(lang: Lang): StaticPage {
               x(
                 `Cofundador de ${SKYQUETZ.name} (${SKYQUETZ.url}), fundada en ${SKYQUETZ.foundingDate} por cuatro socios.`,
                 `Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}), founded in ${SKYQUETZ.foundingDate} by four partners.`,
+              ),
+              x(
+                `Cofundador de ${FORGIA.name} (${FORGIA.url}), con otro socio, y responsable de toda la parte técnica.`,
+                `Co-founder of ${FORGIA.name} (${FORGIA.url}), with one other partner, leading the whole technical side.`,
               ),
               x(
                 "Formación: Grado en Ingeniería Informática, Universidad Europea del Atlántico (desde 2021).",

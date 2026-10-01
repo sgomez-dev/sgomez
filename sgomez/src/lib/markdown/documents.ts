@@ -1,6 +1,6 @@
 import { agentProjectDescription, hero } from "@/app/content";
 import { t } from "@/lib/content/localized";
-import { IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
+import { FORGIA, IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { getProjects } from "@/lib/api/data";
 import { findStaticPage, staticPages } from "@/lib/content/pages";
@@ -34,6 +34,12 @@ function homeMarkdown(lang: Lang): string {
     x(
       `- ${IDENTITY_TEXT.coFounderTitle.es} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios, no fundador único.`,
       `- Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}). Co-founder, one of four partners, not the sole founder.`,
+    ),
+  );
+  lines.push(
+    x(
+      `- ${IDENTITY_TEXT.coFounderForgiaTitle.es} (${FORGIA.url}). Cofundador, uno de dos socios, y lleva toda la parte técnica.`,
+      `- Co-founder of ${FORGIA.name} (${FORGIA.url}). Co-founder, one of two partners, leading the whole technical side.`,
     ),
   );
   lines.push(

@@ -15,11 +15,11 @@ describe("rutas de datos por idioma", () => {
   it("?lang=en responde en inglés", async () => {
     const res = await call("/api/v1/experience?lang=en");
     expect(res.status).toBe(200);
-    expect((await roles(res))[1]).toBe("Software Developer");
+    expect((await roles(res))[2]).toBe("Software Developer");
   });
   it("Accept-Language en-GB sin ?lang responde en inglés", async () => {
-    expect((await roles(await call("/api/v1/experience", { "accept-language": "en-GB" })))[1]).toBe("Software Developer");
-    expect((await roles(await call("/api/v1/experience", { "accept-language": "EN_us" })))[1]).toBe("Software Developer");
+    expect((await roles(await call("/api/v1/experience", { "accept-language": "en-GB" })))[2]).toBe("Software Developer");
+    expect((await roles(await call("/api/v1/experience", { "accept-language": "EN_us" })))[2]).toBe("Software Developer");
   });
   it("sin idioma responde el español de siempre", async () => {
     expect(await roles(await call("/api/v1/experience"))).toEqual(spanishRoles);
@@ -59,9 +59,11 @@ describe("rutas de datos por idioma", () => {
   });
   it("las fechas de las recomendaciones y las ubicaciones también se localizan", async () => {
     const en = (await (await call("/api/v1/experience?lang=en")).json()) as { data: { organization: string }[] };
-    expect(en.data[0]!.organization).toBe("SkyQuetz Consulting - Remote (Spain and Latin America)");
+    expect(en.data[0]!.organization).toBe("Forgia - Santander, Cantabria, Spain");
+    expect(en.data[1]!.organization).toBe("SkyQuetz Consulting - Remote (Spain and Latin America)");
     const es = (await (await call("/api/v1/experience")).json()) as { data: { organization: string }[] };
-    expect(es.data[0]!.organization).toBe("SkyQuetz Consulting - Remoto (España y Latinoamérica)");
+    expect(es.data[0]!.organization).toBe("Forgia - Santander, Cantabria, España");
+    expect(es.data[1]!.organization).toBe("SkyQuetz Consulting - Remoto (España y Latinoamérica)");
     const recs = (await (await recommendations(new Request("https://sgomez.dev/api/v1/recommendations?lang=en"))).json()) as { data: { date: string }[] };
     expect(recs.data.map((r) => r.date)).toContain("March 26, 2025");
   });

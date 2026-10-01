@@ -28,6 +28,11 @@ export const IDENTITY_TEXT = {
     es: "Cofundador de SkyQuetz Consulting",
     en: "Co-founder of SkyQuetz Consulting",
   } satisfies Localized,
+  // Tercer título real: cofundador de Forgia, en los dos idiomas.
+  coFounderForgiaTitle: {
+    es: "Cofundador de Forgia",
+    en: "Co-founder of Forgia",
+  } satisfies Localized,
 };
 
 export const IDENTITY = {
@@ -147,6 +152,27 @@ export const SKYQUETZ = {
       "B2B SaaS for settlement reconciliation for last-mile operators: it computes what an operation should have invoiced from its routes, rates and incidents, compares it with the settlement received from the carrier and documents every difference with its source data.",
   },
 } as const;
+
+/**
+ * Forgia — la segunda empresa que cofundó (junio de 2026).
+ *
+ * Lo que se afirma sale de forgia.es y de nada más. Son DOS socios fundadores,
+ * y Santiago lleva toda la parte técnica. `forgia.es` NO entra en `sameAs` de
+ * la persona: ese campo significa "esto también es él", y una empresa no lo es.
+ * No se publican las cifras de marketing de su web ni su eslogan.
+ */
+export const FORGIA = {
+  name: "Forgia",
+  url: "https://forgia.es",
+  address: { city: "Santander", region: "Cantabria", country: "ES" },
+  description:
+    "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp y redes sociales, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
+  descriptionEn:
+    "An AI bot system that answers customers and qualifies leads over WhatsApp and social media, with an inbound bot, an outbound bot for B2B prospecting and a CRM panel.",
+} as const;
+
+/** @id local del nodo de Forgia en este grafo (mismo criterio que SKYQUETZ_NODE). */
+const FORGIA_NODE = `${IDENTITY.url}/#forgia-org`;
 
 /**
  * Claude Canvas — el proyecto open source, y por qué NO cuelga de SkyQuetz.
@@ -365,7 +391,11 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       url: IDENTITY.url,
       image: IDENTITY.image,
       email: IDENTITY.email,
-      jobTitle: [IDENTITY.jobTitle, IDENTITY_TEXT.coFounderTitle[lang]],
+      jobTitle: [
+        IDENTITY.jobTitle,
+        IDENTITY_TEXT.coFounderTitle[lang],
+        IDENTITY_TEXT.coFounderForgiaTitle[lang],
+      ],
       description: IDENTITY_TEXT.description[lang],
       sameAs: [...IDENTITY.sameAs],
       knowsAbout: [...IDENTITY.knowsAbout],
@@ -396,6 +426,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
           },
         },
         { "@id": SKYQUETZ_NODE },
+        { "@id": FORGIA_NODE },
       ],
       affiliation: { "@id": SKYQUETZ_NODE },
       alumniOf: {
@@ -415,6 +446,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
           },
         },
         { "@id": SKYQUETZ_NODE },
+        { "@id": FORGIA_NODE },
       ],
       hasOccupation: {
         "@type": "Occupation",
@@ -448,6 +480,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
         { "@id": `${IDENTITY.url}/#claude-canvas` },
         { "@id": `${IDENTITY.url}/#sgomez-cli` },
         { "@id": SKYQUETZ_NODE },
+        { "@id": FORGIA_NODE },
         { "@id": `${IDENTITY.url}/#synentria` },
         { "@id": `${IDENTITY.url}/#packatrack` },
       ],
@@ -505,6 +538,24 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
         { "@id": `${IDENTITY.url}/#synentria` },
         { "@id": `${IDENTITY.url}/#packatrack` },
       ],
+    },
+    {
+      // Forgia: otra empresa cofundada, entidad propia. Son dos socios
+      // fundadores; Santiago es uno de ellos, no el fundador único.
+      "@type": "Organization",
+      "@id": FORGIA_NODE,
+      name: FORGIA.name,
+      url: FORGIA.url,
+      description: x(FORGIA.description, FORGIA.descriptionEn),
+      founder: { "@id": PERSON },
+      member: { "@id": PERSON },
+      employee: { "@id": PERSON },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: FORGIA.address.city,
+        addressRegion: FORGIA.address.region,
+        addressCountry: FORGIA.address.country,
+      },
     },
     {
       "@type": "SoftwareApplication",

@@ -273,3 +273,39 @@ describe("Vary: Accept en las páginas HTML", () => {
     expect(() => JSON.parse(files["vercel.json"])).not.toThrow();
   });
 });
+
+describe("JSON-LD de Forgia", () => {
+  const person = nodeOfType("Person");
+  const forgia = graph.find((node) => node["@id"] === "https://sgomez.dev/#forgia-org") as Node;
+
+  it("existe como organización propia, con url y dirección", () => {
+    expect(forgia).toBeDefined();
+    expect(forgia["@type"]).toBe("Organization");
+    expect(forgia.name).toBe("Forgia");
+    expect(forgia.url).toBe("https://forgia.es");
+    const address = forgia.address as Node;
+    expect(address["@type"]).toBe("PostalAddress");
+    expect(address.addressLocality).toBe("Santander");
+    expect(address.addressRegion).toBe("Cantabria");
+    expect(address.addressCountry).toBe("ES");
+  });
+
+  it("su founder referencia a la persona", () => {
+    expect(forgia.founder).toEqual({ "@id": "https://sgomez.dev/#person" });
+  });
+
+  it("la persona trabaja en Forgia y es miembro de ella", () => {
+    expect(person.worksFor as Node[]).toContainEqual({ "@id": "https://sgomez.dev/#forgia-org" });
+    expect(person.memberOf as Node[]).toContainEqual({ "@id": "https://sgomez.dev/#forgia-org" });
+  });
+
+  it("forgia.es no entra en sameAs de la persona", () => {
+    expect(JSON.stringify(person.sameAs)).not.toContain("forgia");
+  });
+
+  it("el cargo de cofundador de Forgia existe en los dos idiomas", () => {
+    const en = (personGraph("en")["@graph"] as Node[]).find((n) => n["@type"] === "Person")!;
+    expect(en.jobTitle).toContain("Co-founder of Forgia");
+    expect(person.jobTitle).toContain("Cofundador de Forgia");
+  });
+});
