@@ -122,7 +122,7 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
     <section
       data-stage="lost"
       aria-labelledby="lost-title"
-      className="relative isolate overflow-hidden pb-24 pt-12 md:pt-20 lg:min-h-[max(640px,calc(min(100vw,1440px)*0.5625))] lg:pb-0 lg:pt-24"
+      className="relative isolate overflow-hidden bg-[color:var(--bg)] pb-24 pt-12 md:pt-20 lg:min-h-[max(640px,calc(min(100vw,1440px)*0.5625))] lg:pb-0 lg:pt-24"
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,#000_65%,transparent)]" style={{ backgroundImage: GLOW }} />
       <div aria-hidden="true" className="absolute inset-0 -z-10" style={{ backgroundImage: STARS }} />

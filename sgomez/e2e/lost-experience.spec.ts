@@ -160,4 +160,41 @@ test.describe("ruta de Safari (MP4 con mix-blend-mode: screen)", () => {
     });
     expect(z).toBe("10");
   });
+
+  test("sonda de píxeles: el MP4 mezcla con el fondo del sitio, no con negro", async ({ page }) => {
+    await forceGate(page);
+    await page.goto(PATH);
+    const video = page.locator('[data-lost-video="mp4"]');
+    await expect(video).toHaveCount(1, { timeout: 20_000 });
+    // a mitad del vídeo: reproduciéndose y con fotogramas ya pintados
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.currentTime > 0.8), { timeout: 20_000 }).toBe(true);
+    const box = (await video.boundingBox())!;
+    const shot = await page.screenshot();
+    const bg = await page.evaluate(() => {
+      const c = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+      const n = parseInt(c.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    });
+    // esquinas interiores de la caja 16:9 (zonas vacías del fotograma)
+    const pts = [
+      [box.x + 6, box.y + 6],
+      [box.x + box.width - 7, box.y + 6],
+      [box.x + 6, box.y + box.height - 7],
+      [box.x + box.width - 7, box.y + box.height - 7],
+    ];
+    const px = await page.evaluate(
+      async ({ b64, pts }) => {
+        const bmp = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
+        const c = document.createElement("canvas");
+        c.width = bmp.width;
+        c.height = bmp.height;
+        const g = c.getContext("2d")!;
+        g.drawImage(bmp, 0, 0);
+        return pts.map(([x, y]) => Array.from(g.getImageData(Math.round(x), Math.round(y), 1, 1).data.slice(0, 3)));
+      },
+      { b64: shot.toString("base64"), pts },
+    );
+    console.log("probe bg", bg, "pixels", JSON.stringify(px));
+    for (const p of px) for (let i = 0; i < 3; i++) expect(Math.abs(p[i] - bg[i])).toBeLessThanOrEqual(2);
+  });
 });
