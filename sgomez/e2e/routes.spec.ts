@@ -40,15 +40,40 @@ test.describe("rutas", () => {
     });
   }
 
-  test("una URL inexistente da el 404 bilingüe con estado 404 (R8)", async ({ request }) => {
-    for (const path of ["/no-existe", "/en/no-existe"]) {
+  test("una URL inexistente da el 404 real en el idioma de la URL (R8)", async ({ request }) => {
+    const cases = [
+      { path: "/no-existe", lang: 'lang="es-ES"', h1: "Esta página", llms: 'href="/llms.txt"', other: "Volver al inicio" },
+      { path: "/en/no-existe", lang: 'lang="en"', h1: "This page", llms: 'href="/en/llms.txt"', other: "Back to home" },
+    ];
+    for (const { path, lang, h1, llms, other } of cases) {
       const res = await request.get(path, { maxRedirects: 0 });
-      expect(res.status()).toBe(404);
+      expect(res.status(), path).toBe(404);
       expect(res.headers()["content-type"]).toContain(HTML);
+      expect(res.headers()["cache-control"]).toBe("public, max-age=60, s-maxage=60");
+      expect(res.headers()["x-robots-tag"]).toBe("noindex, follow");
       const body = await res.text();
-      expect(body).toContain("<h1");
-      expect(body).toContain("Page not found");
+      expect(body, path).toContain(`<html ${lang}`);
+      expect(body).toMatch(new RegExp("<h1[^>]*>" + h1));
+      expect(body).toContain(llms);
+      expect(body).toContain(other);
+      expect(body).toContain('id="mapa"');
     }
+    // El idioma de una URL no se cuela en la otra.
+    // Se compara solo el HTML visible: el payload RSC lleva el aviso por defecto de Next.
+    const visible = (html: string) => html.replace(/<script[\s\S]*?<\/script>/g, "");
+    const es = visible(await (await request.get("/no-existe")).text());
+    const en = visible(await (await request.get("/en/no-existe")).text());
+    expect(es).not.toContain("This page");
+    expect(en).not.toContain("Esta página");
+  });
+
+  test("assets y API desconocidos no reciben la experiencia HTML", async ({ request }) => {
+    const png = await request.get("/foo.png", { maxRedirects: 0 });
+    expect(png.status()).toBe(404);
+    expect(await png.text()).not.toContain('id="mapa"');
+    const api = await request.get("/api/nope", { maxRedirects: 0 });
+    expect(api.status()).toBe(404);
+    expect(api.headers()["content-type"]).toContain("application/json");
   });
 
   test("Accept: text/markdown en una página devuelve markdown con la canónica inglesa (Review Focus 3)", async ({ request }) => {

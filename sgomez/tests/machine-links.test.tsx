@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import NotFoundBody from "@/app/components/NotFoundBody";
+import SiteMap from "@/chapters/lost/SiteMap";
 import type { Lang } from "@/i18n/languages";
 import { llmsTxt } from "@/lib/machine/llms-txt";
 import { llmsFullTxt } from "@/lib/machine/llms-full";
@@ -45,7 +45,7 @@ describe("B2: las superficies en inglés enlazan los ficheros de máquina en ing
   });
 
   it("el 404 en inglés, en HTML y en markdown", () => {
-    expect(rootMachineLinks(renderToStaticMarkup(<NotFoundBody lang={en} />))).toEqual([]);
+    expect(rootMachineLinks(renderToStaticMarkup(<SiteMap lang={en} />))).toEqual([]);
     expect(rootMachineLinks(notFoundMarkdown("/x", en))).toEqual([]);
   });
 

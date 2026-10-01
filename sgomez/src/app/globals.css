@@ -30,7 +30,7 @@ body {
   border-radius: 10px;
 }
 
-/* Lo siguiente solo lo usan StaticPageLayout y NotFoundBody (las sustituye la
+/* Lo siguiente solo lo usan StaticPageLayout y SiteMap (las sustituye la
    Task 9). Los capitulos de la home no dependen de nada de esto. */
 .container-custom {
   max-width: 1200px;

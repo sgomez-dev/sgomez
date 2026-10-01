@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { markdownForPath, notFoundMarkdown } from "@/lib/markdown/documents";
 import { decide } from "@/lib/markdown/routing";
-import { isRscRequest, routeRequest, type RouteDecision } from "@/lib/routing/request";
+import { isRscRequest, isUnknownHtmlPath, routeRequest, type RouteDecision } from "@/lib/routing/request";
+import { BYPASS_HEADER, MOLDE_PATH, fallback404Html, fetchMolde } from "@/lib/lost/molde";
 import { hreflangAlternates, splitLang } from "@/i18n/languages";
 import { CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
 
@@ -64,8 +65,34 @@ function markdownResponse(body: string, status: number, canonical: string, index
   return new NextResponse(body, { status, headers });
 }
 
-export default function proxy(request: NextRequest): NextResponse {
+/**
+ * 404 real por idioma. El molde `/{lang}/perdido` está prerenderizado; aquí se
+ * pide una vez por idioma (caché de 60 s) y se devuelve con estado 404. No se
+ * usa `NextResponse.rewrite(..., { status: 404 })` porque hereda el
+ * `s-maxage` de un año de la página prerenderizada.
+ */
+function lostResponse(html: string): NextResponse {
+  return new NextResponse(html, {
+    status: 404,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=60, s-maxage=60",
+      Vary: PAGE_VARY,
+      "X-Robots-Tag": "noindex, follow",
+    },
+  });
+}
+
+export default async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname, search } = request.nextUrl;
+
+  // La petición interna que trae el molde lleva la cabecera de bypass: las rutas
+  // internas del molde se sirven tal cual, sin el 308 de `/es/*` y sin pedirse a
+  // sí mismas otra vez.
+  if (request.headers.get(BYPASS_HEADER) === "1" && Object.values(MOLDE_PATH).includes(pathname)) {
+    return NextResponse.next();
+  }
+
   const isRsc = isRscRequest(request.headers, request.nextUrl.searchParams);
 
   const route = routeRequest(pathname);
@@ -75,6 +102,12 @@ export default function proxy(request: NextRequest): NextResponse {
 
   // `decide` recibe siempre la ruta PÚBLICA (`/about`, `/en/about`), no la reescrita.
   const decision = decide(pathname, request.headers.get("accept"), isRsc);
+
+  if (decision.kind !== "markdown" && isUnknownHtmlPath(pathname)) {
+    const lang = splitLang(pathname).lang;
+    const html = (await fetchMolde(lang, request.nextUrl.origin)) ?? fallback404Html(pathname, lang);
+    return lostResponse(html);
+  }
 
   if (decision.kind === "skip") return passThrough(request, route);
 

@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 
-const PAGES = ["/", "/en", "/about", "/en/contact", "/developers", "/en/privacy", "/no-existe"];
+const PAGES = ["/", "/en", "/about", "/en/contact", "/developers", "/en/privacy", "/no-existe", "/en/no-existe"];
 const WIDTHS = [
   { width: 320, height: 640 },
   { width: 375, height: 812 },

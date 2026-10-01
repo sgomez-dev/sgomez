@@ -129,9 +129,11 @@ const en: Dictionary = {
   },
   notFound: {
     eyebrow: "Error 404",
-    heading: "This page doesn't exist",
-    body: "The link may be mistyped, or the page may have moved. Try one of these instead.",
+    heading: "This page",
+    headingSerif: "broke.",
+    body: "But every fragment leads somewhere that exists. Pick one or head home.",
     home: "Back to home",
+    map: "See the full map",
     pages: "Pages",
     machine: "Machine-readable files",
     agents: "For agents",

@@ -127,9 +127,11 @@ const es = {
   },
   notFound: {
     eyebrow: "Error 404",
-    heading: "Esta página no existe",
-    body: "Puede que el enlace esté mal escrito o que la página se haya movido. Prueba con alguna de estas.",
+    heading: "Esta página",
+    headingSerif: "se ha roto.",
+    body: "Pero cada fragmento lleva a un sitio que sí existe. Elige uno o vuelve al inicio.",
     home: "Volver al inicio",
+    map: "Ver el mapa completo",
     pages: "Páginas",
     machine: "Ficheros legibles por máquina",
     agents: "Para agentes",

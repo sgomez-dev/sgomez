@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "./fixtures";
 
-for (const path of ["/", "/en", "/about", "/en/contact", "/developers", "/no-existe"]) {
+for (const path of ["/", "/en", "/about", "/en/contact", "/developers", "/no-existe", "/en/no-existe"]) {
   test(`axe WCAG 2 A/AA sin violaciones en ${path}`, async ({ page }) => {
     await page.goto(path);
     await page.waitForLoadState("networkidle");

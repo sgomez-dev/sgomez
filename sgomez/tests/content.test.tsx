@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import StaticPageLayout from "@/components/StaticPageLayout";
-import NotFoundBody from "@/app/components/NotFoundBody";
+import SiteMap from "@/chapters/lost/SiteMap";
 import { findStaticPage, staticPages, STATIC_PAGES, aboutPage, contactPage, developersPage, privacyPage } from "@/lib/content/pages";
 import { renderPageMarkdown } from "@/lib/markdown/render";
 import { MARKDOWN_PATHS, markdownForPath, notFoundMarkdown } from "@/lib/markdown/documents";
@@ -215,16 +215,17 @@ describe("diseño de las páginas de contenido", () => {
     expect(html.match(/<h1/g)).toHaveLength(1);
   });
 
-  it("el 404 inglés enlaza los ficheros /en y tiene un solo h1 en la página", () => {
-    const html = renderToStaticMarkup(
-      <>
-        <NotFoundBody lang="es" />
-        <NotFoundBody lang="en" />
-      </>,
-    );
-    expect(html).toContain('href="/en/llms.txt"');
-    expect(html).toContain('href="/en/agents.md"');
-    expect(html).toContain("OpenAPI 3.1 specification");
-    expect(html.match(/<h1/g)).toHaveLength(1);
+  it("el mapa del 404 es de UN idioma: el inglés enlaza los ficheros /en, el español los raíz, y no lleva h1", () => {
+    const en = renderToStaticMarkup(<SiteMap lang="en" />);
+    expect(en).toContain('href="/en/llms.txt"');
+    expect(en).toContain('href="/en/agents.md"');
+    expect(en).toContain("OpenAPI 3.1 specification");
+    expect(en).toContain('id="mapa"');
+    expect(en).not.toContain("<h1");
+    const es = renderToStaticMarkup(<SiteMap lang="es" />);
+    expect(es).toContain('href="/llms.txt"');
+    expect(es).not.toContain('href="/en/llms.txt"');
+    expect(es).toContain('id="mapa"');
+    expect(es).not.toContain("<h1");
   });
 });

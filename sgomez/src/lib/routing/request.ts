@@ -1,3 +1,5 @@
+import { splitLang } from "@/i18n/languages";
+import { PAGES } from "@/lib/routing/pages";
 import { LOCALIZED_MACHINE_PATHS, NEGOTIATION_EXEMPT_PATHS } from "@/lib/site";
 
 export type RouteDecision =
@@ -51,4 +53,13 @@ export function routeRequest(pathname: string): RouteDecision {
 export function isRscRequest(headers: { has(name: string): boolean }, search: URLSearchParams | string): boolean {
   const params = typeof search === "string" ? new URLSearchParams(search) : search;
   return headers.has("rsc") || headers.has("next-router-prefetch") || params.has("_rsc");
+}
+
+/** A public HTML path that matches no page. Files, /api, /_next and machine files are never "unknown HTML". */
+export function isUnknownHtmlPath(pathname: string): boolean {
+  if (pathname.startsWith("/_next") || pathname === "/api" || pathname.startsWith("/api/")) return false;
+  if (NEGOTIATION_EXEMPT_PATHS.includes(pathname) || FILE.test(pathname)) return false;
+  const { path } = splitLang(pathname);
+  if (path === "/opengraph-image") return false;
+  return !(PAGES as readonly string[]).includes(path.replace(/\/$/, "") || "/");
 }

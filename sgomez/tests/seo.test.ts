@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { serializeJsonLd, pageGraph, staticPageGraph } from "@/lib/seo/jsonld";
 import { buildMetadata } from "@/lib/seo/metadata";
-import NotFoundBody from "@/app/components/NotFoundBody";
+import SiteMap from "@/chapters/lost/SiteMap";
 import { notFoundMarkdown, markdownForPath } from "@/lib/markdown/documents";
 import { machineHref } from "@/lib/routing/pages";
 import { MACHINE_ROUTES, absolute } from "@/lib/site";
@@ -133,7 +133,7 @@ describe("enlaces a los ficheros de máquina: HTML y markdown coinciden", () => 
   });
   for (const lang of LANGS) {
     it(`el 404 en ${lang}: cada enlace del HTML está en el markdown`, () => {
-      const html = renderToStaticMarkup(NotFoundBody({ lang }));
+      const html = renderToStaticMarkup(SiteMap({ lang }));
       const markdown = notFoundMarkdown(undefined, lang);
       for (const route of MACHINE_ROUTES) {
         const href = machineHref(route.path, lang);

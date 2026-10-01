@@ -9,7 +9,7 @@ import OpenSource from "@/chapters/OpenSource";
 import SkyQuetz from "@/chapters/SkyQuetz";
 import Proof from "@/chapters/Proof";
 import Contact from "@/chapters/Contact";
-import NotFoundBody from "@/app/components/NotFoundBody";
+import SiteMap from "@/chapters/lost/SiteMap";
 import { personGraph } from "@/app/seo";
 import { LANGS } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
@@ -107,7 +107,7 @@ describe("A2: sin rayas ni dobles guiones en el texto", () => {
       });
 
       it("404 en HTML y en markdown", () => {
-        expectNoDashes("404 html", renderToStaticMarkup(<NotFoundBody lang={lang} />));
+        expectNoDashes("404 html", renderToStaticMarkup(<SiteMap lang={lang} />));
         expectNoDashes("404 markdown", notFoundMarkdown("/no-existe", lang));
         expectNoDashes("404 markdown sin ruta", notFoundMarkdown(undefined, lang));
       });
