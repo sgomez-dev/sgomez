@@ -30,7 +30,7 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
                 <Image src={skyquetz.logo} alt={t(skyquetz.logoAlt, lang)} width={425} height={253} className="h-14 w-auto sm:h-16" />
               </a>
             </div>
-            <p className="text-[length:var(--step-0)] italic text-[color:var(--serif-ink)]">{t(skyquetz.slogan, lang)}</p>
+            <p className="text-[length:var(--step-0)] italic text-[color:var(--serif-ink)]" lang="es">{skyquetz.slogan}</p>
             <p className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">{t(skyquetz.desc, lang)}</p>
             <p className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text)]">{t(skyquetz.myPart, lang)}</p>
             <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--line)]">

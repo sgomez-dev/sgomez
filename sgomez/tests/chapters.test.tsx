@@ -133,6 +133,11 @@ describe("capítulos 04–07", () => {
       expect(html.match(/data-motion="build"/g)).toHaveLength(3);
     });
   }
+  it("el eslogan de SkyQuetz es la frase de marca en español, también en inglés", () => {
+    const html = renderToStaticMarkup(<SkyQuetz lang="en" />);
+    expect(html).toMatch(/<p[^>]*lang="es"[^>]*>Estándar internacional, trato cercano\.<\/p>/);
+    expect(html).not.toContain("International standard");
+  });
 });
 
 describe("capítulos 08–09 en HTML de servidor", () => {

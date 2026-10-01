@@ -66,7 +66,7 @@ And when I'm not building for clients, I build for the community: I am the creat
 export const skyquetz = {
   name: 'SkyQuetz Consulting',
   role: { es: 'Cofundador', en: 'Co-founder' },
-  slogan: { es: 'Estándar internacional, trato cercano.', en: 'International standard, personal service.' },
+  slogan: 'Estándar internacional, trato cercano.', // frase de marca: solo existe en español
   url: 'https://skyquetz.com',
   cta: 'skyquetz.com',
   logo: '/brand/skyquetz-logo.webp',
