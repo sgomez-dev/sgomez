@@ -1,4 +1,6 @@
 import { gzipSync } from "node:zlib";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { test, expect } from "./fixtures";
 
 const CHAPTERS = ["top", "about", "build", "experience", "work", "open-source", "skyquetz", "proof", "contact"];
@@ -118,7 +120,7 @@ test.describe("presupuesto de JS", () => {
    * se descarga cada script con Accept-Encoding: gzip y se mide el cuerpo
    * comprimido con zlib al nivel por defecto, el mismo que usa `next start`.
    */
-  for (const path of ["/", "/en"]) {
+  for (const path of ["/", "/en", "/en/no-existe"]) {
     test(`${path}: el JS inicial no pasa de 170 KB (gzip)`, async ({ page, request }) => {
       await page.goto(path, { waitUntil: "networkidle" });
       const urls = await page.evaluate(() =>
@@ -133,4 +135,18 @@ test.describe("presupuesto de JS", () => {
       expect(gzipped).toBeLessThanOrEqual(170 * 1024);
     });
   }
+
+  /**
+   * El chunk perezoso de la escena 3D (three + R3F) tiene su propio presupuesto. El
+   * Chromium sin GPU de CI usa WebGL por software y la escena no se carga (puerta de
+   * `LostExperience`), así que el chunk se mide en disco, como lo sirve `next start`.
+   */
+  test("el chunk 3D perezoso no pasa de 250 KB (gzip)", () => {
+    const dir = join(process.cwd(), ".next", "static", "chunks");
+    const files = readdirSync(dir).filter((f) => f.endsWith(".js") && readFileSync(join(dir, f), "utf8").includes("PMREMGenerator"));
+    expect(files.length).toBeGreaterThan(0);
+    const gz = Math.max(...files.map((f) => gzipSync(readFileSync(join(dir, f))).length));
+    console.log(`[budget] chunk 3D: ${(gz / 1024).toFixed(1)} KB gzip`);
+    expect(gz).toBeLessThanOrEqual(250 * 1024);
+  });
 });

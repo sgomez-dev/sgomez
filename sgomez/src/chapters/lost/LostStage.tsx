@@ -7,6 +7,7 @@ import { shardHref } from "@/lib/lost/shard-links";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import RequestedPath from "./RequestedPath";
+import LostExperience from "./LostExperience";
 
 /**
  * Escenario del 404: el cristal roto y sus fragmentos, cada uno un enlace real.
@@ -173,11 +174,12 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
         Desde lg: caja 16:9 fija y centrada; en ella el póster final (si existe) se pinta a 100% x 100%,
         con la misma proyección que las posiciones de los enlaces (L7).
       */}
-      <div className="pointer-events-none relative mx-auto mt-8 h-[32rem] w-[min(100%,28rem)] lg:absolute lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-0 lg:aspect-video lg:h-auto lg:w-[min(100%,1440px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
+      <div className="pointer-events-none relative mx-auto mt-8 h-[32rem] w-[min(100%,28rem)] lg:absolute lg:z-20 lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-0 lg:aspect-video lg:h-auto lg:w-[min(100%,1440px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
         {(["m", "d"] as const).map((variant) => (
           <svg
             key={variant}
             aria-hidden="true"
+            data-lost-static=""
             focusable="false"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
@@ -210,19 +212,20 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
           <div
             aria-hidden="true"
             data-stage-poster="end"
+            data-lost-static=""
             className="absolute inset-0 hidden lg:block"
             style={{ backgroundImage: "url(/media/404/poster-end.webp)", backgroundSize: "100% 100%", backgroundRepeat: "no-repeat" }}
           />
         ) : null}
 
         {/* Cristal CSS: siempre en móvil, y en escritorio solo si no hay póster. */}
-        <div aria-hidden="true">
+        <div aria-hidden="true" data-lost-static="">
           {SHARDS.map((shard) => (
             <Glass key={shard.id} shard={shard} hideOnDesktop={hasEndPoster} />
           ))}
         </div>
 
-        <ul aria-label={dict.lost.group} className="absolute inset-0 m-0 list-none p-0">
+        <ul aria-label={dict.lost.group} className="absolute inset-0 z-10 m-0 list-none p-0">
           {SHARDS.map((shard) => {
             if (shard.target === null) return null;
             const label = dict.lost.shard[shard.target];
@@ -244,7 +247,7 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
 
         {/* «Estás aquí»: el punto cian que pulsa, fuera del mapa. */}
         <div
-          className="absolute left-[8%] top-[3%] flex items-center gap-2 lg:left-[53%] lg:top-[9%]"
+          className="absolute left-[8%] top-0 z-10 flex items-center gap-2 lg:left-[53%] lg:top-[9%]"
           data-stage-you=""
         >
           <span className="block h-3 w-3 shrink-0 rounded-full bg-[color:var(--light-2)] shadow-[0_0_18px_var(--light-2)] motion-safe:animate-pulse" aria-hidden="true" />
@@ -252,6 +255,9 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
             {dict.lost.here}
           </span>
         </div>
+
+        {/* Vídeo del estallido y escena 3D viva encima de lo estático; los enlaces de arriba siguen siendo LOS enlaces. */}
+        <LostExperience lang={lang} pause={dict.lost.pause} resume={dict.lost.resume} gyro={dict.lost.gyro} />
       </div>
     </section>
   );

@@ -64,3 +64,16 @@ body {
   outline: 2px solid var(--light-1);
   outline-offset: 3px;
 }
+
+/* 404 animado: LostExperience marca la fase en el escenario. Sin JS no existen estos atributos
+   y la constelación estática se ve completa. */
+[data-stage="lost"][data-lost-cover] [data-lost-static] {
+  opacity: 0;
+  transition: opacity 120ms linear;
+}
+[data-stage="lost"][data-lost-cover="video"] a[data-shard-id] > span {
+  opacity: 0;
+}
+[data-stage="lost"] a[data-shard-id] > span {
+  transition: opacity 400ms ease-out, color 150ms, border-color 150ms;
+}

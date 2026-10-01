@@ -142,6 +142,9 @@ const es = {
   // 404 como experiencia: los fragmentos del cristal roto, cada uno un enlace real.
   lost: {
     here: "Estás aquí, fuera del mapa",
+    pause: "Pausar movimiento",
+    resume: "Reanudar movimiento",
+    gyro: "Mover con el móvil",
     group: "Fragmentos que llevan a páginas del sitio",
     shard: {
       home: "Inicio",
