@@ -29,8 +29,6 @@ type Props = {
 type VideoState = "idle" | "playing" | "ended" | "error";
 
 const LG = "(min-width: 64rem)";
-/** Pausa tras `load` antes de sondear WebGL2 y pedir el chunk 3D. */
-const START_DELAY = 2500;
 
 class Boundary extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -114,63 +112,44 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     setVideoGone(true);
   }, [setVideoState]);
 
-  // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS, ni durante la hidratación (TBT):
-  // la sonda WebGL2 y el import de three arrancan en un hueco ocioso DESPUÉS de `load`.
+  // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS. Por debajo de lg la puerta falla: escenario estático
+  // (sin sonda WebGL2, sin chunk three, sin lienzo; el coste de enlazar el shader de cristal bloquea el hilo, ver spec §7).
   useEffect(() => {
-    let cleanup: (() => void) | undefined;
-    const start = () => {
-      if (!gatingPasses(readGate())) return;
-      const lg = matchMedia(LG);
-      const rm = matchMedia("(prefers-reduced-motion: reduce)");
-      setEnabled(true);
-      setDesktop(lg.matches);
-      setVideoWanted(lg.matches);
-      // la capa solo existe en escritorio (en móvil está oculta): se decide UNA vez, así un cambio de breakpoint posterior no remonta el Canvas
-      setLayer(lg.matches ? (root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null) : null);
-      setOpaque(needsOpaqueVideo(navigator.userAgent, navigator.maxTouchPoints));
-      if (lg.matches) dispatch("motionAllowed");
+    const lg = matchMedia(LG);
+    if (!lg.matches || !gatingPasses(readGate())) return;
+    const rm = matchMedia("(prefers-reduced-motion: reduce)");
+    setEnabled(true);
+    setDesktop(true);
+    setVideoWanted(true);
+    // la capa se decide UNA vez
+    setLayer(root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null);
+    setOpaque(needsOpaqueVideo(navigator.userAgent, navigator.maxTouchPoints));
+    dispatch("motionAllowed");
 
-      // cruzar el breakpoint en cualquier sentido tras la puerta: la capa (o la caja del escenario) ya no es la correcta, así que escenario estático
-      const onLg = () => {
-        setDesktop(lg.matches);
-        killVideo();
-        dispatch("sceneFailed");
-      };
-      // quien activa reduced-motion a mitad de visita: sin vídeo ni escena, escenario estático
-      const onRm = () => {
-        if (!rm.matches) return;
-        killVideo();
-        dispatch("sceneFailed");
-      };
-      lg.addEventListener("change", onLg);
-      rm.addEventListener("change", onRm);
+    // cruzar a móvil tras la puerta: la capa queda oculta, así que escenario estático
+    const onLg = () => {
+      if (lg.matches) return;
+      setDesktop(false);
+      killVideo();
+      dispatch("sceneFailed");
+    };
+    // quien activa reduced-motion a mitad de visita: sin vídeo ni escena, escenario estático
+    const onRm = () => {
+      if (!rm.matches) return;
+      killVideo();
+      dispatch("sceneFailed");
+    };
+    lg.addEventListener("change", onLg);
+    rm.addEventListener("change", onRm);
 
-      const ori = typeof DeviceOrientationEvent !== "undefined" ? (DeviceOrientationEvent as IOSOrientation) : null;
-      if (ori) {
-        if (typeof ori.requestPermission === "function") setNeedsGyroButton(matchMedia("(pointer: coarse)").matches);
-        else if (matchMedia("(pointer: coarse)").matches) setGyroOn(true);
-      }
-      cleanup = () => {
-        lg.removeEventListener("change", onLg);
-        rm.removeEventListener("change", onRm);
-      };
-    };
-    let idle = 0;
-    let timer = 0;
-    // tras `load` se deja respirar a la página (LCP, TTI) y luego se espera a un hueco ocioso: la compilación de shaders de GPU bloquea el hilo
-    const schedule = () => {
-      timer = window.setTimeout(() => {
-        if (typeof requestIdleCallback === "function") idle = requestIdleCallback(start, { timeout: 2500 });
-        else start();
-      }, START_DELAY);
-    };
-    if (document.readyState === "complete") schedule();
-    else window.addEventListener("load", schedule, { once: true });
+    const ori = typeof DeviceOrientationEvent !== "undefined" ? (DeviceOrientationEvent as IOSOrientation) : null;
+    if (ori) {
+      if (typeof ori.requestPermission === "function") setNeedsGyroButton(matchMedia("(pointer: coarse)").matches);
+      else if (matchMedia("(pointer: coarse)").matches) setGyroOn(true);
+    }
     return () => {
-      window.removeEventListener("load", schedule);
-      if (idle && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
-      window.clearTimeout(timer);
-      cleanup?.();
+      lg.removeEventListener("change", onLg);
+      rm.removeEventListener("change", onRm);
     };
   }, [killVideo]);
 
@@ -178,11 +157,25 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
-    import("@/three/ConstellationScene")
-      .then((m) => !cancelled && setScene(() => m.default))
-      .catch(() => !cancelled && send("sceneFailed"));
+    let idle = 0;
+    let timer = 0;
+    const load = () => {
+      import("@/three/ConstellationScene")
+        .then((m) => !cancelled && setScene(() => m.default))
+        .catch(() => !cancelled && send("sceneFailed"));
+    };
+    // el import espera a un hueco ocioso tras `load` (el vídeo ya corre); si llega tarde al relevo rige el comportamiento de escena tardía
+    const schedule = () => {
+      if (typeof requestIdleCallback === "function") idle = requestIdleCallback(load, { timeout: 3000 });
+      else timer = window.setTimeout(load, 300);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
     return () => {
       cancelled = true;
+      window.removeEventListener("load", schedule);
+      if (idle && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
+      window.clearTimeout(timer);
     };
   }, [enabled, send]);
 

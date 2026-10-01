@@ -124,3 +124,22 @@ test("áreas táctiles de 44 px en /en/no-existe (móvil)", async ({ page }, inf
   expect(measured).toBeGreaterThan(7);
   expect(failures).toEqual([]);
 });
+
+test("móvil: escenario estático, sin lienzo ni petición del chunk 3D", async ({ page }, info) => {
+  test.skip(info.project.name !== "mobile", "solo en móvil");
+  const chunks: string[] = [];
+  page.on("response", async (r) => {
+    if (/\/_next\/static\/chunks\/.+\.js/.test(r.url()) && (await r.text().catch(() => "")).includes("PMREMGenerator")) chunks.push(r.url());
+  });
+  await page.addInitScript(() => {
+    (window as unknown as { __LOST_FORCE_GATE__: boolean }).__LOST_FORCE_GATE__ = true;
+  });
+  await page.goto("/en/no-existe");
+  await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(4000);
+  expect(chunks).toEqual([]);
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await expect(page.locator("video")).toHaveCount(0);
+  await expect(page.locator("[data-lost-static]").first()).toBeVisible();
+  await expect(page.locator("a[data-shard-id]")).toHaveCount(7);
+});

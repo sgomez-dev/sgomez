@@ -149,3 +149,10 @@ El resto de las fases 3 y 4 (el cristal vivo del hero y las secuencias de scroll
   - Los fragmentos de CSS son siluetas proyectadas (`clip-path`).
 - **Safari.** El MP4 se renderiza sobre negro puro y se reproduce con `mix-blend-mode: screen`, porque Safari ignora el canal alfa del WebM.
 - **Ficheros.** Se retiran `constellation*.webp` de `public/media/404`.
+
+### 7.1 Enmienda: 3D solo en escritorio (2026-10-01)
+
+- Por debajo de `lg` la puerta de `LostExperience` falla: no hay sonda WebGL2, ni chunk three, ni lienzo. Móvil muestra siempre el escenario estático (póster, siluetas `clip-path` y líneas) con los mismos enlaces. Esto sustituye al fundido móvil a la escena viva descrito arriba.
+- Motivo: el TBT de Lighthouse móvil estaba en 9-12 s. Casi todo es una única llamada de comprobación de enlazado del shader de `MeshPhysicalMaterial` (transmisión, dispersión, iridiscencia y clearcoat) en ANGLE/D3D11, que bloquea el hilo y no se puede trocear. `compileAsync`, el bucle a demanda y el diferido no lo evitan.
+- Escritorio conserva vídeo y escena 3D. El vídeo arranca de inmediato; solo el import de three espera a un hueco ocioso tras `load`. Si no llega a tiempo al relevo, rige el comportamiento de escena tardía.
+- Cruzar a móvil tras la puerta devuelve el escenario estático.
