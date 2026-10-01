@@ -346,7 +346,16 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
 
   // L8: en escritorio vídeo y lienzo viven en una capa hermana del escenario (sin transform ni z-index) y pintan bajo el texto.
   const inLayer = layer !== null && desktop;
+  const media = (
+    <>
+      {videoEl}
+      {canvasEl}
+    </>
+  );
 
+  return (
+    <div ref={root} lang={lang} className="pointer-events-none absolute inset-0">
+      {inLayer ? createPortal(media, layer) : media}
 
       {motion ? (
         <div className="pointer-events-auto absolute bottom-2 right-2 z-20 flex flex-wrap justify-end gap-2">

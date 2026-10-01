@@ -182,7 +182,7 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
       <div
         aria-hidden="true"
         data-lost-layer=""
-        className="pointer-events-none absolute inset-x-0 inset-y-0 mx-auto my-auto hidden aspect-video w-[min(100%,1440px)] lg:block"
+        className="pointer-events-none absolute left-1/2 top-1/2 ml-[calc(min(100%,1440px)*-0.5)] mt-[calc(min(100%,1440px)*-0.28125)] hidden aspect-video w-[min(100%,1440px)] lg:block"
       />
       <div className="pointer-events-none relative mx-auto mt-8 h-[32rem] w-[min(100%,28rem)] lg:absolute lg:z-20 lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-0 lg:aspect-video lg:h-auto lg:w-[min(100%,1440px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
         {(["m", "d"] as const).map((variant) => (
