@@ -132,3 +132,20 @@ Responsive de 320 a 1920 px y en horizontal. En móvil la constelación se reord
 ## 6. Fuera de alcance
 
 El resto de las fases 3 y 4 (el cristal vivo del hero y las secuencias de scroll de la home). Esta pieza estrena las herramientas, pero no las aplica a otras páginas.
+
+## 7. Cambios tras la revisión del render (2026-10-01)
+
+- **Fuente única de verdad.**
+  - `src/lib/lost/shards.ts` (sin imports) contiene la geometría de cada fragmento (contorno y celda), el tamaño, el orden de Euler, el material y el entorno del cristal.
+  - Contiene también las funciones `project`, `unproject` (a la profundidad de cada fragmento) y `silhouette`.
+  - El generador vive en `video/scripts/bake-geometry.mjs`, con una comprobación que avisa si los datos se desvían.
+- **Escritorio.**
+  - El escenario es una caja fija 16:9 de hasta 1440 px, y en ella encajan el vídeo y el canvas.
+  - Las posiciones se calculan a partir de las poses, no se escriben a mano.
+  - La capa estática es `poster-end.webp` a tamaño exacto, que es también el póster del vídeo.
+  - Las líneas solo las dibuja el SVG.
+- **Móvil.**
+  - No hay vídeo: se pasa de la constelación estática directamente a la escena viva.
+  - Los fragmentos de CSS son siluetas proyectadas (`clip-path`).
+- **Safari.** El MP4 se renderiza sobre negro puro y se reproduce con `mix-blend-mode: screen`, porque Safari ignora el canal alfa del WebM.
+- **Ficheros.** Se retiran `constellation*.webp` de `public/media/404`.
