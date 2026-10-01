@@ -51,7 +51,17 @@ Además, este trabajo arregla las dos limitaciones de la fase 1:
 - **Acceso directo** a `/en/perdido` o `/perdido`: también responde 404 con la misma experiencia, sin bucle gracias a la cabecera de bypass.
 - **Markdown:** `Accept: text/markdown` y las variantes `.md` desconocidas siguen devolviendo `notFoundMarkdown(path, lang)`, como hoy.
 - **Lo que se elimina:** `src/app/global-not-found.tsx`, `experimental.globalNotFound` y `NotFoundBody` en su forma bilingüe. Su contenido de mapa se reutiliza por idioma en la sección `#mapa`.
-- **Viabilidad:** pendiente de la prueba técnica (spike) en marcha. Si el proxy no puede devolver el HTML del molde con 404 de forma fiable, el plan B es generar en build un HTML estático por idioma (`public/404.es.html`, `public/404.en.html`) y que el proxy lo sirva con 404. El plan C es conservar `global-not-found` haciendo que el proxy pase el idioma por cabecera y la página la lea. La spec se actualiza con el resultado antes del plan.
+- **Viabilidad: confirmada** por la prueba técnica del 2026-10-01 (Next 16.2.6, `next start`).
+  - `/zz` → 404 con el molde español y `lang="es-ES"`; `/en/zz` → 404 con el molde inglés y `lang="en"`.
+  - La página hidrata y los componentes de cliente funcionan.
+  - La cabecera de bypass `x-sgomez-404: 1` evita el bucle.
+  - Al navegar desde dentro de la web, el router hace una navegación completa y muestra el 404.
+  - Se descarta `NextResponse.rewrite(url, { status: 404 })`. Conserva el estado, pero hereda `s-maxage=31536000` del prerender y el proxy no puede corregirlo, así que la CDN guardaría el 404 un año.
+- **Robustez:**
+  - El proxy guarda el HTML del molde por idioma en memoria, con un TTL de 60 s, para no hacer una petición interna por cada 404.
+  - `Cache-Control: public, max-age=60, s-maxage=60`.
+  - Si la petición interna falla (por ejemplo, por la protección de previews de Vercel o un error), el proxy devuelve una página 404 mínima autocontenida, generada desde `notFoundMarkdown(path, lang)`, con estado 404 y enlaces a las páginas. Nunca un 500.
+  - Si la petición ya lleva la cabecera de bypass, el proxy nunca vuelve a pedir el molde.
 
 ### 3.2 Taller Remotion (adelanta la fase 4 solo para esta pieza)
 - Proyecto hermano `video/` en la raíz del repo, con dependencias propias que no se despliegan: `remotion`, `@remotion/cli` y `@remotion/three`.
