@@ -76,28 +76,28 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
                         <p className="mb-3 text-[length:var(--step--1)] uppercase tracking-[0.12em] text-[color:var(--text-2)]">{v.translatedLabel}</p>
                       ) : null}
                       <blockquote className="min-w-0">
-                      {v.translation ? (
-                        <>
-                          <Paragraphs text={v.translation} lang="en" />
-                          <details className="group/orig mt-5">
-                            <summary className={`inline-flex min-h-11 cursor-pointer items-center text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline ${focus}`}>
-                              {d.recommendations.readOriginal}
-                              <svg aria-hidden="true" focusable="false" viewBox="0 0 12 12" className="ml-2 h-[1em] w-[1em] shrink-0 transition-transform group-open/orig:rotate-90" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M4.5 2 8.5 6 4.5 10" />
-                              </svg>
-                            </summary>
-                            <div lang={v.quoteLang} className="mt-2 flex flex-col gap-3 border-l-2 border-[color:var(--line)] pl-4">
-                              {v.quote.split("\n\n").map((para) => (
-                                <p key={para} className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">
-                                  {para}
-                                </p>
-                              ))}
-                            </div>
-                          </details>
-                        </>
-                      ) : (
-                        <Paragraphs text={v.quote} lang={v.quoteLang} />
-                      )}
+                        {v.translation ? (
+                          <>
+                            <Paragraphs text={v.translation} lang="en" />
+                            <details className="group/orig mt-5">
+                              <summary className={`inline-flex min-h-11 cursor-pointer items-center text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline ${focus}`}>
+                                {d.recommendations.readOriginal}
+                                <svg aria-hidden="true" focusable="false" viewBox="0 0 12 12" className="ml-2 h-[1em] w-[1em] shrink-0 transition-transform group-open/orig:rotate-90" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M4.5 2 8.5 6 4.5 10" />
+                                </svg>
+                              </summary>
+                              <div lang={v.quoteLang} className="mt-2 flex flex-col gap-3 border-l-2 border-[color:var(--line)] pl-4">
+                                {v.quote.split("\n\n").map((para) => (
+                                  <p key={para} className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">
+                                    {para}
+                                  </p>
+                                ))}
+                              </div>
+                            </details>
+                          </>
+                        ) : (
+                          <Paragraphs text={v.quote} lang={v.quoteLang} />
+                        )}
                       </blockquote>
                     </div>
                   </figure>

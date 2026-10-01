@@ -648,7 +648,7 @@ function buildDevelopers(lang: Lang): StaticPage {
             kind: "links",
             items: [
               { label: "/llms.txt", href: machineHref("/llms.txt", lang), note: x("Resumen factual del sitio, con la sección «when to use this».", "Factual summary of the site, with the “when to use this” section.") },
-              { label: "/agents.md", href: machineHref("/agents.md", lang), note: x("Instrucciones de uso, con para qué sirve este sitio y cómo llamarlo.", "Usage instructions covering what this site is for and how to call it.") },
+              { label: "/agents.md", href: machineHref("/agents.md", lang), note: x("Para qué sirve este sitio y cómo llamarlo.", "Usage instructions covering what this site is for and how to call it.") },
               { label: "/sitemap.xml", href: "/sitemap.xml", note: x("Todas las URLs publicadas.", "All published URLs.") },
               { label: "/robots.txt", href: "/robots.txt", note: x("Crawlers de IA explícitamente permitidos.", "AI crawlers explicitly allowed.") },
               { label: "/manifest.webmanifest", href: "/manifest.webmanifest", note: x("Manifiesto de la aplicación web.", "Web app manifest.") },
