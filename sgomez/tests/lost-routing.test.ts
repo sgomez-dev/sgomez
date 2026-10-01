@@ -45,8 +45,85 @@ describe("fallback404Html", () => {
     const html = fallback404Html("/en/<script>", "en");
     expect(html).toMatch(/^<!doctype html>/i);
     expect(html).toContain('<html lang="en">');
+    expect(fallback404Html("/x", "es")).toContain('<html lang="es-ES">');
     expect(html).toContain('href="https://sgomez.dev/en/about"');
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;");
+  });
+});
+
+import { readdirSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import { renderToStaticMarkup } from "react-dom/server";
+import { PAGES } from "@/lib/routing/pages";
+import { safeOrigin, MOLDE_PATH } from "@/lib/lost/molde";
+
+describe("fetchMolde: robustez", () => {
+  const ok = () => new Response("<html>molde</html>", { status: 200 });
+  it("redirect manual y signal en la petición; un 3xx es fallo", async () => {
+    __resetMoldeCache();
+    const f = vi.fn(async () => new Response(null, { status: 307 }));
+    expect(await fetchMolde("es", "https://sgomez.dev", f as unknown as typeof fetch, () => 0)).toBeNull();
+    const init = (f.mock.calls[0] as unknown as [URL, RequestInit])[1];
+    expect(init.redirect).toBe("manual");
+    expect(init.signal).toBeDefined();
+  });
+  it("un fetch que nunca resuelve acaba en null por el timeout", async () => {
+    __resetMoldeCache();
+    const never = (() => new Promise(() => {})) as unknown as typeof fetch;
+    expect(await fetchMolde("es", "https://sgomez.dev", never, () => 0, 20)).toBeNull();
+  });
+  it("peticiones concurrentes en frío hacen UN fetch", async () => {
+    __resetMoldeCache();
+    const f = vi.fn(async () => { await new Promise((r) => setTimeout(r, 10)); return ok(); });
+    const r = await Promise.all([1, 2, 3].map(() => fetchMolde("en", "https://sgomez.dev", f as unknown as typeof fetch, () => 0)));
+    expect(f).toHaveBeenCalledTimes(1);
+    expect(r.every((x) => x === "<html>molde</html>")).toBe(true);
+  });
+  it("caché negativa de 10 s tras un fallo", async () => {
+    __resetMoldeCache();
+    const f = vi.fn(async () => new Response("x", { status: 500 }));
+    let t = 0;
+    await fetchMolde("es", "https://sgomez.dev", f as unknown as typeof fetch, () => t);
+    t = 5_000;
+    expect(await fetchMolde("es", "https://sgomez.dev", f as unknown as typeof fetch, () => t)).toBeNull();
+    expect(f).toHaveBeenCalledTimes(1);
+    t = 11_000;
+    await fetchMolde("es", "https://sgomez.dev", f as unknown as typeof fetch, () => t);
+    expect(f).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("safeOrigin", () => {
+  it("acepta los orígenes conocidos y descarta cualquier otro", () => {
+    expect(safeOrigin("https://sgomez.dev")).toBe("https://sgomez.dev");
+    expect(safeOrigin("http://localhost:3320")).toBe("http://localhost:3320");
+    expect(safeOrigin("https://evil.example")).toBe("https://sgomez.dev");
+    vi.stubEnv("VERCEL_URL", "sgomez-abc.vercel.app");
+    expect(safeOrigin("https://sgomez-abc.vercel.app")).toBe("https://sgomez-abc.vercel.app");
+    vi.unstubAllEnvs();
+  });
+});
+
+describe("las páginas estáticas existen en PAGES (Minor 7)", () => {
+  it("cada app/[lang]/*/page.tsx estático está en PAGES", () => {
+    const dir = join(process.cwd(), "src/app", "[lang]");
+    const found = readdirSync(dir, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && d.name !== "perdido" && !d.name.startsWith("["))
+      .filter((d) => existsSync(join(dir, d.name, "page.tsx")))
+      .map((d) => `/${d.name}`);
+    expect(found.length).toBeGreaterThan(0);
+    for (const p of found) expect(PAGES as readonly string[], p).toContain(p);
+  });
+});
+
+describe("el molde tiene un solo h1 por idioma (Minor 9)", () => {
+  it("renderiza un h1 y las dos rutas internas existen", async () => {
+    expect(MOLDE_PATH).toEqual({ es: "/es/perdido", en: "/en/perdido" });
+    const { default: Page } = await import("@/app/[lang]/perdido/page");
+    for (const lang of ["es", "en"]) {
+      const html = renderToStaticMarkup(await Page({ params: Promise.resolve({ lang }) }));
+      expect(html.match(/<h1/g), lang).toHaveLength(1);
+    }
   });
 });

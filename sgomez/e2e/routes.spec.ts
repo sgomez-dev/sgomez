@@ -153,6 +153,14 @@ test.describe("cambio de idioma (Review Focus 4)", () => {
     for (const href of hrefs) expect(href).toBe("/en");
   });
 
+  test("desde /en/no-existe el selector lleva a la home española", async ({ page }) => {
+    await page.goto("/en/no-existe");
+    await page.waitForLoadState("networkidle");
+    const hrefs = await page.locator("a[hreflang='es']").evaluateAll((els) => els.map((el) => el.getAttribute("href")));
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) expect(href).toBe("/");
+  });
+
   test("desde /about el selector lleva a /en/about", async ({ page }) => {
     await page.goto("/about");
     await page.waitForLoadState("networkidle");

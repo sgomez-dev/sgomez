@@ -69,3 +69,26 @@ describe("proxy: 404 real por idioma", () => {
     expect(sitemap().some((e) => e.url.includes("perdido"))).toBe(false);
   });
 });
+
+describe("bypass sin recursión", () => {
+  it("una petición con bypass a otra ruta NO llama a fetch y recibe la reserva 404", async () => {
+    const f = vi.fn();
+    vi.stubGlobal("fetch", f);
+    const res = await proxy(req("/no-existe", { "x-sgomez-404": "1" }));
+    expect(f).not.toHaveBeenCalled();
+    expect(res.status).toBe(404);
+    expect(await res.text()).toContain('<html lang="es-ES">');
+  });
+  it("la respuesta directa del molde no es cacheable ni indexable", async () => {
+    const res = await proxy(req("/en/perdido", { "x-sgomez-404": "1" }));
+    expect(res.headers.get("cache-control")).toBe("private, no-store");
+    expect(res.headers.get("x-robots-tag")).toBe("noindex, follow");
+  });
+  it("con un Host falso el fetch va a SITE_URL", async () => {
+    const f = vi.fn(async (url: URL) => new Response(String(url), { status: 200 }));
+    vi.stubGlobal("fetch", f);
+    const res = await proxy(new NextRequest("https://evil.example/no-existe", { headers: { accept: "text/html" } }));
+    expect(res.status).toBe(404);
+    expect(String(f.mock.calls[0]![0])).toBe("https://sgomez.dev/es/perdido");
+  });
+});

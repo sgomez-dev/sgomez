@@ -26,6 +26,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // El molde del 404 no es una página pública: nunca se indexa ni se cachea en una CDN.
+        source: "/:lang(es|en)/perdido",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, follow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+      {
         // Solo las páginas: /api y los assets con hash sirven su propio Vary.
         source: "/((?!api/|_next/static/|_next/image).*)",
         headers: [{ key: "Vary", value: PAGE_VARY }],

@@ -59,6 +59,8 @@ export function isRscRequest(headers: { has(name: string): boolean }, search: UR
 export function isUnknownHtmlPath(pathname: string): boolean {
   if (pathname.startsWith("/_next") || pathname === "/api" || pathname.startsWith("/api/")) return false;
   if (NEGOTIATION_EXEMPT_PATHS.includes(pathname) || FILE.test(pathname)) return false;
+  // Fase 5: las rutas dinámicas (`/work/[slug]`) tendrán que comprobarse contra su lista de slugs aquí;
+  // hoy toda ruta fuera de PAGES es desconocida.
   const { path } = splitLang(pathname);
   if (path === "/opengraph-image") return false;
   return !(PAGES as readonly string[]).includes(path.replace(/\/$/, "") || "/");

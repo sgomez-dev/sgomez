@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { markdownForPath, notFoundMarkdown } from "@/lib/markdown/documents";
 import { decide } from "@/lib/markdown/routing";
 import { isRscRequest, isUnknownHtmlPath, routeRequest, type RouteDecision } from "@/lib/routing/request";
-import { BYPASS_HEADER, MOLDE_PATH, fallback404Html, fetchMolde } from "@/lib/lost/molde";
+import { BYPASS_HEADER, MOLDE_PATH, fallback404Html, fetchMolde, safeOrigin } from "@/lib/lost/molde";
 import { hreflangAlternates, splitLang } from "@/i18n/languages";
 import { CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
 
@@ -89,8 +89,17 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
   // La petición interna que trae el molde lleva la cabecera de bypass: las rutas
   // internas del molde se sirven tal cual, sin el 308 de `/es/*` y sin pedirse a
   // sí mismas otra vez.
-  if (request.headers.get(BYPASS_HEADER) === "1" && Object.values(MOLDE_PATH).includes(pathname)) {
-    return NextResponse.next();
+  // Con la cabecera NUNCA se vuelve a pedir el molde (evita la recursión si una
+  // redirección apunta a otra ruta): lo que no es el molde recibe la reserva.
+  if (request.headers.get(BYPASS_HEADER) === "1") {
+    if (!Object.values(MOLDE_PATH).includes(pathname)) {
+      return lostResponse(fallback404Html(pathname, splitLang(pathname).lang));
+    }
+    // Una petición externa que lleve la cabecera pública no debe dejar un 200 cacheable en una CDN.
+    const direct = NextResponse.next();
+    direct.headers.set("X-Robots-Tag", "noindex, follow");
+    direct.headers.set("Cache-Control", "private, no-store");
+    return direct;
   }
 
   const isRsc = isRscRequest(request.headers, request.nextUrl.searchParams);
@@ -105,7 +114,7 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
 
   if (decision.kind !== "markdown" && isUnknownHtmlPath(pathname)) {
     const lang = splitLang(pathname).lang;
-    const html = (await fetchMolde(lang, request.nextUrl.origin)) ?? fallback404Html(pathname, lang);
+    const html = (await fetchMolde(lang, safeOrigin(request.nextUrl.origin))) ?? fallback404Html(pathname, lang);
     return lostResponse(html);
   }
 
