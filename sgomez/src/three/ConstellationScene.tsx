@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/immutability -- los objetos de three.js son imperativos: se construyen una vez y se mutan en el bucle de render */
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import { CAMERA, GLASS, GLASS_ENV, GLASS_MATERIAL, LINES, LINES_MOBILE, SHARDS, mulberry32, unproject, type Shard } from "@/lib/lost/shards";
@@ -164,41 +164,89 @@ type Rig = {
   glow: number;
 };
 
+type Assets = { env: THREE.Texture; backdrop: THREE.MeshBasicMaterial; geos: THREE.ExtrudeGeometry[]; rigs: Rig[]; lineMat: THREE.LineBasicMaterial };
+
+const yieldToMain = () => new Promise<void>((r) => setTimeout(r, 0));
+
+function buildAssets(env: THREE.Texture, backdrop: THREE.MeshBasicMaterial): Assets {
+  const geos = SHARDS.map((s) => shardGeometry(s));
+  const rigs = SHARDS.map((s, i): Rig => {
+    const { pose } = s;
+    const group = new THREE.Group();
+    group.position.set(pose.x, pose.y, pose.z);
+    const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(pose.rx, pose.ry, pose.rz, GLASS.euler));
+    group.quaternion.copy(q);
+    const baseScale = s.scale * GLASS.radiusPerScale;
+    group.scale.setScalar(baseScale);
+    const mat = glassMaterial(env);
+    group.add(new THREE.Mesh(geos[i]!, mat));
+    return {
+      id: s.id,
+      shard: s,
+      group,
+      mat,
+      q,
+      baseScale,
+      phase: (i * 2.399963) % (Math.PI * 2),
+      speed: 0.55 + ((i * 37) % 11) / 22,
+      amp: Math.min(MAX_FLOAT, 0.034 + ((i * 53) % 7) * 0.0076),
+      glow: 0,
+    };
+  });
+  const lineMat = new THREE.LineBasicMaterial({ color: "#8FA8FF", transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
+  return { env, backdrop, geos, rigs, lineMat };
+}
+
+/** Todo lo que se construyó a mano se libera al desmontar. */
+function disposeAssets(a: Assets) {
+  a.env.dispose();
+  a.backdrop.map?.dispose();
+  a.backdrop.dispose();
+  a.geos.forEach((g) => g.dispose());
+  a.rigs.forEach((r) => r.mat.dispose());
+  a.lineMat.dispose();
+}
+
 function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onProject }: SceneProps) {
   const gl = useThree((s) => s.gl);
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
 
-  const assets = useMemo(() => {
-    const env = buildEnv(gl);
-    const backdrop = buildBackdrop();
-    const geos = SHARDS.map((s) => shardGeometry(s));
-    const rigs = SHARDS.map((s, i): Rig => {
-      const { pose } = s;
-      const group = new THREE.Group();
-      group.position.set(pose.x, pose.y, pose.z);
-      const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(pose.rx, pose.ry, pose.rz, GLASS.euler));
-      group.quaternion.copy(q);
-      const baseScale = s.scale * GLASS.radiusPerScale;
-      group.scale.setScalar(baseScale);
-      const mat = glassMaterial(env);
-      group.add(new THREE.Mesh(geos[i]!, mat));
-      return {
-        id: s.id,
-        shard: s,
-        group,
-        mat,
-        q,
-        baseScale,
-        phase: (i * 2.399963) % (Math.PI * 2),
-        speed: 0.55 + ((i * 37) % 11) / 22,
-        amp: Math.min(MAX_FLOAT, 0.034 + ((i * 53) % 7) * 0.0076),
-        glow: 0,
-      };
-    });
-    const lineMat = new THREE.LineBasicMaterial({ color: "#8FA8FF", transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
-    return { env, backdrop, geos, rigs, lineMat };
-  }, [gl]);
+  const scene = useThree((s) => s.scene);
+  const [assets, setAssets] = useState<Assets | null>(null);
+  const [ready, setReady] = useState(false);
+
+  // Construcción FUERA del render y troceada (PMREM, fondo, geometrías) para no formar una tarea larga; después se compilan los shaders
+  // antes del primer fotograma y de `onReady`.
+  useEffect(() => {
+    let off = false;
+    (async () => {
+      await yieldToMain();
+      const env = buildEnv(gl);
+      await yieldToMain();
+      const backdrop = buildBackdrop();
+      await yieldToMain();
+      const built = buildAssets(env, backdrop);
+      if (off) return disposeAssets(built);
+      setAssets(built);
+    })().catch(() => !off && onFail());
+    return () => {
+      off = true;
+    };
+  }, [gl, onFail]);
+
+  useEffect(() => {
+    if (!assets) return;
+    let off = false;
+    (async () => {
+      await Promise.resolve();
+      await gl.compileAsync(scene, camera);
+      if (!off) setReady(true);
+    })().catch(() => !off && onFail());
+    return () => {
+      off = true;
+    };
+  }, [assets, gl, scene, camera, onFail]);
 
   const lineGeo = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -209,15 +257,10 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
   // todo lo que se construyó a mano se libera al desmontar
   useEffect(() => {
     return () => {
-      assets.env.dispose();
-      assets.backdrop.map?.dispose();
-      assets.backdrop.dispose();
-      assets.geos.forEach((g) => g.dispose());
-      assets.rigs.forEach((r) => r.mat.dispose());
-      assets.lineMat.dispose();
-      lineGeo.dispose();
+      if (assets) disposeAssets(assets);
     };
-  }, [assets, lineGeo]);
+  }, [assets]);
+  useEffect(() => () => lineGeo.dispose(), [lineGeo]);
 
   // un fallo de contexto (GPU perdida) devuelve el escenario estático
   useEffect(() => {
@@ -262,7 +305,39 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
   // con el bucle "demand", un cambio de disposición o de brillo pide su fotograma
   useEffect(() => {
     invalidate();
-  }, [layout, highlightId, paused]);
+  }, [layout, highlightId, paused, ready]);
+
+  // Bucle a demanda: solo hay fotogramas mientras la escena es visible, la pestaña está activa, hay animación y a un máximo de 30 fps.
+  useEffect(() => {
+    if (!ready || !live || paused) return;
+    let visible = true;
+    let raf = 0;
+    let last = 0;
+    const loop = (t: number) => {
+      raf = 0;
+      if (!visible || document.hidden) return;
+      if (t - last >= 33) {
+        last = t;
+        invalidate();
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    const kick = () => {
+      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(loop);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      visible = !!e?.isIntersecting;
+      kick();
+    });
+    io.observe(gl.domElement);
+    document.addEventListener("visibilitychange", kick);
+    kick();
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", kick);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [ready, live, paused, gl]);
 
   const clock = useRef({ t: 0, live: 0, frames: 0 });
   const scratch = useMemo(
@@ -278,6 +353,7 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
   );
 
   useFrame((_, rawDt) => {
+    if (!assets || !ready) return;
     const dt = Math.min(rawDt, 0.05);
     const c = clock.current;
     const aspect = size.width / Math.max(1, size.height);
@@ -361,6 +437,7 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
   });
 
   const plane = GLASS_ENV.backdrop.plane;
+  if (!assets) return null;
   return (
     <>
       <mesh
@@ -395,10 +472,10 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
 export default function ConstellationScene(props: SceneProps) {
   return (
     <Canvas
-      dpr={[1, 1.75]}
+      dpr={[1, 1.25]}
       camera={{ fov: CAMERA.fov, position: [...CAMERA.position], near: 0.1, far: 60 }}
       gl={{ alpha: true, antialias: true }}
-      frameloop={props.live && !props.paused ? "always" : "demand"}
+      frameloop="demand"
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
       onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
     >

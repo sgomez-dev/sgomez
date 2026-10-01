@@ -84,6 +84,12 @@ describe("bypass sin recursión", () => {
     expect(res.headers.get("cache-control")).toBe("private, no-store");
     expect(res.headers.get("x-robots-tag")).toBe("noindex, follow");
   });
+  it("la reserva degradada (sin molde) no es cacheable", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("x", { status: 500 })));
+    const res = await proxy(req("/en/no-existe", { accept: "text/html" }));
+    expect(res.status).toBe(404);
+    expect(res.headers.get("cache-control")).toBe("private, no-store");
+  });
   it("con un Host falso el fetch va a SITE_URL", async () => {
     const f = vi.fn(async (url: URL) => new Response(String(url), { status: 200 }));
     vi.stubGlobal("fetch", f);

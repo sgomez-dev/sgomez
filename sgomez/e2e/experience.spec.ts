@@ -143,9 +143,10 @@ test.describe("presupuesto de JS", () => {
    */
   test("el chunk 3D perezoso no pasa de 250 KB (gzip)", () => {
     const dir = join(process.cwd(), ".next", "static", "chunks");
-    const files = readdirSync(dir).filter((f) => f.endsWith(".js") && readFileSync(join(dir, f), "utf8").includes("PMREMGenerator"));
+    const files = readdirSync(dir).filter((f) => f.endsWith(".js") && readFileSync(join(dir, f), "utf8").match(/PMREMGenerator|webglcontextlost|__r3f/));
     expect(files.length).toBeGreaterThan(0);
-    const gz = Math.max(...files.map((f) => gzipSync(readFileSync(join(dir, f))).length));
+    // el import dinámico reparte three y R3F en varios chunks: se suman todos, los que contienen three (PMREMGenerator), la escena (webglcontextlost) o R3F (__r3f)
+    const gz = files.reduce((sum, f) => sum + gzipSync(readFileSync(join(dir, f))).length, 0);
     console.log(`[budget] chunk 3D: ${(gz / 1024).toFixed(1)} KB gzip`);
     expect(gz).toBeLessThanOrEqual(250 * 1024);
   });

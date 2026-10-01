@@ -75,8 +75,13 @@ test("escena bloqueada: constelación estática completa, sin botón de pausa y 
 test("ruta 3D feliz: el lienzo aparece y el botón de pausa alterna aria-pressed", async ({ page }) => {
   await forceGate(page);
   await page.goto(PATH);
-  await expect(page.locator("[data-lost-video]")).toBeAttached({ timeout: 10_000 });
+  await expect(page.locator("[data-lost-video]")).toBeAttached({ timeout: 20_000 });
   await expect(page.locator("[data-lost-canvas]")).toBeAttached({ timeout: 30_000 });
+  // el relevo se completa: fase idle, la escena cubre lo estático, el vídeo se retira y el lienzo es opaco
+  await expect(page.locator('[data-stage="lost"]')).toHaveAttribute("data-lost-phase", "idle", { timeout: 60_000 });
+  await expect(page.locator('[data-stage="lost"]')).toHaveAttribute("data-lost-cover", "scene");
+  await expect(page.locator("[data-lost-video]")).toHaveCount(0);
+  await expect(page.locator("[data-lost-canvas]")).toHaveCSS("opacity", "1");
   const pause = page.locator("button[aria-pressed]");
   await expect(pause).toBeVisible();
   await expect(pause).toHaveAttribute("aria-pressed", "false");
@@ -115,6 +120,11 @@ test("cruzar el breakpoint con el vídeo en marcha lo abandona y no vuelve", asy
   await expect(page.locator("[data-lost-video]")).toHaveCount(1, { timeout: 20_000 });
   await page.setViewportSize({ width: 800, height: 900 });
   await expect(page.locator("[data-lost-video]")).toHaveCount(0, { timeout: 25_000 });
+  // cruzar el breakpoint devuelve el escenario estático entero (nunca un escenario vacío)
+  await expect(page.locator('[data-stage="lost"]')).toHaveAttribute("data-lost-phase", "static");
+  await expect(page.locator("[data-lost-canvas]")).toHaveCount(0);
+  await expect(page.locator('[data-stage="lost"]')).not.toHaveAttribute("data-lost-cover", /.+/);
+  await expect(page.locator("[data-lost-static]").first()).toBeVisible();
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.waitForTimeout(1000);
   await expect(page.locator("[data-lost-video]")).toHaveCount(0);

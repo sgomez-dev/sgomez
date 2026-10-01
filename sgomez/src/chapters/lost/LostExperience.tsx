@@ -29,6 +29,8 @@ type Props = {
 type VideoState = "idle" | "playing" | "ended" | "error";
 
 const LG = "(min-width: 64rem)";
+/** Pausa tras `load` antes de sondear WebGL2 y pedir el chunk 3D. */
+const START_DELAY = 2500;
 
 class Boundary extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -112,44 +114,63 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     setVideoGone(true);
   }, [setVideoState]);
 
-  // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS.
+  // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS, ni durante la hidratación (TBT):
+  // la sonda WebGL2 y el import de three arrancan en un hueco ocioso DESPUÉS de `load`.
   useEffect(() => {
-    if (!gatingPasses(readGate())) return;
-    const lg = matchMedia(LG);
-    const rm = matchMedia("(prefers-reduced-motion: reduce)");
-    setEnabled(true);
-    setDesktop(lg.matches);
-    setVideoWanted(lg.matches);
-    // la capa solo existe en escritorio (en móvil está oculta): se decide UNA vez, así un cambio de breakpoint posterior no remonta el Canvas
-    setLayer(lg.matches ? (root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null) : null);
-    setOpaque(needsOpaqueVideo(navigator.userAgent, navigator.maxTouchPoints));
-    if (lg.matches) dispatch("motionAllowed");
-
-    const onLg = () => {
+    let cleanup: (() => void) | undefined;
+    const start = () => {
+      if (!gatingPasses(readGate())) return;
+      const lg = matchMedia(LG);
+      const rm = matchMedia("(prefers-reduced-motion: reduce)");
+      setEnabled(true);
       setDesktop(lg.matches);
-      // cruzar el breakpoint con el vídeo sin terminar: se abandona, sin reactivarlo después
-      if (videoStateRef.current === "idle" || videoStateRef.current === "playing") {
-        killVideo();
-        dispatch("videoFailed");
-      }
-    };
-    // quien activa reduced-motion a mitad de visita: sin vídeo ni escena, escenario estático
-    const onRm = () => {
-      if (!rm.matches) return;
-      killVideo();
-      dispatch("sceneFailed");
-    };
-    lg.addEventListener("change", onLg);
-    rm.addEventListener("change", onRm);
+      setVideoWanted(lg.matches);
+      // la capa solo existe en escritorio (en móvil está oculta): se decide UNA vez, así un cambio de breakpoint posterior no remonta el Canvas
+      setLayer(lg.matches ? (root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null) : null);
+      setOpaque(needsOpaqueVideo(navigator.userAgent, navigator.maxTouchPoints));
+      if (lg.matches) dispatch("motionAllowed");
 
-    const ori = typeof DeviceOrientationEvent !== "undefined" ? (DeviceOrientationEvent as IOSOrientation) : null;
-    if (ori) {
-      if (typeof ori.requestPermission === "function") setNeedsGyroButton(matchMedia("(pointer: coarse)").matches);
-      else if (matchMedia("(pointer: coarse)").matches) setGyroOn(true);
-    }
+      // cruzar el breakpoint en cualquier sentido tras la puerta: la capa (o la caja del escenario) ya no es la correcta, así que escenario estático
+      const onLg = () => {
+        setDesktop(lg.matches);
+        killVideo();
+        dispatch("sceneFailed");
+      };
+      // quien activa reduced-motion a mitad de visita: sin vídeo ni escena, escenario estático
+      const onRm = () => {
+        if (!rm.matches) return;
+        killVideo();
+        dispatch("sceneFailed");
+      };
+      lg.addEventListener("change", onLg);
+      rm.addEventListener("change", onRm);
+
+      const ori = typeof DeviceOrientationEvent !== "undefined" ? (DeviceOrientationEvent as IOSOrientation) : null;
+      if (ori) {
+        if (typeof ori.requestPermission === "function") setNeedsGyroButton(matchMedia("(pointer: coarse)").matches);
+        else if (matchMedia("(pointer: coarse)").matches) setGyroOn(true);
+      }
+      cleanup = () => {
+        lg.removeEventListener("change", onLg);
+        rm.removeEventListener("change", onRm);
+      };
+    };
+    let idle = 0;
+    let timer = 0;
+    // tras `load` se deja respirar a la página (LCP, TTI) y luego se espera a un hueco ocioso: la compilación de shaders de GPU bloquea el hilo
+    const schedule = () => {
+      timer = window.setTimeout(() => {
+        if (typeof requestIdleCallback === "function") idle = requestIdleCallback(start, { timeout: 2500 });
+        else start();
+      }, START_DELAY);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
     return () => {
-      lg.removeEventListener("change", onLg);
-      rm.removeEventListener("change", onRm);
+      window.removeEventListener("load", schedule);
+      if (idle && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
+      window.clearTimeout(timer);
+      cleanup?.();
     };
   }, [killVideo]);
 

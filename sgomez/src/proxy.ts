@@ -71,12 +71,16 @@ function markdownResponse(body: string, status: number, canonical: string, index
  * usa `NextResponse.rewrite(..., { status: 404 })` porque hereda el
  * `s-maxage` de un año de la página prerenderizada.
  */
-function lostResponse(html: string): NextResponse {
+const LOST_CACHE = "public, max-age=60, s-maxage=60";
+/** Reserva degradada o petición con la cabecera de bypass: nada de caché compartida. */
+const NO_STORE = "private, no-store";
+
+function lostResponse(html: string, cacheControl: string = LOST_CACHE): NextResponse {
   return new NextResponse(html, {
     status: 404,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Cache-Control": cacheControl,
       Vary: PAGE_VARY,
       "X-Robots-Tag": "noindex, follow",
     },
@@ -93,12 +97,12 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
   // redirección apunta a otra ruta): lo que no es el molde recibe la reserva.
   if (request.headers.get(BYPASS_HEADER) === "1") {
     if (!Object.values(MOLDE_PATH).includes(pathname)) {
-      return lostResponse(fallback404Html(pathname, splitLang(pathname).lang));
+      return lostResponse(fallback404Html(pathname, splitLang(pathname).lang), NO_STORE);
     }
     // Una petición externa que lleve la cabecera pública no debe dejar un 200 cacheable en una CDN.
     const direct = NextResponse.next();
     direct.headers.set("X-Robots-Tag", "noindex, follow");
-    direct.headers.set("Cache-Control", "private, no-store");
+    direct.headers.set("Cache-Control", NO_STORE);
     return direct;
   }
 
@@ -114,8 +118,9 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
 
   if (decision.kind !== "markdown" && isUnknownHtmlPath(pathname)) {
     const lang = splitLang(pathname).lang;
-    const html = (await fetchMolde(lang, safeOrigin(request.nextUrl.origin))) ?? fallback404Html(pathname, lang);
-    return lostResponse(html);
+    const molde = await fetchMolde(lang, safeOrigin(request.nextUrl.origin));
+    // sin molde (degradado) no se cachea: que el siguiente visitante lo vuelva a intentar
+    return molde === null || molde === undefined ? lostResponse(fallback404Html(pathname, lang), NO_STORE) : lostResponse(molde);
   }
 
   if (decision.kind === "skip") return passThrough(request, route);
