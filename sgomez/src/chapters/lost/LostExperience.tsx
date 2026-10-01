@@ -1,6 +1,7 @@
 "use client";
 
 import { Component, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { initial, step, type Event } from "./sequence";
 import { gatingPasses, isSoftwareRenderer, needsOpaqueVideo, VIDEO_SRC } from "./media";
 import type { SceneProps } from "@/three/ConstellationScene";
@@ -22,7 +23,6 @@ import type { SceneProps } from "@/three/ConstellationScene";
 type Props = {
   lang: string;
   pause: string;
-  resume: string;
   gyro: string;
 };
 
@@ -62,9 +62,11 @@ type NavigatorExtras = Navigator & { connection?: { saveData?: boolean } };
 function readGate() {
   const nav = navigator as NavigatorExtras;
   const gl = probeWebGL2();
+  // Solo para pruebas: un init-script pone este indicador para ejercitar la ruta 3D aunque el Chromium de CI pinte por software.
+  const forced = (window as { __LOST_FORCE_GATE__?: boolean }).__LOST_FORCE_GATE__ === true;
   return {
     webgl2: gl.ok,
-    software: gl.software,
+    software: forced ? false : gl.software,
     reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
     saveData: nav.connection?.saveData === true,
     cores: typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency > 0 ? nav.hardwareConcurrency : undefined,
@@ -73,7 +75,7 @@ function readGate() {
 
 type IOSOrientation = typeof DeviceOrientationEvent & { requestPermission?: () => Promise<"granted" | "denied"> };
 
-export default function LostExperience({ lang, pause, resume, gyro }: Props) {
+export default function LostExperience({ lang, pause, gyro }: Props) {
   const [s, dispatch] = useReducer(step, undefined, initial);
   const send = useCallback((e: Event) => dispatch(e), []);
   const root = useRef<HTMLDivElement>(null);
@@ -82,9 +84,18 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
 
   const [enabled, setEnabled] = useState(false);
   const [desktop, setDesktop] = useState(false);
+  // El vídeo se decide UNA vez, al pasar la puerta: nunca se reactiva después.
+  const [videoWanted, setVideoWanted] = useState(false);
+  const [layer, setLayer] = useState<HTMLElement | null>(null);
+  const videoStateRef = useRef<VideoState>("idle");
   const [opaque, setOpaque] = useState(false);
   const [Scene, setScene] = useState<ComponentType<SceneProps> | null>(null);
-  const [videoState, setVideoState] = useState<VideoState>("idle");
+  const [videoState, setVideoStateRaw] = useState<VideoState>("idle");
+  const setVideoState = useCallback((v: VideoState | ((p: VideoState) => VideoState)) => {
+    const n = typeof v === "function" ? v(videoStateRef.current) : v;
+    videoStateRef.current = n;
+    setVideoStateRaw(n);
+  }, []);
   const [videoGone, setVideoGone] = useState(false);
   const [coverScene, setCoverScene] = useState(false);
   const [highlight, setHighlight] = useState("");
@@ -94,6 +105,13 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
 
   const stage = () => root.current?.closest<HTMLElement>('[data-stage="lost"]') ?? null;
 
+  /** Apaga el vídeo para siempre: lo para, lo desmonta y avisa a la secuencia. */
+  const killVideo = useCallback(() => {
+    video.current?.pause();
+    setVideoState("error");
+    setVideoGone(true);
+  }, [setVideoState]);
+
   // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS.
   useEffect(() => {
     if (!gatingPasses(readGate())) return;
@@ -101,12 +119,25 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
     const rm = matchMedia("(prefers-reduced-motion: reduce)");
     setEnabled(true);
     setDesktop(lg.matches);
+    setVideoWanted(lg.matches);
+    setLayer(root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null);
     setOpaque(needsOpaqueVideo(navigator.userAgent, navigator.maxTouchPoints));
     if (lg.matches) dispatch("motionAllowed");
 
-    const onLg = () => setDesktop(lg.matches);
-    // quien activa reduced-motion a mitad de visita recupera el escenario estático
-    const onRm = () => rm.matches && dispatch("sceneFailed");
+    const onLg = () => {
+      setDesktop(lg.matches);
+      // cruzar el breakpoint con el vídeo sin terminar: se abandona, sin reactivarlo después
+      if (videoStateRef.current === "idle" || videoStateRef.current === "playing") {
+        killVideo();
+        dispatch("videoFailed");
+      }
+    };
+    // quien activa reduced-motion a mitad de visita: sin vídeo ni escena, escenario estático
+    const onRm = () => {
+      if (!rm.matches) return;
+      killVideo();
+      dispatch("sceneFailed");
+    };
     lg.addEventListener("change", onLg);
     rm.addEventListener("change", onRm);
 
@@ -119,7 +150,7 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
       lg.removeEventListener("change", onLg);
       rm.removeEventListener("change", onRm);
     };
-  }, []);
+  }, [killVideo]);
 
   // 2. El chunk 3D se carga EN PARALELO con el vídeo. Si no llega, escenario estático.
   useEffect(() => {
@@ -134,29 +165,26 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
   }, [enabled, send]);
 
   // 3. El vídeo: la fuente se elige aquí (Safari no puede decidirlo con el orden de <source>).
-  const wantsVideo = enabled && desktop;
+  const wantsVideo = enabled && videoWanted;
   const showVideo = wantsVideo && !videoGone && !(s.failed && videoState !== "playing");
   const src = opaque ? VIDEO_SRC.mp4 : VIDEO_SRC.webm;
   useEffect(() => {
     const v = video.current;
     if (!v || !wantsVideo) return;
     let off = false;
-    const timeout = window.setTimeout(() => {
-      if (!off && v.paused && v.currentTime === 0) {
-        setVideoState("error");
-        send("videoFailed");
-      }
-    }, 8000);
-    v.play().catch(() => {
-      if (off) return;
-      setVideoState("error");
+    const fail = () => {
+      if (off || videoStateRef.current !== "idle") return;
+      killVideo();
       send("videoFailed");
-    });
+    };
+    // si en 8 s no ha llegado a reproducir, se abandona (play() ya quita `paused`, por eso se mira el estado)
+    const timeout = window.setTimeout(fail, 8000);
+    v.play().catch(fail);
     return () => {
       off = true;
       window.clearTimeout(timeout);
     };
-  }, [wantsVideo, src, send]);
+  }, [wantsVideo, src, send, killVideo]);
 
   // pausa: el vídeo y la escena se congelan
   useEffect(() => {
@@ -177,7 +205,9 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
     el.dataset.lostPhase = s.phase;
     if (cover) el.dataset.lostCover = cover;
     else delete el.dataset.lostCover;
-  }, [s.phase, cover]);
+    if (s.paused) el.dataset.lostPaused = "";
+    else delete el.dataset.lostPaused;
+  }, [s.phase, cover, s.paused]);
 
   // relevo: el vídeo desaparece cuando el lienzo ya pintó; sin vídeo, fundido de 200 ms y luego se retira lo estático
   useEffect(() => {
@@ -258,9 +288,7 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
   const layout = desktop ? "desktop" : "mobile";
   const canvasVisible = scenePhase && !s.failed;
 
-  return (
-    <div ref={root} lang={lang} className="pointer-events-none absolute inset-0">
-      {showVideo ? (
+  const videoEl = showVideo ? (
         <video
           ref={video}
           src={src}
@@ -278,22 +306,24 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
           onPlaying={(e) => {
             const v = e.currentTarget;
             const go = () => setVideoState((p) => (p === "idle" ? "playing" : p));
+            if (videoStateRef.current === "error") return;
             // el primer fotograma ya pintado, para no dejar un hueco entre póster y vídeo
             if ("requestVideoFrameCallback" in v) (v as HTMLVideoElement).requestVideoFrameCallback(go);
             else go();
           }}
           onEnded={() => {
+            if (videoStateRef.current === "error") return;
             setVideoState("ended");
             send("videoEnded");
           }}
           onError={() => {
-            setVideoState("error");
+            if (videoStateRef.current === "error") return;
+            killVideo();
             send("videoFailed");
           }}
         />
-      ) : null}
-
-      {Scene && !s.failed ? (
+  ) : null;
+  const canvasEl = Scene && !s.failed ? (
         <div
           data-lost-canvas=""
           className="absolute inset-0"
@@ -312,7 +342,11 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
             />
           </Boundary>
         </div>
-      ) : null}
+  ) : null;
+
+  // L8: en escritorio vídeo y lienzo viven en una capa hermana del escenario (sin transform ni z-index) y pintan bajo el texto.
+  const inLayer = layer !== null && desktop;
+
 
       {motion ? (
         <div className="pointer-events-auto absolute bottom-2 right-2 z-20 flex flex-wrap justify-end gap-2">
@@ -325,7 +359,7 @@ export default function LostExperience({ lang, pause, resume, gyro }: Props) {
             <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" className="mr-2 fill-current">
               {s.paused ? <path d="M4 2.5v11l9-5.5z" /> : <path d="M3.5 2h3v12h-3zm6 0h3v12h-3z" />}
             </svg>
-            {s.paused ? resume : pause}
+            {pause}
           </button>
         </div>
       ) : null}

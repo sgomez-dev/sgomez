@@ -74,6 +74,14 @@ body {
 [data-stage="lost"][data-lost-cover="video"] a[data-shard-id] > span {
   opacity: 0;
 }
+/* un enlace con foco de teclado nunca queda sin etiqueta, ni durante el vídeo */
+[data-stage="lost"][data-lost-cover="video"] a[data-shard-id]:focus-visible > span {
+  opacity: 1;
+}
+/* en pausa, el punto de «Estás aquí» también deja de pulsar */
+[data-stage="lost"][data-lost-paused] [data-stage-you] > span:first-child {
+  animation-play-state: paused;
+}
 [data-stage="lost"] a[data-shard-id] > span {
   transition: opacity 400ms ease-out, color 150ms, border-color 150ms;
 }

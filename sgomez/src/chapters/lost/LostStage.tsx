@@ -174,6 +174,16 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
         Desde lg: caja 16:9 fija y centrada; en ella el póster final (si existe) se pinta a 100% x 100%,
         con la misma proyección que las posiciones de los enlaces (L7).
       */}
+      {/*
+        Capa del vídeo y del lienzo en escritorio (L8): hermana del escenario, SIN transform ni z-index,
+        para que `mix-blend-mode: screen` del MP4 de Safari mezcle con el fondo de la sección (isolate)
+        y para que pinte POR DEBAJO del titular y los botones. LostExperience la rellena con un portal.
+      */}
+      <div
+        aria-hidden="true"
+        data-lost-layer=""
+        className="pointer-events-none absolute inset-x-0 inset-y-0 mx-auto my-auto hidden aspect-video w-[min(100%,1440px)] lg:block"
+      />
       <div className="pointer-events-none relative mx-auto mt-8 h-[32rem] w-[min(100%,28rem)] lg:absolute lg:z-20 lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-0 lg:aspect-video lg:h-auto lg:w-[min(100%,1440px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
         {(["m", "d"] as const).map((variant) => (
           <svg
@@ -257,7 +267,7 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
         </div>
 
         {/* Vídeo del estallido y escena 3D viva encima de lo estático; los enlaces de arriba siguen siendo LOS enlaces. */}
-        <LostExperience lang={lang} pause={dict.lost.pause} resume={dict.lost.resume} gyro={dict.lost.gyro} />
+        <LostExperience lang={lang} pause={dict.lost.pause} gyro={dict.lost.gyro} />
       </div>
     </section>
   );

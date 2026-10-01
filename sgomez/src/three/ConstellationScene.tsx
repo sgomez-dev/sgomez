@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
-import { CAMERA, GLASS, GLASS_ENV, GLASS_MATERIAL, LINES, LINES_MOBILE, SHARDS, unproject, type Shard } from "@/lib/lost/shards";
+import { CAMERA, GLASS, GLASS_ENV, GLASS_MATERIAL, LINES, LINES_MOBILE, SHARDS, mulberry32, unproject, type Shard } from "@/lib/lost/shards";
 
 /**
  * Escena 3D viva del 404. Es el RELEVO exacto del último fotograma del vídeo
@@ -36,18 +36,6 @@ const DEG = Math.PI / 180;
 const MAX_TILT = 6 * DEG;
 const MAX_FLOAT = 0.08;
 const GLOW_COLOR = "#9FB6FF";
-
-/** Mismo generador que el vídeo (`video/src/geometry.ts`): el fondo de refracción debe salir idéntico. */
-function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 /** Entorno HDR de estudio: lo que el cristal refleja. Igual que `useStudioEnv` del vídeo. */
 function buildEnv(gl: THREE.WebGLRenderer): THREE.Texture {

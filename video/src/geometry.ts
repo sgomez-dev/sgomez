@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SHARDS, GLASS } from "../../sgomez/src/lib/lost/shards";
+import { SHARDS, GLASS, mulberry32 } from "../../sgomez/src/lib/lost/shards";
 
 /**
  * Geometría del estallido. La forma de cada fragmento (`outline`) y su sitio en el
@@ -7,16 +7,7 @@ import { SHARDS, GLASS } from "../../sgomez/src/lib/lost/shards";
  * escribe `scripts/bake-geometry.mjs`. Nada de `Math.random`.
  */
 
-export function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { mulberry32 };
 
 export const SLAB_RADIUS = GLASS.slabRadius;
 
