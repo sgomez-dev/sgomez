@@ -57,6 +57,24 @@ test.describe("rutas", () => {
     expect(res.headers()["content-type"]).toContain(MD);
     expect(res.headers().link).toContain('<https://sgomez.dev/en/about>; rel="canonical"');
   });
+
+  test("las variantes .md anuncian hreflang en Link, y el 404 en markdown se cachea un minuto", async ({ request }) => {
+    for (const [path, canonical] of [
+      ["/about.md", "https://sgomez.dev/about"],
+      ["/en/about.md", "https://sgomez.dev/en/about"],
+    ]) {
+      const res = await request.get(path, { maxRedirects: 0 });
+      expect(res.status()).toBe(200);
+      const link = res.headers().link;
+      expect(link, path).toContain(`<${canonical}>; rel="canonical"`);
+      expect(link, path).toContain('<https://sgomez.dev/about>; rel="alternate"; hreflang="es"');
+      expect(link, path).toContain('<https://sgomez.dev/en/about>; rel="alternate"; hreflang="en"');
+      expect(link, path).toContain('<https://sgomez.dev/about>; rel="alternate"; hreflang="x-default"');
+    }
+    const missing = await request.get("/no-existe.md", { maxRedirects: 0 });
+    expect(missing.status()).toBe(404);
+    expect(missing.headers()["cache-control"]).toBe("public, max-age=60, s-maxage=60");
+  });
 });
 
 const ALTERNATES: [string, Record<string, string>][] = [

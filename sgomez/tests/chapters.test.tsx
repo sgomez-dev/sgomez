@@ -196,6 +196,7 @@ describe("capítulos 08–09 en HTML de servidor", () => {
 });
 
 describe("últimas entradas del blog", () => {
+  const COVER = "https://veelwadirgvhyvquvfnn.supabase.co/storage/v1/object/public/blog/posts/2026-09/a.png";
   const post = (slug: string, coverImage: string | null) => ({ slug, title: `T ${slug}`, excerpt: "", coverImage, coverAlt: null, category: "PROYECTO", readingTime: 3, publishedAt: "2026-09-11T00:00:00Z" });
   const render = async (lang: "es" | "en") => renderToStaticMarkup(await LatestPosts({ lang }));
   afterEach(() => {
@@ -226,11 +227,26 @@ describe("últimas entradas del blog", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [] }) }));
     expect(await LatestPosts({ lang: "es" })).toBeNull();
   });
+  it("una portada de un host no autorizado no se pinta (ni el navegador la pediría a un tercero)", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [post("a", "https://x.test/a.webp"), post("c", "http://veelwadirgvhyvquvfnn.supabase.co/a.png"), post("d", "no es una url")] }) }));
+    const html = await render("es");
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("x.test");
+    expect(html).toContain("T a");
+  });
+  it("next.config autoriza el host de las portadas y solo ese", async () => {
+    const { default: config } = await import("../next.config");
+    expect(config.images?.remotePatterns).toEqual([
+      { protocol: "https", hostname: "veelwadirgvhyvquvfnn.supabase.co", pathname: "/storage/v1/object/public/blog/**" },
+    ]);
+  });
   it("con y sin portada: imagen solo cuando la hay", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [post("a", "https://x.test/a.webp"), post("b", null)] }) }));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [post("a", COVER), post("b", null)] }) }));
     const html = await render("en");
     expect(html.match(/<img/g)).toHaveLength(1);
-    expect(html).toContain('src="https://x.test/a.webp"');
+    expect(html).toContain(`src="${COVER}"`);
+    expect(html).toContain('sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"');
+    expect(html).toContain('loading="lazy"');
     expect(html).toMatch(/<img[^>]*alt=""/);
     expect(html).not.toContain("aspect-video overflow-hidden bg-[color:var(--bg-3)]\"></div>");
     expect(html).toContain("T b");

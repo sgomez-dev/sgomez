@@ -15,6 +15,15 @@ const PAGE_VARY =
 
 const nextConfig: NextConfig = {
   experimental: { globalNotFound: true },
+  images: {
+    // Las portadas del blog viven en el almacenamiento de Supabase. Se listan solo
+    // ellas para que el optimizador no sea un proxy abierto: el servidor las
+    // descarga y las sirve desde este dominio, así que el navegador no pide nada
+    // a terceros (la política de privacidad lo dice).
+    remotePatterns: [
+      { protocol: "https", hostname: "veelwadirgvhyvquvfnn.supabase.co", pathname: "/storage/v1/object/public/blog/**" },
+    ],
+  },
   async headers() {
     return [
       {

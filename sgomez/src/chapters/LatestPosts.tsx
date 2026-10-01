@@ -1,9 +1,27 @@
+import Image from "next/image";
 import { getDictionary } from "@/i18n";
 import { fill } from "@/i18n/fill";
 import type { Lang } from "@/i18n/languages";
 
 const BLOG_API = "https://blog.sgomez.dev/api/blog/posts";
 const BLOG_URL = "https://blog.sgomez.dev";
+/**
+ * Hosts de las portadas que `next.config.ts` deja optimizar (`remotePatterns`).
+ * Una portada de otro host haría fallar el render de `next/image`, y mostrarla
+ * con un `<img>` directo rompería la promesa de la política de privacidad (el
+ * navegador no pide nada a terceros), así que esa tarjeta sale sin imagen.
+ */
+const COVER_HOSTS = ["veelwadirgvhyvquvfnn.supabase.co"];
+
+function coverSrc(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const { protocol, hostname } = new URL(url);
+    return protocol === "https:" && COVER_HOSTS.includes(hostname) ? url : null;
+  } catch {
+    return null;
+  }
+}
 
 interface BlogPost {
   slug: string;
@@ -69,10 +87,17 @@ export default async function LatestPosts({ lang }: { lang: Lang }) {
               rel="noopener"
               className={`group flex min-h-11 w-full flex-col overflow-hidden rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] transition-colors hover:bg-[color:var(--bg-3)] ${focus}`}
             >
-              {post.coverImage ? (
+              {coverSrc(post.coverImage) ? (
                 <div className="relative aspect-video overflow-hidden bg-[color:var(--bg-3)]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={post.coverImage} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                  {/* Decorativa: el título de la tarjeta ya dice de qué va. El servidor la descarga y la optimiza. */}
+                  <Image
+                    src={coverSrc(post.coverImage)!}
+                    alt=""
+                    fill
+                    sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                    loading="lazy"
+                    className="object-cover"
+                  />
                 </div>
               ) : null}
               <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">

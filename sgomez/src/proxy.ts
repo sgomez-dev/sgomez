@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { markdownForPath, notFoundMarkdown } from "@/lib/markdown/documents";
 import { decide } from "@/lib/markdown/routing";
 import { isRscRequest, routeRequest, type RouteDecision } from "@/lib/routing/request";
-import { splitLang } from "@/i18n/languages";
+import { hreflangAlternates, splitLang } from "@/i18n/languages";
 import { CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
 
 /**
@@ -38,10 +38,24 @@ function markdownResponse(body: string, status: number, canonical: string, index
   const headers = new Headers({
     "Content-Type": MARKDOWN_CONTENT_TYPE,
     Vary: CONTENT_VARY,
-    "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
+    // Un 404 en markdown se cachea un minuto: si la ruta se publica después, no
+    // debe quedarse una hora anunciando que no existe.
+    "Cache-Control":
+      status === 404
+        ? "public, max-age=60, s-maxage=60"
+        : "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
     // La URL canónica es siempre la HTML, también cuando se pide /about.md.
     Link: `<${absolute(canonical)}>; rel="canonical"`,
   });
+
+  // hreflang de la variante markdown: solo cuando el documento existe. Es el
+  // mismo esquema que el de la página HTML (es, en y x-default).
+  if (status === 200) {
+    const alternates = hreflangAlternates(splitLang(canonical).path);
+    for (const [hreflang, url] of Object.entries(alternates)) {
+      headers.append("Link", `<${url}>; rel="alternate"; hreflang="${hreflang}"`);
+    }
+  }
 
   // Las URLs con sufijo .md no se indexan: son la misma página que su
   // canónica y un buscador que las indexara partiría la señal en dos.
