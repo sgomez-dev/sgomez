@@ -6,7 +6,7 @@ import { markdownVariantOf } from "@/lib/markdown/routing";
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 
 /** Nombre de sitio en Open Graph. */
-export const SITE_NAME = "Santiago Gómez de la Torre Romero - Full-Stack Engineer";
+export const SITE_NAME = "Santiago Gómez de la Torre Romero · Full-Stack Engineer";
 
 /** Texto alternativo de la imagen Open Graph, en el idioma de la página que la enlaza. */
 export const OG_ALT: Record<Lang, string> = {

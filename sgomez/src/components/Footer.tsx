@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
+import { machineHref } from "@/lib/routing/pages";
 import LangSwitch from "./LangSwitch";
 
 const LINK = "inline-flex min-h-11 min-w-11 items-center justify-center text-[color:var(--text-2)] hover:text-[color:var(--text)] transition-colors";
@@ -14,7 +15,7 @@ export default function Footer({ lang }: { lang: Lang }) {
     { href: localizedPath(lang, "/privacy"), label: d.footer.privacy },
   ];
   const plain = [
-    { href: "/llms.txt", label: "llms.txt" },
+    { href: machineHref("/llms.txt", lang), label: "llms.txt" },
     { href: "/openapi.json", label: "OpenAPI" },
     { href: "https://skills.sgomez.dev", label: d.nav.skills },
     { href: "https://blog.sgomez.dev", label: d.nav.blog },

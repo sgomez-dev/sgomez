@@ -279,7 +279,7 @@ export function search(query: string, limit: number, lang: Lang = ES): SearchRes
       result: {
         type: "experience",
         slug: entry.slug,
-        title: `${entry.role} — ${entry.organization}`,
+        title: `${entry.role}, ${entry.organization}`,
         snippet: entry.description,
         url: absolute(`${API_BASE}/experience`),
       },
@@ -296,8 +296,8 @@ export function search(query: string, limit: number, lang: Lang = ES): SearchRes
           title: skill.name,
           snippet:
             lang === "en"
-              ? `${group.category} — ${skill.years} years of experience`
-              : `${group.category} — ${skill.years} años de experiencia`,
+              ? `${group.category}, ${skill.years} years of experience`
+              : `${group.category}, ${skill.years} años de experiencia`,
           url: absolute(`${API_BASE}/skills`),
         },
         title: skill.name,
@@ -311,7 +311,7 @@ export function search(query: string, limit: number, lang: Lang = ES): SearchRes
         type: "certification",
         slug: certification.slug,
         title: certification.title,
-        snippet: `${certification.institution} — ${certification.date}`,
+        snippet: `${certification.institution}, ${certification.date}`,
         url: absolute(`${API_BASE}/certifications`),
       },
       title: certification.title,

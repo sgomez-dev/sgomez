@@ -118,7 +118,7 @@ describe("capítulos 04–07", () => {
       expect(html).toContain('data-motion="timeline"');
       for (const p of getProjects(lang)) {
         // Sin aria-label (WCAG 2.5.3): la acción es texto solo para lectores dentro del enlace.
-        expect(html).toContain(`${esc(p.title)}<span class="sr-only"> — ${d.projects.open}</span>`);
+        expect(html).toContain(`${esc(p.title)}<span class="sr-only">. ${d.projects.open}</span>`);
       }
       expect(html).toContain('rel="noopener"');
     });

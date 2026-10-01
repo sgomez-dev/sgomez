@@ -110,7 +110,7 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
                 <a
                   href={c.credential_url}
                   rel="noopener"
-                  aria-label={`${c.title} — ${c.institution}, ${c.date}. ${d.chapters.proof.credential}`}
+                  aria-label={`${c.title}, ${c.institution}, ${c.date}. ${d.chapters.proof.credential}`}
                   className={`group flex min-h-11 w-full flex-col gap-2 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-4 transition-colors hover:bg-[color:var(--bg-3)] sm:p-5 ${focus}`}
                 >
                   <span className="flex items-start justify-between gap-3 text-[length:var(--step-0)] font-semibold leading-[1.25] text-[color:var(--text)] [overflow-wrap:anywhere]">

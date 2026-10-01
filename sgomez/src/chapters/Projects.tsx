@@ -58,7 +58,7 @@ export default function Projects({ lang }: { lang: Lang }) {
                       <span className="min-w-0 [overflow-wrap:anywhere]">
                         {p.title}
                         {/* WCAG 2.5.3: el nombre accesible debe contener el texto visible, así que no se usa aria-label; la acción va como texto solo para lectores. */}
-                        <span className="sr-only"> — {d.projects.open}</span>
+                        <span className="sr-only">. {d.projects.open}</span>
                       </span>
                       <span aria-hidden="true" className="shrink-0 text-[color:var(--text-2)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
                     </h3>

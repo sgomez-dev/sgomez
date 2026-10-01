@@ -15,7 +15,7 @@ const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrumen
 const siteUrl = "https://sgomez.dev";
 const siteName = SITE_NAME;
 const siteTitle =
-  "Santiago Gómez de la Torre Romero — Full-Stack Engineer shipping AI to production";
+  "Santiago Gómez de la Torre Romero · Full-Stack Engineer shipping AI to production";
 // Tiene que decir lo mismo que IDENTITY.description en seo.ts: son la meta
 // description y el JSON-LD de la MISMA pagina, y si una menciona el rol de
 // cofundador y la otra no, el propio documento se contradice.
@@ -168,10 +168,10 @@ export default async function LangLayout({
             descripción de una API sin que nadie se la pase a mano: es la
             diferencia entre publicar la especificación y que se pueda
             descubrir. */}
-        <link rel="service-desc" type="application/openapi+json" href="/openapi.json" title="OpenAPI 3.1 — sgomez.dev Public API" />
+        <link rel="service-desc" type="application/openapi+json" href="/openapi.json" title="OpenAPI 3.1 · sgomez.dev Public API" />
         <link rel="service-doc" type="text/html" href={localizedPath(lang, "/developers")} title={lang === "es" ? "Portal para desarrolladores de sgomez.dev" : "sgomez.dev developer portal"} />
         {/* Sin `type="text/markdown"`: el único alternate de ese tipo debe ser el `.md` de la propia página. */}
-        <link rel="alternate" href={machineHref("/llms.txt", lang)} title={lang === "es" ? "llms.txt — resumen factual del sitio" : "llms.txt — factual summary of the site"} />
+        <link rel="alternate" href={machineHref("/llms.txt", lang)} title={lang === "es" ? "llms.txt · resumen factual del sitio" : "llms.txt · factual summary of the site"} />
         <link rel="author" href={localizedPath(lang, "/about")} />
         <link rel="privacy-policy" href={localizedPath(lang, "/privacy")} />
         {/* El JSON-LD ya no vive aquí: lo pinta cada página (un solo @graph por

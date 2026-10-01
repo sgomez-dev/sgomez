@@ -1,4 +1,4 @@
-import { hero } from "@/app/content";
+import { agentProjectDescription, hero } from "@/app/content";
 import { t } from "@/lib/content/localized";
 import { IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
@@ -32,8 +32,8 @@ function homeMarkdown(lang: Lang): string {
   lines.push(x(`- Rol: ${IDENTITY.jobTitle}, en Evenbytes.`, `- Role: ${IDENTITY.jobTitle}, at Evenbytes.`));
   lines.push(
     x(
-      `- ${IDENTITY_TEXT.coFounderTitle.es} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios: no fundador único.`,
-      `- Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}). Co-founder, one of four partners: not the sole founder.`,
+      `- ${IDENTITY_TEXT.coFounderTitle.es} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios, no fundador único.`,
+      `- Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}). Co-founder, one of four partners, not the sole founder.`,
     ),
   );
   lines.push(
@@ -47,7 +47,7 @@ function homeMarkdown(lang: Lang): string {
 
   lines.push(x("## Proyectos", "## Projects"), "");
   for (const project of getProjects(lang)) {
-    lines.push(`- **${project.title}** — ${project.description} (${project.stack.join(", ")}) ${project.url}`);
+    lines.push(`- **${project.title}**: ${agentProjectDescription(project.title, project.description, lang)} (${project.stack.join(", ")}) ${project.url}`);
   }
   lines.push("");
 
@@ -60,7 +60,7 @@ function homeMarkdown(lang: Lang): string {
 
   lines.push(x("## Para agentes", "## For agents"), "");
   for (const route of MACHINE_ROUTES) {
-    lines.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}) — \`${route.type}\``);
+    lines.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}): \`${route.type}\``);
   }
   lines.push(`- ${x("API pública", "Public API")}: \`GET ${absolute(`${API_BASE}/profile`)}\``);
   lines.push("");
@@ -98,7 +98,7 @@ export function notFoundMarkdown(requestedPath?: string, lang: Lang = "es"): str
   const es = lang === "es";
   const x = (spanish: string, english: string) => (es ? spanish : english);
   const lines: string[] = [];
-  lines.push(x("# 404 — Esta página no existe", "# 404 — This page doesn't exist"), "");
+  lines.push(x("# 404 · Esta página no existe", "# 404 · This page doesn't exist"), "");
   lines.push(
     requestedPath
       ? x(
@@ -120,27 +120,27 @@ export function notFoundMarkdown(requestedPath?: string, lang: Lang = "es"): str
 
   lines.push(x("## Ficheros legibles por máquina", "## Machine-readable files"), "");
   for (const route of MACHINE_ROUTES) {
-    lines.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}) — \`${route.type}\``);
+    lines.push(`- [${route.title}](${absolute(machineHref(route.path, lang))}): \`${route.type}\``);
   }
   lines.push("");
 
   lines.push(x("## API pública", "## Public API"), "");
   lines.push(
     x(
-      `- \`GET ${absolute(`${API_BASE}/health`)}\` — comprueba el servicio y devuelve los enlaces de entrada.`,
-      `- \`GET ${absolute(`${API_BASE}/health`)}\` — checks the service and returns the entry links.`,
+      `- \`GET ${absolute(`${API_BASE}/health`)}\`: comprueba el servicio y devuelve los enlaces de entrada.`,
+      `- \`GET ${absolute(`${API_BASE}/health`)}\`: checks the service and returns the entry links.`,
     ),
   );
   lines.push(
     x(
-      `- \`GET ${absolute(`${API_BASE}/profile`)}\` — el perfil completo en JSON.`,
-      `- \`GET ${absolute(`${API_BASE}/profile`)}\` — the full profile as JSON.`,
+      `- \`GET ${absolute(`${API_BASE}/profile`)}\`: el perfil completo en JSON.`,
+      `- \`GET ${absolute(`${API_BASE}/profile`)}\`: the full profile as JSON.`,
     ),
   );
   lines.push(
     x(
-      `- \`GET ${absolute(`${API_BASE}/search`)}?q=…\` — busca en todo el contenido publicado.`,
-      `- \`GET ${absolute(`${API_BASE}/search`)}?q=…\` — searches all published content.`,
+      `- \`GET ${absolute(`${API_BASE}/search`)}?q=…\`: busca en todo el contenido publicado.`,
+      `- \`GET ${absolute(`${API_BASE}/search`)}?q=…\`: searches all published content.`,
     ),
   );
   lines.push("");

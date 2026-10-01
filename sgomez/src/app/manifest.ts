@@ -6,7 +6,7 @@ import type { MetadataRoute } from "next";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Santiago Gómez de la Torre Romero — Full-Stack Engineer (AI/LLM)",
+    name: "Santiago Gómez de la Torre Romero · Full-Stack Engineer (AI/LLM)",
     short_name: "sgomez.dev",
     description:
       "Full-stack engineer que lleva la IA a producción. Creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo.",

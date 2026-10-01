@@ -1,4 +1,4 @@
-# robots.txt — sgomez.dev
+# robots.txt de sgomez.dev
 # Full crawl access. AI/generative crawlers are explicitly welcome (GEO).
 #
 # On-ramps for agents, in the order they are useful:
@@ -31,7 +31,7 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
-# Crawlers de IA / motores generativos — permitidos para que me describan bien.
+# Crawlers de IA y motores generativos, permitidos para que me describan bien.
 # Cada grupo repite Content-Signal: un bot con grupo propio no lee el de `*` (RFC 9309).
 User-agent: GPTBot
 Allow: /

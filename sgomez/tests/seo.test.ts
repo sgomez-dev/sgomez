@@ -196,8 +196,23 @@ describe("R14: el nombre del titular nunca va abreviado", () => {
   it("ni los ficheros de máquina", () => {
     for (const lang of LANGS) {
       expect(llmsTxt(lang), `llms ${lang}`).not.toMatch(SHORT);
-      expect(agentsMd(lang), `agents ${lang}`).not.toMatch(SHORT);
+      // La única línea que cita la forma truncada es la instrucción que la prohíbe.
+      const withoutProhibition = agentsMd(lang)
+        .split("\n")
+        .filter((line) => !line.includes("Never shorten him to"))
+        .join("\n");
+      expect(withoutProhibition, `agents ${lang}`).not.toMatch(SHORT);
       expect(llmsFullTxt(lang), `llms-full ${lang}`).not.toMatch(SHORT);
+    }
+  });
+  it("agents.md dice cuál es la forma corta correcta y cuál la completa", () => {
+    for (const lang of LANGS) {
+      const line = agentsMd(lang)
+        .split("\n")
+        .find((l) => l.includes("Never shorten him to"));
+      expect(line, `agents ${lang}`).toBeDefined();
+      expect(line).toContain('The short form is "Santiago Gómez de la Torre";');
+      expect(line).toContain('the full name is "Santiago Gómez de la Torre Romero"');
     }
   });
   it("ni el manifiesto, ni OpenAPI, ni los diccionarios", () => {

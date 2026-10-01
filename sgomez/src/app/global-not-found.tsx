@@ -18,7 +18,7 @@ const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrumen
  * dos idiomas: el español primero, que es el idioma por defecto.
  */
 export const metadata: Metadata = {
-  title: "404 — Página no encontrada / Page not found | sgomez.dev",
+  title: "404 · Página no encontrada / Page not found | sgomez.dev",
   description:
     "La ruta pedida no existe en sgomez.dev. / The requested route does not exist on sgomez.dev. Inicio, páginas, sitemap, llms.txt y API pública.",
   robots: { index: false, follow: true },

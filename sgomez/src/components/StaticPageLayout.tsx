@@ -112,7 +112,7 @@ function BlockView({ block, tableLabel, codeLabel }: { block: Block; tableLabel:
                 >
                   {item.label}
                 </a>
-                {item.note ? <span className="text-[color:var(--text-2)]"> — {item.note}</span> : null}
+                {item.note ? <span className="text-[color:var(--text-2)]">: {item.note}</span> : null}
               </li>
             );
           })}

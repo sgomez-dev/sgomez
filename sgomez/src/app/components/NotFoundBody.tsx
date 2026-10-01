@@ -72,7 +72,7 @@ export default function NotFoundBody({ lang, primary = lang === "es" }: { lang: 
                   <a href={href} className={`inline-flex min-h-11 items-center ${LINK}`}>
                     {href}
                   </a>
-                  <span> — {route.description[lang]}</span>
+                  <span>: {route.description[lang]}</span>
                 </li>
               );
             })}

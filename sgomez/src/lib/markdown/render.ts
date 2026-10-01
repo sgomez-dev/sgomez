@@ -1,5 +1,6 @@
 import type { Block, StaticPage } from "@/lib/content/pages";
 import { absolute } from "@/lib/site";
+import { machineHref } from "@/lib/routing/pages";
 
 /**
  * Render de markdown para las páginas estáticas.
@@ -34,7 +35,7 @@ function renderBlock(block: Block): string[] {
     case "links":
       return [
         ...block.items.map((item) =>
-          item.note ? `- ${link(item.label, item.href)} — ${item.note}` : `- ${link(item.label, item.href)}`,
+          item.note ? `- ${link(item.label, item.href)}: ${item.note}` : `- ${link(item.label, item.href)}`,
         ),
         "",
       ];
@@ -54,7 +55,7 @@ export function renderPageMarkdown(page: StaticPage): string {
   }
 
   lines.push("---", "");
-  const formats = `${link("llms.txt", "/llms.txt")}, ${link("agents.md", "/agents.md")}, ${link("OpenAPI", "/openapi.json")}, ${link("sitemap", "/sitemap.xml")}`;
+  const formats = `${link("llms.txt", machineHref("/llms.txt", page.lang))}, ${link("agents.md", machineHref("/agents.md", page.lang))}, ${link("OpenAPI", "/openapi.json")}, ${link("sitemap", "/sitemap.xml")}`;
   lines.push(
     page.lang === "es" ? `Más formatos legibles por máquina: ${formats}.` : `More machine-readable formats: ${formats}.`,
     "",

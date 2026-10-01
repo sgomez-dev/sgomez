@@ -26,7 +26,7 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
         <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
           <div className="flex min-w-0 flex-col gap-5">
             <div data-motion="monogram" className="self-start">
-              <a href={skyquetz.url} rel="noopener" aria-label={`${skyquetz.name} — ${skyquetz.cta}`} className="inline-flex min-h-11 rounded-[var(--radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]">
+              <a href={skyquetz.url} rel="noopener" aria-label={`${skyquetz.name}, ${skyquetz.cta}`} className="inline-flex min-h-11 rounded-[var(--radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]">
                 <Image src={skyquetz.logo} alt={t(skyquetz.logoAlt, lang)} width={425} height={253} className="h-14 w-auto sm:h-16" />
               </a>
             </div>

@@ -16,7 +16,7 @@ import { localizedHtmlRoutes, machineHref } from "@/lib/routing/pages";
 export function llmsFullTxt(lang: Lang): string {
   const es = lang === "es";
   const L: string[] = [];
-  L.push(`# ${IDENTITY.name} — sgomez.dev`, "");
+  L.push(`# ${IDENTITY.name} · sgomez.dev`, "");
   L.push(
     es
       ? `> Todo el contenido de sgomez.dev en markdown, en español. El resumen corto está en ${absolute(machineHref("/llms.txt", lang))}.`

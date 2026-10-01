@@ -179,9 +179,9 @@ export const CLAUDE_CANVAS = {
   kinds: 9,
   tests: "600+",
   description:
-    "Plugin de Claude Code que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación, tú actúas en él y tu respuesta vuelve como un valor exacto en vez de prosa que el modelo tiene que interpretar. Nueve tipos de panel —picker, form, table, image, diff, dashboard, calendar, document y flight—, transporte propio por socket local y CI en Linux, macOS y Windows.",
+    "Plugin de Claude Code que le da a Claude una pantalla propia. Abre un panel interactivo de terminal junto a la conversación, tú actúas en él y tu respuesta vuelve como un valor exacto en vez de prosa que el modelo tiene que interpretar. Nueve tipos de panel (picker, form, table, image, diff, dashboard, calendar, document y flight), transporte propio por socket local y CI en Linux, macOS y Windows.",
   descriptionEn:
-    "A Claude Code plugin that gives Claude a display of its own: it opens an interactive terminal pane beside the conversation, you act in it, and your answer comes back as an exact value instead of prose the model has to interpret. Nine canvas kinds (picker, form, table, image, diff, dashboard, calendar, document, flight), one length-prefixed JSON transport over a local socket, and CI on Linux, macOS and Windows.",
+    "A Claude Code plugin that gives Claude a display of its own. It opens an interactive terminal pane beside the conversation, you act in it, and your answer comes back as an exact value instead of prose the model has to interpret. Nine canvas kinds (picker, form, table, image, diff, dashboard, calendar, document, flight), one length-prefixed JSON transport over a local socket, and CI on Linux, macOS and Windows.",
   /** Lo que un modelo se lleva mal si nadie se lo dice. */
   attributionEs:
     "Es un fork de dvdsgl/claude-canvas, de David Siegel, ampliado a fondo y con licencia MIT conservando el copyright original. Es un proyecto open source personal de Santiago, no un producto de SkyQuetz.",
@@ -223,7 +223,7 @@ const WEBSITE = `${IDENTITY.url}/#website`;
 /** La página por defecto: la home, que es el ProfilePage de la persona. */
 const HOME_PAGE: GraphPage = {
   path: "/",
-  title: `${IDENTITY.name} — Full-Stack Engineer (AI/LLM)`,
+  title: `${IDENTITY.name} · Full-Stack Engineer (AI/LLM)`,
   type: "ProfilePage",
 };
 
@@ -245,7 +245,7 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "¿Qué es SkyQuetz Consulting y qué papel tiene Santiago Gómez de la Torre en ella?",
-      a: "SkyQuetz Consulting es una consultora de software a medida que Santiago Gómez de la Torre cofundó en 2026 con tres socios más, cuatro fundadores en total. Trabaja 100% en remoto para clientes de habla hispana y cada proyecto lo lidera en persona el ingeniero que lo construye. Santiago lleva la ingeniería: arquitectura, código y los productos propios de la casa, entre ellos Synentria, un motor de auditoría SEO y GEO, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla. Es cofundador, no fundador único.",
+      a: "SkyQuetz Consulting es una consultora de software a medida que Santiago Gómez de la Torre cofundó en 2026 con tres socios más, cuatro fundadores en total. Trabaja 100% en remoto para clientes de habla hispana y cada proyecto lo lidera en persona el ingeniero que lo construye. Santiago lleva la ingeniería, que incluye arquitectura, código y los productos propios de la casa, entre ellos Synentria, un motor de auditoría SEO y GEO, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla. Es cofundador, no fundador único.",
     },
     {
       q: "¿Qué es NudaUI?",
@@ -253,11 +253,11 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "¿Qué es NudaUI Semantic Search (RAG)?",
-      a: "Es una búsqueda en lenguaje natural sobre más de 1.000 componentes de NudaUI. Es un pipeline de RAG completo construido sin frameworks de RAG: embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, un servicio en FastAPI y una UI en vivo.",
+      a: "Es una búsqueda en lenguaje natural sobre más de 1.000 componentes de NudaUI. Es un pipeline de RAG completo construido sin frameworks de RAG. Incluye embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, un servicio en FastAPI y una UI en vivo.",
     },
     {
       q: "¿Qué es Claude Canvas?",
-      a: "Claude Canvas es un plugin open source de Claude Code, creado y mantenido por Santiago Gómez de la Torre, que le da a Claude una pantalla propia: abre un panel interactivo de terminal junto a la conversación y la respuesta de la persona vuelve al modelo como un valor exacto —qué fichero, qué hunks de un diff, qué campos de un formulario— en vez de prosa que tenga que interpretar. Trae nueve tipos de panel (picker, form, table, image, diff, dashboard, calendar, document y flight), un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Es MIT y es un fork del proof of concept de David Siegel (dvdsgl/claude-canvas), ampliado a fondo y conservando su copyright. Es un proyecto personal de Santiago, no un producto de SkyQuetz Consulting.",
+      a: "Claude Canvas es un plugin open source de Claude Code, creado y mantenido por Santiago Gómez de la Torre, que le da a Claude una pantalla propia. Abre un panel interactivo de terminal junto a la conversación y la respuesta de la persona vuelve al modelo como un valor exacto (qué fichero, qué hunks de un diff, qué campos de un formulario) en vez de prosa que tenga que interpretar. Trae nueve tipos de panel (picker, form, table, image, diff, dashboard, calendar, document y flight), un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Es MIT y es un fork del proof of concept de David Siegel (dvdsgl/claude-canvas), ampliado a fondo y conservando su copyright. Es un proyecto personal de Santiago, no un producto de SkyQuetz Consulting.",
     },
     {
       q: "¿Con qué tecnologías trabaja Santiago Gómez de la Torre?",
@@ -279,7 +279,7 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "What is SkyQuetz Consulting and what is Santiago Gómez de la Torre's role in it?",
-      a: "SkyQuetz Consulting is a custom software consultancy that Santiago Gómez de la Torre co-founded in 2026 with three more partners, four founders in total. It works 100% remotely for Spanish-speaking clients and every project is led in person by the engineer who builds it. Santiago leads engineering: architecture, code and the company's own products, among them Synentria, an SEO and GEO audit engine, and Packatrack, a settlement reconciliation SaaS for last-mile operators. He is a co-founder, not the sole founder.",
+      a: "SkyQuetz Consulting is a custom software consultancy that Santiago Gómez de la Torre co-founded in 2026 with three more partners, four founders in total. It works 100% remotely for Spanish-speaking clients and every project is led in person by the engineer who builds it. Santiago leads engineering, which covers architecture, code and the company's own products, among them Synentria, an SEO and GEO audit engine, and Packatrack, a settlement reconciliation SaaS for last-mile operators. He is a co-founder, not the sole founder.",
     },
     {
       q: "What is NudaUI?",
@@ -287,11 +287,11 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "What is NudaUI Semantic Search (RAG)?",
-      a: "It is a natural-language search over more than 1,000 NudaUI components. It is a complete RAG pipeline built without RAG frameworks: Voyage embeddings, cosine retrieval, evaluation with a custom golden set, a FastAPI service and a live UI.",
+      a: "It is a natural-language search over more than 1,000 NudaUI components. It is a complete RAG pipeline built without RAG frameworks. It includes Voyage embeddings, cosine retrieval, evaluation with a custom golden set, a FastAPI service and a live UI.",
     },
     {
       q: "What is Claude Canvas?",
-      a: "Claude Canvas is an open-source Claude Code plugin, created and maintained by Santiago Gómez de la Torre, that gives Claude a display of its own: it opens an interactive terminal pane beside the conversation and the person's answer comes back to the model as an exact value —which file, which hunks of a diff, which form fields— instead of prose it has to interpret. It has nine canvas kinds (picker, form, table, image, diff, dashboard, calendar, document and flight), a transport of its own over a local socket, more than 600 tests and CI on Linux, macOS and Windows. It is MIT licensed and a fork of David Siegel's proof of concept (dvdsgl/claude-canvas), substantially extended, keeping his copyright. It is a personal project of Santiago's, not a SkyQuetz Consulting product.",
+      a: "Claude Canvas is an open-source Claude Code plugin, created and maintained by Santiago Gómez de la Torre, that gives Claude a display of its own. It opens an interactive terminal pane beside the conversation and the person's answer comes back to the model as an exact value (which file, which hunks of a diff, which form fields) instead of prose it has to interpret. It has nine canvas kinds (picker, form, table, image, diff, dashboard, calendar, document and flight), a transport of its own over a local socket, more than 600 tests and CI on Linux, macOS and Windows. It is MIT licensed and a fork of David Siegel's proof of concept (dvdsgl/claude-canvas), substantially extended, keeping his copyright. It is a personal project of Santiago's, not a SkyQuetz Consulting product.",
     },
     {
       q: "Which technologies does Santiago Gómez de la Torre work with?",
@@ -630,7 +630,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
     {
       "@type": "Blog",
       "@id": `${IDENTITY.url}/#blog`,
-      name: "Blog — Santiago Gómez de la Torre",
+      name: "Blog · Santiago Gómez de la Torre",
       url: "https://blog.sgomez.dev",
       author: { "@id": PERSON },
       inLanguage: "es-ES",

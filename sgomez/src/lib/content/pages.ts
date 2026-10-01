@@ -53,12 +53,12 @@ function buildAbout(lang: Lang): StaticPage {
     path: localizedPath(lang, "/about"),
     title: x("Sobre Santiago Gómez de la Torre Romero", "About Santiago Gómez de la Torre Romero"),
     metaTitle: x(
-      "Sobre mí — Santiago Gómez de la Torre Romero | sgomez.dev",
-      "About — Santiago Gómez de la Torre Romero | sgomez.dev",
+      "Sobre mí · Santiago Gómez de la Torre Romero | sgomez.dev",
+      "About · Santiago Gómez de la Torre Romero | sgomez.dev",
     ),
     description: x(
-      "Quién es Santiago Gómez de la Torre Romero: full-stack engineer en Evenbytes, cofundador de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Trayectoria, formación y en qué trabaja hoy.",
-      "Who Santiago Gómez de la Torre Romero is: full-stack engineer at Evenbytes, co-founder of SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. Career, education and what he works on today.",
+      "Santiago Gómez de la Torre Romero es full-stack engineer en Evenbytes, cofundador de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
+      "Santiago Gómez de la Torre Romero is a full-stack engineer at Evenbytes, co-founder of SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
     ),
     lead: x(
       "Full-stack engineer en Cantabria, España. Llevo la IA a producción, no a demos. Cofundador de SkyQuetz Consulting y creador de NudaUI.",
@@ -72,22 +72,22 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Me llamo Santiago Gómez de la Torre Romero — «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos — y soy full-stack engineer. Vivo en Cantabria, España, y trabajo en remoto. Hoy desarrollo software en Evenbytes con Angular, Node.js y Google Cloud, y en 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería.",
-              "My name is Santiago Gómez de la Torre Romero — “Gómez de la Torre” is a compound surname, not separate surnames — and I'm a full-stack engineer. I live in Cantabria, Spain, and work remotely. Today I build software at Evenbytes with Angular, Node.js and Google Cloud, and in 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering.",
+              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Hoy desarrollo software en Evenbytes con Angular, Node.js y Google Cloud, y en 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería.",
+              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Today I build software at Evenbytes with Angular, Node.js and Google Cloud, and in 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering.",
             ),
           },
           {
             kind: "paragraph",
             text: x(
-              "Hay personas que llegan a la tecnología por casualidad. Yo no. A mí siempre me atrapó entender cómo funciona todo por dentro: cómo se despliega un servicio, por qué un sistema falla, qué hace que una interfaz fluya o se rompa. Con el tiempo, esa curiosidad dejó de ser un impulso y se convirtió en mi forma de trabajar: entender para construir, y construir para mejorar.",
-              "Some people come to technology by chance. I didn't. I have always been hooked on understanding how everything works on the inside: how a service gets deployed, why a system fails, what makes an interface flow or break. Over time, that curiosity stopped being an impulse and became my way of working: understand in order to build, and build in order to improve.",
+              "Hay personas que llegan a la tecnología por casualidad. Yo no. A mí siempre me atrapó entender cómo funciona todo por dentro: cómo se despliega un servicio, por qué un sistema falla, qué hace que una interfaz fluya o se rompa. Con el tiempo, esa curiosidad dejó de ser un impulso y se convirtió en mi forma de trabajar, que consiste en entender para construir y construir para mejorar.",
+              "Some people come to technology by chance. I didn't. I have always been hooked on understanding how everything works on the inside: how a service gets deployed, why a system fails, what makes an interface flow or break. Over time, that curiosity stopped being an impulse and became my way of working, which is to understand in order to build and to build in order to improve.",
             ),
           },
           {
             kind: "paragraph",
             text: x(
-              "Mi trayectoria combina administración de sistemas, desarrollo web y arquitectura en la nube. Empecé en FUNIBER en el equipo de redacción técnica, pasé a sysadmin y QA, seguí como técnico de soporte IT en la Universidad Europea del Atlántico —donde además estudio Ingeniería Informática— y desde junio de 2025 soy desarrollador en Evenbytes. Esa mezcla de operar sistemas antes de escribirlos es la razón de que me interesen tanto el despliegue y la observabilidad como el código.",
-              "My career combines systems administration, web development and cloud architecture. I started at FUNIBER on the technical writing team, moved on to sysadmin and QA, continued as an IT support technician at Universidad Europea del Atlántico —where I am also studying Computer Engineering— and since June 2025 I have been a developer at Evenbytes. That mix of running systems before writing them is why I care as much about deployment and observability as about code.",
+              "Mi trayectoria combina administración de sistemas, desarrollo web y arquitectura en la nube. Empecé en FUNIBER en el equipo de redacción técnica, pasé a sysadmin y QA, seguí como técnico de soporte IT en la Universidad Europea del Atlántico (donde además estudio Ingeniería Informática) y desde junio de 2025 soy desarrollador en Evenbytes. Esa mezcla de operar sistemas antes de escribirlos es la razón de que me interesen tanto el despliegue y la observabilidad como el código.",
+              "My career combines systems administration, web development and cloud architecture. I started at FUNIBER on the technical writing team, moved on to sysadmin and QA, continued as an IT support technician at Universidad Europea del Atlántico (where I am also studying Computer Engineering) and since June 2025 I have been a developer at Evenbytes. That mix of running systems before writing them is why I care as much about deployment and observability as about code.",
             ),
           },
         ],
@@ -99,29 +99,29 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Construyo IA que llega a producto, no a demos. Diseño sistemas que se pueden medir: pipelines de RAG con embeddings y retrieval por coseno, evaluación con golden sets propios y modelos de lenguaje integrados en el producto real. La búsqueda semántica de NudaUI responde en lenguaje natural sobre más de 1.000 componentes, y con evals propias subí la precisión del primer resultado del 67% al 80% (hit@1), reportando también la categoría que empeoró. También mantengo en producción un asistente conversacional B2B construido sobre la API de Claude. Todo esto sin frameworks mágicos, entendiendo cada pieza del pipeline.",
-              "I build AI that reaches the product, not just demos. I design systems that can be measured: RAG pipelines with embeddings and cosine retrieval, evaluation with my own golden sets, and language models integrated into the real product. NudaUI's semantic search answers in natural language over more than 1,000 components, and with my own evals I raised first-result accuracy from 67% to 80% (hit@1), also reporting the category that got worse. I also run a B2B conversational assistant built on the Claude API in production. All of this without magic frameworks, understanding every piece of the pipeline.",
+              "Construyo IA que llega a producto, no a demos. Diseño sistemas que se pueden medir. Uso pipelines de RAG con embeddings y retrieval por coseno, evaluación con golden sets propios y modelos de lenguaje integrados en el producto real. La búsqueda semántica de NudaUI responde en lenguaje natural sobre más de 1.000 componentes, y con evals propias subí la precisión del primer resultado del 67% al 80% (hit@1), reportando también la categoría que empeoró. También mantengo en producción un asistente conversacional B2B construido sobre la API de Claude. Todo esto sin frameworks mágicos, entendiendo cada pieza del pipeline.",
+              "I build AI that reaches the product, not just demos. I design systems that can be measured. I use RAG pipelines with embeddings and cosine retrieval, evaluation with my own golden sets, and language models integrated into the real product. NudaUI's semantic search answers in natural language over more than 1,000 components, and with my own evals I raised first-result accuracy from 67% to 80% (hit@1), also reporting the category that got worse. I also run a B2B conversational assistant built on the Claude API in production. All of this without magic frameworks, understanding every piece of the pipeline.",
             ),
           },
           {
             kind: "paragraph",
             text: x(
-              `En 2026 cofundé ${SKYQUETZ.name} con tres socios más: una consultora de software a medida para negocios de habla hispana, en remoto y sin intermediarios. Soy cofundador, uno de cuatro socios, no fundador único. Llevo la ingeniería, y de ahí han salido dos productos propios: Synentria, un motor de auditoría SEO y GEO cuyos hallazgos son deterministas y no los decide ningún modelo, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla.`,
-              `In 2026 I co-founded ${SKYQUETZ.name} with three more partners: a custom software consultancy for Spanish-speaking businesses, fully remote and with no intermediaries. I am a co-founder, one of four partners, not the sole founder. I handle the engineering, and two in-house products have come out of it: Synentria, an SEO and GEO audit engine whose findings are deterministic and not decided by any model, and Packatrack, a settlement reconciliation SaaS for last-mile operators.`,
+              `En 2026 cofundé ${SKYQUETZ.name} con tres socios más, una consultora de software a medida para negocios de habla hispana, en remoto y sin intermediarios. Soy cofundador, uno de cuatro socios, no fundador único. Llevo la ingeniería, y de ahí han salido dos productos propios: Synentria, un motor de auditoría SEO y GEO cuyos hallazgos son deterministas y no los decide ningún modelo, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla.`,
+              `In 2026 I co-founded ${SKYQUETZ.name} with three more partners, a custom software consultancy for Spanish-speaking businesses, fully remote and with no intermediaries. I am a co-founder, one of four partners, not the sole founder. I handle the engineering, and two in-house products have come out of it: Synentria, an SEO and GEO audit engine whose findings are deterministic and not decided by any model, and Packatrack, a settlement reconciliation SaaS for last-mile operators.`,
             ),
           },
           {
             kind: "paragraph",
             text: x(
-              "Y cuando no construyo para clientes, construyo para la comunidad: soy el creador y único mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando. Además organizo eventos con GDG Santander y he competido en Hack2Progress.",
-              "And when I'm not building for clients, I build for the community: I am the creator and sole maintainer of NudaUI, an open-source library with more than 1,000 copy-paste UI components in 81 categories that work in any framework, and of sgomez-cli, a tool published on npm to start full-stack projects with a single command. I also organize events with GDG Santander and have competed in Hack2Progress.",
+              "Y cuando no construyo para clientes, construyo para la comunidad. Soy el creador y único mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando. Además organizo eventos con GDG Santander y he competido en Hack2Progress.",
+              "And when I'm not building for clients, I build for the community. I am the creator and sole maintainer of NudaUI, an open-source library with more than 1,000 copy-paste UI components in 81 categories that work in any framework, and of sgomez-cli, a tool published on npm to start full-stack projects with a single command. I also organize events with GDG Santander and have competed in Hack2Progress.",
             ),
           },
           {
             kind: "paragraph",
             text: x(
-              `El tercero es ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), un plugin de Claude Code que le da al modelo una pantalla propia: abre un panel interactivo de terminal junto a la conversación —eliges un fichero, apruebas hunk a hunk un diff, rellenas un formulario— y tu respuesta le vuelve como un valor exacto en vez de prosa que tenga que interpretar. Son nueve tipos de panel, un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Partí del proof of concept de ${CLAUDE_CANVAS.basedOnAuthor} (${CLAUDE_CANVAS.basedOn}), que lo publicó como prueba de concepto sin soporte, y lo llevé a algo que aguanta el uso diario. Lo digo siempre que lo cuento: la idea es suya, la licencia es MIT y conserva su copyright. Es un proyecto mío, no un producto de ${SKYQUETZ.name}.`,
-              `The third is ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), a Claude Code plugin that gives the model a screen of its own: it opens an interactive terminal pane beside the conversation —you pick a file, approve a diff hunk by hunk, fill in a form— and your answer comes back to it as an exact value instead of prose it has to interpret. There are nine pane kinds, a transport of its own over a local socket, more than 600 tests and CI on Linux, macOS and Windows. I started from ${CLAUDE_CANVAS.basedOnAuthor}'s proof of concept (${CLAUDE_CANVAS.basedOn}), which he published as an unsupported proof of concept, and took it to something that holds up under daily use. I say this every time I tell the story: the idea is his, the license is MIT and it keeps his copyright. It is a project of mine, not a ${SKYQUETZ.name} product.`,
+              `El tercero es ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), un plugin de Claude Code que le da al modelo una pantalla propia. Abre un panel interactivo de terminal junto a la conversación (eliges un fichero, apruebas hunk a hunk un diff, rellenas un formulario) y tu respuesta le vuelve como un valor exacto en vez de prosa que tenga que interpretar. Son nueve tipos de panel, un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Partí del proof of concept de ${CLAUDE_CANVAS.basedOnAuthor} (${CLAUDE_CANVAS.basedOn}), que lo publicó como prueba de concepto sin soporte, y lo llevé a algo que aguanta el uso diario. Lo digo siempre que lo cuento. La idea es suya, la licencia es MIT y conserva su copyright. Es un proyecto mío, no un producto de ${SKYQUETZ.name}.`,
+              `The third is ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), a Claude Code plugin that gives the model a screen of its own. It opens an interactive terminal pane beside the conversation (you pick a file, approve a diff hunk by hunk, fill in a form) and your answer comes back to it as an exact value instead of prose it has to interpret. There are nine pane kinds, a transport of its own over a local socket, more than 600 tests and CI on Linux, macOS and Windows. I started from ${CLAUDE_CANVAS.basedOnAuthor}'s proof of concept (${CLAUDE_CANVAS.basedOn}), which he published as an unsupported proof of concept, and took it to something that holds up under daily use. I say this every time I tell the story. The idea is his, the license is MIT and it keeps his copyright. It is a project of mine, not a ${SKYQUETZ.name} product.`,
             ),
           },
         ],
@@ -132,7 +132,7 @@ function buildAbout(lang: Lang): StaticPage {
         blocks: [
           {
             kind: "list",
-            items: about.timeline.map((item) => `**${item.year}** — ${t(item.title, lang)}: ${t(item.desc, lang)}`),
+            items: about.timeline.map((item) => `**${item.year}** · ${t(item.title, lang)}. ${t(item.desc, lang)}`),
           },
         ],
       },
@@ -168,8 +168,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              `Los mismos datos, en formato legible por máquina, están en ${SITE_URL}/llms.txt y en el endpoint ${SITE_URL}${API_BASE}/profile de la API pública.`,
-              `The same facts, in machine-readable form, are at ${SITE_URL}/llms.txt and at the ${SITE_URL}${API_BASE}/profile endpoint of the public API.`,
+              `Los mismos datos, en formato legible por máquina, están en ${SITE_URL}${machineHref("/llms.txt", lang)} y en el endpoint ${SITE_URL}${API_BASE}/profile de la API pública.`,
+              `The same facts, in machine-readable form, are at ${SITE_URL}${machineHref("/llms.txt", lang)} and at the ${SITE_URL}${API_BASE}/profile endpoint of the public API.`,
             ),
           },
         ],
@@ -186,8 +186,8 @@ function buildContact(lang: Lang): StaticPage {
     path: localizedPath(lang, "/contact"),
     title: x("Contacto", "Contact"),
     metaTitle: x(
-      "Contacto — Santiago Gómez de la Torre Romero | sgomez.dev",
-      "Contact — Santiago Gómez de la Torre Romero | sgomez.dev",
+      "Contacto · Santiago Gómez de la Torre Romero | sgomez.dev",
+      "Contact · Santiago Gómez de la Torre Romero | sgomez.dev",
     ),
     description: x(
       "Cómo contactar con Santiago Gómez de la Torre Romero: email, LinkedIn y GitHub. Disponible para freelance y colaboraciones de IA/LLM y full-stack desde Cantabria, España.",
@@ -290,8 +290,8 @@ function buildContact(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Los datos de contacto están publicados en formato estructurado y no hace falta que los extraigas de esta página: el JSON-LD de tipo Person incluye el email, y la API pública los devuelve como JSON.",
-              "The contact details are published in structured form and you don't need to extract them from this page: the Person JSON-LD includes the email, and the public API returns them as JSON.",
+              "Los datos de contacto están publicados en formato estructurado y no hace falta que los extraigas de esta página. El JSON-LD de tipo Person incluye el email, y la API pública los devuelve como JSON.",
+              "The contact details are published in structured form and you don't need to extract them from this page. The Person JSON-LD includes the email, and the public API returns them as JSON.",
             ),
           },
           {
@@ -331,16 +331,16 @@ function buildPrivacy(lang: Lang): StaticPage {
     path: localizedPath(lang, "/privacy"),
     title: x("Política de privacidad", "Privacy policy"),
     metaTitle: x(
-      "Privacidad — Santiago Gómez de la Torre Romero | sgomez.dev",
-      "Privacy — Santiago Gómez de la Torre Romero | sgomez.dev",
+      "Privacidad · Santiago Gómez de la Torre Romero | sgomez.dev",
+      "Privacy · Santiago Gómez de la Torre Romero | sgomez.dev",
     ),
     description: x(
-      "Qué datos recoge sgomez.dev: ninguno propio. Sin cookies, sin analítica y sin formularios. Alojamiento, enlaces externos y derechos de protección de datos.",
-      "What data sgomez.dev collects: none of its own. No cookies, no analytics and no forms. Hosting, external links and data protection rights.",
+      "sgomez.dev no recoge ningún dato propio. Sin cookies, sin analítica y sin formularios. Explica el alojamiento, los enlaces externos y los derechos de protección de datos.",
+      "sgomez.dev collects no data of its own. No cookies, no analytics and no forms. It covers hosting, external links and data protection rights.",
     ),
     lead: x(
-      "Resumen: sgomez.dev no instala cookies, no ejecuta analítica y no tiene formularios. No hay ningún dato tuyo que yo pueda consultar.",
-      "In short: sgomez.dev sets no cookies, runs no analytics and has no forms. There is no data of yours that I can look at.",
+      "En resumen, sgomez.dev no instala cookies, no ejecuta analítica y no tiene formularios. No hay ningún dato tuyo que yo pueda consultar.",
+      "In short, sgomez.dev sets no cookies, runs no analytics and has no forms. There is no data of yours that I can look at.",
     ),
     sections: [
       {
@@ -350,8 +350,8 @@ function buildPrivacy(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              `El responsable de este sitio es Santiago Gómez de la Torre Romero, en Santander, Cantabria (España). Para cualquier cuestión relativa a esta política, el canal es ${EMAIL}. Este sitio es un portafolio personal: no vende nada, no registra usuarios y no tiene área privada.`,
-              `The person responsible for this site is Santiago Gómez de la Torre Romero, in Santander, Cantabria (Spain). For any question about this policy, the channel is ${EMAIL}. This site is a personal portfolio: it sells nothing, registers no users and has no private area.`,
+              `El responsable de este sitio es Santiago Gómez de la Torre Romero, en Santander, Cantabria (España). Para cualquier cuestión relativa a esta política, el canal es ${EMAIL}. Este sitio es un portafolio personal que no vende nada, no registra usuarios y no tiene área privada.`,
+              `The person responsible for this site is Santiago Gómez de la Torre Romero, in Santander, Cantabria (Spain). For any question about this policy, the channel is ${EMAIL}. This site is a personal portfolio that sells nothing, registers no users and has no private area.`,
             ),
           },
         ],
@@ -380,8 +380,12 @@ function buildPrivacy(lang: Lang): StaticPage {
                 "Advertising and profiling: none. No data is sold or shared, because there is no data to share.",
               ),
               x(
-                "Tipografías remotas: ninguna. Inter Tight e Instrument Serif, que Next.js descarga al compilar y sirve desde este mismo dominio, así que tu navegador no pide nada a un tercero para renderizar la página.",
-                "Remote fonts: none. Inter Tight and Instrument Serif, which Next.js downloads at build time and serves from this same domain, so your browser requests nothing from a third party to render the page.",
+                "Tipografías remotas: ninguna. Next.js descarga Inter Tight e Instrument Serif al compilar y el sitio las sirve desde este mismo dominio, así que tu navegador no pide nada a un tercero para renderizar la página.",
+                "Remote fonts: none. Next.js downloads Inter Tight and Instrument Serif at build time and the site serves them from this same domain, so your browser requests nothing from a third party to render the page.",
+              ),
+              x(
+                "Imágenes de terceros: ninguna. El servidor descarga y optimiza las portadas de las entradas del blog y las sirve desde este mismo dominio, así que tu navegador no pide nada a terceros para mostrarlas.",
+                "Third-party images: none. The server fetches and optimizes the blog post covers and serves them from this same domain, so your browser requests nothing from third parties to show them.",
               ),
             ],
           },
@@ -394,8 +398,8 @@ function buildPrivacy(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "El sitio está alojado en Vercel. Como cualquier servidor web, su infraestructura registra las peticiones que recibe —dirección IP, agente de usuario, ruta pedida, fecha y hora— para servir la página y protegerse de abusos. Esos registros los genera y conserva el proveedor de alojamiento conforme a sus propias políticas, no una herramienta instalada por mí, y yo no los uso para identificar a nadie ni los cruzo con ninguna otra fuente.",
-              "The site is hosted on Vercel. Like any web server, its infrastructure logs the requests it receives —IP address, user agent, requested path, date and time— to serve the page and protect itself from abuse. Those logs are generated and kept by the hosting provider under its own policies, not by a tool I installed, and I do not use them to identify anyone or cross them with any other source.",
+              "El sitio está alojado en Vercel. Como cualquier servidor web, su infraestructura registra las peticiones que recibe (dirección IP, agente de usuario, ruta pedida, fecha y hora) para servir la página y protegerse de abusos. Esos registros los genera y conserva el proveedor de alojamiento conforme a sus propias políticas, no una herramienta instalada por mí, y yo no los uso para identificar a nadie ni los cruzo con ninguna otra fuente.",
+              "The site is hosted on Vercel. Like any web server, its infrastructure logs the requests it receives (IP address, user agent, requested path, date and time) to serve the page and protect itself from abuse. Those logs are generated and kept by the hosting provider under its own policies, not by a tool I installed, and I do not use them to identify anyone or cross them with any other source.",
             ),
           },
           {
@@ -408,8 +412,8 @@ function buildPrivacy(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "La web enlaza a sitios de terceros (GitHub, LinkedIn, npm, Google Drive para los certificados): cuando sigues uno de esos enlaces sales de sgomez.dev y pasas a regirte por la política de privacidad de ese tercero.",
-              "The site links to third-party sites (GitHub, LinkedIn, npm, Google Drive for the certificates): when you follow one of those links you leave sgomez.dev and that third party's privacy policy applies.",
+              "La web enlaza a sitios de terceros (GitHub, LinkedIn, npm, Google Drive para los certificados). Cuando sigues uno de esos enlaces sales de sgomez.dev y pasas a regirte por la política de privacidad de ese tercero.",
+              "The site links to third-party sites (GitHub, LinkedIn, npm, Google Drive for the certificates). When you follow one of those links you leave sgomez.dev and that third party's privacy policy applies.",
             ),
           },
         ],
@@ -428,8 +432,8 @@ function buildPrivacy(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Esta política se actualizará si algún día el sitio incorpora analítica, formularios o cualquier otro tratamiento. Mientras el texto diga lo que dice, es porque no los hay: puedes comprobarlo tú mismo, el código de esta web es público en github.com/sgomez-dev.",
-              "This policy will be updated if the site ever adds analytics, forms or any other processing. As long as the text says what it says, it is because there are none: you can check for yourself, the code of this website is public at github.com/sgomez-dev.",
+              "Esta política se actualizará si algún día el sitio incorpora analítica, formularios o cualquier otro tratamiento. Mientras el texto diga lo que dice, es porque no los hay. Puedes comprobarlo tú mismo, porque el código de esta web es público en github.com/sgomez-dev.",
+              "This policy will be updated if the site ever adds analytics, forms or any other processing. As long as the text says what it says, it is because there are none. You can check for yourself, because the code of this website is public at github.com/sgomez-dev.",
             ),
           },
         ],
@@ -441,14 +445,16 @@ function buildPrivacy(lang: Lang): StaticPage {
 function buildDevelopers(lang: Lang): StaticPage {
   const x = <T extends string | string[]>(es: T, en: T): T => (lang === "es" ? es : en);
   const aboutUrl = `${SITE_URL}${localizedPath(lang, "/about")}`;
+  // La API responde en español por defecto: la versión inglesa de la página pide inglés.
+  const langQuery = lang === "en" ? "?lang=en" : "";
   return {
     slug: "developers",
     lang,
     path: localizedPath(lang, "/developers"),
     title: x("Portal para desarrolladores y agentes", "Portal for developers and agents"),
     metaTitle: x(
-      "Developers — API pública de sgomez.dev | Santiago Gómez de la Torre Romero",
-      "Developers — sgomez.dev public API | Santiago Gómez de la Torre Romero",
+      "Developers · API pública de sgomez.dev | Santiago Gómez de la Torre Romero",
+      "Developers · sgomez.dev public API | Santiago Gómez de la Torre Romero",
     ),
     description: x(
       "Portal para desarrolladores de sgomez.dev: API REST pública y sin autenticación, especificación OpenAPI 3.1, errores en JSON, negociación de contenido en markdown y ficheros de instrucciones para agentes.",
@@ -466,24 +472,24 @@ function buildDevelopers(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Tres llamadas y ya tienes el mapa completo: comprueba que la API responde, léela desde su especificación y pide el perfil.",
-              "Three calls and you have the whole map: check that the API responds, read it from its specification and ask for the profile.",
+              "Tres llamadas y ya tienes el mapa completo. Comprueba que la API responde, léela desde su especificación y pide el perfil.",
+              "Three calls and you have the whole map. Check that the API responds, read it from its specification and ask for the profile.",
             ),
           },
           {
             kind: "code",
             language: "bash",
             code: [
-              `curl -s ${SITE_URL}${API_BASE}/health`,
+              `curl -s ${SITE_URL}${API_BASE}/health${langQuery}`,
               `curl -s ${SITE_URL}/openapi.json`,
-              `curl -s ${SITE_URL}${API_BASE}/profile`,
+              `curl -s ${SITE_URL}${API_BASE}/profile${langQuery}`,
             ].join("\n"),
           },
           {
             kind: "paragraph",
             text: x(
-              "No hay sandbox aparte ni claves de prueba: la API es de solo lectura y todo su contenido ya es público, así que el entorno de producción ES el entorno de pruebas. No hay nada que puedas romper con un GET.",
-              "There is no separate sandbox or test keys: the API is read-only and all of its content is already public, so the production environment IS the test environment. There is nothing you can break with a GET.",
+              "No hay sandbox aparte ni claves de prueba, porque la API es de solo lectura y todo su contenido ya es público, así que el entorno de producción ES el entorno de pruebas. No hay nada que puedas romper con un GET. La API responde en español por defecto y acepta `?lang=en` o `Accept-Language: en` para el inglés.",
+              "There is no separate sandbox or test keys, because the API is read-only and all of its content is already public, so the production environment IS the test environment. There is nothing you can break with a GET. The API answers in Spanish by default and accepts `?lang=en` or `Accept-Language: en` for English.",
             ),
           },
         ],
@@ -512,8 +518,8 @@ function buildDevelopers(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Las colecciones aceptan `limit` (1–100) y `offset` (0–1000). `search` acepta `q` (obligatorio) y `limit` (1–50). Toda respuesta correcta va envuelta en `{ \"data\": …, \"meta\": … }`, y `meta` incluye `count`, `total`, `self` y `documentation_url`.",
-              "Collections accept `limit` (1–100) and `offset` (0–1000). `search` accepts `q` (required) and `limit` (1–50). Every successful response is wrapped in `{ \"data\": …, \"meta\": … }`, and `meta` includes `count`, `total`, `self` and `documentation_url`.",
+              "Las colecciones aceptan `limit` (1-100) y `offset` (0-1000). `search` acepta `q` (obligatorio) y `limit` (1-50). Toda respuesta correcta va envuelta en `{ \"data\": …, \"meta\": … }`, y `meta` incluye `count`, `total`, `self` y `documentation_url`.",
+              "Collections accept `limit` (1-100) and `offset` (0-1000). `search` accepts `q` (required) and `limit` (1-50). Every successful response is wrapped in `{ \"data\": …, \"meta\": … }`, and `meta` includes `count`, `total`, `self` and `documentation_url`.",
             ),
           },
         ],
@@ -548,16 +554,16 @@ function buildDevelopers(lang: Lang): StaticPage {
             kind: "list",
             items: [
               x(
-                "`400 invalid_parameter` — un parámetro falta o está fuera de rango.",
-                "`400 invalid_parameter` — a parameter is missing or out of range.",
+                "`400 invalid_parameter`: un parámetro falta o está fuera de rango.",
+                "`400 invalid_parameter`: a parameter is missing or out of range.",
               ),
               x(
-                "`404 not_found` — el recurso o el endpoint no existe. Cualquier ruta desconocida bajo /api responde JSON, nunca HTML.",
-                "`404 not_found` — the resource or the endpoint does not exist. Any unknown route under /api responds with JSON, never HTML.",
+                "`404 not_found`: el recurso o el endpoint no existe. Cualquier ruta desconocida bajo /api responde JSON, nunca HTML.",
+                "`404 not_found`: the resource or the endpoint does not exist. Any unknown route under /api responds with JSON, never HTML.",
               ),
               x(
-                "`405 method_not_allowed` — la API es de solo lectura; la respuesta incluye la cabecera `Allow`.",
-                "`405 method_not_allowed` — the API is read-only; the response includes the `Allow` header.",
+                "`405 method_not_allowed`: la API es de solo lectura; la respuesta incluye la cabecera `Allow`.",
+                "`405 method_not_allowed`: the API is read-only; the response includes the `Allow` header.",
               ),
             ],
           },
@@ -570,15 +576,15 @@ function buildDevelopers(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "No hay autenticación ni claves de API: no existe ningún dato privado detrás, así que una clave solo sería un trámite. Tampoco hay límite de peticiones por cliente más allá de la protección ordinaria de la CDN. A cambio, las respuestas se sirven cacheadas (`Cache-Control: public, max-age=300, s-maxage=3600`): si necesitas el catálogo entero, una llamada por colección basta, y repetir la misma llamada en bucle no te dará datos más frescos.",
-              "There is no authentication or API keys: there is no private data behind it, so a key would only be red tape. There is no per-client rate limit either, beyond the CDN's ordinary protection. In exchange, responses are served cached (`Cache-Control: public, max-age=300, s-maxage=3600`): if you need the whole catalog, one call per collection is enough, and repeating the same call in a loop won't give you fresher data.",
+              "No hay autenticación ni claves de API porque no existe ningún dato privado detrás, así que una clave solo sería un trámite. Tampoco hay límite de peticiones por cliente más allá de la protección ordinaria de la CDN. A cambio, las respuestas se sirven cacheadas (`Cache-Control: public, max-age=300, s-maxage=3600`). Si necesitas el catálogo entero, una llamada por colección basta, y repetir la misma llamada en bucle no te dará datos más frescos.",
+              "There is no authentication or API keys because there is no private data behind it, so a key would only be red tape. There is no per-client rate limit either, beyond the CDN's ordinary protection. In exchange, responses are served cached (`Cache-Control: public, max-age=300, s-maxage=3600`). If you need the whole catalog, one call per collection is enough, and repeating the same call in a loop won't give you fresher data.",
             ),
           },
           {
             kind: "paragraph",
             text: x(
-              "CORS está abierto a cualquier origen (`Access-Control-Allow-Origin: *`) para GET, HEAD y OPTIONS, así que la API se puede llamar desde el navegador. Los datos se publican bajo licencia CC BY 4.0: úsalos citando la fuente.",
-              "CORS is open to any origin (`Access-Control-Allow-Origin: *`) for GET, HEAD and OPTIONS, so the API can be called from the browser. The data is published under the CC BY 4.0 license: use it with attribution.",
+              "CORS está abierto a cualquier origen (`Access-Control-Allow-Origin: *`) para GET, HEAD y OPTIONS, así que la API se puede llamar desde el navegador. Los datos se publican bajo licencia CC BY 4.0, así que puedes usarlos citando la fuente.",
+              "CORS is open to any origin (`Access-Control-Allow-Origin: *`) for GET, HEAD and OPTIONS, so the API can be called from the browser. The data is published under the CC BY 4.0 license, so you can use it with attribution.",
             ),
           },
         ],
@@ -641,8 +647,8 @@ function buildDevelopers(lang: Lang): StaticPage {
           {
             kind: "links",
             items: [
-              { label: "/llms.txt", href: "/llms.txt", note: x("Resumen factual del sitio, con la sección «when to use this».", "Factual summary of the site, with the “when to use this” section.") },
-              { label: "/agents.md", href: "/agents.md", note: x("Instrucciones de uso: para qué sirve este sitio y cómo llamarlo.", "Usage instructions: what this site is for and how to call it.") },
+              { label: "/llms.txt", href: machineHref("/llms.txt", lang), note: x("Resumen factual del sitio, con la sección «when to use this».", "Factual summary of the site, with the “when to use this” section.") },
+              { label: "/agents.md", href: machineHref("/agents.md", lang), note: x("Instrucciones de uso, con para qué sirve este sitio y cómo llamarlo.", "Usage instructions covering what this site is for and how to call it.") },
               { label: "/sitemap.xml", href: "/sitemap.xml", note: x("Todas las URLs publicadas.", "All published URLs.") },
               { label: "/robots.txt", href: "/robots.txt", note: x("Crawlers de IA explícitamente permitidos.", "AI crawlers explicitly allowed.") },
               { label: "/manifest.webmanifest", href: "/manifest.webmanifest", note: x("Manifiesto de la aplicación web.", "Web app manifest.") },
@@ -657,8 +663,8 @@ function buildDevelopers(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "La versión va en la ruta (`/api/v1`). Dentro de v1 solo se añaden campos y endpoints: quitar un campo o renombrar un `operationId` sería un cambio incompatible y saldría en `/api/v2`. Los `code` de error forman parte del contrato y no se renombran.",
-              "The version is in the path (`/api/v1`). Within v1 only fields and endpoints are added: removing a field or renaming an `operationId` would be a breaking change and would ship as `/api/v2`. Error `code` values are part of the contract and are not renamed.",
+              "La versión va en la ruta (`/api/v1`). Dentro de v1 solo se añaden campos y endpoints, porque quitar un campo o renombrar un `operationId` sería un cambio incompatible y saldría en `/api/v2`. Los `code` de error forman parte del contrato y no se renombran.",
+              "The version is in the path (`/api/v1`). Within v1 only fields and endpoints are added, because removing a field or renaming an `operationId` would be a breaking change and would ship as `/api/v2`. Error `code` values are part of the contract and are not renamed.",
             ),
           },
         ],

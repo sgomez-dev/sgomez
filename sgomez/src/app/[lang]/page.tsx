@@ -19,12 +19,12 @@ import Contact from '@/chapters/Contact'
 // con el texto inglés del layout; ahora cada uno lleva el suyo.
 const HOME_META = {
   es: {
-    title: `${IDENTITY.name} — Full-Stack Engineer que lleva la IA a producción`,
+    title: `${IDENTITY.name} · Full-Stack Engineer que lleva la IA a producción`,
     description:
       'Full-stack engineer que lleva la IA y los LLM a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI (más de 1.000 componentes) y de una búsqueda semántica (RAG) en vivo. React, Next.js, Node.js, Python, Google Cloud.',
   },
   en: {
-    title: `${IDENTITY.name} — Full-Stack Engineer shipping AI to production`,
+    title: `${IDENTITY.name} · Full-Stack Engineer shipping AI to production`,
     description:
       'Full-stack engineer building and shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (1,000+ components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.',
   },
@@ -46,7 +46,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
         data={pageGraph({
           lang,
           path: '/',
-          title: `${IDENTITY.name} — Full-Stack Engineer (AI/LLM)`,
+          title: HOME_META[lang].title,
           description: HOME_META[lang].description,
           type: 'ProfilePage',
         })}
