@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
-import { SHARDS, LINES, CAMERA, type ShardTarget } from "@/lib/lost/shards";
+import { SHARDS, LINES, LINES_MOBILE, HAS_POSTER, CAMERA, type ShardTarget } from "@/lib/lost/shards";
 import { shardHref } from "@/lib/lost/shard-links";
-import LostStage from "@/chapters/lost/LostStage";
+import LostStage, { posterLayers } from "@/chapters/lost/LostStage";
 import { RequestedPathLabel, formatRequestedPath, readRequestedPath } from "@/chapters/lost/RequestedPath";
 import { LANGS } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
@@ -46,8 +47,73 @@ describe("SHARDS", () => {
     }
   });
   it("shards.ts no importa nada (Remotion lo importa por ruta relativa)", () => {
-    const src = readFileSync("src/lib/lost/shards.ts", "utf8");
+    const src = readFileSync(fileURLToPath(new URL("../src/lib/lost/shards.ts", import.meta.url)), "utf8");
     expect(/^\s*import\s|\brequire\(|\bimport\(/m.test(src)).toBe(false);
+  });
+});
+
+type Pt = { left: number; top: number };
+const cross = (o: Pt, a: Pt, b: Pt) => (a.left - o.left) * (b.top - o.top) - (a.top - o.top) * (b.left - o.left);
+function properlyIntersect(p1: Pt, p2: Pt, p3: Pt, p4: Pt) {
+  const d1 = cross(p3, p4, p1), d2 = cross(p3, p4, p2), d3 = cross(p1, p2, p3), d4 = cross(p1, p2, p4);
+  return d1 * d2 < 0 && d3 * d4 < 0;
+}
+function checkPlanar(edges: readonly (readonly [string, string])[], k: "mobile" | "desktop") {
+  const pos = new Map(SHARDS.map((s) => [s.id, s.stage[k]]));
+  const bad: string[] = [];
+  for (let i = 0; i < edges.length; i++)
+    for (let j = i + 1; j < edges.length; j++) {
+      const [a, b] = edges[i]!, [c, d] = edges[j]!;
+      if (a === c || a === d || b === c || b === d) continue;
+      if (properlyIntersect(pos.get(a)!, pos.get(b)!, pos.get(c)!, pos.get(d)!)) bad.push(`${a}-${b} x ${c}-${d}`);
+    }
+  return bad;
+}
+
+describe("constelación sin cruces", () => {
+  it("LINES_MOBILE: ids válidos, grado 1 a 3, aristas cortas, sin cruces", () => {
+    const ids = new Set(SHARDS.map((s) => s.id));
+    const deg = new Map<string, number>();
+    const pos = new Map(SHARDS.map((s) => [s.id, s.stage.mobile]));
+    for (const [a, b] of LINES_MOBILE) {
+      expect(ids.has(a) && ids.has(b)).toBe(true);
+      deg.set(a, (deg.get(a) ?? 0) + 1);
+      deg.set(b, (deg.get(b) ?? 0) + 1);
+      expect(Math.hypot(pos.get(a)!.left - pos.get(b)!.left, pos.get(a)!.top - pos.get(b)!.top)).toBeLessThanOrEqual(36);
+    }
+    for (const s of SHARDS) {
+      expect(deg.get(s.id) ?? 0, s.id).toBeGreaterThanOrEqual(1);
+      expect(deg.get(s.id) ?? 0, s.id).toBeLessThanOrEqual(3);
+    }
+    expect(checkPlanar(LINES_MOBILE, "mobile")).toEqual([]);
+  });
+  it("LINES en escritorio: sin cruces", () => expect(checkPlanar(LINES, "desktop")).toEqual([]));
+  it("el fragmento más bajo del móvil queda por encima del 82%", () => {
+    expect(Math.max(...SHARDS.map((s) => s.stage.mobile.top))).toBeLessThanOrEqual(82);
+  });
+});
+
+describe("póster (L4)", () => {
+  it("HAS_POSTER coincide con el disco", () => {
+    const f = (n: string) => existsSync(fileURLToPath(new URL(`../public/media/404/${n}`, import.meta.url)));
+    expect(HAS_POSTER).toBe(f("constellation.webp"));
+  });
+  it("posterLayers: ninguna capa sin póster, dos con póster (móvil bajo lg, escritorio desde lg)", () => {
+    expect(posterLayers(false)).toEqual([]);
+    const l = posterLayers(true);
+    expect(l).toHaveLength(2);
+    expect(l[0]!.url).toBe("/media/404/constellation-mobile.webp");
+    expect(l[0]!.className).toContain("lg:hidden");
+    expect(l[1]!.url).toBe("/media/404/constellation.webp");
+    expect(l[1]!.className).toContain("hidden lg:block");
+  });
+  it("LostStage pinta las capas solo con póster, y nunca como <img>", () => {
+    const on = renderToStaticMarkup(<LostStage lang="en" hasPoster />);
+    expect(on).toContain("url(/media/404/constellation-mobile.webp)");
+    expect(on).toContain("url(/media/404/constellation.webp)");
+    expect(on).not.toMatch(/<img/);
+    const off = renderToStaticMarkup(<LostStage lang="en" hasPoster={false} />);
+    expect(off).not.toContain("constellation");
   });
 });
 
@@ -114,8 +180,10 @@ describe("RequestedPath", () => {
   it("escapa el HTML en el render", () => {
     const html = renderToStaticMarkup(<RequestedPathLabel label="Error 404" path={formatRequestedPath('/<script>alert(1)</script>')} />);
     expect(html).not.toContain("<script>");
+    expect(html).toContain("normal-case");
     expect(html).toContain("&lt;script&gt;");
-    expect(html).toContain("Error 404 · ");
+    expect(html).toContain("Error 404");
+    expect(html).toContain("·");
   });
   it("sin ruta el label es solo «Error 404»", () => {
     expect(renderToStaticMarkup(<RequestedPathLabel label="Error 404" path="" />)).not.toContain("·");

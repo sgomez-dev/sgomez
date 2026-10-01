@@ -1,10 +1,8 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
-import { SHARDS, LINES, type Shard } from "@/lib/lost/shards";
+import { SHARDS, LINES, LINES_MOBILE, HAS_POSTER, type Shard } from "@/lib/lost/shards";
 import { shardHref } from "@/lib/lost/shard-links";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
@@ -63,16 +61,15 @@ function Glass({ shard, index }: { shard: Shard; index: number }) {
   );
 }
 
-// El póster de fondo solo se referencia si existe (CSS `background-image`, nunca
-// `<img>`): antes de que se renderice (Task 3) no debe pedirse un fichero que no está.
-// El 404 se prerenderiza en el build, que es donde se evalúa esto.
-const POSTER = "/media/404/constellation.webp";
-function posterExists(): boolean {
-  try {
-    return existsSync(join(process.cwd(), "public", POSTER));
-  } catch {
-    return false;
-  }
+// Pósters renderizados (Task 3): solo CSS `background-image`, nunca `<img>`. Se
+// pintan únicamente si `HAS_POSTER` (constante comprobada contra el disco por un
+// test), así que antes de Task 3 no se pide ningún fichero que no existe.
+export function posterLayers(hasPoster: boolean): { id: string; url: string; className: string }[] {
+  if (!hasPoster) return [];
+  return [
+    { id: "mobile", url: "/media/404/constellation-mobile.webp", className: "lg:hidden" },
+    { id: "desktop", url: "/media/404/constellation.webp", className: "hidden lg:block" },
+  ];
 }
 
 const STARS = [
@@ -89,28 +86,28 @@ const STARS = [
 const GLOW =
   "radial-gradient(circle 380px at 64% 48%,rgba(98,140,255,.28),transparent),radial-gradient(circle 420px at 70% 60%,rgba(0,220,200,.12),transparent)";
 
-export default function LostStage({ lang }: { lang: Lang }) {
+export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang; hasPoster?: boolean }) {
   const dict = getDictionary(lang);
   const d = dict.notFound;
   const byId = new Map(SHARDS.map((s) => [s.id, s]));
-  const poster = posterExists();
 
   return (
     <section
       data-stage="lost"
       aria-labelledby="lost-title"
-      className="relative isolate overflow-hidden pb-4 pt-12 md:pt-20 lg:min-h-[640px] lg:pb-0 lg:pt-24"
+      className="relative isolate overflow-hidden pb-24 pt-12 md:pt-20 lg:min-h-[640px] lg:pb-0 lg:pt-24"
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,#000_65%,transparent)]" style={{ backgroundImage: GLOW }} />
       <div aria-hidden="true" className="absolute inset-0 -z-10" style={{ backgroundImage: STARS }} />
-      {poster ? (
+      {posterLayers(hasPoster).map((l) => (
         <div
+          key={l.id}
           aria-hidden="true"
-          data-stage-poster=""
-          className="absolute inset-0 -z-10 bg-cover bg-center"
-          style={{ backgroundImage: `url(${POSTER})` }}
+          data-stage-poster={l.id}
+          className={`absolute inset-0 -z-10 bg-cover bg-center ${l.className}`}
+          style={{ backgroundImage: `url(${l.url})` }}
         />
-      ) : null}
+      ))}
 
       <Container className="relative z-10">
         <div className="max-w-[30rem]">
@@ -146,16 +143,17 @@ export default function LostStage({ lang }: { lang: Lang }) {
         </div>
       </Container>
 
-      {/* Los dígitos 404 en contorno, detrás de todo: decorativos. */}
-      <p
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-3 left-[max(var(--gutter),var(--safe-left))] -z-[5] select-none text-[clamp(5rem,15vw,9rem)] font-extrabold leading-[0.8] tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_rgba(143,168,255,0.35)]"
-      >
-        404
-      </p>
+      {/* Los dígitos 404 en contorno, detrás de todo y alineados con la columna de texto: decorativos. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-[5]">
+        <Container className="relative h-full">
+          <p className="absolute bottom-3 left-[max(var(--gutter),var(--safe-left))] select-none text-[clamp(5rem,15vw,9rem)] font-extrabold leading-[0.8] tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_rgba(143,168,255,0.35)] lg:left-[var(--gutter)]">
+            404
+          </p>
+        </Container>
+      </div>
 
       {/* Escenario: apilado bajo el texto en móvil (altura fija, sin CLS) y a pantalla completa desde lg. */}
-      <div className="pointer-events-none relative mt-8 h-[30rem] lg:absolute lg:inset-0 lg:mt-0 lg:h-auto">
+      <div className="pointer-events-none relative mt-8 h-[32rem] lg:absolute lg:inset-y-0 lg:left-1/2 lg:mt-0 lg:h-auto lg:w-full lg:max-w-[1440px] lg:-translate-x-1/2">
         {(["m", "d"] as const).map((variant) => (
           <svg
             key={variant}
@@ -166,7 +164,7 @@ export default function LostStage({ lang }: { lang: Lang }) {
             className={`absolute inset-0 h-full w-full ${variant === "m" ? "lg:hidden" : "hidden lg:block"}`}
             fill="none"
           >
-            {LINES.map(([a, b]) => {
+            {(variant === "m" ? LINES_MOBILE : LINES).map(([a, b]) => {
               const from = byId.get(a)!;
               const to = byId.get(b)!;
               const k = variant === "m" ? "mobile" : "desktop";
@@ -199,7 +197,7 @@ export default function LostStage({ lang }: { lang: Lang }) {
                   className={`group pointer-events-auto relative grid min-h-11 min-w-11 place-items-center rounded-full ${FOCUS}`}
                 >
                   <Glass shard={shard} index={i} />
-                  <span className="absolute left-1/2 top-[calc(50%+var(--s)*1.4rem+0.25rem)] -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.12] bg-[rgba(11,13,20,0.8)] px-2.5 py-1 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors group-hover:border-[color:var(--light-1)] group-focus-visible:border-[color:var(--light-1)] lg:top-[calc(50%+var(--s)*1.75rem+0.25rem)]">
+                  <span className="absolute left-1/2 top-[calc(50%+var(--s)*1.4rem+0.25rem)] -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.12] bg-[rgba(11,13,20,0.8)] px-2.5 py-1 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors group-hover:border-[color:var(--light-1)] group-focus-visible:border-[color:var(--light-1)] group-focus-visible:ring-2 group-focus-visible:ring-[color:var(--light-1)] lg:top-[calc(50%+var(--s)*1.75rem+0.25rem)]">
                     {label}
                   </span>
                 </a>

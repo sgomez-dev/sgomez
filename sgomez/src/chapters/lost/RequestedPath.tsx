@@ -24,7 +24,7 @@ export function RequestedPathLabel({ label, path }: { label: string; path: strin
   return (
     <>
       {label}
-      {path ? ` · ${path}` : ""}
+      {path ? <span className="normal-case">{` · ${path}`}</span> : null}
     </>
   );
 }
