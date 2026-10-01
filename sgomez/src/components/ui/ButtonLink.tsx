@@ -8,7 +8,11 @@ const VARIANTS = {
   ghost: "border border-[color:var(--line)] text-[color:var(--text)] hover:bg-white/5",
 } as const;
 
-/** Enlace con aspecto de botón. Interno con Link de Next, externo (http o mailto) con ancla. */
+/**
+ * Enlace con aspecto de botón. Interno con Link de Next; externo (http o
+ * mailto) y ancla de página (`#work`) con `<a>`: el router de Next duplica el
+ * fragmento cuando la URL ya lleva uno.
+ */
 export function ButtonLink({
   href,
   variant = "primary",
@@ -19,7 +23,7 @@ export function ButtonLink({
   children: ReactNode;
 }) {
   const className = `${BASE} ${VARIANTS[variant]}`;
-  if (/^(https?:|mailto:)/.test(href)) {
+  if (/^(https?:|mailto:|#)/.test(href)) {
     return (
       <a href={href} className={className}>
         {children}

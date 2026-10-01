@@ -9,9 +9,13 @@ const LINK = "inline-flex min-h-11 min-w-11 items-center justify-center text-sm 
 export default function Nav({ lang }: { lang: Lang }) {
   const d = getDictionary(lang);
   const home = localizedPath(lang, "/");
+  // Mismo orden que las secciones de la home: about, work, open-source, contact.
+  // Anclas de página: `<a>` y no el componente Link de Next. El router de Next duplica el
+  // fragmento (`/en#work#about`) cuando la URL ya lleva uno y se navega a otro
+  // ancla de la misma página; el navegador lo resuelve bien por sí solo.
   const anchors = [
-    { href: `${home}#work`, label: d.nav.work },
     { href: `${home}#about`, label: d.nav.about },
+    { href: `${home}#work`, label: d.nav.work },
     { href: `${home}#open-source`, label: d.nav.openSource },
     { href: `${home}#contact`, label: d.nav.contact },
   ];
@@ -33,9 +37,9 @@ export default function Nav({ lang }: { lang: Lang }) {
 
         <nav aria-label={d.nav.ariaMain} className="hidden items-center gap-6 lg:flex">
           {anchors.map((a) => (
-            <Link prefetch={false} key={a.href} href={a.href} className={LINK}>
+            <a key={a.href} href={a.href} className={LINK}>
               {a.label}
-            </Link>
+            </a>
           ))}
           {external.map((a) => (
             <a key={a.href} href={a.href} className={LINK}>
@@ -58,9 +62,9 @@ export default function Nav({ lang }: { lang: Lang }) {
             className="absolute right-0 top-12 flex w-[min(14rem,calc(100vw-2rem))] max-h-[calc(100dvh-5rem-var(--safe-top)-var(--safe-bottom))] overflow-y-auto overscroll-contain flex-col gap-1 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-3"
           >
             {anchors.map((a) => (
-              <Link prefetch={false} key={a.href} href={a.href} className={`${LINK} rounded-lg px-3 !justify-start`}>
+              <a key={a.href} href={a.href} className={`${LINK} rounded-lg px-3 !justify-start`}>
                 {a.label}
-              </Link>
+              </a>
             ))}
             {external.map((a) => (
               <a key={a.href} href={a.href} className={`${LINK} rounded-lg px-3 !justify-start`}>
