@@ -85,6 +85,6 @@ export const LINES_MOBILE: readonly (readonly [string, string])[] = [
 /**
  * ¿Existen los pósters renderizados (`public/media/404/constellation.webp` y
  * `constellation-mobile.webp`)? Constante a mano; un test la compara con el disco.
- * Pásala a `true` cuando se commiteen (Task 3).
+ * Es `true` desde que Task 3 commitea ambos pósters.
  */
-export const HAS_POSTER = false;
+export const HAS_POSTER = true;

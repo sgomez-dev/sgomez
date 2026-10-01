@@ -96,7 +96,15 @@ describe("constelación sin cruces", () => {
 describe("póster (L4)", () => {
   it("HAS_POSTER coincide con el disco", () => {
     const f = (n: string) => existsSync(fileURLToPath(new URL(`../public/media/404/${n}`, import.meta.url)));
-    expect(HAS_POSTER).toBe(f("constellation.webp"));
+    // Con la constante en true hacen falta LOS DOS pósters (escritorio y móvil); en false, ninguno.
+    expect(HAS_POSTER).toBe(f("constellation.webp") && f("constellation-mobile.webp"));
+  });
+  it("con HAS_POSTER a true existen constellation.webp y constellation-mobile.webp", () => {
+    const f = (n: string) => existsSync(fileURLToPath(new URL(`../public/media/404/${n}`, import.meta.url)));
+    if (HAS_POSTER) {
+      expect(f("constellation.webp")).toBe(true);
+      expect(f("constellation-mobile.webp")).toBe(true);
+    }
   });
   it("posterLayers: ninguna capa sin póster, dos con póster (móvil bajo lg, escritorio desde lg)", () => {
     expect(posterLayers(false)).toEqual([]);

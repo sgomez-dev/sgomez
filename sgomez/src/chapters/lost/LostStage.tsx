@@ -99,16 +99,6 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,#000_65%,transparent)]" style={{ backgroundImage: GLOW }} />
       <div aria-hidden="true" className="absolute inset-0 -z-10" style={{ backgroundImage: STARS }} />
-      {posterLayers(hasPoster).map((l) => (
-        <div
-          key={l.id}
-          aria-hidden="true"
-          data-stage-poster={l.id}
-          className={`absolute inset-0 -z-10 bg-cover bg-center ${l.className}`}
-          style={{ backgroundImage: `url(${l.url})` }}
-        />
-      ))}
-
       <Container className="relative z-10">
         <div className="max-w-[30rem]">
           <p className="block overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[length:var(--step--1)] uppercase tracking-[0.14em] text-[color:var(--text-2)]">
@@ -154,6 +144,15 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
 
       {/* Escenario: apilado bajo el texto en móvil (altura fija, sin CLS) y a pantalla completa desde lg. */}
       <div className="pointer-events-none relative mt-8 h-[32rem] lg:absolute lg:inset-y-0 lg:left-1/2 lg:mt-0 lg:h-auto lg:w-full lg:max-w-[1440px] lg:-translate-x-1/2">
+        {posterLayers(hasPoster).map((l) => (
+          <div
+            key={l.id}
+            aria-hidden="true"
+            data-stage-poster={l.id}
+            className={`absolute inset-0 bg-cover bg-center ${l.className}`}
+            style={{ backgroundImage: `url(${l.url})` }}
+          />
+        ))}
         {(["m", "d"] as const).map((variant) => (
           <svg
             key={variant}
