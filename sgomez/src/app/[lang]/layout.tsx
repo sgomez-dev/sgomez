@@ -39,7 +39,9 @@ function siteMetadata(lang: Lang): Metadata {
   applicationName: siteName,
   creator: "Santiago Gómez de la Torre Romero",
   publisher: "Santiago Gómez de la Torre Romero",
-  authors: [{ name: "Santiago Gómez de la Torre Romero", url: siteUrl }],
+  // Sin `url`: con ella Next añade un segundo <link rel="author"> (a la raíz) que
+  // contradice al del layout (a /about). El único rel="author" es el del <body>.
+  authors: [{ name: "Santiago Gómez de la Torre Romero" }],
   category: "technology",
   referrer: "origin-when-cross-origin",
   manifest: "/manifest.webmanifest",

@@ -58,8 +58,8 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
             {recommendations.map((r) => {
               const v = recommendationView(r, lang);
               return (
-                <li key={r.slug} data-motion="quote" className="min-w-0 border-t border-[color:var(--line)] pt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:gap-10">
-                  <figure className="contents">
+                <li key={r.slug} data-motion="quote" className="min-w-0 border-t border-[color:var(--line)] pt-8">
+                  <figure className="min-w-0 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:gap-10">
                     <figcaption className="mb-5 flex flex-col gap-1 lg:mb-0">
                       <a
                         href={r.recommender_url}
@@ -70,10 +70,14 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
                       </a>
                       <span className="text-[length:var(--step--1)] uppercase tracking-[0.1em] text-[color:var(--text-2)]">{r.date}</span>
                     </figcaption>
-                    <blockquote className="min-w-0 max-w-[62ch]">
+                    <div className="min-w-0 max-w-[62ch]">
+                      {/* La etiqueta es texto visible del sitio, no parte de la cita: va fuera del blockquote, justo encima. */}
+                      {v.translation ? (
+                        <p className="mb-3 text-[length:var(--step--1)] uppercase tracking-[0.12em] text-[color:var(--text-2)]">{v.translatedLabel}</p>
+                      ) : null}
+                      <blockquote className="min-w-0">
                       {v.translation ? (
                         <>
-                          <p className="mb-3 text-[length:var(--step--1)] uppercase tracking-[0.12em] text-[color:var(--text-2)]">{v.translatedLabel}</p>
                           <Paragraphs text={v.translation} lang="en" />
                           <details className="group/orig mt-5">
                             <summary className={`inline-flex min-h-11 cursor-pointer items-center text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline ${focus}`}>
@@ -94,7 +98,8 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
                       ) : (
                         <Paragraphs text={v.quote} lang={v.quoteLang} />
                       )}
-                    </blockquote>
+                      </blockquote>
+                    </div>
                   </figure>
                 </li>
               );

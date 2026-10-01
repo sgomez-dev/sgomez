@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import Hero from "@/chapters/Hero";
+import { PORTRAIT_SIZES } from "@/components/Portrait";
 import About from "@/chapters/About";
 import Build from "@/chapters/Build";
 import Experience from "@/chapters/Experience";
@@ -64,7 +65,9 @@ describe("capítulos 01–03 en HTML de servidor", () => {
     it(`${lang}: el retrato es prioritario, con sizes y alt localizado`, () => {
       const img = html.match(/<img[^>]*>/)![0];
       expect(img).toContain('data-priority="true"');
-      expect(img).toContain('sizes="(min-width:1024px) 40vw, 80vw"');
+      expect(img).toContain(`sizes="${PORTRAIT_SIZES}"`);
+      // En píxeles y no en vw: la precarga y la imagen no deben poder elegir candidatos distintos.
+      expect(PORTRAIT_SIZES).not.toMatch(/vw/);
       expect(img).toContain(`alt="${d.chapters.hero.portraitAlt}"`);
     });
     it(`${lang}: el cristal es decorativo`, () => expect(html).toMatch(/data-motion="glass"[^>]*aria-hidden="true"|aria-hidden="true"[^>]*data-motion="glass"/));
@@ -157,6 +160,12 @@ describe("capítulos 08–09 en HTML de servidor", () => {
         const tr = proof.indexOf(esc(r.comment_translation!.split("\n\n")[0]!));
         expect(label).toBeGreaterThan(0);
         expect(tr).toBeGreaterThan(label);
+        // D6: la etiqueta es texto del sitio, visible y fuera del blockquote, justo encima de él.
+        const firstQuote = proof.match(/<blockquote[\s\S]*?<\/blockquote>/)![0];
+        expect(firstQuote).not.toContain(d.recommendations.translated);
+        expect(proof.indexOf("<blockquote")).toBeGreaterThan(label);
+        const labelTag = proof.slice(proof.lastIndexOf("<p", label), label);
+        expect(labelTag).not.toMatch(/aria-hidden/);
         expect(proof).toMatch(/<p[^>]*lang="en"[^>]*>/);
         const details = proof.match(/<details[\s\S]*?<\/details>/)![0];
         expect(details).toMatch(/<summary(?![^>]*lang=)[^>]*>/);
@@ -174,6 +183,10 @@ describe("capítulos 08–09 en HTML de servidor", () => {
         expect(proof).not.toContain("<details");
         expect(proof).not.toContain(getDictionary("en").recommendations.translated);
       }
+    });
+    it(`${lang}: la cita es un <figure> normal y no uno con display: contents`, () => {
+      expect(proof).not.toMatch(/<figure[^>]*class="[^"]*contents/);
+      expect(proof).toMatch(/<figure[^>]*>[\s\S]*<figcaption[\s\S]*<blockquote/);
     });
     it(`${lang}: insignias de certificación`, () => {
       expect(proof.match(/data-motion="badge"/g)!.length).toBeGreaterThan(5);

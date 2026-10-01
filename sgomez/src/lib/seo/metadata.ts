@@ -56,7 +56,10 @@ export function buildMetadata({ lang, path, title, description }: BuildMetadataO
       description,
       url: canonical,
       siteName: SITE_NAME,
-      type: path === "/" ? "website" : "article",
+      // /about es el perfil de una persona (`profile`); el resto son páginas de un sitio (`website`).
+      ...(path === "/about"
+        ? { type: "profile" as const, firstName: "Santiago", lastName: "Gómez de la Torre Romero" }
+        : { type: "website" as const }),
       locale: lang === "es" ? "es_ES" : "en_US",
       alternateLocale: [lang === "es" ? "en_US" : "es_ES"],
       images: [image],

@@ -74,11 +74,14 @@ test.describe("recomendaciones en inglés (Review Focus 5, R12)", () => {
     await page.goto("/en");
     const first = page.locator("#proof blockquote").first();
 
-    // La etiqueta va justo antes de la traducción, que es lo primero visible.
-    await expect(first.getByText("Translated from Spanish")).toBeVisible();
+    // La etiqueta es texto visible del sitio, fuera del blockquote y justo encima de él.
+    const label = page.locator("#proof figure").first().getByText("Translated from Spanish");
+    await expect(label).toBeVisible();
+    await expect(first.getByText("Translated from Spanish")).toHaveCount(0);
+    expect(await label.evaluate((p) => p.nextElementSibling?.tagName.toLowerCase())).toBe("blockquote");
+    expect(await label.getAttribute("aria-hidden")).toBeNull();
     const order = await first.evaluate((bq) => Array.from(bq.children).map((c) => c.tagName.toLowerCase()));
-    expect(order).toEqual(["p", "div", "details"]);
-    expect(await first.locator("> p").textContent()).toContain("Translated from Spanish");
+    expect(order).toEqual(["div", "details"]);
     const translation = first.locator("> div > p").first();
     await expect(translation).toHaveAttribute("lang", "en");
     await expect(translation).toBeVisible();

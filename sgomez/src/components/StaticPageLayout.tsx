@@ -145,8 +145,8 @@ export default function StaticPageLayout({ page }: { page: StaticPage }) {
 
           <div className="flex flex-col gap-14">
             {page.sections.map((section) => (
-              <section key={section.id} id={section.id} className="scroll-mt-24">
-                <h2 className="mb-5 text-[28px] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)] [overflow-wrap:anywhere]">{section.heading}</h2>
+              <section key={section.id} id={section.id} className="scroll-mt-[calc(4rem+var(--safe-top))]">
+                <h2 className="mb-5 text-[length:var(--step-2)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)] [overflow-wrap:anywhere]">{section.heading}</h2>
                 <div className="flex flex-col gap-4">
                   {section.blocks.map((block, index) => (
                     <BlockView key={index} block={block} tableLabel={d.tableRegion} codeLabel={d.codeRegion} />

@@ -31,7 +31,7 @@ export default function Hero({ lang }: { lang: Lang }) {
               motion="text-reveal"
               className="mt-4 !leading-[0.95] !tracking-[-0.045em]"
             />
-            <p data-answer className="mt-6 max-w-[34rem] text-[18px] leading-[1.55] text-[color:var(--text-2)]">
+            <p data-answer className="mt-6 max-w-[34rem] text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text-2)]">
               {t(hero.subtitle, lang)}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
