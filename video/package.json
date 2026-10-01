@@ -7,6 +7,9 @@
     "studio": "remotion studio src/index.ts",
     "render": "node scripts/render.mjs",
     "draft": "node scripts/render.mjs --draft",
+    "bake": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bake-geometry.mjs",
+    "bake:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bake-geometry.mjs --check",
+    "verify": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-poster.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

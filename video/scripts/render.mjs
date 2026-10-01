@@ -17,9 +17,10 @@ const entry = "src/index.ts";
 
 // Ajustes de peso. Presupuesto: vídeos juntos <= 1,5 MB, cada webp <= 200 KB.
 const WEBM_CRF = 40; // VP9 con alfa, menor número = más calidad
-const MP4_CRF = 27; // H.264 sobre #05060A
-const WEBP_QUALITY = { "poster-end": 78, constellation: 80, "constellation-mobile": 80 };
-const BG = "#05060A";
+const MP4_CRF = 27; // H.264 sobre negro puro (screen en la página)
+const WEBP_QUALITY = { "poster-end": 78 };
+// Negro puro: en la página el MP4 se pinta con mix-blend-mode: screen, así que el negro es transparente.
+const BG = "#000000";
 
 const args = process.argv.slice(2);
 const draft = args.includes("--draft");
@@ -59,11 +60,9 @@ if (want("mp4")) {
   sizes["shatter.mp4"] = out;
 }
 
-// Pósters: still en PNG con alfa y recompresión a WebP con alfa.
+// Póster final: still del último fotograma en PNG con alfa y recompresión a WebP con alfa (sin líneas, 1920x1080).
 const stills = [
   { name: "poster-end", comp: "Shatter404", frame: 119, extra: [props("poster", { bg: "transparent" })] },
-  { name: "constellation", comp: "Constellation", frame: 0, extra: [] },
-  { name: "constellation-mobile", comp: "ConstellationMobile", frame: 0, extra: [] },
 ];
 
 if (want("posters") && !draft) {

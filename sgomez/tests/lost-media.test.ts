@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { execFileSync } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -11,7 +12,7 @@ const dir = (n: string) => fileURLToPath(new URL(`../public/media/404/${n}`, imp
 const size = (n: string) => statSync(dir(n)).size;
 
 const VIDEOS = ["shatter.webm", "shatter.mp4"];
-const POSTERS = ["poster-end.webp", "constellation.webp", "constellation-mobile.webp"];
+const POSTERS = ["poster-end.webp"];
 
 describe("medios del 404", () => {
   it("existen todos los ficheros", () => {
@@ -25,5 +26,13 @@ describe("medios del 404", () => {
 
   it("cada póster pesa como mucho 200 KB", () => {
     for (const n of POSTERS) expect(size(n), n).toBeLessThanOrEqual(200 * 1024);
+  });
+});
+
+describe("geometría horneada", () => {
+  it("bake:check pasa: los literales de shards.ts son los del generador de video/", () => {
+    const script = fileURLToPath(new URL("../../video/scripts/bake-geometry.mjs", import.meta.url));
+    const out = execFileSync(process.execPath, ["--disable-warning=MODULE_TYPELESS_PACKAGE_JSON", script, "--check"], { encoding: "utf8" });
+    expect(out).toContain("bake:check OK");
   });
 });

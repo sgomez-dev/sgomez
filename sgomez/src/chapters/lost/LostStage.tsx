@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
-import { SHARDS, LINES, LINES_MOBILE, HAS_POSTER, type Shard } from "@/lib/lost/shards";
+import { SHARDS, LINES, LINES_MOBILE, HAS_END_POSTER, STAGE_ASPECT_DESKTOP, project, unproject, silhouette, type Shard } from "@/lib/lost/shards";
 import { shardHref } from "@/lib/lost/shard-links";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
@@ -28,48 +28,74 @@ const HUE: Record<Shard["hue"], string> = {
   c: "[background:conic-gradient(from_40deg,#6ef0dc,#ffffff,#8fa8ff,#5b6cff,#6ef0dc)]",
 };
 
-/** Contornos irregulares: el fragmento no es nunca un círculo. */
-const RADII = [
-  "30% 70% 60% 40%",
-  "60% 40% 30% 70%",
-  "40% 60% 70% 30%",
-  "70% 30% 40% 60%",
-  "50% 50% 40% 60%",
-  "60% 40% 50% 50%",
-];
+/** Aspecto de referencia de la caja móvil (24rem por 32rem): solo fija la FORMA de la silueta. */
+const MOBILE_REF_ASPECT = 0.75;
 
-const POS =
-  "absolute left-[var(--ml)] top-[var(--mt)] -translate-x-1/2 -translate-y-1/2 lg:left-[var(--dl)] lg:top-[var(--dt)]";
+const r2 = (v: number) => Math.round(v * 100) / 100;
 
-function posStyle(s: Shard): CSSProperties {
+/**
+ * Todo sale de `shards.ts`. Escritorio: `project(pose)` en la caja 16:9 y silueta
+ * de la pose. Móvil: `stage.mobile` (autorado) y la silueta del fragmento colocado
+ * en 3D con `unproject` a su propia profundidad. El tamaño va en % del ALTO de la
+ * caja (`h`) y la proporción (`r`), así no depende del ancho.
+ */
+function layoutOf(s: Shard) {
+  const dp = project(s.pose, STAGE_ASPECT_DESKTOP);
+  const ds = silhouette(s, STAGE_ASPECT_DESKTOP);
+  const mu = unproject(s.stage.mobile.left, s.stage.mobile.top, s.pose.z, MOBILE_REF_ASPECT);
+  const ms = silhouette({ ...s, pose: { ...s.pose, x: mu.x, y: mu.y } }, MOBILE_REF_ASPECT);
   return {
-    "--ml": `${s.stage.mobile.left}%`,
-    "--mt": `${s.stage.mobile.top}%`,
-    "--dl": `${s.stage.desktop.left}%`,
-    "--dt": `${s.stage.desktop.top}%`,
-    "--s": s.scale,
+    d: { left: r2(dp.left), top: r2(dp.top), sl: r2(ds.left), st: r2(ds.top), h: r2(ds.h), r: r2((ds.w * STAGE_ASPECT_DESKTOP) / ds.h), clip: ds.clip },
+    m: { left: s.stage.mobile.left, top: s.stage.mobile.top, sl: r2(ms.left), st: r2(ms.top), h: r2(ms.h), r: r2((ms.w * MOBILE_REF_ASPECT) / ms.h), clip: ms.clip },
+  };
+}
+
+export function stageVars(s: Shard): CSSProperties {
+  const l = layoutOf(s);
+  return {
+    "--ml": `${l.m.left}%`,
+    "--mt": `${l.m.top}%`,
+    "--mh": `${l.m.h}%`,
+    "--mr": l.m.r,
+    "--dl": `${l.d.left}%`,
+    "--dt": `${l.d.top}%`,
+    "--dh": `${l.d.h}%`,
+    "--dr": l.d.r,
   } as CSSProperties;
 }
 
-function Glass({ shard, index }: { shard: Shard; index: number }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`block h-[calc(var(--s)*2.75rem)] w-[calc(var(--s)*2.75rem)] rounded-full shadow-[0_0_28px_rgba(120,150,255,0.55)] transition-[transform,box-shadow] duration-200 lg:h-[calc(var(--s)*3.5rem)] lg:w-[calc(var(--s)*3.5rem)] ${HUE[shard.hue]}`}
-      style={{ borderRadius: RADII[index % RADII.length], rotate: `${Math.round(shard.pose.rz * 57)}deg` }}
-    />
-  );
+function glassVars(s: Shard): CSSProperties {
+  const l = layoutOf(s);
+  return {
+    "--ml": `${l.m.sl}%`,
+    "--mt": `${l.m.st}%`,
+    "--mh": `${l.m.h}%`,
+    "--mr": l.m.r,
+    "--mc": l.m.clip,
+    "--dl": `${l.d.sl}%`,
+    "--dt": `${l.d.st}%`,
+    "--dh": `${l.d.h}%`,
+    "--dr": l.d.r,
+    "--dc": l.d.clip,
+  } as CSSProperties;
 }
 
-// Pósters renderizados (Task 3): solo CSS `background-image`, nunca `<img>`. Se
-// pintan únicamente si `HAS_POSTER` (constante comprobada contra el disco por un
-// test), así que antes de Task 3 no se pide ningún fichero que no existe.
-export function posterLayers(hasPoster: boolean): { id: string; url: string; className: string }[] {
-  if (!hasPoster) return [];
-  return [
-    { id: "mobile", url: "/media/404/constellation-mobile.webp", className: "lg:hidden" },
-    { id: "desktop", url: "/media/404/constellation.webp", className: "hidden lg:block" },
-  ];
+const BOX =
+  "absolute h-[var(--mh)] aspect-[var(--mr)] left-[var(--ml)] top-[var(--mt)] -translate-x-1/2 -translate-y-1/2 lg:h-[var(--dh)] lg:aspect-[var(--dr)] lg:left-[var(--dl)] lg:top-[var(--dt)]";
+
+/** Cristal CSS: silueta recortada con `clip-path` (la de la pose, vista por la cámara). Sin póster, o en móvil. */
+function Glass({ shard, hideOnDesktop }: { shard: Shard; hideOnDesktop: boolean }) {
+  return (
+    <div
+      aria-hidden="true"
+      data-shard-glass={shard.id}
+      {...(shard.target === null ? { "data-shard-id": shard.id } : {})}
+      className={`${BOX} [filter:drop-shadow(0_0_14px_rgba(120,150,255,0.5))] ${hideOnDesktop ? "lg:hidden" : ""}`}
+      style={glassVars(shard)}
+    >
+      <div className={`h-full w-full [clip-path:var(--mc)] lg:[clip-path:var(--dc)] ${HUE[shard.hue]}`} />
+    </div>
+  );
 }
 
 const STARS = [
@@ -86,7 +112,7 @@ const STARS = [
 const GLOW =
   "radial-gradient(circle 380px at 64% 48%,rgba(98,140,255,.28),transparent),radial-gradient(circle 420px at 70% 60%,rgba(0,220,200,.12),transparent)";
 
-export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang; hasPoster?: boolean }) {
+export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lang: Lang; hasEndPoster?: boolean }) {
   const dict = getDictionary(lang);
   const d = dict.notFound;
   const byId = new Map(SHARDS.map((s) => [s.id, s]));
@@ -95,7 +121,7 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
     <section
       data-stage="lost"
       aria-labelledby="lost-title"
-      className="relative isolate overflow-hidden pb-24 pt-12 md:pt-20 lg:min-h-[640px] lg:pb-0 lg:pt-24"
+      className="relative isolate overflow-hidden pb-24 pt-12 md:pt-20 lg:min-h-[max(640px,calc(min(100vw,1440px)*0.5625))] lg:pb-0 lg:pt-24"
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,#000_65%,transparent)]" style={{ backgroundImage: GLOW }} />
       <div aria-hidden="true" className="absolute inset-0 -z-10" style={{ backgroundImage: STARS }} />
@@ -142,17 +168,12 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
         </Container>
       </div>
 
-      {/* Escenario: apilado bajo el texto en móvil (altura fija, sin CLS) y a pantalla completa desde lg. */}
-      <div className="pointer-events-none relative mt-8 h-[32rem] lg:absolute lg:inset-y-0 lg:left-1/2 lg:mt-0 lg:h-auto lg:w-full lg:max-w-[1440px] lg:-translate-x-1/2">
-        {posterLayers(hasPoster).map((l) => (
-          <div
-            key={l.id}
-            aria-hidden="true"
-            data-stage-poster={l.id}
-            className={`absolute inset-0 bg-cover bg-center ${l.className}`}
-            style={{ backgroundImage: `url(${l.url})` }}
-          />
-        ))}
+      {/*
+        Escenario. Móvil: apilado bajo el texto, altura fija (sin CLS), ancho máx. 28rem y SIN vídeo (L5).
+        Desde lg: caja 16:9 fija y centrada; en ella el póster final (si existe) se pinta a 100% x 100%,
+        con la misma proyección que las posiciones de los enlaces (L7).
+      */}
+      <div className="pointer-events-none relative mx-auto mt-8 h-[32rem] w-[min(100%,28rem)] lg:absolute lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-0 lg:aspect-video lg:h-auto lg:w-[min(100%,1440px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
         {(["m", "d"] as const).map((variant) => (
           <svg
             key={variant}
@@ -166,14 +187,15 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
             {(variant === "m" ? LINES_MOBILE : LINES).map(([a, b]) => {
               const from = byId.get(a)!;
               const to = byId.get(b)!;
-              const k = variant === "m" ? "mobile" : "desktop";
+              const pf = variant === "m" ? from.stage.mobile : project(from.pose, STAGE_ASPECT_DESKTOP);
+              const pt = variant === "m" ? to.stage.mobile : project(to.pose, STAGE_ASPECT_DESKTOP);
               return (
                 <line
                   key={`${a}-${b}`}
-                  x1={from.stage[k].left}
-                  y1={from.stage[k].top}
-                  x2={to.stage[k].left}
-                  y2={to.stage[k].top}
+                  x1={r2(pf.left)}
+                  y1={r2(pf.top)}
+                  x2={r2(pt.left)}
+                  y2={r2(pt.top)}
                   className="[stroke:var(--light-1)]"
                   strokeOpacity={0.28}
                   strokeWidth={1}
@@ -184,19 +206,34 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
           </svg>
         ))}
 
+        {hasEndPoster ? (
+          <div
+            aria-hidden="true"
+            data-stage-poster="end"
+            className="absolute inset-0 hidden lg:block"
+            style={{ backgroundImage: "url(/media/404/poster-end.webp)", backgroundSize: "100% 100%", backgroundRepeat: "no-repeat" }}
+          />
+        ) : null}
+
+        {/* Cristal CSS: siempre en móvil, y en escritorio solo si no hay póster. */}
+        <div aria-hidden="true">
+          {SHARDS.map((shard) => (
+            <Glass key={shard.id} shard={shard} hideOnDesktop={hasEndPoster} />
+          ))}
+        </div>
+
         <ul aria-label={dict.lost.group} className="absolute inset-0 m-0 list-none p-0">
-          {SHARDS.map((shard, i) => {
+          {SHARDS.map((shard) => {
             if (shard.target === null) return null;
             const label = dict.lost.shard[shard.target];
             return (
-              <li key={shard.id} className={POS} style={posStyle(shard)}>
+              <li key={shard.id} className={`${BOX} min-h-11 min-w-11`} style={stageVars(shard)}>
                 <a
                   href={shardHref(shard.target, lang)}
                   data-shard-id={shard.id}
-                  className={`group pointer-events-auto relative grid min-h-11 min-w-11 place-items-center rounded-full ${FOCUS}`}
+                  className={`group pointer-events-auto relative block h-full min-h-11 w-full min-w-11 rounded-full ${FOCUS}`}
                 >
-                  <Glass shard={shard} index={i} />
-                  <span className="absolute left-1/2 top-[calc(50%+var(--s)*1.4rem+0.25rem)] -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.12] bg-[rgba(11,13,20,0.8)] px-2.5 py-1 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors group-hover:border-[color:var(--light-1)] group-focus-visible:border-[color:var(--light-1)] group-focus-visible:ring-2 group-focus-visible:ring-[color:var(--light-1)] lg:top-[calc(50%+var(--s)*1.75rem+0.25rem)]">
+                  <span className="absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.12] bg-[rgba(11,13,20,0.8)] px-2.5 py-1 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors group-hover:border-[color:var(--light-1)] group-focus-visible:border-[color:var(--light-1)] group-focus-visible:ring-2 group-focus-visible:ring-[color:var(--light-1)]">
                     {label}
                   </span>
                 </a>
@@ -204,17 +241,6 @@ export default function LostStage({ lang, hasPoster = HAS_POSTER }: { lang: Lang
             );
           })}
         </ul>
-
-        <div aria-hidden="true">
-          {SHARDS.map((shard, i) => {
-            if (shard.target !== null) return null;
-            return (
-              <div key={shard.id} data-shard-id={shard.id} className={`${POS} opacity-80`} style={posStyle(shard)}>
-                <Glass shard={shard} index={i + 3} />
-              </div>
-            );
-          })}
-        </div>
 
         {/* «Estás aquí»: el punto cian que pulsa, fuera del mapa. */}
         <div

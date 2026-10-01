@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { SHARDS, CAMERA } from "../../sgomez/src/lib/lost/shards";
-import { assignCells, mulberry32, type Cell } from "./geometry";
+import { SHARDS, GLASS } from "../../sgomez/src/lib/lost/shards";
+import { mulberry32, cells } from "./geometry";
 
 /**
  * Línea de tiempo pura: (fragmento, frame) -> transformación. Sin estado ni
@@ -14,9 +14,6 @@ import { assignCells, mulberry32, type Cell } from "./geometry";
 export const F_CRACK_END = 40;
 export const F_FLY_END = 70;
 export const F_LAST = 119;
-
-/** Radio del fragmento por unidad de `scale`, en unidades de mundo (la escena en vivo debe usar el mismo). */
-export const RADIUS_PER_SCALE = { desktop: 0.42, mobile: 0.3 };
 
 /** Centro del cristal: el baricentro de la constelación, para que el estallido se abra hacia donde aterriza. */
 export const GLASS_CENTER = new THREE.Vector3(2.15, 0.1, 0);
@@ -35,13 +32,7 @@ const easeOutBack = (t: number) => {
   return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
 };
 
-export const cells: Cell[] = assignCells();
-
-/** Cámara compartida: aspect 16:9 en el vídeo, otro en el póster móvil. */
-export function worldSize(aspect: number) {
-  const h = 2 * CAMERA.position[2] * Math.tan(((CAMERA.fov / 2) * Math.PI) / 180);
-  return { w: h * aspect, h };
-}
+export { cells };
 
 /** Pose del cristal entero (antes de romperse). */
 export function slabState(f: number) {
@@ -61,23 +52,16 @@ export function slabState(f: number) {
 
 export type ShardState = { pos: THREE.Vector3; q: THREE.Quaternion; scale: number };
 
-const finalCache = new Map<string, { pos: THREE.Vector3; q: THREE.Quaternion; scale: number }>();
+const finalCache = new Map<number, ShardState>();
 
-/** Pose final de un fragmento. `mobile` coloca los centros en `stage.mobile` (póster apilado, aspect 3:4). */
-export function finalPose(i: number, mode: "desktop" | "mobile") {
-  const key = `${mode}${i}`;
-  const hit = finalCache.get(key);
+/** Pose final de un fragmento: la de `shards.ts` con Euler XYZ y radio `scale * GLASS.radiusPerScale`. */
+export function finalPose(i: number): ShardState {
+  const hit = finalCache.get(i);
   if (hit) return hit;
   const s = SHARDS[i]!;
-  const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(s.pose.rx, s.pose.ry, s.pose.rz, "XYZ"));
-  let pos: THREE.Vector3;
-  if (mode === "desktop") pos = new THREE.Vector3(s.pose.x, s.pose.y, s.pose.z);
-  else {
-    const { w, h } = worldSize(900 / 1200);
-    pos = new THREE.Vector3((s.stage.mobile.left / 100 - 0.5) * w, (0.5 - s.stage.mobile.top / 100) * h, s.pose.z);
-  }
-  const out = { pos, q, scale: s.scale * RADIUS_PER_SCALE[mode] };
-  finalCache.set(key, out);
+  const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(s.pose.rx, s.pose.ry, s.pose.rz, GLASS.euler));
+  const out = { pos: new THREE.Vector3(s.pose.x, s.pose.y, s.pose.z), q, scale: s.scale * GLASS.radiusPerScale };
+  finalCache.set(i, out);
   return out;
 }
 
@@ -87,7 +71,7 @@ const dirs = SHARDS.map((_, i) => {
   return { axis, turns: 0.45 + r() * 0.7, depth: 0.5 + r() * 0.9, over: 0.28 + r() * 0.2 };
 });
 
-export function shardState(i: number, f: number, mode: "desktop" | "mobile" = "desktop"): ShardState {
+export function shardState(i: number, f: number): ShardState {
   const cell = cells[i]!;
   const slab = slabState(Math.min(f, F_CRACK_END));
   const local = new THREE.Vector3(cell.cx * slab.gap, cell.cy * slab.gap, 0).multiplyScalar(slab.scale).applyQuaternion(slab.q);
@@ -95,7 +79,7 @@ export function shardState(i: number, f: number, mode: "desktop" | "mobile" = "d
 
   if (f <= F_CRACK_END) return assembled;
 
-  const fin = finalPose(i, mode);
+  const fin = finalPose(i);
   const d = dirs[i]!;
   const radial = Math.hypot(cell.cx, cell.cy) / 1.5;
   const delay = radial * 3; // los centrales ceden primero

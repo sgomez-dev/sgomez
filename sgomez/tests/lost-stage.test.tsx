@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
-import { SHARDS, LINES, LINES_MOBILE, HAS_POSTER, CAMERA, type ShardTarget } from "@/lib/lost/shards";
+import { SHARDS, LINES, LINES_MOBILE, HAS_END_POSTER, CAMERA, STAGE_ASPECT_DESKTOP, project, unproject, silhouette, type ShardTarget } from "@/lib/lost/shards";
 import { shardHref } from "@/lib/lost/shard-links";
-import LostStage, { posterLayers } from "@/chapters/lost/LostStage";
+import LostStage from "@/chapters/lost/LostStage";
 import { RequestedPathLabel, formatRequestedPath, readRequestedPath } from "@/chapters/lost/RequestedPath";
 import { LANGS } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
@@ -29,7 +29,7 @@ describe("SHARDS", () => {
     for (const s of SHARDS) {
       expect(s.scale).toBeGreaterThanOrEqual(0.4);
       expect(s.scale).toBeLessThanOrEqual(1.4);
-      for (const p of [s.stage.desktop, s.stage.mobile]) {
+      for (const p of [project(s.pose, STAGE_ASPECT_DESKTOP), s.stage.mobile]) {
         expect(p.left).toBeGreaterThan(5);
         expect(p.left).toBeLessThan(95);
         expect(p.top).toBeGreaterThan(0);
@@ -59,7 +59,7 @@ function properlyIntersect(p1: Pt, p2: Pt, p3: Pt, p4: Pt) {
   return d1 * d2 < 0 && d3 * d4 < 0;
 }
 function checkPlanar(edges: readonly (readonly [string, string])[], k: "mobile" | "desktop") {
-  const pos = new Map(SHARDS.map((s) => [s.id, s.stage[k]]));
+  const pos = new Map(SHARDS.map((s) => [s.id, k === "mobile" ? s.stage.mobile : project(s.pose, STAGE_ASPECT_DESKTOP)]));
   const bad: string[] = [];
   for (let i = 0; i < edges.length; i++)
     for (let j = i + 1; j < edges.length; j++) {
@@ -93,37 +93,69 @@ describe("constelación sin cruces", () => {
   });
 });
 
-describe("póster (L4)", () => {
-  it("HAS_POSTER coincide con el disco", () => {
-    const f = (n: string) => existsSync(fileURLToPath(new URL(`../public/media/404/${n}`, import.meta.url)));
-    // Con la constante en true hacen falta LOS DOS pósters (escritorio y móvil); en false, ninguno.
-    expect(HAS_POSTER).toBe(f("constellation.webp") && f("constellation-mobile.webp"));
+describe("póster final (L7)", () => {
+  const exists = (n: string) => existsSync(fileURLToPath(new URL(`../public/media/404/${n}`, import.meta.url)));
+  it("HAS_END_POSTER coincide con el disco (poster-end.webp)", () => {
+    expect(HAS_END_POSTER).toBe(exists("poster-end.webp"));
   });
-  it("con HAS_POSTER a true existen constellation.webp y constellation-mobile.webp", () => {
-    const f = (n: string) => existsSync(fileURLToPath(new URL(`../public/media/404/${n}`, import.meta.url)));
-    if (HAS_POSTER) {
-      expect(f("constellation.webp")).toBe(true);
-      expect(f("constellation-mobile.webp")).toBe(true);
-    }
+  it("sin pósters viejos de constelación en disco", () => {
+    expect(exists("constellation.webp")).toBe(false);
+    expect(exists("constellation-mobile.webp")).toBe(false);
   });
-  it("posterLayers: ninguna capa sin póster, dos con póster (móvil bajo lg, escritorio desde lg)", () => {
-    expect(posterLayers(false)).toEqual([]);
-    const l = posterLayers(true);
-    expect(l).toHaveLength(2);
-    expect(l[0]!.url).toBe("/media/404/constellation-mobile.webp");
-    expect(l[0]!.className).toContain("lg:hidden");
-    expect(l[1]!.url).toBe("/media/404/constellation.webp");
-    expect(l[1]!.className).toContain("hidden lg:block");
-  });
-  it("LostStage pinta las capas solo con póster, y nunca como <img>", () => {
-    const on = renderToStaticMarkup(<LostStage lang="en" hasPoster />);
-    expect(on).toContain("url(/media/404/constellation-mobile.webp)");
-    expect(on).toContain("url(/media/404/constellation.webp)");
+  it("LostStage pinta el póster final solo con HAS_END_POSTER, como CSS y nunca como <img>", () => {
+    const on = renderToStaticMarkup(<LostStage lang="en" hasEndPoster />);
+    expect(on).toContain("url(/media/404/poster-end.webp)");
+    expect(on).toContain("100% 100%");
     expect(on).not.toMatch(/<img/);
-    const off = renderToStaticMarkup(<LostStage lang="en" hasPoster={false} />);
-    expect(off).not.toContain("constellation");
+    const off = renderToStaticMarkup(<LostStage lang="en" hasEndPoster={false} />);
+    expect(off).not.toContain("poster-end");
   });
 });
+
+describe("proyección compartida (L6)", () => {
+  it("unproject(project(p)) vuelve a p, a la profundidad del propio punto", () => {
+    for (const s of SHARDS) {
+      for (const aspect of [STAGE_ASPECT_DESKTOP, 0.75, 1.6]) {
+        const q = project(s.pose, aspect);
+        const back = unproject(q.left, q.top, s.pose.z, aspect);
+        expect(Math.abs(back.x - s.pose.x)).toBeLessThan(1e-6);
+        expect(Math.abs(back.y - s.pose.y)).toBeLessThan(1e-6);
+      }
+    }
+  });
+  it("unproject usa la profundidad (z distinto da x distinto)", () => {
+    const a = unproject(80, 30, 0, STAGE_ASPECT_DESKTOP);
+    const b = unproject(80, 30, 0.6, STAGE_ASPECT_DESKTOP);
+    expect(b.x).toBeLessThan(a.x);
+  });
+  it("silhouette: polígono válido de 3 o más puntos dentro de 0 a 100%", () => {
+    for (const s of SHARDS) {
+      for (const aspect of [STAGE_ASPECT_DESKTOP, 0.75]) {
+        const sil = silhouette(s, aspect);
+        const pts = [...sil.clip.matchAll(/(-?[0-9.]+)% (-?[0-9.]+)%/g)].map((m) => [Number(m[1]), Number(m[2])]);
+        expect(pts.length, s.id).toBeGreaterThanOrEqual(3);
+        for (const [x, y] of pts) {
+          expect(x!).toBeGreaterThanOrEqual(0);
+          expect(x!).toBeLessThanOrEqual(100);
+          expect(y!).toBeGreaterThanOrEqual(0);
+          expect(y!).toBeLessThanOrEqual(100);
+        }
+        expect(sil.w).toBeGreaterThan(0);
+        expect(sil.h).toBeGreaterThan(0);
+      }
+    }
+  });
+  it("las variables --dl y --dt renderizadas son project() de la pose", () => {
+    const html = renderToStaticMarkup(<LostStage lang="es" hasEndPoster />);
+    for (const s of SHARDS.filter((x) => x.target !== null)) {
+      const p = project(s.pose, STAGE_ASPECT_DESKTOP);
+      const re = new RegExp("--ml:[^;]*;--mt:[^;]*;--mh:[^;]*;--mr:[^;]*;--dl:([0-9.]+)%;--dt:([0-9.]+)%", "g");
+      const found = [...html.matchAll(re)].map((m) => [Number(m[1]), Number(m[2])] as const);
+      expect(found.some(([l, t]) => Math.abs(l - p.left) < 0.01 && Math.abs(t - p.top) < 0.01), s.id).toBe(true);
+    }
+  });
+});
+
 
 describe("shardHref", () => {
   const machinePaths = new Set<string>(MACHINE_ROUTES.map((r) => r.path));
