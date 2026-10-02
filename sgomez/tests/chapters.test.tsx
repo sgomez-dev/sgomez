@@ -207,7 +207,9 @@ describe("capítulos 08–09 en HTML de servidor", () => {
         expect(outside).toContain(esc(r.comment_translation!.split("\n\n")[0]!));
       } else {
         expect(proof).toMatch(/<p[^>]*lang="es"[^>]*>/);
-        expect(proof).not.toContain("<details");
+        // en español las recomendaciones no llevan <details> (el de las certificaciones es otro bloque)
+        const recs = proof.slice(proof.indexOf('aria-labelledby="proof-recs"'), proof.indexOf('aria-labelledby="proof-certs"'));
+        expect(recs).not.toContain("<details");
         expect(proof).not.toContain(getDictionary("en").recommendations.translated);
       }
     });

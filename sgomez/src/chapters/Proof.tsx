@@ -1,7 +1,8 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
-import { getCertifications, getEducation, getRecommendations } from "@/lib/api/data";
+import { getEducation, getRecommendations } from "@/lib/api/data";
+import Certifications from "@/chapters/proof/Certifications";
 import { recommendationView } from "@/lib/content/recommendation-view";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
@@ -44,7 +45,6 @@ function Paragraphs({ text, lang }: { text: string; lang: string }) {
 export default function Proof({ lang, children }: { lang: Lang; children?: ReactNode }) {
   const d = getDictionary(lang);
   const recommendations = getRecommendations(lang);
-  const certifications = getCertifications(lang);
   const education = getEducation(lang);
   return (
     <Section id="proof" labelledBy="proof-h">
@@ -109,25 +109,7 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
 
         <div className="mt-16 lg:mt-24" role="group" aria-labelledby="proof-certs">
           <Label id="proof-certs">{d.chapters.proof.certifications}</Label>
-          <ul className="mt-6 grid list-none gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {certifications.map((c, i) => (
-              <li key={c.slug} data-motion="badge" style={{ "--i": i % 3 } as CSSProperties} className="flex min-w-0">
-                <a
-                  href={c.credential_url}
-                  rel="noopener"
-                  aria-label={`${c.title}, ${c.institution}, ${c.date}. ${d.chapters.proof.credential}`}
-                  className={`group flex min-h-11 w-full flex-col gap-2 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-4 transition-colors hover:bg-[color:var(--bg-3)] sm:p-5 ${focus}`}
-                >
-                  <span className="flex items-start justify-between gap-3 text-[length:var(--step-0)] font-semibold leading-[1.25] text-[color:var(--text)] [overflow-wrap:anywhere]">
-                    {c.title}
-                    <span aria-hidden="true" className="text-[color:var(--text-2)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
-                  </span>
-                  <span className="text-[length:var(--step--1)] text-[color:var(--text-2)]">{c.institution}</span>
-                  <span className="mt-auto text-[length:var(--step--1)] uppercase tracking-[0.1em] text-[color:var(--light-2)]">{c.date}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <Certifications lang={lang} />
         </div>
 
         <div className="mt-16 lg:mt-24" role="group" aria-labelledby="proof-edu">

@@ -65,6 +65,11 @@ const en: Dictionary = {
       blogAll: "See all posts",
       minutes: "{n} min read",
       credential: "View credential",
+      certSummary: "{n} certifications from {k} issuers, {from} to {to}",
+      certCount: "{n} certificates",
+      certCountOne: "1 certificate",
+      certIssuers: "Issuers",
+      certAll: "See the other {n} certifications",
       categories: { PROYECTO: "Project", PODCAST: "Podcast", REFLEXION: "Reflection", TUTORIAL: "Tutorial", NOTICIA: "News", GENERAL: "General" },
     },
     contact: {

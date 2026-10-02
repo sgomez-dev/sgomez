@@ -63,6 +63,11 @@ const es = {
       blogAll: "Ver todas las entradas",
       minutes: "{n} min de lectura",
       credential: "Ver credencial",
+      certSummary: "{n} certificaciones de {k} emisores, de {from} a {to}",
+      certCount: "{n} certificados",
+      certCountOne: "1 certificado",
+      certIssuers: "Emisores",
+      certAll: "Ver las otras {n} certificaciones",
       categories: { PROYECTO: "Proyecto", PODCAST: "Podcast", REFLEXION: "Reflexión", TUTORIAL: "Tutorial", NOTICIA: "Noticia", GENERAL: "General" },
     },
     contact: {
