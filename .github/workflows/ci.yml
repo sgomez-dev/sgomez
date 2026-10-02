@@ -90,7 +90,11 @@ jobs:
       # The e2e build sets BLOG_API_DISABLED=1 (no blog block, no cover images),
       # so it is lighter than production. Rebuild WITHOUT it before auditing, or
       # the LCP/TBT/CLS budgets would be checked against a page nobody serves.
-      # .next/cache keeps this cheap.
+      # .next/cache keeps this cheap. The e2e build was made with E2E_FIXTURES=1:
+      # its prerendered HTML and the fixture frames must not leak into this one.
+      - name: Remove the e2e fixtures
+        run: rm -rf .next/server public/media/__fixture
+
       - name: Production build for Lighthouse
         run: npm run build
         env:

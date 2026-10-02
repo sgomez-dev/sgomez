@@ -13,6 +13,14 @@ import type { NextConfig } from "next";
 const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
 
+/**
+ * `E2E_FIXTURES=1` monta la ruta de prueba /e2e-sequence y sus fotogramas. Solo es para el build del e2e: un despliegue de
+ * Vercel (que define `VERCEL_ENV`) con la variable puesta publicaría una página de pruebas, así que el build se aborta.
+ */
+if (process.env.E2E_FIXTURES === "1" && process.env.VERCEL_ENV) {
+  throw new Error("E2E_FIXTURES=1 no puede usarse en un build de Vercel (VERCEL_ENV está definida).");
+}
+
 const nextConfig: NextConfig = {
   experimental: { viewTransition: true },
   images: {
