@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
-import { CAMERA, GLASS, GLASS_ENV, GLASS_MATERIAL, LINES, LINES_MOBILE, SHARDS, mulberry32, unproject, type Shard } from "@/lib/lost/shards";
+import { CAMERA, GLASS, GLASS_ENV, LINES, LINES_MOBILE, SHARDS, unproject, type Shard } from "@/lib/lost/shards";
+import { buildBackdrop, buildEnv, glassMaterial, shardGeometry } from "./glass-kit";
 
 /**
  * Escena 3D viva del 404. Es el RELEVO exacto del último fotograma del vídeo
@@ -37,117 +38,6 @@ const MAX_TILT = 6 * DEG;
 const MAX_FLOAT = 0.08;
 const GLOW_COLOR = "#9FB6FF";
 
-/** Entorno HDR de estudio: lo que el cristal refleja. Igual que `useStudioEnv` del vídeo. */
-function buildEnv(gl: THREE.WebGLRenderer): THREE.Texture {
-  const env = new THREE.Scene();
-  const { dome, panels } = GLASS_ENV;
-  const sphere = new THREE.SphereGeometry(dome.radius, 64, 32);
-  const ring = dome.ring.map((c) => new THREE.Color(c));
-  const p = sphere.attributes.position!;
-  const cols = new Float32Array(p.count * 3);
-  const L = dome.lobe;
-  for (let i = 0; i < p.count; i++) {
-    const x = p.getX(i) / dome.radius;
-    const y = p.getY(i) / dome.radius;
-    const z = p.getZ(i) / dome.radius;
-    const t = (Math.atan2(y, x) / (Math.PI * 2) + 0.5) * (ring.length - 1);
-    const k = Math.min(ring.length - 2, Math.floor(t));
-    const c = ring[k]!.clone().lerp(ring[k + 1]!, t - k);
-    c.multiplyScalar(L.base + L.front * Math.pow(Math.max(0, z), L.frontPow) + L.back * Math.pow(Math.max(0, -z), L.backPow));
-    cols.set([c.r, c.g, c.b], i * 3);
-  }
-  sphere.setAttribute("color", new THREE.BufferAttribute(cols, 3));
-  env.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
-  for (const pn of panels) {
-    const c = new THREE.Color(pn.color).multiplyScalar(pn.intensity);
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(pn.w, pn.h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide }));
-    m.position.set(...pn.pos);
-    m.lookAt(0, 0, 0);
-    env.add(m);
-  }
-  const pm = new THREE.PMREMGenerator(gl);
-  const tex = pm.fromScene(env, 0.02).texture;
-  pm.dispose();
-  // la escena auxiliar ya no hace falta: PMREM guardó su resultado
-  env.traverse((o) => {
-    const m = o as THREE.Mesh;
-    if (m.isMesh) {
-      m.geometry.dispose();
-      (m.material as THREE.Material).dispose();
-    }
-  });
-  return tex;
-}
-
-/** Fondo SOLO para la refracción (ver `Scene.tsx` del vídeo): el pase de transmisión refracta lo que hay detrás del cristal. */
-function buildBackdrop(): THREE.MeshBasicMaterial {
-  const B = GLASS_ENV.backdrop;
-  const c = document.createElement("canvas");
-  c.width = B.size;
-  c.height = B.size;
-  const g = c.getContext("2d")!;
-  g.fillStyle = B.base;
-  g.fillRect(0, 0, B.size, B.size);
-  for (const b of B.blobs) {
-    const rg = g.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-    rg.addColorStop(0, `rgba(${b.rgb},${b.a})`);
-    rg.addColorStop(1, `rgba(${b.rgb},0)`);
-    g.fillStyle = rg;
-    g.fillRect(0, 0, B.size, B.size);
-  }
-  const rnd = mulberry32(B.seed);
-  g.globalCompositeOperation = "lighter";
-  for (let i = 0; i < B.count; i++) {
-    const { rgb, a } = B.beams[i % B.beams.length]!;
-    g.save();
-    g.translate(rnd() * B.size, rnd() * B.size);
-    g.rotate(0.45 + (rnd() - 0.5) * 0.5);
-    const w = 8 + rnd() * 34;
-    const lg = g.createLinearGradient(-w, 0, w, 0);
-    lg.addColorStop(0, `rgba(${rgb},0)`);
-    lg.addColorStop(0.5, `rgba(${rgb},${a * (0.35 + rnd() * 0.65)})`);
-    lg.addColorStop(1, `rgba(${rgb},0)`);
-    g.fillStyle = lg;
-    g.fillRect(-w, -700, w * 2, 1400);
-    g.restore();
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(B.plane.repeat, B.plane.repeat);
-  return new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
-}
-
-function shardGeometry(s: Shard): THREE.ExtrudeGeometry {
-  const B = GLASS.bevel;
-  const shape = new THREE.Shape(s.outline.map(([x, y]) => new THREE.Vector2(x, y)));
-  const g = new THREE.ExtrudeGeometry(shape, {
-    depth: GLASS.depth,
-    bevelEnabled: true,
-    bevelThickness: B.thickness,
-    bevelSize: B.size,
-    bevelOffset: B.offset,
-    bevelSegments: B.segments,
-    curveSegments: 1,
-  });
-  g.translate(0, 0, -GLASS.depth / 2);
-  return g;
-}
-
-/** El material del vídeo, uno por fragmento (el brillo es por fragmento). Con emisión 0 es idéntico. */
-function glassMaterial(env: THREE.Texture): THREE.MeshPhysicalMaterial {
-  const { attenuationColor, iridescenceThicknessRange, ...rest } = GLASS_MATERIAL;
-  const m = new THREE.MeshPhysicalMaterial({
-    ...rest,
-    iridescenceThicknessRange: [...iridescenceThicknessRange],
-    attenuationColor: new THREE.Color(attenuationColor),
-    emissive: new THREE.Color(GLOW_COLOR),
-    emissiveIntensity: 0,
-  });
-  m.envMap = env;
-  return m;
-}
-
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
@@ -178,7 +68,7 @@ function buildAssets(env: THREE.Texture, backdrop: THREE.MeshBasicMaterial): Ass
     group.quaternion.copy(q);
     const baseScale = s.scale * GLASS.radiusPerScale;
     group.scale.setScalar(baseScale);
-    const mat = glassMaterial(env);
+    const mat = glassMaterial(env, "full", GLOW_COLOR);
     group.add(new THREE.Mesh(geos[i]!, mat));
     return {
       id: s.id,
@@ -224,7 +114,7 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
       await yieldToMain();
       const env = buildEnv(gl);
       await yieldToMain();
-      const backdrop = buildBackdrop();
+      const backdrop = buildBackdrop((w, h) => Object.assign(document.createElement("canvas"), { width: w, height: h }));
       await yieldToMain();
       const built = buildAssets(env, backdrop);
       if (off) return disposeAssets(built);

@@ -3,7 +3,8 @@
 import { Component, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { initial, step, type Event } from "./sequence";
-import { gatingPasses, isSoftwareRenderer, needsOpaqueVideo, VIDEO_SRC } from "./media";
+import { gatingPasses, needsOpaqueVideo, VIDEO_SRC } from "./media";
+import { LG_QUERY, readGate } from "@/lib/three/gate";
 import type { SceneProps } from "@/three/ConstellationScene";
 
 /**
@@ -28,8 +29,6 @@ type Props = {
 
 type VideoState = "idle" | "playing" | "ended" | "error";
 
-const LG = "(min-width: 64rem)";
-
 class Boundary extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() {
@@ -41,36 +40,6 @@ class Boundary extends Component<{ onError: () => void; children: ReactNode }, {
   render() {
     return this.state.failed ? null : this.props.children;
   }
-}
-
-function probeWebGL2(): { ok: boolean; software: boolean } {
-  try {
-    const c = document.createElement("canvas");
-    const g = c.getContext("webgl2");
-    if (!g) return { ok: false, software: false };
-    const info = g.getExtension("WEBGL_debug_renderer_info");
-    const name = info ? String(g.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
-    g.getExtension("WEBGL_lose_context")?.loseContext();
-    return { ok: true, software: isSoftwareRenderer(name) };
-  } catch {
-    return { ok: false, software: false };
-  }
-}
-
-type NavigatorExtras = Navigator & { connection?: { saveData?: boolean } };
-
-function readGate() {
-  const nav = navigator as NavigatorExtras;
-  const gl = probeWebGL2();
-  // Solo para pruebas: un init-script pone este indicador para ejercitar la ruta 3D aunque el Chromium de CI pinte por software.
-  const forced = (window as { __LOST_FORCE_GATE__?: boolean }).__LOST_FORCE_GATE__ === true;
-  return {
-    webgl2: gl.ok,
-    software: forced ? false : gl.software,
-    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
-    saveData: nav.connection?.saveData === true,
-    cores: typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency > 0 ? nav.hardwareConcurrency : undefined,
-  };
 }
 
 type IOSOrientation = typeof DeviceOrientationEvent & { requestPermission?: () => Promise<"granted" | "denied"> };
@@ -115,7 +84,7 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS. Por debajo de lg la puerta falla: escenario estático
   // (sin sonda WebGL2, sin chunk three, sin lienzo; el coste de enlazar el shader de cristal bloquea el hilo, ver spec §7).
   useEffect(() => {
-    const lg = matchMedia(LG);
+    const lg = matchMedia(LG_QUERY);
     if (!lg.matches || !gatingPasses(readGate())) return;
     const rm = matchMedia("(prefers-reduced-motion: reduce)");
     setEnabled(true);

@@ -324,3 +324,93 @@ export function silhouette(shard: Shard, aspect: number, cam: typeof CAMERA = CA
   const clip = `polygon(${hull.map((p) => `${f(((p[0] - x0) / (x1 - x0)) * 100)}% ${f(((p[1] - y0) / (y1 - y0)) * 100)}%`).join(",")})`;
   return { left: (x0 + x1) / 2, top: (y0 + y1) / 2, w: x1 - x0, h: y1 - y0, clip };
 }
+
+/**
+ * Silueta del cristal entero del hero y del contacto (amendment F3): la forma
+ * REDONDEADA del póster SVG, no la losa del 404. `GlassPoster` pinta `d` y la
+ * escena 3D extruye la misma curva, de modo que en el relevo coinciden.
+ * Coordenadas del póster (viewBox 400, y hacia abajo); el póster aplica además
+ * `rotate(rotate, ...center)` al conjunto.
+ */
+export const POSTER_SILHOUETTE = {
+  d: "M222 78c58 4 106 46 106 104 0 56-28 92-72 116-44 24-106 18-136-28-28-44-18-98 18-136 26-28 50-58 84-56z",
+  rotate: 18,
+  center: [200, 200] as const,
+} as const;
+
+/** Cubos de Bézier absolutos de `POSTER_SILHOUETTE.d` (solo M, c y z relativos). */
+function silhouetteCubics(d: string): [number, number][][] {
+  const nums = (d.match(/-?\d+(?:\.\d+)?/g) ?? []).map(Number);
+  let x = nums[0]!;
+  let y = nums[1]!;
+  const out: [number, number][][] = [];
+  for (let i = 2; i + 5 < nums.length; i += 6) {
+    const [a, b, c, e, f, g] = nums.slice(i, i + 6) as [number, number, number, number, number, number];
+    out.push([[x, y], [x + a, y + b], [x + c, y + e], [x + f, y + g]]);
+    x += f;
+    y += g;
+  }
+  return out;
+}
+
+/**
+ * Contorno del cristal entero en unidades de mundo (y hacia arriba), antihorario,
+ * centrado en su centroide y con radio medio `GLASS.slabRadius`: la silueta del
+ * póster, girada `POSTER_SILHOUETTE.rotate` grados, remuestreada a `n` puntos
+ * equidistantes sobre la curva.
+ */
+export function slabOutlinePoints(n: number = GLASS.slabOutline.n): [number, number][] {
+  const S = POSTER_SILHOUETTE;
+  const dense: [number, number][] = [];
+  for (const [p0, p1, p2, p3] of silhouetteCubics(S.d)) {
+    for (let k = 0; k < 64; k++) {
+      const t = k / 64;
+      const u = 1 - t;
+      dense.push([
+        u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+        u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
+      ]);
+    }
+  }
+  // longitud de arco acumulada y remuestreo uniforme
+  const m = dense.length;
+  const acc = [0];
+  for (let i = 1; i <= m; i++) {
+    const a = dense[i - 1]!;
+    const b = dense[i % m]!;
+    acc.push(acc[i - 1]! + Math.hypot(b[0] - a[0], b[1] - a[1]));
+  }
+  const total = acc[m]!;
+  const pts: [number, number][] = [];
+  let j = 0;
+  for (let i = 0; i < n; i++) {
+    const s = (i / n) * total;
+    while (acc[j + 1]! < s) j++;
+    const a = dense[j]!;
+    const b = dense[(j + 1) % m]!;
+    const f = (s - acc[j]!) / (acc[j + 1]! - acc[j]!);
+    pts.push([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]);
+  }
+  // girar como el póster (SVG: horario en pantalla), centrar, voltear y y escalar
+  const r = (S.rotate * Math.PI) / 180;
+  const cr = Math.cos(r);
+  const sr = Math.sin(r);
+  const rot = pts.map(([px, py]) => {
+    const dx = px - S.center[0];
+    const dy = py - S.center[1];
+    return [dx * cr - dy * sr, dx * sr + dy * cr] as [number, number];
+  });
+  const mx = rot.reduce((s, p) => s + p[0], 0) / n;
+  const my = rot.reduce((s, p) => s + p[1], 0) / n;
+  const mean = rot.reduce((s, p) => s + Math.hypot(p[0] - mx, p[1] - my), 0) / n;
+  const k = GLASS.slabRadius / mean;
+  const world = rot.map(([px, py]) => [(px - mx) * k, -(py - my) * k] as [number, number]);
+  // al voltear y el recorrido pasa a antihorario; se comprueba por si la curva cambia
+  let area = 0;
+  for (let i = 0; i < n; i++) {
+    const a = world[i]!;
+    const b = world[(i + 1) % n]!;
+    area += a[0] * b[1] - b[0] * a[1];
+  }
+  return area >= 0 ? world : world.reverse();
+}

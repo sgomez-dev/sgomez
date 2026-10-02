@@ -22,6 +22,8 @@ export type Gate = {
   cores: number | undefined;
   /** El WebGL2 lo pinta la CPU (SwiftShader, llvmpipe): 12 fragmentos de vidrio irían a tirones. */
   software?: boolean;
+  /** GB de RAM (navigator.deviceMemory), si el navegador lo dice. */
+  deviceMemory?: number;
 };
 
 /** ¿El nombre del renderizador de WebGL es uno por software? */
@@ -29,9 +31,13 @@ export function isSoftwareRenderer(name: string): boolean {
   return /swiftshader|llvmpipe|softpipe|software|microsoft basic render/i.test(name);
 }
 
-/** WebGL2 por hardware, sin `prefers-reduced-motion`, sin Save-Data y 4 núcleos o más (si se sabe). */
+/** WebGL2 por hardware, sin `prefers-reduced-motion`, sin Save-Data, 4 núcleos o más y 4 GB o más (si se saben). */
 export function gatingPasses(g: Gate): boolean {
-  return g.webgl2 && !g.software && !g.reducedMotion && !g.saveData && (g.cores === undefined || g.cores >= 4);
+  return (
+    g.webgl2 && !g.software && !g.reducedMotion && !g.saveData &&
+    (g.cores === undefined || g.cores >= 4) &&
+    (g.deviceMemory === undefined || g.deviceMemory >= 4)
+  );
 }
 
 export const VIDEO_SRC = { webm: "/media/404/shatter.webm", mp4: "/media/404/shatter.mp4" } as const;

@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { POSTER_SILHOUETTE } from "@/lib/lost/shards";
 
 /**
  * Sustituto estático del cristal 3D de la fase 3: un blob iridiscente en SVG
@@ -51,20 +52,20 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
       />
       <g transform="rotate(18 200 200)">
         <path
-          d="M222 78c58 4 106 46 106 104 0 56-28 92-72 116-44 24-106 18-136-28-28-44-18-98 18-136 26-28 50-58 84-56z"
+          d={POSTER_SILHOUETTE.d}
           fill={`url(#${body})`}
           opacity="0.92"
         />
         <path
-          d="M222 78c58 4 106 46 106 104 0 56-28 92-72 116-44 24-106 18-136-28-28-44-18-98 18-136 26-28 50-58 84-56z"
+          d={POSTER_SILHOUETTE.d}
           fill={`url(#${depth})`}
         />
         <path
-          d="M222 78c58 4 106 46 106 104 0 56-28 92-72 116-44 24-106 18-136-28-28-44-18-98 18-136 26-28 50-58 84-56z"
+          d={POSTER_SILHOUETTE.d}
           fill={`url(#${sheen})`}
         />
         <path
-          d="M222 78c58 4 106 46 106 104 0 56-28 92-72 116-44 24-106 18-136-28-28-44-18-98 18-136 26-28 50-58 84-56z"
+          d={POSTER_SILHOUETTE.d}
           fill="none"
           stroke="#FFFFFF"
           strokeOpacity="0.55"
