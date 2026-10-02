@@ -19,11 +19,19 @@ describe("nombre escrito con luz", () => {
     const block = css.slice(css.indexOf("/* Nombre escrito con luz"), css.indexOf("/* Fin nombre escrito con luz */"));
     expect(block).toMatch(/prefers-reduced-motion: no-preference/);
     expect(block).toMatch(/data-motion-state="on"/);
-    expect(block).toMatch(/\[data-light-write\]::after/);
+    expect(block).toMatch(/\[data-light-host\]::after/);
     // isolation haría que el multiply se mezclara solo dentro del span y la capa se vería blanca
     expect(block).not.toMatch(/\[data-light-write\]\s*\{[^}]*(opacity|clip-path|color\s*:|isolation)/);
   });
   it("los colores de la banda cumplen AA sobre el fondo", () => {
     for (const c of ["#8FA8FF", "#6EF0DC"]) expect(contrastRatio(c, "#05060A")).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe("LCP del titular", () => {
+  it("nada dentro del h1 del hero está posicionado: el titular entero sigue siendo un solo candidato de LCP", () => {
+    const html = renderToStaticMarkup(<Hero lang="es" />);
+    const h1 = html.match(/<h1[\s\S]*?<\/h1>/)![0];
+    expect(h1.replace(/^<h1[^>]*>/, "")).not.toMatch(/class="[^"]*\b(relative|absolute|z-\[)/);
   });
 });

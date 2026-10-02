@@ -391,10 +391,10 @@
 [data-hero-loop="live"] ~ [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 500ms var(--mo-ease-out) 150ms; }
 
 /* Nombre escrito con luz (E3). El texto del h1 es el LCP: no se toca. La luz es un
-   pseudo-elemento decorativo en multiply: blanco fuera de la banda (no cambia nada),
-   --light-1 y --light-2 dentro (tiñe solo las letras). Su caja es el h1 (relative) y el serif va
-   encima (z-index 1), así que solo tiñe el nombre en todas sus líneas. Sin isolation: el multiply
-   tiene que mezclarse con el fondo de la página, o la capa se ve blanca. Una vez, 2,2 s. */
+   pseudo-elemento decorativo del h1 en multiply: blanco fuera de la banda (no cambia nada),
+   --light-1 y --light-2 dentro (tiñe solo las letras, también las del serif al pasar). Nada se
+   posiciona dentro del h1: partiría el titular en candidatos de LCP más pequeños que el retrato.
+   Sin isolation: el multiply tiene que mezclarse con el fondo de la página, o la capa se ve blanca. Una vez, 2,2 s. */
 /* De 93 % a 7 %: la banda empieza tocando el borde izquierdo y acaba saliendo por el derecho, sin tenir
    nada ni antes ni despues, y casi todo el tiempo es barrido visible (con 100 % a 0 % y la curva de
    entrada solo se veia medio segundo). */
@@ -407,7 +407,7 @@
   to { translate: 0 0; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  :root[data-motion-state="on"] [data-light-write]::after {
+  :root[data-motion-state="on"] [data-light-host]::after {
     content: "";
     position: absolute;
     inset: -0.05em -0.1em;

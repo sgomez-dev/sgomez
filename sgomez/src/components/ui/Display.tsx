@@ -20,9 +20,9 @@ export function Display({
   /** Marcador `data-motion` para la fase 2. */
   motion?: string;
   /**
-   * Envuelve `lead` para el barrido de luz del hero (E3). Solo decorativo. La capa de luz cubre el titular
-   * entero (el h1 es su caja: un inline partido en dos líneas no cubriría la primera) y la parte en serif
-   * va por encima de ella, así que solo tiñe el nombre.
+   * Barrido de luz del hero (E3). Solo decorativo. La capa de luz cuelga del propio h1 y cubre el titular entero.
+   * Dentro del h1 no se posiciona nada: un hijo posicionado parte el titular en dos candidatos de LCP más
+   * pequeños que el retrato, y el LCP pasaba a ser la imagen (unos 700 ms más tarde con throttling real).
    */
   light?: boolean;
   className?: string;
@@ -30,6 +30,7 @@ export function Display({
   return (
     <Tag
       id={id}
+      data-light-host={light ? "" : undefined}
       data-motion={motion}
       className={`${light ? "relative " : ""}font-semibold leading-[1.02] [overflow-wrap:anywhere] ${size === DEFAULT_SIZE ? "tracking-[-0.055em]" : "tracking-[-0.03em]"} text-[color:var(--text)] ${size} ${className}`}
     >
@@ -37,7 +38,7 @@ export function Display({
       {serif ? (
         <>
           {" "}
-          <span className={`${light ? "relative z-[1] " : ""}text-[1.08em] font-normal italic leading-[0.9] tracking-[-0.01em] text-[color:var(--serif-ink)] [font-family:var(--font-serif),serif]`}>
+          <span className={`text-[1.08em] font-normal italic leading-[0.9] tracking-[-0.01em] text-[color:var(--serif-ink)] [font-family:var(--font-serif),serif]`}>
             {serif}
           </span>
         </>
