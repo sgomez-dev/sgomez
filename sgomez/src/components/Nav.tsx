@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
+import { caseLogicalPaths } from "@/lib/routing/cases";
 import LangSwitch from "./LangSwitch";
 import NavDisclosure from "./NavDisclosure";
 
@@ -46,7 +47,7 @@ export default function Nav({ lang }: { lang: Lang }) {
               {a.label}
             </a>
           ))}
-          <LangSwitch lang={lang} label={d.nav.switchTo} />
+          <LangSwitch lang={lang} label={d.nav.switchTo} casePaths={caseLogicalPaths()} />
         </nav>
 
         <NavDisclosure className="group relative lg:hidden">
@@ -72,7 +73,7 @@ export default function Nav({ lang }: { lang: Lang }) {
               </a>
             ))}
             <div className="px-3 py-1">
-              <LangSwitch lang={lang} label={d.nav.switchTo} />
+              <LangSwitch lang={lang} label={d.nav.switchTo} casePaths={caseLogicalPaths()} />
             </div>
           </nav>
         </NavDisclosure>

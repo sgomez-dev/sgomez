@@ -241,6 +241,14 @@ export type GraphPage = {
   description?: string;
   type: GraphPageType;
   faq?: GraphFaq[];
+  /** Fecha real del contenido de esta página (AAAA-MM-DD), cuando no sale de `CONTENT_UPDATED` (los casos de estudio). */
+  dateModified?: string;
+  /** Migas entre la home y la página (Inicio, Proyectos, esta página). */
+  trail?: { name: string; item: string }[];
+  /** `@id` del nodo que esta página describe (`mainEntity`), si no es la persona. */
+  mainEntityId?: string;
+  /** Nodos propios de la página (el caso de estudio), añadidos al final del grafo. */
+  extraNodes?: JsonLd[];
 };
 
 const PERSON = `${IDENTITY.url}/#person`;
@@ -372,11 +380,12 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       ...(page.description ? { description: page.description } : {}),
       isPartOf: { "@id": WEBSITE },
       ...(page.type === "ProfilePage" ? { mainEntity: { "@id": PERSON } } : {}),
+      ...(page.mainEntityId ? { mainEntity: { "@id": page.mainEntityId } } : {}),
       ...(page.type === "AboutPage" || page.type === "ContactPage" ? { about: { "@id": PERSON } } : {}),
       ...(page.type === "ProfilePage" ? { primaryImageOfPage: IDENTITY.image } : {}),
       breadcrumb: { "@id": `${pageBase}#breadcrumb` },
       inLanguage,
-      dateModified: CONTENT_UPDATED[logical] ?? latestContentUpdate(),
+      dateModified: page.dateModified ?? CONTENT_UPDATED[logical] ?? latestContentUpdate(),
       speakable: {
         "@type": "SpeakableSpecification",
         cssSelector: ["h1", "[data-answer]"],
@@ -699,7 +708,18 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
           ]
         : [
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },
-            { "@type": "ListItem", position: 2, name: ROUTE_CATALOGUE[logical]?.title[lang] ?? page.title, item: pageUrl },
+            ...(page.trail ?? []).map((step, index) => ({
+              "@type": "ListItem",
+              position: index + 2,
+              name: step.name,
+              item: step.item,
+            })),
+            {
+              "@type": "ListItem",
+              position: (page.trail?.length ?? 0) + 2,
+              name: ROUTE_CATALOGUE[logical]?.title[lang] ?? page.title,
+              item: pageUrl,
+            },
           ],
     },
     ...(faq
@@ -720,6 +740,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
           },
         ]
       : []),
+    ...(page.extraNodes ?? []),
   ];
 
   return { "@context": "https://schema.org", "@graph": nodes };

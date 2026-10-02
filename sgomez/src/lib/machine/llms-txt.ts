@@ -2,6 +2,7 @@ import { CLAUDE_CANVAS, FORGIA, HOME_FAQ, IDENTITY, IDENTITY_TEXT, SKYQUETZ } fr
 import { projects, experience, agentProjectDescription } from "@/app/content";
 import { t } from "@/lib/content/localized";
 import { localizedPath, type Lang } from "@/i18n/languages";
+import { getCaseStudies } from "@/lib/api/data";
 import { machineHref } from "@/lib/routing/pages";
 import { API_BASE, MACHINE_ROUTES, absolute } from "@/lib/site";
 
@@ -181,6 +182,19 @@ export function llmsTxt(lang: Lang): string {
     L.push(`- **${p.title}**: ${agentProjectDescription(p.title, t(p.desc, lang), lang)} (${p.stack}) ${p.link}`);
   }
   L.push("");
+
+  // Un caso de estudio por proyecto que tiene sus tres textos (problema, rol y resultado) en los dos idiomas.
+  const studies = getCaseStudies(lang);
+  if (studies.length > 0) {
+    L.push("## Case studies");
+    L.push("");
+    for (const study of studies) {
+      L.push(
+        `- [${study.title}](${absolute(study.path)}): case study with the problem, his role, the stack and the outcome. Updated ${study.updated}.`
+      );
+    }
+    L.push("");
+  }
 
   L.push("## Experience");
   L.push("");

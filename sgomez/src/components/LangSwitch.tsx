@@ -10,11 +10,11 @@ import { isLang, normalizePathname, switchLangHref } from "@/i18n/languages";
  * el texto del enlace al otro idioma. Sin JS el href apunta a la home del otro
  * idioma y se corrige al hidratar.
  */
-export default function LangSwitch({ lang, label }: { lang: string; label: string }) {
+export default function LangSwitch({ lang, label, casePaths = [] }: { lang: string; label: string; casePaths?: readonly string[] }) {
   const pathname = usePathname() ?? "/";
   const other = lang === "es" ? "en" : "es";
   if (!isLang(other)) return null;
-  const href = switchLangHref(normalizePathname(pathname), other, PAGES);
+  const href = switchLangHref(normalizePathname(pathname), other, [...PAGES, ...casePaths]);
   return (
     <a
       href={href}

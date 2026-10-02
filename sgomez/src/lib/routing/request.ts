@@ -1,5 +1,6 @@
 import { splitLang } from "@/i18n/languages";
 import { E2E_FIXTURE_PATHS, e2eFixturesEnabled } from "@/lib/e2e";
+import { isCaseSlug } from "@/lib/routing/cases";
 import { PAGES } from "@/lib/routing/pages";
 import { LOCALIZED_MACHINE_PATHS, NEGOTIATION_EXEMPT_PATHS } from "@/lib/site";
 
@@ -60,9 +61,11 @@ export function isRscRequest(headers: { has(name: string): boolean }, search: UR
 export function isUnknownHtmlPath(pathname: string): boolean {
   if (pathname.startsWith("/_next") || pathname === "/api" || pathname.startsWith("/api/")) return false;
   if (NEGOTIATION_EXEMPT_PATHS.includes(pathname) || FILE.test(pathname)) return false;
-  // Fase 5: las rutas dinámicas (`/work/[slug]`) tendrán que comprobarse contra su lista de slugs aquí;
-  // hoy toda ruta fuera de PAGES es desconocida.
   const { path } = splitLang(pathname);
+  // Rutas dinámicas: `/work/[slug]` y su imagen Open Graph solo existen para los casos publicados;
+  // cualquier otro slug (y `/work` sin slug) es desconocido y recibe el 404 a medida.
+  const work = /^\/work\/([^/]+?)(\/opengraph-image)?\/?$/.exec(path);
+  if (work) return !isCaseSlug(work[1]!);
   // la imagen Open Graph de la home y la de cada página
   if (/^(\/(about|contact|developers|privacy))?\/opengraph-image$/.test(path)) return false;
   if (e2eFixturesEnabled() && (E2E_FIXTURE_PATHS as readonly string[]).includes(path)) return false;

@@ -9,10 +9,11 @@ import {
   projects,
   recommendations,
   technologies,
+  type ProjectContent,
 } from "@/app/content";
 import { API_BASE, SITE_URL, absolute } from "@/lib/site";
 import { slugify } from "@/lib/api/slug";
-import { DEFAULT_LANG, type Lang } from "@/i18n/languages";
+import { DEFAULT_LANG, localizedPath, type Lang } from "@/i18n/languages";
 import { t } from "@/lib/content/localized";
 
 /**
@@ -167,6 +168,67 @@ export function getProjects(lang: Lang = ES): Project[] {
 
 export function getProject(slug: string, lang: Lang = ES): Project | undefined {
   return getProjects(lang).find((project) => project.slug === slug);
+}
+
+/** Caso de estudio publicado de un proyecto, en un idioma (spec 3.4). */
+export type CaseStudy = {
+  slug: string;
+  title: string;
+  /** La descripción corta del proyecto, la de su ficha. */
+  description: string;
+  stack: string[];
+  /** La fuente: la URL pública del proyecto. */
+  url: string;
+  problem: string;
+  role: string;
+  outcome: string;
+  /** AAAA-MM-DD: la fecha visible, el `dateModified` y el `lastmod` del sitemap. */
+  updated: string;
+  repo?: string;
+  based_on?: { name: string; url: string; author: string };
+  /** Ruta pública del caso en este idioma: `/work/{slug}` o `/en/work/{slug}`. */
+  path: string;
+};
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const filled = (text: { es: string; en: string } | undefined) =>
+  !!text && text.es.trim() !== "" && text.en.trim() !== "";
+
+/**
+ * Los casos publicables de una lista de proyectos. Solo se publica el que tiene los tres textos (problema, rol y
+ * resultado) en los dos idiomas y una fecha válida: sin alguno, el proyecto se queda en la home sin página propia.
+ * Recibe la lista para poder probarse con proyectos de prueba sin tocar el contenido real.
+ */
+export function buildCaseStudies(source: readonly ProjectContent[], lang: Lang = ES): CaseStudy[] {
+  return source.flatMap((project) => {
+    const c = project.caseStudy;
+    if (!c || !filled(c.problem) || !filled(c.role) || !filled(c.outcome) || !ISO_DATE.test(c.updated)) return [];
+    const slug = slugify(project.title);
+    return [
+      {
+        slug,
+        title: project.title,
+        description: t(project.desc, lang),
+        stack: project.stack.split(",").map((item) => item.trim()).filter(Boolean),
+        url: project.link,
+        problem: t(c.problem, lang),
+        role: t(c.role, lang),
+        outcome: t(c.outcome, lang),
+        updated: c.updated,
+        ...(c.repo ? { repo: c.repo } : {}),
+        ...(c.basedOn ? { based_on: c.basedOn } : {}),
+        path: localizedPath(lang, `/work/${slug}`),
+      },
+    ];
+  });
+}
+
+export function getCaseStudies(lang: Lang = ES): CaseStudy[] {
+  return buildCaseStudies(projects, lang);
+}
+
+export function getCaseStudy(slug: string, lang: Lang = ES): CaseStudy | undefined {
+  return getCaseStudies(lang).find((study) => study.slug === slug);
 }
 
 export function getExperience(lang: Lang = ES): ExperienceEntry[] {

@@ -6,6 +6,7 @@ import type { Lang } from "@/i18n/languages";
 import { OG_SIZE } from "@/lib/seo/metadata";
 import { routeTitle, type LogicalPath } from "@/lib/routing/pages";
 import { staticPage, type StaticPageSlug } from "@/lib/content/pages";
+import { getCaseStudy } from "@/lib/api/data";
 
 /**
  * Imagen Open Graph de un idioma (1200×630).
@@ -48,6 +49,13 @@ export function renderPageOgImage(path: Exclude<LogicalPath, "/">, lang: Lang): 
     : path === "/contact" ? `${ch.contact.heading} ${ch.contact.serif}`
     : staticPage(path.slice(1) as StaticPageSlug, lang).title;
   return renderOgImage(lang, { eyebrow: routeTitle(path, lang), line });
+}
+
+/** La de un caso de estudio: «Caso de estudio» arriba y el nombre del proyecto en la línea serif. */
+export function renderCaseOgImage(slug: string, lang: Lang): Promise<ImageResponse> {
+  const study = getCaseStudy(slug, lang);
+  if (!study) throw new Error(`renderCaseOgImage: no hay caso publicado para ${slug}`);
+  return renderOgImage(lang, { eyebrow: getDictionary(lang).caseStudy.eyebrow, line: study.title });
 }
 
 export async function renderOgImage(lang: Lang, page?: { eyebrow: string; line: string }): Promise<ImageResponse> {

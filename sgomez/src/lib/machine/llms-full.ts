@@ -2,6 +2,7 @@ import { absolute } from "@/lib/site";
 import { IDENTITY } from "@/app/seo";
 import type { Lang } from "@/i18n/languages";
 import { markdownForPath } from "@/lib/markdown/documents";
+import { caseRoutes } from "@/lib/routing/cases";
 import { localizedHtmlRoutes, machineHref } from "@/lib/routing/pages";
 
 /**
@@ -24,7 +25,8 @@ export function llmsFullTxt(lang: Lang): string {
     "",
   );
 
-  for (const route of localizedHtmlRoutes(lang)) {
+  // Las páginas y, después, cada caso de estudio publicado.
+  for (const route of [...localizedHtmlRoutes(lang), ...caseRoutes(lang)]) {
     const document = markdownForPath(route.path);
     if (document === undefined) throw new Error(`llms-full: sin markdown para ${route.path}`);
     L.push("---", "", document.trimEnd(), "");

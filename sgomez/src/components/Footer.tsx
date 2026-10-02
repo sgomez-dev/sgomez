@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDictionary } from "@/i18n";
 import { localizedPath, type Lang } from "@/i18n/languages";
 import { machineHref } from "@/lib/routing/pages";
+import { caseLogicalPaths } from "@/lib/routing/cases";
 import LangSwitch from "./LangSwitch";
 
 const LINK = "inline-flex min-h-11 min-w-11 items-center justify-center text-[color:var(--text-2)] hover:text-[color:var(--text)] transition-colors";
@@ -41,7 +42,7 @@ export default function Footer({ lang }: { lang: Lang }) {
           <p className="text-xs text-[color:var(--text-2)]">
             © {new Date().getFullYear()} Santiago Gómez de la Torre Romero
           </p>
-          <LangSwitch lang={lang} label={d.nav.switchTo} />
+          <LangSwitch lang={lang} label={d.nav.switchTo} casePaths={caseLogicalPaths()} />
         </div>
       </div>
     </footer>

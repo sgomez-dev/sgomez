@@ -1,6 +1,31 @@
 // src/content/index.ts
 
 import { CLAUDE_CANVAS } from '../seo'
+import type { Localized } from '@/lib/content/localized'
+
+/**
+ * Caso de estudio de un proyecto. Solo se publica la página `/work/{slug}` si están
+ * los tres textos en los dos idiomas (spec 3.4): son del dueño y no se inventan.
+ * La fecha `updated` (AAAA-MM-DD) es la que llevan el `<time>`, el `dateModified` y el `lastmod` del sitemap.
+ */
+export type CaseStudyContent = {
+  problem: Localized
+  role: Localized
+  outcome: Localized
+  updated: string
+  /** Repositorio público, si lo hay: con él el grafo declara un SoftwareSourceCode; sin él, un CreativeWork. */
+  repo?: string
+  /** Obra original de la que el proyecto es un fork (Claude Canvas), para conservar `isBasedOn`. */
+  basedOn?: { name: string; url: string; author: string }
+}
+
+export type ProjectContent = {
+  title: string
+  desc: Localized
+  stack: string
+  link: string
+  caseStudy?: CaseStudyContent
+}
 
 export const hero = {
   name: 'Santiago Gómez de la Torre Romero',
@@ -121,10 +146,56 @@ export const certifications = [
   { title: "Certificado de Participación", institution: "Universidad Europea del Atlantico", date: { es: "Julio 2024", en: "July 2024" }, img: "/models/assets/certifications/uneatlantico.png", url: "https://drive.google.com/file/d/1wfl_0Dlw17CMrVMIq51I7Sgf5UPhd5Kz/view?usp=sharing" },
 ];
 
-export const projects = [
-  { title: 'Claude Canvas', desc: { es: `${CLAUDE_CANVAS.description} Es un fork del proof of concept de David Siegel, ampliado a fondo, con una sola capa de IPC donde había dos incompatibles, primitivas reutilizables, composición, más de 600 tests y CI en tres sistemas operativos donde no había ninguno.`, en: `${CLAUDE_CANVAS.descriptionEn} It is a fork of David Siegel's proof of concept, extended at length, with one IPC layer where there had been two incompatible ones, reusable primitives, composition, more than 600 tests and CI on three operating systems where there had been none.` }, stack: 'TypeScript, Bun, React, Ink, tmux', link: 'https://claude-canvas.sgomez.dev' },
-  { title: 'NudaUI Semantic Search (RAG)', desc: { es: 'Búsqueda en lenguaje natural sobre 1.000+ componentes de NudaUI. Pipeline de RAG completo, sin frameworks de RAG. Incluye embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, servicio en FastAPI y UI en vivo. Subí la precisión del primer resultado del 67% al 80% (hit@1) y reporté hasta la categoría que empeoró.', en: 'Natural-language search over 1,000+ NudaUI components. A complete RAG pipeline with no RAG frameworks. It includes embeddings with Voyage, cosine retrieval, evaluation with my own golden set, a FastAPI service and a live UI. I raised first-result precision from 67% to 80% (hit@1) and reported even the category that got worse.' }, stack: 'RAG, Embeddings, Python, FastAPI, Evals', link: 'https://blog.sgomez.dev/rag-busqueda-semantica-nudaui' },
-  { title: 'NudaUI', desc: { es: 'Librería open-source de más de 1.500 componentes y animaciones UI copy-paste, framework-agnósticos (HTML + CSS, JS solo cuando hace falta), organizados en 81 categorías. Cero dependencias, cero build. Creador y único mantenedor.', en: 'Open-source library of more than 1,500 copy-paste UI components and animations, framework-agnostic (HTML + CSS, JS only when needed), organized in 81 categories. Zero dependencies, zero build. Creator and sole maintainer.' }, stack: 'Next.js, TypeScript, CSS, framework-agnostic', link: 'https://nudaui.dev' },
+export const projects: ProjectContent[] = [
+  { title: 'Claude Canvas', desc: { es: `${CLAUDE_CANVAS.description} Es un fork del proof of concept de David Siegel, ampliado a fondo, con una sola capa de IPC donde había dos incompatibles, primitivas reutilizables, composición, más de 600 tests y CI en tres sistemas operativos donde no había ninguno.`, en: `${CLAUDE_CANVAS.descriptionEn} It is a fork of David Siegel's proof of concept, extended at length, with one IPC layer where there had been two incompatible ones, reusable primitives, composition, more than 600 tests and CI on three operating systems where there had been none.` }, stack: 'TypeScript, Bun, React, Ink, tmux', link: 'https://claude-canvas.sgomez.dev', caseStudy: {
+    problem: {
+      es: `En Claude Code, cuando Claude necesita que elijas un fichero, apruebes un cambio o rellenes unos datos, la respuesta va en prosa y Claude tiene que interpretarla. Claude Canvas abre un panel interactivo junto a la conversación y devuelve tu respuesta como un valor exacto.`,
+      en: `In Claude Code, when Claude needs you to pick a file, approve a change or fill in some details, your answer comes back as prose that Claude has to interpret. Claude Canvas opens an interactive pane next to the conversation and returns your answer as an exact value.`,
+    },
+    role: {
+      es: `Lo bifurqué del proof of concept de David Siegel y lo amplié a fondo. Dejé una sola capa de IPC donde había dos incompatibles y añadí primitivas reutilizables, composición y nueve tipos de canvas (picker, form, table, image, diff, dashboard, calendar, document y flight).`,
+      en: `I forked it from David Siegel's proof of concept and extended it substantially. I left a single IPC layer where there had been two incompatible ones and added reusable primitives, composition and nine canvas types (picker, form, table, image, diff, dashboard, calendar, document and flight).`,
+    },
+    outcome: {
+      es: `Nueve canvas, más de 600 tests y CI en tres sistemas operativos. Funciona en kitty, Ghostty, iTerm2, WezTerm, foot, Windows Terminal y xterm. En imágenes, los bloques de cuadrante dan un 61 % menos de error que los de media celda. Publicado con licencia MIT.`,
+      en: `Nine canvases, more than 600 tests and CI on three operating systems. It works in kitty, Ghostty, iTerm2, WezTerm, foot, Windows Terminal and xterm. For images, quadrant blocks give 61% less error than half blocks. Released under the MIT license.`,
+    },
+    updated: '2026-10-02',
+    repo: CLAUDE_CANVAS.repo,
+    basedOn: { name: 'dvdsgl/claude-canvas', url: CLAUDE_CANVAS.basedOn, author: CLAUDE_CANVAS.basedOnAuthor },
+  } },
+  { title: 'NudaUI Semantic Search (RAG)', desc: { es: 'Búsqueda en lenguaje natural sobre 1.000+ componentes de NudaUI. Pipeline de RAG completo, sin frameworks de RAG. Incluye embeddings con Voyage, retrieval por coseno, evaluación con un golden set propio, servicio en FastAPI y UI en vivo. Subí la precisión del primer resultado del 67% al 80% (hit@1) y reporté hasta la categoría que empeoró.', en: 'Natural-language search over 1,000+ NudaUI components. A complete RAG pipeline with no RAG frameworks. It includes embeddings with Voyage, cosine retrieval, evaluation with my own golden set, a FastAPI service and a live UI. I raised first-result precision from 67% to 80% (hit@1) and reported even the category that got worse.' }, stack: 'RAG, Embeddings, Python, FastAPI, Evals', link: 'https://blog.sgomez.dev/rag-busqueda-semantica-nudaui', caseStudy: {
+    problem: {
+      es: `NudaUI tenía 1.022 componentes y la búsqueda por palabras no encontraba lo que la gente describía, así que «un loader con puntos» no llevaba a «Pulse Dots». Hacía falta buscar por significado.`,
+      en: `NudaUI had 1,022 components and keyword search could not find what people described, so “a loader with dots” never led to “Pulse Dots”. It needed search by meaning.`,
+    },
+    role: {
+      es: `Construí el pipeline de RAG completo sin frameworks de RAG, con embeddings de Voyage, similitud del coseno escrita a mano, un servicio en FastAPI desplegado en Vercel y un golden set propio de 45 consultas en 15 categorías, etiquetado a mano, para medir cada cambio.`,
+      en: `I built the full RAG pipeline without RAG frameworks, with Voyage embeddings, hand-written cosine similarity, a FastAPI service deployed on Vercel and my own golden set of 45 queries across 15 categories, labelled by hand, to measure every change.`,
+    },
+    outcome: {
+      es: `Añadir el CSS de cada componente al embedding subió el hit@1 del 66,7 % al 80 %, el hit@5 al 95,6 % y el recall@5 del 54,9 % al 59,4 %. La medición también mostró un retroceso en los efectos de texto, del 100 % al 67 %, que queda documentado. Está en vivo en nudaui.dev.`,
+      en: `Adding each component's CSS to its embedding raised hit@1 from 66.7% to 80%, hit@5 to 95.6% and recall@5 from 54.9% to 59.4%. The measurement also showed a drop in text effects, from 100% to 67%, which is documented. It is live on nudaui.dev.`,
+    },
+    updated: '2026-10-02',
+    repo: 'https://github.com/sgomez-dev/nudaui-rag',
+  } },
+  { title: 'NudaUI', desc: { es: 'Librería open-source de más de 1.500 componentes y animaciones UI copy-paste, framework-agnósticos (HTML + CSS, JS solo cuando hace falta), organizados en 81 categorías. Cero dependencias, cero build. Creador y único mantenedor.', en: 'Open-source library of more than 1,500 copy-paste UI components and animations, framework-agnostic (HTML + CSS, JS only when needed), organized in 81 categories. Zero dependencies, zero build. Creator and sole maintainer.' }, stack: 'Next.js, TypeScript, CSS, framework-agnostic', link: 'https://nudaui.dev', caseStudy: {
+    problem: {
+      es: `Las librerías de animaciones atan a un framework y pesan de más, y quien trabaja con Laravel, Django, Rails o HTML plano se queda fuera.`,
+      en: `Animation libraries tie you to a framework and weigh too much, and anyone working with Laravel, Django, Rails or plain HTML is left out.`,
+    },
+    role: {
+      es: `La creé y la mantengo yo solo. Son animaciones en HTML y CSS, con JavaScript solo cuando hace falta, accesibles desde el principio (ARIA y prefers-reduced-motion) y con temas por variables CSS. Se copian y se pegan, sin instalar nada.`,
+      en: `I created it and maintain it on my own. They are HTML and CSS animations, with JavaScript only when needed, accessible from day one (ARIA and prefers-reduced-motion) and themed with CSS variables. You copy and paste them, with nothing to install.`,
+    },
+    outcome: {
+      es: `1.503 componentes en 81 categorías, sin dependencias y normalmente por debajo de 1 KB cada uno. Funcionan en React, Vue, Svelte, Astro, Blade, Jinja y HTML plano, con licencia MIT y una API JSON pública.`,
+      en: `1,503 components across 81 categories, with zero dependencies and usually under 1 KB each. They work in React, Vue, Svelte, Astro, Blade, Jinja and plain HTML, under the MIT license and with a public JSON API.`,
+    },
+    updated: '2026-10-02',
+    repo: 'https://github.com/sgomez-dev/nudaui',
+  } },
   { title: 'EliteEstate Manager', desc: { es: 'PWA de gestión inmobiliaria completa con autenticación, propiedades, citas, zonas y panel de administración. Proyecto end-to-end para cliente real.', en: 'Complete real estate management PWA with authentication, properties, appointments, zones and an admin panel. End-to-end project for a real client.' }, stack: 'React, Vite, Firebase, TailwindCSS', link: 'https://elite-estate-manager.vercel.app/' },
   { title: 'GeekLab', desc: { es: 'E-commerce full-stack de productos IT con catálogo avanzado, carrito persistente, foro en tiempo real con WebSockets, API GraphQL y panel admin.', en: 'Full-stack e-commerce of IT products with an advanced catalog, persistent cart, real-time forum with WebSockets, GraphQL API and admin panel.' }, stack: 'Svelte 5, Node.js, Express, MongoDB, GraphQL, Socket.io', link: 'https://github.com/sgomez-dev/GeekLab' },
   { title: 'SyncCart', desc: { es: 'Extensión de Chrome que unifica carritos de compra de múltiples tiendas (Amazon, PcComponentes, MediaMarkt) en una sola interfaz con calculadora de presupuesto.', en: 'Chrome extension that unifies shopping carts from multiple stores (Amazon, PcComponentes, MediaMarkt) in a single interface with a budget calculator.' }, stack: 'Plasmo, React 18, TypeScript, Chrome APIs', link: 'https://github.com/sgomez-dev/SyncCart' },

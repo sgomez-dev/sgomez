@@ -2,9 +2,9 @@ import { agentProjectDescription, hero } from "@/app/content";
 import { t } from "@/lib/content/localized";
 import { FORGIA, IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
-import { getProjects } from "@/lib/api/data";
+import { getCaseStudies, getProjects } from "@/lib/api/data";
 import { findStaticPage, staticPages } from "@/lib/content/pages";
-import { renderPageMarkdown } from "@/lib/markdown/render";
+import { renderCaseStudyMarkdown, renderPageMarkdown } from "@/lib/markdown/render";
 import { localizedHtmlRoutes, machineHref } from "@/lib/routing/pages";
 import { API_BASE, MACHINE_ROUTES, SITE_URL, absolute } from "@/lib/site";
 
@@ -52,8 +52,11 @@ function homeMarkdown(lang: Lang): string {
   lines.push("");
 
   lines.push(x("## Proyectos", "## Projects"), "");
+  const cases = new Map(getCaseStudies(lang).map((study) => [study.slug, study]));
   for (const project of getProjects(lang)) {
-    lines.push(`- **${project.title}**: ${agentProjectDescription(project.title, project.description, lang)} (${project.stack.join(", ")}) ${project.url}`);
+    const study = cases.get(project.slug);
+    const caseLink = study ? ` ${x("Caso de estudio", "Case study")}: ${absolute(study.path)}` : "";
+    lines.push(`- **${project.title}**: ${agentProjectDescription(project.title, project.description, lang)} (${project.stack.join(", ")}) ${project.url}${caseLink}`);
   }
   lines.push("");
 
@@ -79,6 +82,7 @@ export const MARKDOWN_DOCUMENTS: Record<string, () => string> = Object.fromEntri
   LANGS.flatMap((lang) => [
     [localizedPath(lang, "/"), () => homeMarkdown(lang)] as const,
     ...staticPages(lang).map((page) => [page.path, () => renderPageMarkdown(page)] as const),
+    ...getCaseStudies(lang).map((study) => [study.path, () => renderCaseStudyMarkdown(study, lang)] as const),
   ]),
 );
 

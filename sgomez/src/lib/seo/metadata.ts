@@ -32,6 +32,8 @@ export type BuildMetadataOptions = {
   description: string;
   /** Nombre corto de la página para el alt de su imagen Open Graph («Contacto»). */
   ogTitle?: string;
+  /** Texto alternativo completo de la imagen, para las páginas cuyo alt no es «nombre, página» (los casos de estudio). */
+  ogAltText?: string;
 };
 
 /**
@@ -47,9 +49,9 @@ export type BuildMetadataOptions = {
  * - `title` va como `absolute`: el título de cada página ya lleva la marca, y
  *   con la plantilla del layout saldría dos veces.
  */
-export function buildMetadata({ lang, path, title, description, ogTitle = title }: BuildMetadataOptions): Metadata {
+export function buildMetadata({ lang, path, title, description, ogTitle = title, ogAltText }: BuildMetadataOptions): Metadata {
   const canonical = localizedPath(lang, path);
-  const image = { url: ogImagePath(lang, path), ...OG_SIZE, alt: ogAlt(lang, path, ogTitle) };
+  const image = { url: ogImagePath(lang, path), ...OG_SIZE, alt: ogAltText ?? ogAlt(lang, path, ogTitle) };
   return {
     title: { absolute: title },
     description,

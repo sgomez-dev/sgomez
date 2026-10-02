@@ -1,6 +1,7 @@
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
-import { getProjects } from "@/lib/api/data";
+import Link from "next/link";
+import { getCaseStudies, getProjects } from "@/lib/api/data";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -19,6 +20,8 @@ const initials = (title: string) => {
 export default function Projects({ lang }: { lang: Lang }) {
   const d = getDictionary(lang);
   const projects = getProjects(lang);
+  // La ficha es un `<a>` externo, así que el caso de estudio va en un segundo enlace interno al lado, sin anidar enlaces.
+  const cases = new Map(getCaseStudies(lang).map((study) => [study.slug, study]));
   return (
     <Section id="work" labelledBy="work-h">
       <Container>
@@ -27,14 +30,15 @@ export default function Projects({ lang }: { lang: Lang }) {
         <ul className="mt-10 grid list-none grid-flow-row-dense gap-3 sm:gap-4 md:grid-cols-2 lg:mt-14 lg:grid-cols-3">
           {projects.map((p, i) => {
             const featured = i < FEATURED;
+            const study = cases.get(p.slug);
             const reel = featured && hasReel(p.slug);
             return (
-              <li key={p.slug} data-motion="tile" data-index={i} className={`min-w-0 ${featured ? "lg:col-span-2" : ""}`}>
+              <li key={p.slug} data-motion="tile" data-index={i} className={`flex min-w-0 flex-col gap-1 ${featured ? "lg:col-span-2" : ""}`}>
                 <a
                   href={p.url}
                   target="_blank"
                   rel="noopener"
-                  className={`group flex h-full min-h-11 flex-col gap-4 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-4 transition-colors hover:border-[color-mix(in_oklab,var(--light-1)_45%,transparent)] hover:bg-[color:var(--bg-3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)] sm:p-5 ${featured ? "lg:flex-row" : ""}`}
+                  className={`group flex min-h-11 flex-1 flex-col gap-4 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-4 transition-colors hover:border-[color-mix(in_oklab,var(--light-1)_45%,transparent)] hover:bg-[color:var(--bg-3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)] sm:p-5 ${featured ? "lg:flex-row" : ""}`}
                 >
                   {featured ? (
                     <div className={`flex flex-col rounded-[calc(var(--radius)-4px)] border border-[color:var(--line)] bg-[color:var(--bg)] p-2 ${reel ? "lg:w-[40%]" : "lg:w-[34%]"} lg:shrink-0 lg:self-start`}>
@@ -81,6 +85,19 @@ export default function Projects({ lang }: { lang: Lang }) {
                     )}
                   </div>
                 </a>
+                {study ? (
+                  <Link
+                    prefetch={false}
+                    href={study.path}
+                    data-case-link={p.slug}
+                    className="inline-flex min-h-11 items-center self-start px-1 text-[length:var(--step--1)] font-medium text-[color:var(--light-1)] underline underline-offset-4 decoration-[color:var(--line)] hover:decoration-current focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]"
+                  >
+                    {d.caseStudy.viewCase}
+                    {/* WCAG 2.5.3: el nombre accesible contiene el texto visible y añade de qué proyecto es. */}
+                    <span className="sr-only">. {p.title}</span>
+                    <span aria-hidden="true">&nbsp;→</span>
+                  </Link>
+                ) : null}
               </li>
             );
           })}
