@@ -5,3 +5,5 @@
 # Taller de Remotion
 video/node_modules
 video/out
+/.lighthouseci-desktop/
+lighthouserc.desktop.ci.json

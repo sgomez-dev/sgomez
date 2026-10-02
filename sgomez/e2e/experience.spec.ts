@@ -113,6 +113,8 @@ test.describe("recomendaciones en inglés (Review Focus 5, R12)", () => {
 
 test.describe("presupuesto de JS", () => {
   /**
+   * Incluye el runtime perezoso del movimiento: `waitUntil: "networkidle"` espera a que
+   * se pida tras idle, así que su peso (y el de las primitivas) cuenta en el total.
    * Suma lo que pesa por la red el JS que carga la página. `transferSize` sería
    * la medida directa, pero depende de la máquina: con un antivirus que filtra
    * el tráfico local (ESET en la máquina del autor) Chrome recibe el cuerpo ya

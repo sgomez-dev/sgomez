@@ -11,7 +11,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "budget": "node scripts/js-budget.mjs",
-    "lhci": "next build && lhci autorun"
+    "lhci": "next build && lhci autorun && lhci autorun --config=./lighthouserc.desktop.json"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.1",
