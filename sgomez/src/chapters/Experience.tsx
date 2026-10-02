@@ -1,7 +1,9 @@
 import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
+import { experience } from "@/app/content";
 import { getExperience } from "@/lib/api/data";
+import { t } from "@/lib/content/localized";
 import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -41,8 +43,8 @@ export default function Experience({ lang }: { lang: Lang }) {
               <h3 data-e="role" className="text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)]">{e.role}</h3>
               <p data-e="org" className="text-[length:var(--step-0)] text-[color:var(--light-2)]">{e.organization}</p>
               <p data-e="desc" className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{e.description}</p>
-              <p data-e="summary" aria-hidden="true" className="hidden select-none">
-                {e.summary}
+              <p data-e="summary" aria-hidden="true" className="hidden">
+                {t(experience[i].summary, lang)}
               </p>
             </li>
           ))}

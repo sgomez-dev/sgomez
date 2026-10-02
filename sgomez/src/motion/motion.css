@@ -59,29 +59,30 @@
       animation-timeline: view();
       animation-range: entry 0% entry 100%;
     }
-    /* Tarjetas de OpenSource: se construyen en cuatro tiempos sobre una linea de tiempo con nombre, todo termina en entry 100%. */
-    :root[data-motion-state="on"] [data-motion="build"] { view-timeline: --build block; }
+    /* Tarjetas de OpenSource: se construyen en cuatro tiempos sobre una linea de tiempo con nombre. Todo termina hacia entry 50%
+       (escalonado incluido): un ancla deja las tarjetas de la segunda fila en el tercio inferior y han de verse acabadas. */
+    :root[data-motion-state="on"] [data-motion="build"] { view-timeline: --build block; --mo-b: calc(var(--i, 0) * 3%); }
     :root[data-motion-state="on"] [data-motion="build"] > [data-layer="trace"] rect {
       animation: mo-trace linear both;
       animation-timeline: --build;
-      animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(45% + calc(var(--i, 0) * var(--mo-stagger)));
+      animation-range: entry var(--mo-b) entry calc(18% + var(--mo-b));
     }
     :root[data-motion-state="on"] [data-motion="build"] > [data-layer="outline"] {
       animation: mo-deco-fade linear both;
       animation-timeline: --build;
-      animation-range: entry calc(35% + calc(var(--i, 0) * var(--mo-stagger))) entry calc(55% + calc(var(--i, 0) * var(--mo-stagger)));
+      animation-range: entry calc(12% + var(--mo-b)) entry calc(26% + var(--mo-b));
     }
     :root[data-motion-state="on"] [data-motion="build"] > [data-layer="fill"] {
       animation: mo-fill linear both;
       animation-timing-function: var(--mo-ease);
       animation-timeline: --build;
-      animation-range: entry calc(40% + calc(var(--i, 0) * var(--mo-stagger))) entry calc(70% + calc(var(--i, 0) * var(--mo-stagger)));
+      animation-range: entry calc(16% + var(--mo-b)) entry calc(34% + var(--mo-b));
     }
     :root[data-motion-state="on"] [data-motion="build"] > [data-layer="content"] {
       animation: mo-content linear both;
       animation-timing-function: var(--mo-ease);
       animation-timeline: --build;
-      animation-range: entry calc(55% + calc(var(--i, 0) * var(--mo-stagger))) entry 100%;
+      animation-range: entry calc(25% + var(--mo-b)) entry calc(44% + var(--mo-b));
     }
     /* La bio se enciende palabra a palabra (color entre tokens AA). Es el unico rango que usa contain. */
     :root[data-motion-state="on"] [data-motion="word-reveal"] { view-timeline: --reveal block; }

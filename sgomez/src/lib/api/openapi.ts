@@ -212,6 +212,19 @@ const SCHEMAS: Json = {
       },
     ],
   },
+  SearchMeta: {
+    allOf: [
+      { $ref: "#/components/schemas/Meta" },
+      {
+        type: "object",
+        required: ["query", "limit"],
+        properties: {
+          query: { type: "string", description: "The search terms as received, trimmed." },
+          limit: { type: "integer", description: "Limit applied to this search." },
+        },
+      },
+    ],
+  },
   Profile: {
     type: "object",
     description: "Identity card of Santiago Gómez de la Torre Romero: role, location, availability and canonical profiles.",
@@ -474,7 +487,21 @@ export function openApiDocument(): Json {
           summary: "Check that the API is serving",
           description:
             "Returns the API version and the entry points to the OpenAPI document and the developer portal. Call it first to discover the rest of the surface.",
-          responses: { "200": objectResponse("The API is serving.", "#/components/schemas/Health") },
+          responses: {
+            "200": {
+              description: "The API is serving.",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    required: ["data"],
+                    additionalProperties: false,
+                    properties: { data: { $ref: "#/components/schemas/Health" } },
+                  },
+                },
+              },
+            },
+          },
         },
       },
       [`${API_BASE}/profile`]: {
@@ -610,7 +637,22 @@ export function openApiDocument(): Json {
             LANG_PARAM,
           ],
           responses: {
-            "200": collectionResponse("Ranked search hits, best first.", "#/components/schemas/SearchResult"),
+            "200": {
+              description: "Ranked search hits, best first.",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    required: ["data", "meta"],
+                    additionalProperties: false,
+                    properties: {
+                      data: { type: "array", items: { $ref: "#/components/schemas/SearchResult" } },
+                      meta: { $ref: "#/components/schemas/SearchMeta" },
+                    },
+                  },
+                },
+              },
+            },
             "400": BAD_REQUEST_RESPONSE,
           },
         },

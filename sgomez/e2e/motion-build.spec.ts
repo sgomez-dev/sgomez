@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
-import { scrollToProgress, settledInViewport } from "./motion-utils";
+import { scrollToProgress, settledInViewport, unfinishedWhenMostlyVisible } from "./motion-utils";
 
 /** El CSS de las primitivas lo inyecta el runtime tras idle: se espera a que esté. */
 /** El CSS de movimiento es estatico (E5 revisada): esta vivo en cuanto el estado es on. */
@@ -11,7 +11,7 @@ test.describe("titulares y open source", () => {
   test("a mitad de la entrada la tarjeta esta a medio construir y sin violaciones de axe", async ({ page }) => {
     await page.goto("/");
     await motionCss(page);
-    await scrollToProgress(page, "#open-source ul", 0.85);
+    await scrollToProgress(page, "#open-source ul", 0.93);
     const progress = await page.locator('#open-source [data-layer="content"]').first().evaluate((el) => el.getAnimations()[0]?.effect?.getComputedTiming().progress ?? null);
     expect(progress).not.toBeNull();
     expect(progress).toBeLessThan(1);
@@ -60,3 +60,27 @@ test.describe("titulares y open source", () => {
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
   });
 });
+
+/** Cada ancla de la navegacion aterriza con lo que se ve ya construido, a los tamanos en que el scroll del ancla deja tarjetas cortadas abajo. */
+const LANDINGS = [
+  { w: 1366, h: 700 },
+  { w: 1280, h: 800 },
+  { w: 1440, h: 900 },
+  { w: 375, h: 812 },
+];
+for (const v of LANDINGS) {
+  test.describe(`ancla aterriza terminada ${v.w}x${v.h}`, () => {
+    test.use({ viewport: { width: v.w, height: v.h } });
+    for (const id of ["about", "work", "open-source", "contact"]) {
+      test(`#${id}`, async ({ page }, info) => {
+        test.skip(info.project.name !== "desktop", "el tamano lo fija la propia prueba; basta con un proyecto");
+        await page.goto(`/#${id}`);
+        await motionCss(page);
+        await page.waitForTimeout(400);
+        await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+        expect(await unfinishedWhenMostlyVisible(page, '[data-motion="build"]', 0.6)).toEqual([]);
+        expect(await settledInViewport(page)).toEqual([]);
+      });
+    }
+  });
+}

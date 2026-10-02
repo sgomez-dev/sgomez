@@ -20,7 +20,6 @@ export default function MotionDirector() {
     const html = document.documentElement;
     let stop: (() => void) | undefined;
     let alive = true;
-    let lc: typeof import("./runtime").lifecycle | undefined;
     const isOn = () => html.getAttribute(MOTION_ATTR) === "on";
     const run = () => {
       const root = document.querySelector("main");
@@ -28,9 +27,7 @@ export default function MotionDirector() {
       import("./runtime")
         .then((m) => {
           if (!alive || stop || !isOn()) return;
-          lc = m.lifecycle;
           stop = m.start(root);
-          lc.emit("afterNavigate");
         })
         .catch(() => {});
     };
@@ -47,7 +44,6 @@ export default function MotionDirector() {
     return () => {
       alive = false;
       watch.disconnect();
-      lc?.emit("beforeNavigate");
       stop?.();
       if (w.cancelIdleCallback) w.cancelIdleCallback(handle);
       else window.clearTimeout(handle);

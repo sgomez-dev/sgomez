@@ -7,13 +7,13 @@ export const MOTION_RUNTIME_MARKER = "sgomez-motion-runtime";
 /** Atributo de `<html>` que dice «el runtime está enganchado». El estado previo que dependa de JS cuelga de él. */
 export const READY_ATTR = "data-motion-ready";
 
-type Phase = "ready" | "stop" | "beforeNavigate" | "afterNavigate";
+type Phase = "ready" | "stop";
 
 /**
  * Ciclo de vida para las primitivas y las transiciones de página (Task 7).
  * `exit` registra una animación de salida; `runExit()` espera a todas.
  */
-const hooks: Record<Phase, Set<() => void>> = { ready: new Set(), stop: new Set(), beforeNavigate: new Set(), afterNavigate: new Set() };
+const hooks: Record<Phase, Set<() => void>> = { ready: new Set(), stop: new Set() };
 const exits = new Set<() => Promise<void> | void>();
 export const lifecycle = {
   on(phase: Phase, fn: () => void) {

@@ -46,3 +46,25 @@ export async function layoutShiftDuring(page: Page, fn: () => Promise<void>): Pr
   await fn();
   return page.evaluate(() => (window as unknown as { __cls: number }).__cls);
 }
+
+/** Animaciones sin terminar de los elementos `selector` que se ven al menos en `min` (0..1) de su alto. Vacío = bien. */
+export async function unfinishedWhenMostlyVisible(page: Page, selector: string, min: number): Promise<string[]> {
+  return page.evaluate(
+    ([sel, m]) => {
+      const out: string[] = [];
+      for (const card of document.querySelectorAll<HTMLElement>(sel as string)) {
+        const r = card.getBoundingClientRect();
+        const seen = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+        if (r.height === 0 || seen / r.height < (m as number)) continue;
+        for (const el of [card, ...card.querySelectorAll<HTMLElement>("*")]) {
+          for (const a of el.getAnimations()) {
+            const p = a.effect?.getComputedTiming().progress;
+            if (p !== 1) out.push(`${el.tagName.toLowerCase()}${el.dataset.layer ? `[${el.dataset.layer}]` : ""} ${(a as CSSAnimation).animationName ?? ""} ${p}`);
+          }
+        }
+      }
+      return out;
+    },
+    [selector, min] as const,
+  );
+}

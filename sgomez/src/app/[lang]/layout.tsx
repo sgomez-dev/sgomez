@@ -157,7 +157,7 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   return (
-    <html lang={lang === "es" ? "es-ES" : "en"} className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
+    <html lang={lang === "es" ? "es-ES" : "en"} data-scroll-behavior="smooth" className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
         {/* Antes del primer pintado: decide si hay movimiento (ver src/motion/boot.ts). */}
         <MotionBoot />
