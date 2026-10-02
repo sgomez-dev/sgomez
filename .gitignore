@@ -10,3 +10,4 @@ sgomez/lighthouserc.desktop.ci.json
 
 # Secuencia de prueba de ScrollSequence (la genera scripts/make-fixture-sequence.mjs)
 /sgomez/public/media/__fixture
+video/public/brand

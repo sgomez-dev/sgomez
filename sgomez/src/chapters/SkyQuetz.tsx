@@ -7,6 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
+import MonogramReveal from "@/components/MonogramReveal";
 
 const linkClass =
   "inline-flex min-h-11 items-center gap-1.5 text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
@@ -27,7 +28,9 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
           <div className="flex min-w-0 flex-col gap-5">
             <div data-motion="monogram" className="self-start">
               <a href={skyquetz.url} rel="noopener" aria-label={`${skyquetz.name}, ${skyquetz.cta}`} className="inline-flex min-h-11 rounded-[var(--radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]">
-                <Image src={skyquetz.logo} alt={t(skyquetz.logoAlt, lang)} width={425} height={253} className="h-14 w-auto sm:h-16" />
+                <MonogramReveal>
+                  <Image src={skyquetz.logo} alt={t(skyquetz.logoAlt, lang)} width={425} height={253} className="h-20 w-auto sm:h-24" />
+                </MonogramReveal>
               </a>
             </div>
             <p className="text-[length:var(--step-0)] italic text-[color:var(--serif-ink)]" lang="es">{skyquetz.slogan}</p>

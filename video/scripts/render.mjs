@@ -5,6 +5,7 @@
 //   npm run draft             10 fotogramas a video/out, para probar la tubería
 //   npm run render -- --only=webm,mp4,posters
 //   npm run render -- --only=build      secuencia de fotogramas del capítulo 03, a sgomez/public/media/build
+//   npm run render -- --only=monogram   el logotipo de SkyQuetz que se forma (capítulo 07), a sgomez/public/media/skyquetz
 //   npm run render -- --only=reels      un reel por proyecto destacado (capítulo 05), a sgomez/public/media/reels
 import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync, statSync, existsSync, readdirSync, rmSync } from "node:fs";
@@ -12,6 +13,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { PROJECTS } from "./projects.mjs";
+import { copyFileSync } from "node:fs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const media = resolve(root, "..", "sgomez", "public", "media", "404");
@@ -37,6 +39,11 @@ const REEL_WEBM_CRF = 52;
 const REEL_MP4_CRF = 30;
 const REEL_POSTER_QUALITY = 82;
 const reelsMedia = resolve(root, "..", "sgomez", "public", "media", "reels");
+
+// Capítulo 07 (SkyQuetzMonogram): 850x506 a 60 fps, 2,5 s. WebM con alfa y MP4 sobre negro para Safari. Presupuesto: <= 400 KB cada fichero.
+const MONO_WEBM_CRF = 52;
+const MONO_MP4_CRF = 24;
+const monoMedia = resolve(root, "..", "sgomez", "public", "media", "skyquetz");
 
 const only = (args.find((a) => a.startsWith("--only=")) ?? "").slice(7).split(",").filter(Boolean);
 const want = (k) => only.length === 0 || only.includes(k);
@@ -136,6 +143,19 @@ if (want("reels") && !draft) {
     sizes[`reels/${slug}.mp4`] = mp4;
     sizes[`reels/${slug}.webp`] = poster;
   }
+}
+
+if (want("monogram") && !draft) {
+  mkdirSync(monoMedia, { recursive: true });
+  // El último fotograma es la imagen de la página (la <img> de SkyQuetz.tsx): se usa el mismo fichero, sin copia versionada.
+  mkdirSync(join(root, "public", "brand"), { recursive: true });
+  copyFileSync(resolve(root, "..", "sgomez", "public", "brand", "skyquetz-logo.webp"), join(root, "public", "brand", "skyquetz-logo.webp"));
+  const webm = join(monoMedia, "monogram.webm");
+  const mp4 = join(monoMedia, "monogram.mp4");
+  remotion(["render", entry, "SkyQuetzMonogram", webm, "--codec=vp9", "--pixel-format=yuva420p", "--image-format=png", `--crf=${MONO_WEBM_CRF}`, "--muted", "--gl=angle", props("mono-webm", { bg: "transparent" })]);
+  remotion(["render", entry, "SkyQuetzMonogram", mp4, "--codec=h264", "--pixel-format=yuv420p", "--image-format=png", `--crf=${MONO_MP4_CRF}`, "--x264-preset=veryslow", "--muted", "--gl=angle", props("mono-mp4", { bg: BG })]);
+  sizes["skyquetz/monogram.webm"] = webm;
+  sizes["skyquetz/monogram.mp4"] = mp4;
 }
 
 console.log("\nTamaños:");
