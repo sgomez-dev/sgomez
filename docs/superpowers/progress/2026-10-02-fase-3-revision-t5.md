@@ -1,6 +1,6 @@
 # Fase 3: revisión con opus de la tarea 5 (GlassStage en el hero)
 
-**Veredicto:** todavía no se puede fusionar. La fontanería es sólida: puerta, reservas, CLS 0, LCP intacto (el h1) y presupuesto de 156,3 KB. Pero el relevo del póster al 3D se nota como un bajón, así que **la siguiente ronda es visual**. Esta ronda está **por aplicar**.
+**Veredicto:** todavía no se puede fusionar. **Ronda aplicada el 2026-10-02, ver `2026-10-02-fase-3.md`.** La fontanería es sólida: puerta, reservas, CLS 0, LCP intacto (el h1) y presupuesto de 156,3 KB. Pero el relevo del póster al 3D se nota como un bajón, así que **la siguiente ronda es visual**. Esta ronda está **por aplicar**.
 
 Las capturas de la revisión estaban en el scratchpad de la sesión y no se guardaron. Las de referencia son `fase-3-task5-poster.png` (el póster) y `fase-3-task4-glass-fixed.png` (el cristal en vivo).
 

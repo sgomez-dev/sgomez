@@ -21,9 +21,11 @@ export function materialParams(profile: GlassProfile) {
   return profile === "full" ? base : { ...base, transmission: 0, dispersion: 0, thickness: 0 };
 }
 
-/** Un material por pieza (el brillo es por pieza). Con emisión 0 es idéntico al del vídeo. */
-export function glassMaterial(env: THREE.Texture, profile: GlassProfile = "full", glow = "#9FB6FF"): THREE.MeshPhysicalMaterial {
-  const { attenuationColor, ...p } = materialParams(profile);
+export type MaterialOverrides = { attenuationColor?: string; attenuationDistance?: number; envMapIntensity?: number };
+
+/** Un material por pieza (el brillo es por pieza). Con emisión 0 y sin `over` es idéntico al del vídeo. */
+export function glassMaterial(env: THREE.Texture, profile: GlassProfile = "full", glow = "#9FB6FF", over: MaterialOverrides = {}): THREE.MeshPhysicalMaterial {
+  const { attenuationColor, ...p } = { ...materialParams(profile), ...over };
   const m = new THREE.MeshPhysicalMaterial({ ...p, attenuationColor: new THREE.Color(attenuationColor), emissive: new THREE.Color(glow), emissiveIntensity: 0 });
   if (profile === "lite") {
     m.transparent = true;
@@ -124,29 +126,44 @@ export function buildEnv(gl: THREE.WebGLRenderer): THREE.Texture {
 }
 
 
+export type BackdropSpec = {
+  seed: number;
+  size: number;
+  base: string;
+  blobs: readonly { x: number; y: number; r: number; rgb: string; a: number }[];
+  beams: readonly { rgb: string; a: number }[];
+  count: number;
+  plane: { repeat: number };
+};
+
 /** Fondo SOLO para la refracción (ver `Scene.tsx` del vídeo): el pase de transmisión refracta lo que hay detrás del cristal. */
-export function buildBackdrop(make2d: Make2D): THREE.MeshBasicMaterial {
-  const B = GLASS_ENV.backdrop;
+export function buildBackdrop(make2d: Make2D, B: BackdropSpec = GLASS_ENV.backdrop): THREE.MeshBasicMaterial {
   const c = make2d(B.size, B.size);
   const g = c.getContext("2d") as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   g.fillStyle = B.base;
   g.fillRect(0, 0, B.size, B.size);
   // Cada mancha y cada haz se pinta tambien en sus copias envueltas (+-size): el tile se repite con RepeatWrapping y sin esto
-  // queda una costura donde el borde corta un degradado.
+  // queda una costura donde el borde corta un degradado. Solo se pintan las copias que tocan el tile, y cada mancha solo
+  // en su caja: rellenar el tile entero en cada copia costaba hilo principal en el 404.
   const wraps = [-B.size, 0, B.size];
+  const touches = (x: number, y: number, r: number) => x + r > 0 && x - r < B.size && y + r > 0 && y - r < B.size;
   for (const b of B.blobs) {
     for (const dx of wraps) {
       for (const dy of wraps) {
-        const rg = g.createRadialGradient(b.x + dx, b.y + dy, 0, b.x + dx, b.y + dy, b.r);
+        const x = b.x + dx;
+        const y = b.y + dy;
+        if (!touches(x, y, b.r)) continue;
+        const rg = g.createRadialGradient(x, y, 0, x, y, b.r);
         rg.addColorStop(0, `rgba(${b.rgb},${b.a})`);
         rg.addColorStop(1, `rgba(${b.rgb},0)`);
         g.fillStyle = rg;
-        g.fillRect(0, 0, B.size, B.size);
+        g.fillRect(x - b.r, y - b.r, b.r * 2, b.r * 2);
       }
     }
   }
   const rnd = mulberry32(B.seed);
   g.globalCompositeOperation = "lighter";
+  const HALF = 700;
   for (let i = 0; i < B.count; i++) {
     const { rgb, a } = B.beams[i % B.beams.length]!;
     const px = rnd() * B.size;
@@ -156,6 +173,7 @@ export function buildBackdrop(make2d: Make2D): THREE.MeshBasicMaterial {
     const alpha = a * (0.35 + rnd() * 0.65);
     for (const dx of wraps) {
       for (const dy of wraps) {
+        if (!touches(px + dx, py + dy, Math.hypot(w, HALF))) continue;
         g.save();
         g.translate(px + dx, py + dy);
         g.rotate(rot);
@@ -164,7 +182,7 @@ export function buildBackdrop(make2d: Make2D): THREE.MeshBasicMaterial {
         lg.addColorStop(0.5, `rgba(${rgb},${alpha})`);
         lg.addColorStop(1, `rgba(${rgb},0)`);
         g.fillStyle = lg;
-        g.fillRect(-w, -700, w * 2, 1400);
+        g.fillRect(-w, -HALF, w * 2, HALF * 2);
         g.restore();
       }
     }

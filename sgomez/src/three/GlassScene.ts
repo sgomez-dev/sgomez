@@ -1,12 +1,13 @@
 import * as THREE from "three";
-import { CAMERA, unproject } from "@/lib/lost/shards";
+import { CAMERA, GLASS_LIVE, unproject } from "@/lib/lost/shards";
 import { addLights, backdropMesh, buildBackdrop, buildEnv, glassMaterial, slabGeometry, type GlassProfile, type Make2D } from "./glass-kit";
 import type { Placement } from "./protocol";
 
 /**
  * El cristal entero de la marca, vivo: flota, gira muy despacio y se inclina hacia
  * el puntero. Sin DOM: corre en el worker sobre un OffscreenCanvas. Mismo material,
- * entorno, luces y cámara que el 404 (todo de shards.ts vía glass-kit).
+ * entorno, luces y cámara que el 404 (todo de shards.ts vía glass-kit), pero más claro y
+ * con el color del póster (`GLASS_LIVE`) para que el relevo no se note.
  */
 export type GlassSceneHandle = {
   frame(dt: number, input: { x: number; y: number }, paused: boolean): void;
@@ -26,8 +27,9 @@ export async function createGlassScene(
   step: () => Promise<void> = () => new Promise((r) => setTimeout(r, 0)),
 ): Promise<GlassSceneHandle> {
   const renderer = new THREE.WebGLRenderer({ canvas, context: gl, antialias: true, alpha: true });
-  // Lo que R3F pone por defecto en el 404: mismo aspecto.
+  // El ACES del 404 con más exposición: con 1 el cristal salía más oscuro que el póster.
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = GLASS_LIVE.exposure;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(Math.min(o.dpr, 1.25));
@@ -40,12 +42,12 @@ export async function createGlassScene(
   await step();
   const env = buildEnv(renderer);
   await step();
-  const backdrop = o.profile === "full" ? buildBackdrop(o.make2d) : null;
+  const backdrop = o.profile === "full" ? buildBackdrop(o.make2d, GLASS_LIVE.backdrop) : null;
   if (backdrop) scene.add(backdropMesh(backdrop));
   addLights(scene);
   await step();
   const geo = slabGeometry();
-  const mat = glassMaterial(env, o.profile);
+  const mat = glassMaterial(env, o.profile, undefined, GLASS_LIVE.material);
   const group = new THREE.Group();
   group.add(new THREE.Mesh(geo, mat));
   scene.add(group);
@@ -72,16 +74,17 @@ export async function createGlassScene(
         inp.x += (input.x - inp.x) * k;
         inp.y += (input.y - inp.y) * k;
       }
-      // Entrada estilo keynote: llega 18° girado y se asienta en 1,6 s.
+      // El fotograma de t=0 coincide con el póster (sin giro extra y a escala 1); el movimiento entra en 1,6 s.
       const intro = smooth(clamp01(t / 1.6));
       const float = Math.sin(t * 0.6) * 0.06 * intro;
       group.position.set(base.x + inp.x * 0.12 * intro, base.y + float - inp.y * 0.08 * intro, P.z);
-      ex.set(inp.y * TILT * intro, inp.x * TILT * intro + (1 - intro) * 18 * DEG, 0, "XYZ");
+      ex.set(inp.y * TILT * intro, inp.x * TILT * intro, 0, "XYZ");
       qa.setFromEuler(ex);
-      ex.set(Math.sin(t * 0.35) * 0.05, t * 0.08, Math.cos(t * 0.3) * 0.03, "XYZ");
+      // Giro acotado: sin límite la losa se ponía de canto cada unos 39 s.
+      ex.set(Math.sin(t * 0.35) * 0.05 * intro, Math.sin(t * 0.1) * 0.2 * intro, (Math.cos(t * 0.3) - 1) * 0.03 * intro, "XYZ");
       qb.setFromEuler(ex);
       group.quaternion.copy(qa).multiply(restQ).multiply(qb);
-      group.scale.setScalar(P.scale * (0.94 + 0.06 * intro));
+      group.scale.setScalar(P.scale);
       renderer.render(scene, camera);
     },
     resize(w, h, dpr) {

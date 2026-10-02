@@ -50,7 +50,8 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
         opacity="0.55"
         filter={`url(#${glow})`}
       />
-      <g transform="rotate(18 200 200)">
+      {/* Con el cristal vivo solo se apaga el cuerpo: el halo se queda detrás del lienzo. */}
+      <g data-glass-body="" transform="rotate(18 200 200)">
         <path
           d={POSTER_SILHOUETTE.d}
           fill={`url(#${body})`}

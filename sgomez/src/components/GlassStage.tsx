@@ -99,6 +99,8 @@ export default function GlassStage({ id, pauseLabel, className = "", children }:
             setState("live");
           } else off();
         });
+        // El IntersectionObserver y `document.hidden` pudieron responder antes de que hubiera handle.
+        sendVisible();
       })
       .catch(off);
 
@@ -146,6 +148,8 @@ export default function GlassStage({ id, pauseLabel, className = "", children }:
   // 3. Pausa compartida entre hero y contacto.
   useEffect(() => {
     if (state !== "live" || !client.current) return;
+    // La otra escena pudo pausar mientras esta cargaba.
+    setPausedState(client.current.isPaused());
     return client.current.onPaused(setPausedState);
   }, [state]);
 

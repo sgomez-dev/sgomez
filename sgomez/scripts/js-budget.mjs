@@ -75,7 +75,11 @@ for (const [label, seeds, exclude, limit] of [
   ["cliente del cristal", clientSeeds, new Set([...initialAll, ...workerSet]), BUDGET.glassClientKB],
   ["worker del cristal", [...workerSet], null, BUDGET.glassWorkerKB],
 ]) {
-  if (seeds.length === 0) { console.log(`\n${label}: todavia no existe`); continue; }
+  if (seeds.length === 0) {
+    if (REQUIRE_GLASS) { failed = true; console.error(`\n${label}: FALLA, no encuentro sus chunks`); }
+    else console.log(`\n${label}: todavia no existe`);
+    continue;
+  }
   const g = exclude ? chunkGraph(names, seeds, text, exclude) : new Set(seeds);
   const kb = [...g].reduce((sum, n) => sum + gz(byName.get(n)), 0);
   console.log(`\n${label}: ${kb.toFixed(1)} KB gzip en ${g.size} chunks`);

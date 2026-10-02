@@ -117,6 +117,27 @@ export const GLASS_ENV = {
   },
 } as const;
 
+/**
+ * El cristal entero del hero y el contacto sobre el póster: más claro y con el color del
+ * degradado del póster (#8FA8FF, blanco, #6EF0DC, #5B6CFF). El 404 no lo usa y conserva
+ * su aspecto oscuro.
+ */
+export const GLASS_LIVE = {
+  exposure: 1.4,
+  material: { attenuationColor: "#FFFFFF", attenuationDistance: 8, envMapIntensity: 1.6 },
+  backdrop: {
+    ...GLASS_ENV.backdrop,
+    base: "#5A6BD8",
+    // La refracción da la vuelta al fondo: lo que va arriba aquí se ve abajo en el cristal.
+    blobs: [
+      { x: 300, y: 820, r: 420, rgb: "255,255,255", a: 0.75 },
+      { x: 780, y: 760, r: 360, rgb: "143,168,255", a: 0.6 },
+      { x: 260, y: 260, r: 380, rgb: "110,240,220", a: 0.8 },
+      { x: 760, y: 220, r: 400, rgb: "91,108,255", a: 0.85 },
+    ],
+  },
+} as const;
+
 export const SHARDS: readonly Shard[] = [
   {
     id: "s1", target: "home", pose: { x: 1.45, y: -1.02, z: 0.3, rx: 0.4, ry: -0.5, rz: 0.5 }, scale: 0.8, hue: "a",

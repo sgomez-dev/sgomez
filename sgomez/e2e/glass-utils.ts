@@ -71,3 +71,43 @@ export async function blockGlassWorker(page: Page) {
   });
   return state;
 }
+
+/** Guarda en window.__glassMsgs el tipo y los datos de cada mensaje al worker del cristal (sin el canvas). */
+export async function spyGlassMessages(page: Page) {
+  await page.addInitScript(() => {
+    const w = window as unknown as { __glassMsgs: Record<string, unknown>[] };
+    w.__glassMsgs = [];
+    const post = Worker.prototype.postMessage;
+    Worker.prototype.postMessage = function (this: Worker, m: unknown, ...rest: unknown[]) {
+      if (m && typeof m === "object" && "type" in m) {
+        const data = { ...(m as Record<string, unknown>) };
+        delete data.canvas;
+        w.__glassMsgs.push(data);
+      }
+      return (post as (...a: unknown[]) => void).call(this, m, ...rest);
+    } as typeof Worker.prototype.postMessage;
+  });
+}
+
+export const glassMessages = (page: Page) => page.evaluate(() => (window as unknown as { __glassMsgs: Record<string, unknown>[] }).__glassMsgs);
+
+/**
+ * Espera a que la etapa salga de live y lee la opacidad del cuerpo del póster EN ESE MISMO instante. `toHaveCSS`
+ * reintenta y escondería los 200 ms que tardaba en volver.
+ */
+export function posterOpacityWhenOff(page: Page, selector: string) {
+  return page.evaluate(
+    (sel) =>
+      new Promise<string>((resolve) => {
+        const stage = document.querySelector(sel)!;
+        const read = () => getComputedStyle(stage.querySelector("[data-glass-body]")!).opacity;
+        if (stage.getAttribute("data-glass") === "off") return resolve(read());
+        new MutationObserver((_, mo) => {
+          if (stage.getAttribute("data-glass") !== "off") return;
+          mo.disconnect();
+          resolve(read());
+        }).observe(stage, { attributes: true, attributeFilter: ["data-glass"] });
+      }),
+    selector,
+  );
+}

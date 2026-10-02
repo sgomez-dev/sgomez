@@ -292,5 +292,5 @@
 /* Relevo poster a cristal vivo (Task 5). Solo capas decorativas con aria-hidden. */
 [data-glass] > [data-glass-canvas] { opacity: 0; transition: opacity 700ms var(--mo-ease-out); }
 [data-glass="live"] > [data-glass-canvas] { opacity: 1; }
-[data-glass] > [data-motion="glass"] { transition: opacity 700ms var(--mo-ease-out) 200ms; }
-[data-glass="live"] > [data-motion="glass"] { opacity: 0; }
+/* La transición solo va al entrar en live: al apagarse el cristal el póster vuelve al instante. El halo no se apaga. */
+[data-glass="live"] > [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 700ms var(--mo-ease-out) 200ms; }
