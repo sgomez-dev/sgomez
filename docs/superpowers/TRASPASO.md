@@ -55,10 +55,10 @@ Actualizado el 2026-10-02 por la tarde.
 | — | 404 a medida: vídeo de Remotion y constelación 3D | ✅ Hecho y revisado (hasta 3b09675) |
 | 2 | Movimiento del DOM | ✅ Hecha y revisada con opus (hasta 1039bf4) |
 | 3 | 3D en vivo: `GlassScene` en el hero y el contacto, y los pendientes | 🔄 En curso: tareas 1 a 4 hechas, la 5 con su ronda visual aplicada y pendiente de re-revisión y del visto bueno del dueño (ver §7) |
-| 4 | Taller de Remotion: `BuildSequence`, `SkyQuetzMonogram`, `HeroLoop`, reels y `ScrollSequence` (capítulos 03, 05 y 07) | ⏳ |
-| 5 | Casos de estudio, contacto por intención, SEO/GEO y lanzamiento | ⏳ Hace falta contenido del dueño para los casos |
+| 4 | Taller de Remotion: `BuildSequence`, `SkyQuetzMonogram`, `HeroLoop`, reels y `ScrollSequence` (capítulos 03, 05 y 07) | ✅ Hecha, revisada con opus y con su ronda de arreglos (`progress/2026-10-02-fase-4*.md`) |
+| 5 | Casos de estudio, contacto por intención, SEO/GEO y lanzamiento | 🔄 Casos (aprobados por el dueño), IndexNow, fechas desde git y OG por página hechos. Falta el lanzamiento: PR abierto, a la espera del visto bueno (`LANZAMIENTO.md`) |
 
-**No hay nada en producción.** El dueño decidió: «hacer la PR ya cuando todo esté listo». Hasta entonces:
+**No hay nada en producción.** El dueño decidió «hacer la PR ya cuando todo esté listo». Las cinco fases están hechas y el PR está abierto el 2026-10-02. Hasta entonces:
 
 - Cada avance se sube a `feat/redesign-v3`.
 - **Nunca se hace push a `main`.** Fusionar en `main` publica en Vercel, y `main` exige PR.
@@ -200,12 +200,14 @@ El plan es `docs/superpowers/plans/2026-10-02-redesign-fase-3-3d.md`, con las re
 
 ### Pendiente inmediato (por este orden)
 
-1. Hecho el 2026-10-02: el dueño eligió devtools para el LCP móvil del CI y aprobó el tono; la tarea 5 está revisada y fusionable y la 6 está hecha (ver `progress/2026-10-02-fase-3.md`).
-   - Para medir y capturar un relevo: `HEADED=1 [SEC=contact] node scripts/glass-capture.mjs <carpeta>` con el build en :3101. En headless Chromium pinta con SwiftShader y el color no vale.
-   - Riesgo al abrir el PR: el TBT simulado de `/` estuvo en 209 ms y el umbral es 200.
-2. **Fase 3 cerrada. Sigue con la fase 4** (`plans/2026-10-02-redesign-fase-4-remotion.md`) **y la 5** (`plans/2026-10-02-redesign-fase-5-casos-seo-lanzamiento.md`) con el flujo de la §5.
-   - La tarea 8 empieza por el diagnóstico visual (F4): una tira de fotogramas que hay que enseñar al dueño.
-   - La tarea 9 es de alto riesgo y la revisa opus.
+1. **El PR de `feat/redesign-v3` contra `main` está abierto.** Hay que revisar su CI y la preview de Vercel según `docs/superpowers/LANZAMIENTO.md` §1.
+   - Los e2e de 3D (`glass-contact`, `glass-hero` y `lost-experience`) fallan a veces cuando corren en paralelo en una máquina cargada y pasan en serie. Si el CI los marca, se repiten antes de tocar código.
+2. **Se fusiona solo con el visto bueno del dueño.** Después, §2 y §3 de `LANZAMIENTO.md`.
+3. Deuda conocida:
+   - HEVC con alfa para Safari (revisión de la fase 4, punto 10);
+   - Firefox y Safari reales sin probar;
+   - el margen del presupuesto de JS del e2e es de unos 5 KB;
+   - `src/lib/image-props.ts` usa un módulo interno de Next (fijado a 16.2.6 y con test).
 
 ### Lo que hizo falta saber en esta fase
 
