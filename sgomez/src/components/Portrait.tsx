@@ -39,7 +39,7 @@ export default function Portrait({ alt, className = "" }: { alt: string; classNa
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- imageProps ya trae el srcset del optimizador */}
-      <img {...props} className="h-full w-full object-contain" style={{ ...props.style, filter: "saturate(.9) contrast(1.05)" }} />
+      <img {...props} alt={alt} className="h-full w-full object-contain" style={{ ...props.style, filter: "saturate(.9) contrast(1.05)" }} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COARSE_STEP, frameForProgress, loadOrder, chapterProgress, nearestLoaded, sectionProgress, sequenceGatePasses } from "@/motion/scroll-sequence/player";
+import { COARSE_STEP, WINDOW, decodeWindow, frameForProgress, loadOrder, chapterProgress, nearestLoaded, sectionProgress, sequenceGatePasses } from "@/motion/scroll-sequence/player";
 import { defineSequence, framePath } from "@/motion/scroll-sequence/manifest";
 import type { GlassEnv } from "@/lib/three/gate";
 import { e2eFixturesEnabled } from "@/lib/e2e";
@@ -112,6 +112,30 @@ describe("chapterProgress", () => {
     expect(chapterProgress({ top: -600, height: 2000 }, 800)).toBe(0.5);
     expect(chapterProgress({ top: -1200, height: 2000 }, 800)).toBe(1);
     expect(chapterProgress({ top: -3000, height: 2000 }, 800)).toBe(1);
-    expect(chapterProgress({ top: 0, height: 600 }, 800)).toBe(0);
+  });
+  it("en una pantalla alta (el capítulo cabe en el viewport) cae al progreso de la sección y avanza con el scroll", () => {
+    const rect = (top: number) => ({ top, height: 600 });
+    expect(chapterProgress(rect(800), 1000)).toBe(sectionProgress(rect(800), 1000));
+    expect(chapterProgress(rect(800), 1000)).toBe(0.125);
+    expect(chapterProgress(rect(0), 1000)).toBeGreaterThan(chapterProgress(rect(500), 1000));
+    expect(chapterProgress(rect(-600), 1000)).toBe(1);
+    // exactamente igual de alto: tampoco hay recorrido pegajoso
+    expect(chapterProgress({ top: 0, height: 800 }, 800)).toBe(sectionProgress({ top: 0, height: 800 }, 800));
+  });
+});
+
+describe("decodeWindow", () => {
+  it("son los fotogramas a ±WINDOW del actual, recortados a la secuencia", () => {
+    expect(WINDOW).toBe(8);
+    expect(decodeWindow(40, 90)).toEqual([32, 48]);
+    expect(decodeWindow(0, 90)).toEqual([0, 8]);
+    expect(decodeWindow(89, 90)).toEqual([81, 89]);
+    expect(decodeWindow(3, 24)).toEqual([0, 11]);
+  });
+  it("nunca tiene más de 17 fotogramas", () => {
+    for (let t = 0; t < 90; t++) {
+      const [lo, hi] = decodeWindow(t, 90);
+      expect(hi - lo + 1).toBeLessThanOrEqual(17);
+    }
   });
 });

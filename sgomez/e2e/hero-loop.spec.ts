@@ -94,4 +94,43 @@ test.describe("hero, bucle del cristal", () => {
     await btn.click();
     await expect(stage).toHaveAttribute("data-playing", "true");
   });
+
+  test("«Pausar movimiento» no tapa el cristal ni el texto, y en el DOM va antes del h1", async ({ page }, info) => {
+    test.skip(info.project.name === "desktop", "solo por debajo de lg");
+    await page.goto("/");
+    await expect(page.locator("#top [data-hero-loop]")).toHaveAttribute("data-hero-loop", "live", { timeout: 20000 });
+    const btn = page.getByRole("button", { name: "Pausar movimiento" });
+    await expect(btn).toBeVisible();
+    const m = await page.evaluate(() => {
+      const b = document.querySelector("#top [data-hero-loop] button")!.getBoundingClientRect();
+      const col = document.querySelector("#top [data-glass]")!.getBoundingClientRect();
+      const h1 = document.querySelector("#top h1")!;
+      const eyebrow = h1.previousElementSibling!.getBoundingClientRect();
+      const before = !!(document.querySelector("#top [data-hero-loop] button")!.compareDocumentPosition(h1) & Node.DOCUMENT_POSITION_FOLLOWING);
+      return { b: { top: b.top, bottom: b.bottom, left: b.left, right: b.right }, col: { top: col.top, bottom: col.bottom, left: col.left, right: col.right }, eyebrow: { top: eyebrow.top, bottom: eyebrow.bottom, left: eyebrow.left, right: eyebrow.right }, before, vw: innerWidth };
+    });
+    // debajo de la columna del cristal (no encima) y dentro de la pantalla
+    expect(m.b.top).toBeGreaterThanOrEqual(m.col.bottom - 1);
+    expect(m.b.right).toBeLessThanOrEqual(m.vw + 1);
+    expect(m.b.left).toBeGreaterThanOrEqual(-1);
+    // sin pisar el texto de al lado o de debajo
+    const overlapX = m.b.left < m.eyebrow.right && m.b.right > m.eyebrow.left;
+    const overlapY = m.b.top < m.eyebrow.bottom && m.b.bottom > m.eyebrow.top;
+    expect(overlapX && overlapY, "el botón pisa el texto").toBe(false);
+    expect(m.before).toBe(true);
+  });
+
+  test("al quitar el movimiento a mitad de visita no queda ningún botón ni vídeo (nada enfocable bajo aria-hidden)", async ({ page }, info) => {
+    test.skip(info.project.name === "desktop", "solo por debajo de lg");
+    await page.goto("/");
+    const stage = page.locator("#top [data-hero-loop]");
+    await expect(stage).toHaveAttribute("data-hero-loop", "live", { timeout: 20000 });
+    await page.getByRole("button", { name: "Pausar movimiento" }).focus();
+    await page.evaluate(() => document.documentElement.setAttribute("data-motion-state", "off"));
+    await expect(stage).toHaveAttribute("data-hero-loop", "off");
+    expect(await page.locator("#top button").count()).toBe(0);
+    expect(await page.locator("#top [data-hero-loop] canvas").count()).toBe(0);
+    await expect(stage).toHaveAttribute("aria-hidden", "true");
+    expect(await page.locator("[aria-hidden=true] :is(button, a, input, [tabindex]:not([tabindex='-1']))").evaluateAll((els) => els.filter((e) => (e as HTMLElement).closest("#top [data-hero-loop]")).length)).toBe(0);
+  });
 });

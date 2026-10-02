@@ -4,14 +4,17 @@ import { cells } from "./geometry";
 
 /**
  * Línea de tiempo pura del capítulo 07 (SkyQuetzMonogram): 2,5 s a 60 fps, 850x506 (el doble del logotipo de la página).
- * Los doce fragmentos del cristal del 404 llegan de lejos, girando, y se juntan en una placa de cristal entera. La placa
- * se disuelve en el logotipo, que sale con un desenfoque que se cierra. Los últimos fotogramas son SOLO el logotipo, igual
- * que la `<img>` del capítulo: el relevo a la imagen del DOM no salta.
+ * Los doce fragmentos del cristal del 404 llegan de lejos, girando, y se juntan en una placa de cristal entera. El logotipo
+ * se enfoca ENCIMA de la placa, que aún está entera, y solo cuando ya se lee el cristal se funde a transparente. Así nunca
+ * hay un cristal a medio opacar sobre un logotipo a medio formar (un velo gris que oscurecía los dos): el logotipo ya está
+ * casi entero cuando el cristal empieza a irse, y el cristal se va rápido. Los últimos fotogramas son SOLO el logotipo,
+ * igual que la `<img>` del capítulo: el relevo a la imagen del DOM no salta.
  *
  *    0 a  84   los fragmentos vuelan y se asientan (cada uno con su retraso)
- *   84 a  94   la placa entera brilla
- *   94 a 132   la placa se disuelve (hasta el 120) y el logotipo se enfoca
- *  132 a 149   solo el logotipo
+ *   84 a  92   la placa entera brilla
+ *   92 a 118   el logotipo se enfoca sobre la placa
+ *  110 a 122   la placa se deshace en manchas hasta quedar transparente (el logotipo ya está casi entero)
+ *  126 a 149   solo el logotipo
  */
 export const MONO_FPS = 60;
 export const MONO_FRAMES = 150;
@@ -21,10 +24,16 @@ export const MONO_W = 850;
 export const MONO_H = 506;
 
 export const F_FLY_END = 84;
-export const F_FADE_START = 94;
-export const F_FADE_END = 132;
-/** La placa se apaga antes de que el logotipo acabe de formarse: así no se ve un cristal turbio sobre él. */
-const F_GLASS_END = 120;
+/** El logotipo empieza a enfocarse (sobre la placa entera) y acaba de hacerlo. */
+export const F_LOGO_START = 92;
+export const F_LOGO_END = 118;
+/**
+ * La placa se va cuando el logotipo ya se lee. No baja de opacidad (un cristal a medio opacar sobre negro es un velo gris):
+ * se disuelve con un umbral de ruido (ver SkyQuetzMonogram), así cada punto es cristal vivo o es transparente, y solo hay
+ * un borde fino entre ambos.
+ */
+export const F_GLASS_START = 108;
+export const F_GLASS_END = 126;
 
 /** Cómo se despliega la placa en el encuadre: más ancha que alta, como el logotipo. */
 /** `sx` estira la placa entera en horizontal (posiciones Y formas de cada fragmento), así las celdas siguen encajando. */
@@ -75,9 +84,9 @@ export function monoShardState(i: number, f: number): MonoShard {
   return { pos, q: spin.multiply(rest.q), scale: rest.scale * (0.4 + 0.6 * easeOutCubic(t * 1.15)) };
 }
 
-/** Opacidad de la capa 3D: entera hasta F_FADE_START y 0 en F_GLASS_END. */
-export const glassOpacity = (f: number) => 1 - smooth((f - F_FADE_START) / (F_GLASS_END - F_FADE_START));
-/** Cuánto se ha formado el logotipo (0 a 1): empieza algo después que el cristal a disolverse. */
-export const logoReveal = (f: number) => smooth((f - (F_FADE_START + 6)) / (F_FADE_END - F_FADE_START - 6));
+/** Cuánto queda de la placa (1 a 0): entera hasta F_GLASS_START y nada en F_GLASS_END. */
+export const glassOpacity = (f: number) => 1 - smooth((f - F_GLASS_START) / (F_GLASS_END - F_GLASS_START));
+/** Cuánto se ha formado el logotipo (0 a 1): llega antes de que el cristal empiece a irse. */
+export const logoReveal = (f: number) => smooth((f - F_LOGO_START) / (F_LOGO_END - F_LOGO_START));
 /** Destello menta justo cuando la placa se completa. */
 export const flash = (f: number) => (f < F_FLY_END - 4 ? 0 : Math.exp(-(f - (F_FLY_END - 4)) / 6));

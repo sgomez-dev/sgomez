@@ -3,6 +3,7 @@ import { getDictionary } from "@/i18n";
 import { fill } from "@/i18n/fill";
 import { localizedPath, type Lang } from "@/i18n/languages";
 import { getCaseStudies, type CaseStudy as CaseStudyData } from "@/lib/api/data";
+import { hardPercent } from "@/lib/content/localized";
 import { markdownVariantOf } from "@/lib/markdown/routing";
 import { hasReel } from "@/lib/reels";
 import { JsonLd } from "@/lib/seo/JsonLdScript";
@@ -76,12 +77,12 @@ export default function CaseStudy({ lang, study }: { lang: Lang; study: CaseStud
           <div className="flex flex-col gap-14">
             <section id="problem" aria-labelledby="problem-h" className={SECTION}>
               <h2 id="problem-h" className={H2}>{d.problem}</h2>
-              <p className={BODY}>{study.problem}</p>
+              <p className={BODY}>{hardPercent(study.problem)}</p>
             </section>
 
             <section id="role" aria-labelledby="role-h" className={SECTION}>
               <h2 id="role-h" className={H2}>{d.role}</h2>
-              <p className={BODY}>{study.role}</p>
+              <p className={BODY}>{hardPercent(study.role)}</p>
             </section>
 
             <section id="stack" aria-labelledby="stack-h" className={SECTION}>
@@ -97,7 +98,7 @@ export default function CaseStudy({ lang, study }: { lang: Lang; study: CaseStud
 
             <section id="outcome" aria-labelledby="outcome-h" className={SECTION}>
               <h2 id="outcome-h" className={H2}>{d.outcome}</h2>
-              <p className={BODY}>{study.outcome}</p>
+              <p className={BODY}>{hardPercent(study.outcome)}</p>
             </section>
 
             <section id="links" aria-labelledby="links-h" className={SECTION}>

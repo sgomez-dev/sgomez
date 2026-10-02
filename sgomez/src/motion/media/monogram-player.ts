@@ -1,17 +1,20 @@
 import { MOTION_ATTR } from "@/motion/boot";
 import { needsOpaqueVideo } from "@/chapters/lost/media";
 import { MONOGRAM_SRC } from "@/lib/monogram";
+import { releaseVideo } from "./release";
 
 /**
  * Reproductor del logotipo de SkyQuetz, sin React. Se carga con `import()` cuando el logotipo está a un viewport (ver
- * MonogramReveal). Precarga el vídeo, lo reproduce UNA vez cuando está listo y la mitad del logotipo está a la vista, y al
- * acabar (o si falla, o si se quita el movimiento) lo retira y devuelve el relevo a la `<img>`. Safari: solo el MP4.
+ * MonogramReveal). Precarga el vídeo y lo reproduce UNA vez cuando la mitad del logotipo está a la vista (sin esperar a
+ * `canplaythrough`, que en iOS puede no llegar: se llama a `play()` y arranca cuando tenga datos), y al
+ * acabar (o si falla, o si se quita el movimiento) lo suelta y devuelve el relevo a la `<img>`. Safari: solo el MP4.
+ *
+ * El `<video>` no entra en el documento hasta `playing`: un `<video>` con opacity 0 que pinta su primer fotograma cuenta como
+ * candidato a LCP (ver hero-loop-player.ts), y antes de empezar no hay nada que enseñar. Suelto reproduce igual.
  */
 export function startMonogram(root: HTMLElement, cb: { onPlaying(): void; onDone(): void; onOff(): void }): { dispose(): void } {
   const html = document.documentElement;
   const on = () => html.getAttribute(MOTION_ATTR) === "on";
-  let ready = false;
-  let visible = false;
   let started = false;
   let gone = false;
 
@@ -22,12 +25,11 @@ export function startMonogram(root: HTMLElement, cb: { onPlaying(): void; onDone
     gone = true;
     seen.disconnect();
     mo.disconnect();
-    v.pause();
-    v.remove();
+    releaseVideo(v);
     cbEnd();
   };
-  const tryPlay = () => {
-    if (gone || started || !ready || !visible || !on()) return;
+  const play = () => {
+    if (gone || started || !on()) return;
     started = true;
     v.play().catch(() => finish(cb.onOff));
   };
@@ -51,19 +53,27 @@ export function startMonogram(root: HTMLElement, cb: { onPlaying(): void; onDone
       return s;
     })
     .pop()!;
-  v.addEventListener("canplaythrough", () => ((ready = true), tryPlay()), { once: true });
-  // La <img> se oculta solo cuando ya hay un fotograma pintado, para que no haya un hueco.
-  v.addEventListener("playing", () => !gone && cb.onPlaying(), { once: true });
+  // Entra en el documento ya con un fotograma decodificado y la <img> se oculta un fotograma después, para que no haya un hueco.
+  v.addEventListener(
+    "playing",
+    () => {
+      if (gone) return;
+      root.appendChild(v);
+      const rvfc = (v as HTMLVideoElement & { requestVideoFrameCallback?: (cb: () => void) => number }).requestVideoFrameCallback;
+      const shown = () => !gone && cb.onPlaying();
+      if (rvfc) rvfc.call(v, shown);
+      else requestAnimationFrame(shown);
+    },
+    { once: true },
+  );
   v.addEventListener("ended", () => finish(cb.onDone), { once: true });
   last.addEventListener("error", () => finish(cb.onOff), { once: true });
   v.addEventListener("error", () => finish(cb.onOff), { once: true });
-  root.appendChild(v);
   v.load();
 
   const seen = new IntersectionObserver(
     ([e]) => {
-      visible = !!e?.isIntersecting;
-      tryPlay();
+      if (e?.isIntersecting) play();
     },
     { threshold: 0.5 },
   );
@@ -75,8 +85,7 @@ export function startMonogram(root: HTMLElement, cb: { onPlaying(): void; onDone
       gone = true;
       seen.disconnect();
       mo.disconnect();
-      v.pause();
-      v.remove();
+      releaseVideo(v);
     },
   };
 }

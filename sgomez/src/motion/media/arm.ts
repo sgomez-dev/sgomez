@@ -1,4 +1,6 @@
 import { useEffect, type RefObject } from "react";
+import { gatingPasses } from "@/chapters/lost/media";
+import { readGlassEnv } from "@/lib/three/gate";
 import { MOTION_ATTR } from "@/motion/boot";
 
 type Idle = (cb: () => void, o?: { timeout: number }) => number;
@@ -40,14 +42,20 @@ export function armAfterLoad(root: Element | null, run: () => void, delay = 0): 
   };
 }
 
+/** Equipo capaz: la misma puerta que el cristal y las secuencias (núcleos y memoria). Movimiento y Save-Data ya los decide el atributo. */
+const capable = () => {
+  const e = readGlassEnv();
+  return gatingPasses({ webgl2: true, software: false, reducedMotion: false, saveData: false, cores: e.cores, deviceMemory: e.deviceMemory });
+};
+
 /**
  * Efecto común de ProjectReel, MonogramReveal y HeroLoop: sin movimiento no hace nada; con él, espera (`armAfterLoad`) y
- * pide el reproductor con `start`, cuyo resultado se desmonta al salir. `extra` es una condición más (HeroLoop: no desde lg).
+ * pide el reproductor con `start`, cuyo resultado se desmonta al salir. Un equipo modesto (menos de 4 núcleos o 4 GB) se queda con el póster. `extra` es una condición más (HeroLoop: no desde lg).
  */
 export function useLazyMedia(ref: RefObject<HTMLElement | null>, start: (root: HTMLElement) => Promise<{ dispose(): void }>, near: boolean, delay: number, extra: () => boolean, deps: unknown[]) {
   useEffect(() => {
     const root = ref.current;
-    const ok = () => document.documentElement.getAttribute(MOTION_ATTR) === "on" && extra();
+    const ok = () => document.documentElement.getAttribute(MOTION_ATTR) === "on" && capable() && extra();
     if (!root || !ok()) return;
     let alive = true;
     let handle: { dispose(): void } | null = null;

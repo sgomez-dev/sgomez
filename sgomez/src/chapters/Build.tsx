@@ -62,7 +62,7 @@ export default function Build({ lang }: { lang: Lang }) {
               </li>
             ))}
           </ol>
-          <div className="order-first lg:sticky lg:top-[15vh] lg:order-none lg:flex lg:h-[70vh] lg:items-center">
+          <div className="order-first lg:sticky lg:top-[15vh] lg:order-none lg:flex lg:h-[70vh] lg:w-[min(100%,70vh)] lg:items-center lg:justify-self-center">
             <ScrollSequence manifest={BUILD_SEQUENCE} trackSelector="#build" />
           </div>
         </div>

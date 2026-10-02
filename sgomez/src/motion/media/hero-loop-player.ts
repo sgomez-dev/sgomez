@@ -2,6 +2,7 @@ import { LG_QUERY } from "@/lib/three/gate";
 import { MOTION_ATTR } from "@/motion/boot";
 import { needsOpaqueVideo } from "@/chapters/lost/media";
 import { HERO_LOOP_SRC } from "@/lib/hero-loop";
+import { releaseVideo } from "./release";
 
 export type HeroLoopHandle = { setPaused(p: boolean): void; dispose(): void };
 
@@ -20,6 +21,10 @@ export function startHeroLoop(root: HTMLElement, cb: { label: string; onLive(): 
   let userPaused = false;
   let gone = false;
   let raf = 0;
+  let live = false;
+  /** Hay una copia a lienzo ya pedida (por rvfc o rAF) y sin ejecutar. */
+  let pending = false;
+  let btn: HTMLButtonElement | null = null;
 
   const v = document.createElement("video");
   const canvas = document.createElement("canvas");
@@ -35,8 +40,11 @@ export function startHeroLoop(root: HTMLElement, cb: { label: string; onLive(): 
     lg.removeEventListener("change", check);
     document.removeEventListener("visibilitychange", sync);
     cancelAnimationFrame(raf);
-    v.pause();
+    // El botón se va con el bucle: nunca queda un control enfocable dentro del `aria-hidden` de HeroLoop.
+    btn?.remove();
+    btn = null;
     canvas.remove();
+    releaseVideo(v);
   };
   const stop = () => {
     if (gone) return;
@@ -50,7 +58,7 @@ export function startHeroLoop(root: HTMLElement, cb: { label: string; onLive(): 
     b.setAttribute("aria-pressed", "false");
     b.style.pointerEvents = "auto";
     b.className =
-      "absolute right-2 top-2 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/[0.16] bg-[rgba(11,13,20,0.8)] px-4 py-2 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--light-1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
+      "absolute right-0 top-full z-10 mt-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/[0.16] bg-[rgba(11,13,20,0.8)] px-4 py-2 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--light-1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
     const icon = (paused: boolean) =>
       `<svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" class="mr-2 fill-current"><path d="${paused ? "M4 2.5v11l9-5.5z" : "M3.5 2h3v12h-3zm6 0h3v12h-3z"}"/></svg>`;
     b.innerHTML = icon(false);
@@ -70,14 +78,25 @@ export function startHeroLoop(root: HTMLElement, cb: { label: string; onLive(): 
     else v.pause();
   };
   const next = (fn: () => void) => {
+    pending = true;
+    const run = () => {
+      pending = false;
+      fn();
+    };
+    if (rvfc) rvfc.call(v, run);
+    else raf = requestAnimationFrame(run);
+  };
+  /** Una sola espera, fuera de la cadena de copias a lienzo. */
+  const afterFrame = (fn: () => void) => {
     if (rvfc) rvfc.call(v, fn);
-    else raf = requestAnimationFrame(fn);
+    else requestAnimationFrame(fn);
   };
   const tick = () => {
     if (gone) return;
     ctx?.clearRect(0, 0, 720, 720);
     ctx?.drawImage(v, 0, 0, 720, 720);
-    next(tick);
+    // En pausa el respaldo con rAF se para (no hay fotogramas nuevos que copiar); `play` lo reanuda.
+    if (!v.paused) next(tick);
   };
 
   v.muted = true;
@@ -100,16 +119,20 @@ export function startHeroLoop(root: HTMLElement, cb: { label: string; onLive(): 
       return s;
     })
     .pop()!;
-  v.addEventListener("play", () => root.setAttribute("data-playing", "true"));
+  v.addEventListener("play", () => {
+    root.setAttribute("data-playing", "true");
+    if (live && !pending && !gone) next(tick);
+  });
   v.addEventListener("pause", () => root.setAttribute("data-playing", "false"));
   v.addEventListener(
     "playing",
     () => {
+      live = true;
       tick();
       // el primer fotograma ya está en el lienzo cuando se enciende
-      next(() => {
+      afterFrame(() => {
         if (gone) return;
-        root.appendChild(pauseButton());
+        root.appendChild((btn = pauseButton()));
         cb.onLive();
       });
     },

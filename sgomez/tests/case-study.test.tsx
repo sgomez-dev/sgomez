@@ -9,6 +9,7 @@ import { CLAUDE_CANVAS } from "@/app/seo";
 import { projects, type ProjectContent } from "@/app/content";
 import { LANGS, type Lang } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
+import { hardPercent } from "@/lib/content/localized";
 import { buildCaseStudies, getCaseStudies, getCaseStudy, getProjects } from "@/lib/api/data";
 import { llmsTxt } from "@/lib/machine/llms-txt";
 import { llmsFullTxt } from "@/lib/machine/llms-full";
@@ -224,7 +225,7 @@ describe("la página del caso", () => {
       expect(html).toMatch(/<h1[^>]*>Claude Canvas<\/h1>/);
       expect(html).toContain("data-answer");
       for (const heading of [d.problem, d.role, d.stack, d.outcome, d.links]) expect(html).toContain(`>${heading}</h2>`);
-      for (const text of [study.problem, study.role, study.outcome]) expect(html).toContain(text.replace(/'/g, "&#x27;"));
+      for (const text of [study.problem, study.role, study.outcome]) expect(html).toContain(hardPercent(text).replace(/'/g, "&#x27;"));
       expect(html).toContain('<time dateTime="2026-10-02">');
       expect(html).toMatch(/<time[^>]*>[^<]*2026[^<]*<\/time>/);
       expect(html).toContain(`href="https://claude-canvas.sgomez.dev"`);
@@ -300,4 +301,25 @@ describe("sin rayas ni dos puntos retóricos en el texto de los casos", () => {
       for (const s of study) for (const t of [s.problem, s.role, s.outcome]) expect(t).not.toMatch(/:\s*$/);
     });
   }
+});
+
+describe("espacio duro antes de «%»", () => {
+  const NBSP = " ";
+  it("hardPercent solo toca «cifra espacio %»", async () => {
+    const { hardPercent } = await import("@/lib/content/localized");
+    expect(hardPercent("del 66,7 % al 80 %")).toBe(`del 66,7${NBSP}% al 80${NBSP}%`);
+    expect(hardPercent("from 66.7% to 80%")).toBe("from 66.7% to 80%");
+    expect(hardPercent("100 % remoto y un % suelto")).toBe(`100${NBSP}% remoto y un % suelto`);
+  });
+  it("las páginas de los casos pintan el % pegado a la cifra, en ES y EN, sin tocar los datos", () => {
+    for (const lang of ["es", "en"] as const) {
+      for (const study of getCaseStudies(lang)) {
+        const html = renderToStaticMarkup(<CaseStudy lang={lang} study={study} />);
+        expect(html, `${lang} ${study.slug}`).not.toMatch(/\d %/);
+      }
+    }
+    const nuda = getCaseStudy("nudaui-semantic-search-rag", "es")!;
+    expect(nuda.outcome).toMatch(/\d %/);
+    expect(renderToStaticMarkup(<CaseStudy lang="es" study={nuda} />)).toContain(`80${NBSP}%`);
+  });
 });

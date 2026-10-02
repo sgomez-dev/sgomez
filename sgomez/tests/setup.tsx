@@ -7,6 +7,7 @@ vi.mock("next/image", () => ({
 }));
 // imageProps (Portrait, SkyQuetz, LatestPosts): las props de un <img> normal, sin el optimizador.
 vi.mock("@/lib/image-props", () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   imageProps: ({ fill: _fill, priority: _priority, ...p }: Record<string, unknown>) => p,
 }));
 vi.mock("next/link", () => ({

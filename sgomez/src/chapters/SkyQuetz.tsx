@@ -30,7 +30,7 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
               <a href={skyquetz.url} rel="noopener" aria-label={`${skyquetz.name}, ${skyquetz.cta}`} className="inline-flex min-h-11 rounded-[var(--radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]">
                 <MonogramReveal>
                   {/* eslint-disable-next-line @next/next/no-img-element -- imageProps: <img> normal, sin JS de cliente */}
-                  <img {...imageProps({ src: skyquetz.logo, alt: t(skyquetz.logoAlt, lang), width: 425, height: 253 })} className="h-20 w-auto sm:h-24" />
+                  <img {...imageProps({ src: skyquetz.logo, alt: t(skyquetz.logoAlt, lang), width: 425, height: 253 })} alt={t(skyquetz.logoAlt, lang)} className="h-20 w-auto sm:h-24" />
                 </MonogramReveal>
               </a>
             </div>

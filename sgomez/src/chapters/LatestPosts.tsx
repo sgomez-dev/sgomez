@@ -93,6 +93,7 @@ export default async function LatestPosts({ lang }: { lang: Lang }) {
                   {/* eslint-disable-next-line @next/next/no-img-element -- imageProps: <img> normal, sin JS de cliente */}
                   <img
                     {...imageProps({ src: coverSrc(post.coverImage)!, alt: "", fill: true, sizes: "(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw", loading: "lazy" })}
+                    alt=""
                     className="object-cover"
                   />
                 </div>

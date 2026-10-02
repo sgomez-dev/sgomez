@@ -1,6 +1,6 @@
 import { test, expect } from "./fixtures";
 
-/** Capítulo 05: el reel de cada ficha destacada. El póster va en el SSR; el vídeo solo con movimiento, en pantalla y tras load e idle. */
+/** Capítulo 05: el reel de cada ficha destacada. El póster va en el SSR; el vídeo solo a petición (hover o foco) con puntero fino y movimiento permitido. */
 const REELS = /\/media\/reels\/[\w-]+\.(webm|mp4)/;
 const reels = (page: import("@playwright/test").Page) => page.locator("#work [data-reel]");
 
@@ -44,7 +44,8 @@ test.describe("capítulo 05, reels de proyectos", () => {
     expect(asked).toEqual([]);
   });
 
-  test("con JS: lejos no se pide nada; al llegar suena solo el reel visible, sin CLS y la ficha mantiene su caja", async ({ page }) => {
+  test("con puntero fino: solo se reproduce a petición (hover o foco), sin CLS, y al salir se pausa en el fotograma 0", async ({ page }, info) => {
+    test.skip(/mobile|landscape/.test(info.project.name), "táctil: sin hover no hay reproducción");
     const asked: string[] = [];
     page.on("request", (r) => REELS.test(r.url()) && asked.push(new URL(r.url()).pathname));
     await page.goto("/");
@@ -53,19 +54,66 @@ test.describe("capítulo 05, reels de proyectos", () => {
     expect(asked).toEqual([]);
     const first = reels(page).first();
     await first.scrollIntoViewIfNeeded();
+    // en pantalla pero sin interacción: ni vídeo ni petición (WCAG 2.2.2)
+    await page.waitForTimeout(2500);
+    expect(await page.locator("#work video").count()).toBe(0);
+    expect(asked).toEqual([]);
     const before = await first.boundingBox();
+    // hover sobre la ficha entera, no solo sobre el reel
+    const card = page.locator("#work li").first().locator('a[target="_blank"]');
+    // un punto del texto de la ficha (debajo o al lado del reel), dentro de la pantalla
+    const text = (await card.locator("h3").boundingBox())!;
+    const pt = { x: text.x + 8, y: text.y + 8 };
+    await page.mouse.move(pt.x, pt.y);
     await expect(first).toHaveAttribute("data-reel", "live", { timeout: 20000 });
-    const after = await first.boundingBox();
-    expect(after).toEqual(before);
-    expect(await first.locator("video").evaluate((v: HTMLVideoElement) => !v.paused && v.muted && v.loop)).toBe(true);
-    // en pantallas bajas puede haber entrado también la ficha siguiente, pero nunca la tercera sin haber llegado a ella
+    const video = first.locator("video");
+    expect(await video.evaluate((v: HTMLVideoElement) => !v.paused && v.muted && v.loop)).toBe(true);
+    expect(await first.boundingBox()).toEqual(before);
     expect(asked.some((u) => u.startsWith("/media/reels/claude-canvas."))).toBe(true);
     expect(asked.some((u) => u.startsWith("/media/reels/nudaui."))).toBe(false);
-    // el vídeo es decorativo y no se puede enfocar
-    await expect(first.locator("video")).toHaveAttribute("aria-hidden", "true");
-    // al alejarse se pausa
-    await page.locator("#top").scrollIntoViewIfNeeded();
-    await expect.poll(() => first.locator("video").evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+    // decorativo y sin foco
+    await expect(video).toHaveAttribute("aria-hidden", "true");
+    // al salir se pausa y vuelve al fotograma 0, sin destruir el vídeo
+    await page.mouse.move(2, 2);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBe(0);
+    expect(await page.locator("#work video").count()).toBe(1);
+    // y al volver, sigue siendo a petición
+    await page.mouse.move(pt.x, pt.y);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
+  });
+
+  test("con teclado: el foco en la ficha reproduce y al salir se pausa", async ({ page }, info) => {
+    test.skip(/mobile|landscape/.test(info.project.name), "táctil: sin hover no hay reproducción");
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await page.waitForTimeout(2500);
+    const first = reels(page).first();
+    await first.scrollIntoViewIfNeeded();
+    expect(await page.locator("#work video").count()).toBe(0);
+    await page.locator("#work li").first().locator('a[target="_blank"]').focus();
+    await expect(first).toHaveAttribute("data-reel", "live", { timeout: 20000 });
+    const video = first.locator("video");
+    expect(await video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
+    await page.locator("#work li").first().locator('a[target="_blank"]').blur();
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  });
+
+  test("táctil: solo el póster, aunque se toque la ficha", async ({ page }, info) => {
+    test.skip(!/mobile|landscape/.test(info.project.name), "solo táctil");
+    const asked: string[] = [];
+    page.on("request", (r) => REELS.test(r.url()) && asked.push(r.url()));
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await page.waitForTimeout(2500);
+    const first = reels(page).first();
+    await first.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(2500);
+    await first.dispatchEvent("pointerenter");
+    await page.waitForTimeout(1000);
+    expect(await page.locator("#work video").count()).toBe(0);
+    await expect(first).toHaveAttribute("data-reel", "poster");
+    expect(asked).toEqual([]);
   });
 
   test("la ficha sigue siendo un único enlace accesible con su nombre", async ({ page }) => {

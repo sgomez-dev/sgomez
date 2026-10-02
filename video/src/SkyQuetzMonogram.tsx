@@ -34,6 +34,28 @@ function MonogramScene({ frame }: { frame: number }) {
   );
 }
 
+/**
+ * Disolución por umbral de ruido: el alfa de cada punto es 1 donde el ruido supera el umbral y 0 donde no, con un borde de
+ * unos pocos fotogramas de gris. `remaining` (1 a 0) sube el umbral de 0 a más que el máximo del ruido, así la placa se
+ * deshace en manchas que se abren y no se oscurece.
+ */
+function DissolveFilter({ remaining }: { remaining: number }) {
+  const SLOPE = 6;
+  const threshold = (1 - remaining) * 1.1 - 0.05;
+  return (
+    <svg width={0} height={0} style={{ position: "absolute" }} aria-hidden>
+      <filter id="glass-dissolve" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.0065 0.011" numOctaves={2} seed={11} result="noise" />
+        <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" result="r" />
+        <feComponentTransfer in="r" result="mask">
+          <feFuncA type="linear" slope={SLOPE} intercept={(-SLOPE * threshold).toFixed(3)} />
+        </feComponentTransfer>
+        <feComposite in="SourceGraphic" in2="mask" operator="in" />
+      </filter>
+    </svg>
+  );
+}
+
 export type MonogramProps = {
   /** "transparent" para el WebM y el póster; negro puro para el MP4 de Safari (la página lo mezcla con `screen`). */
   bg: string;
@@ -46,8 +68,9 @@ export const SkyQuetzMonogram = ({ bg }: MonogramProps) => {
   const r = logoReveal(frame);
   return (
     <AbsoluteFill style={{ background: bg }}>
+      {g < 1 ? <DissolveFilter remaining={g} /> : null}
       {g > 0.001 ? (
-        <AbsoluteFill style={{ opacity: g }}>
+        <AbsoluteFill style={g < 1 ? { filter: "url(#glass-dissolve)" } : undefined}>
           <ThreeCanvas
             width={MONO_W}
             height={MONO_H}

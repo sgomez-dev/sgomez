@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { hardPercent } from "@/lib/content/localized";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { CLAUDE_CANVAS } from "@/app/seo";
@@ -77,7 +78,7 @@ export default function OpenSource({ lang }: { lang: Lang }) {
               <div data-layer="fill" aria-hidden="true" className="absolute inset-[1px] -z-10 rounded-[calc(var(--radius)-1px)] bg-[color:var(--bg-3)]" />
               <div data-layer="content" className="flex w-full flex-col gap-4 p-5 sm:p-6">
                 <h3 className="text-[length:var(--step-2)] font-semibold leading-[1.1] tracking-[-0.03em] text-[color:var(--text)] [overflow-wrap:anywhere]">{b.name}</h3>
-                <p className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{b.desc}</p>
+                <p className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{hardPercent(b.desc)}</p>
                 {b.note ? (
                   <p className="border-l-2 border-[color:var(--light-1)] pl-4 text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text)]">{b.note}</p>
                 ) : null}

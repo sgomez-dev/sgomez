@@ -11,7 +11,7 @@ type State = "poster" | "playing" | "done" | "off";
  * Sin JS, con movimiento reducido o con Save-Data solo existe la `<img>` y no se descarga ningún vídeo.
  *
  * Tras `load` y un hueco ocioso, y a un viewport de distancia, se carga el reproductor (import diferido: no cuesta JS
- * inicial) y este precarga el vídeo (unos 370 KB). Mientras suena, la `<img>` se oculta con `opacity` (sigue en el DOM con su
+ * inicial) y este precarga el vídeo (unos 370 KB) sin ponerlo en el documento hasta que suena. Mientras suena, la `<img>` se oculta con `opacity` (sigue en el DOM con su
  * `alt`). Como en GlassStage y ScrollSequence, el `<video>` lo crea y quita el efecto, no React, para sobrevivir a StrictMode.
  */
 export default function MonogramReveal({ children }: { children: ReactNode }) {

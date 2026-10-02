@@ -8,6 +8,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
 import ProjectReel from "@/components/ProjectReel";
 import { hasReel } from "@/lib/reels";
+import { hardPercent } from "@/lib/content/localized";
 
 const FEATURED = 3;
 
@@ -73,7 +74,7 @@ export default function Projects({ lang }: { lang: Lang }) {
                       </span>
                       <span aria-hidden="true" className="shrink-0 text-[color:var(--text-2)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
                     </h3>
-                    <p className="flex-1 text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{p.description}</p>
+                    <p className="flex-1 text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{hardPercent(p.description)}</p>
                     {featured && !reel ? null : (
                       <ul className="flex flex-wrap gap-2">
                         {p.stack.map((s) => (

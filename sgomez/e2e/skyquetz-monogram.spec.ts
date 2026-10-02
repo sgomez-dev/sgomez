@@ -53,17 +53,20 @@ test.describe("capítulo 07, logotipo de SkyQuetz", () => {
     expect(asked).toEqual([]);
     const size = async () => logo(page).evaluate((i) => [i.clientWidth, i.clientHeight]);
     const before = await size();
-    // Instrumenta el vídeo en cuanto exista para saber que llegó a sonar y a acabar.
+    // El vídeo entra en el documento solo al sonar (un vídeo oculto en el DOM contaría para el LCP): se anota cómo entra y que acaba.
     await page.evaluate(() => {
       const w = window as unknown as { __mono: string[] };
       w.__mono = [];
       new MutationObserver((ms) => {
-        for (const m of ms) for (const n of m.addedNodes) if (n instanceof HTMLVideoElement) for (const ev of ["playing", "ended"]) n.addEventListener(ev, () => w.__mono.push(ev));
+        for (const m of ms) for (const n of m.addedNodes) if (n instanceof HTMLVideoElement) {
+            w.__mono.push(n.paused || n.readyState < 2 ? "entra sin sonar" : "entra sonando");
+            n.addEventListener("ended", () => w.__mono.push("ended"));
+          }
       }).observe(document.body, { childList: true, subtree: true });
     });
     await box(page).scrollIntoViewIfNeeded();
     await expect(box(page)).toHaveAttribute("data-monogram", "done", { timeout: 20000 });
-    expect(await page.evaluate(() => (window as unknown as { __mono: string[] }).__mono)).toEqual(["playing", "ended"]);
+    expect(await page.evaluate(() => (window as unknown as { __mono: string[] }).__mono)).toEqual(["entra sonando", "ended"]);
     expect(asked.length).toBeGreaterThan(0);
     expect(asked.every((u) => u.startsWith("/media/skyquetz/monogram."))).toBe(true);
     // el vídeo se retira y la imagen vuelve visible, en la misma caja

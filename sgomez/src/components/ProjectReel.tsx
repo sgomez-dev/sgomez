@@ -6,11 +6,15 @@ import { useLazyMedia } from "@/motion/media/arm";
 
 type State = "poster" | "live" | "off";
 
+/** Solo con puntero fino y hover: en táctil no hay hover ni forma de pausar, y el reel no se reproduce nunca. */
+const HOVER_QUERY = "(hover: hover) and (pointer: fine)";
+
 /**
  * El marco del reel de un proyecto. El servidor pinta solo la caja a 16:9 con el póster (el fotograma 0 del vídeo): sin JS,
- * con movimiento reducido o con Save-Data es lo único que existe y no se pide ningún vídeo. Con movimiento permitido, tras
- * `load` y un hueco ocioso, y cuando la ficha está a un viewport, se carga el reproductor (import diferido, no cuesta JS
- * inicial) que crea el `<video>` encima del póster la primera vez que entra en pantalla. Decorativo: la ficha es el enlace.
+ * con movimiento reducido, con Save-Data o en táctil es lo único que existe y no se pide ningún vídeo. El reel se reproduce
+ * solo a petición (WCAG 2.2.2): con puntero fino y hover, tras `load` y un hueco ocioso y con la ficha a un viewport, se carga
+ * el reproductor (import diferido, no cuesta JS inicial) y este crea el `<video>` encima del póster la primera vez que el
+ * puntero o el foco entran en la ficha. Al salir se pausa y vuelve al fotograma 0. Decorativo: la ficha es el enlace.
  *
  * Como en GlassStage y ScrollSequence, el elemento lo crea y quita el efecto, no React, para sobrevivir a StrictMode.
  */
@@ -24,7 +28,7 @@ export default function ProjectReel({ slug, className = "" }: { slug: string; cl
     (root) => import("@/motion/media/reel-player").then((m) => m.startReel(root, reelSources(slug), { onLive: () => setState("live"), onOff: () => setState("off") })),
     true,
     0,
-    () => true,
+    () => matchMedia(HOVER_QUERY).matches,
     [slug],
   );
 
