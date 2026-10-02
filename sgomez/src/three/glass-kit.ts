@@ -131,28 +131,43 @@ export function buildBackdrop(make2d: Make2D): THREE.MeshBasicMaterial {
   const g = c.getContext("2d") as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   g.fillStyle = B.base;
   g.fillRect(0, 0, B.size, B.size);
+  // Cada mancha y cada haz se pinta tambien en sus copias envueltas (+-size): el tile se repite con RepeatWrapping y sin esto
+  // queda una costura donde el borde corta un degradado.
+  const wraps = [-B.size, 0, B.size];
   for (const b of B.blobs) {
-    const rg = g.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-    rg.addColorStop(0, `rgba(${b.rgb},${b.a})`);
-    rg.addColorStop(1, `rgba(${b.rgb},0)`);
-    g.fillStyle = rg;
-    g.fillRect(0, 0, B.size, B.size);
+    for (const dx of wraps) {
+      for (const dy of wraps) {
+        const rg = g.createRadialGradient(b.x + dx, b.y + dy, 0, b.x + dx, b.y + dy, b.r);
+        rg.addColorStop(0, `rgba(${b.rgb},${b.a})`);
+        rg.addColorStop(1, `rgba(${b.rgb},0)`);
+        g.fillStyle = rg;
+        g.fillRect(0, 0, B.size, B.size);
+      }
+    }
   }
   const rnd = mulberry32(B.seed);
   g.globalCompositeOperation = "lighter";
   for (let i = 0; i < B.count; i++) {
     const { rgb, a } = B.beams[i % B.beams.length]!;
-    g.save();
-    g.translate(rnd() * B.size, rnd() * B.size);
-    g.rotate(0.45 + (rnd() - 0.5) * 0.5);
+    const px = rnd() * B.size;
+    const py = rnd() * B.size;
+    const rot = 0.45 + (rnd() - 0.5) * 0.5;
     const w = 8 + rnd() * 34;
-    const lg = g.createLinearGradient(-w, 0, w, 0);
-    lg.addColorStop(0, `rgba(${rgb},0)`);
-    lg.addColorStop(0.5, `rgba(${rgb},${a * (0.35 + rnd() * 0.65)})`);
-    lg.addColorStop(1, `rgba(${rgb},0)`);
-    g.fillStyle = lg;
-    g.fillRect(-w, -700, w * 2, 1400);
-    g.restore();
+    const alpha = a * (0.35 + rnd() * 0.65);
+    for (const dx of wraps) {
+      for (const dy of wraps) {
+        g.save();
+        g.translate(px + dx, py + dy);
+        g.rotate(rot);
+        const lg = g.createLinearGradient(-w, 0, w, 0);
+        lg.addColorStop(0, `rgba(${rgb},0)`);
+        lg.addColorStop(0.5, `rgba(${rgb},${alpha})`);
+        lg.addColorStop(1, `rgba(${rgb},0)`);
+        g.fillStyle = lg;
+        g.fillRect(-w, -700, w * 2, 1400);
+        g.restore();
+      }
+    }
   }
   const tex = new THREE.CanvasTexture(c as HTMLCanvasElement);
   tex.colorSpace = THREE.SRGBColorSpace;

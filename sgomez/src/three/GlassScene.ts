@@ -59,8 +59,8 @@ export async function createGlassScene(
   let t = 0;
   let aspect = o.width / Math.max(1, o.height);
 
-  // El enlazado del shader ocurre aquí, en el hilo del worker. El hilo principal no lo ve.
-  renderer.compile(scene, camera);
+  // El enlazado del shader ocurre en el worker y, con KHR_parallel_shader_compile, sin bloquear la GPU compartida (huecos de rAF de 33 a 117 ms medidos).
+  await renderer.compileAsync(scene, camera);
 
   let base = unproject(P.left, P.top, P.z, aspect);
 
@@ -99,6 +99,7 @@ export async function createGlassScene(
       backdrop?.map?.dispose();
       backdrop?.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
     },
   };
 }

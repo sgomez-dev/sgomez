@@ -14,7 +14,7 @@ const ctx = self as unknown as Scope;
 const post = (m: FromWorker) => ctx.postMessage(m);
 const raf = (cb: (t: number) => void) => (ctx.requestAnimationFrame ? ctx.requestAnimationFrame(cb) : setTimeout(() => cb(performance.now()), FRAME_MS));
 
-type Slot = { scene: GlassSceneHandle | null; visible: boolean; frames: number; t0: number };
+type Slot = { scene: GlassSceneHandle | null; visible: boolean; frames: number; t0: number; w: number; h: number; dpr: number };
 const slots = new Map<GlassId, Slot>();
 const input = { x: 0, y: 0 };
 let paused = false;
@@ -44,8 +44,10 @@ function kick() {
   raf(loop);
 }
 
-function fail(id: GlassId, reason: FailReason) {
-  slots.get(id)?.scene?.dispose();
+/** Solo actua si el hueco sigue siendo el mismo: un fallo tardio de un montaje viejo no debe tirar el nuevo. */
+function fail(id: GlassId, reason: FailReason, slot: Slot) {
+  if (slots.get(id) !== slot) return;
+  slot.scene?.dispose();
   slots.delete(id);
   post({ type: "fail", id, reason });
 }
@@ -54,36 +56,43 @@ ctx.onmessage = async (e) => {
   const m = e.data;
   switch (m.type) {
     case "init": {
-      const slot: Slot = { scene: null, visible: true, frames: 0, t0: performance.now() };
+      const slot: Slot = { scene: null, visible: true, frames: 0, t0: performance.now(), w: m.width, h: m.height, dpr: m.dpr };
       slots.set(m.id, slot);
       try {
         const gl = m.canvas.getContext("webgl2", { alpha: true, antialias: true, powerPreference: "high-performance" }) as WebGL2RenderingContext | null;
-        if (!gl) return fail(m.id, "no-webgl2");
+        if (!gl) return fail(m.id, "no-webgl2", slot);
         const info = gl.getExtension("WEBGL_debug_renderer_info");
         const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
-        if (!m.force && isSoftwareRenderer(name)) return fail(m.id, "software");
+        if (!m.force && isSoftwareRenderer(name)) return fail(m.id, "software", slot);
         m.canvas.addEventListener("webglcontextlost", (ev) => {
           ev.preventDefault();
-          fail(m.id, "context-lost");
+          fail(m.id, "context-lost", slot);
         });
         const scene = await createGlassScene(m.canvas, gl, {
-          width: m.width,
-          height: m.height,
-          dpr: m.dpr,
+          width: slot.w,
+          height: slot.h,
+          dpr: slot.dpr,
           profile: m.profile,
           placement: PLACEMENTS[m.id],
           make2d: (w, h) => new OffscreenCanvas(w, h),
         });
         if (slots.get(m.id) !== slot) return scene.dispose();
         slot.scene = scene;
+        // un resize que llego durante el arranque ya estaba guardado en el hueco: se aplica ahora
+        if (slot.w !== m.width || slot.h !== m.height || slot.dpr !== m.dpr) scene.resize(slot.w, slot.h, slot.dpr);
         kick();
       } catch {
-        fail(m.id, "error");
+        fail(m.id, "error", slot);
       }
       return;
     }
     case "resize": {
       const s = slots.get(m.id);
+      if (s) {
+        s.w = m.width;
+        s.h = m.height;
+        s.dpr = m.dpr;
+      }
       s?.scene?.resize(m.width, m.height, m.dpr);
       if (paused) s?.scene?.frame(0, input, true);
       return;

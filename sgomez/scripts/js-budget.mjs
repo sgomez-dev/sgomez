@@ -11,6 +11,8 @@ for (const l of ["es", "en"]) {
   for (const page of ["about", "contact", "developers", "privacy"]) ROUTES[`/${l}/${page}`] = `${l}/${page}.html`;
   ROUTES[`404 (molde ${l})`] = `${l}/perdido.html`;
 }
+/** La Task 5 monta el cristal en el hero: desde ahi, no encontrar sus chunks es un fallo y no un 'todavia no existe'. */
+const REQUIRE_GLASS = true;
 const NEXT = join(process.cwd(), ".next");
 const gz = (file) => gzipSync(readFileSync(file)).length / 1024;
 const disk = (src) => join(NEXT, src.replace(/^\/_next\//, ""));
