@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { CLAUDE_CANVAS } from "@/app/seo";
@@ -6,6 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
+import { BuildTrace } from "@/components/motion/BuildTrace";
 
 const SKILLS_URL = "https://skills.sgomez.dev";
 const NUDAUI_URL = "https://nudaui.dev";
@@ -69,7 +71,8 @@ export default function OpenSource({ lang }: { lang: Lang }) {
         <Display as="h2" id="open-source-h" lead={d.chapters.openSource.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
         <ul className="mt-10 grid list-none gap-3 sm:gap-4 lg:mt-14 lg:grid-cols-3">
           {blocks.map((b, i) => (
-            <li key={b.key} data-motion="build" data-index={i} className="relative isolate flex min-w-0">
+            <li key={b.key} data-motion="build" data-index={i} style={{ "--i": i } as CSSProperties} className="relative isolate flex min-w-0">
+              <BuildTrace />
               <div data-layer="outline" aria-hidden="true" className="absolute inset-0 -z-20 rounded-[var(--radius)] border border-[color-mix(in_oklab,var(--light-1)_35%,transparent)]" />
               <div data-layer="fill" aria-hidden="true" className="absolute inset-[1px] -z-10 rounded-[calc(var(--radius)-1px)] bg-[color:var(--bg-3)]" />
               <div data-layer="content" className="flex w-full flex-col gap-4 p-5 sm:p-6">

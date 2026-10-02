@@ -85,7 +85,8 @@ export function start(root: ParentNode, registry: Registry = REGISTRY, opts: Sta
       addCss(el.dataset.motion ?? "", e.css);
       const fn = supported ? e.run : (e.fallback ?? e.run);
       if (!fn) return;
-      const stop = fn(el, await getCtx());
+      // Las primitivas que no piden contexto (exactamente `(el) => ...`) no cargan el chunk del motor.
+      const stop = fn(el, fn.length === 1 ? (undefined as never) : await getCtx());
       if (!alive || hooked.get(el) !== claim) {
         stop?.();
         return;

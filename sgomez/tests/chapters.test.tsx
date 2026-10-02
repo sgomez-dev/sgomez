@@ -135,6 +135,12 @@ describe("capítulos 04–07", () => {
     it(`${lang}: Open source con tres bloques build`, () => {
       expect(html.match(/data-motion="build"/g)).toHaveLength(3);
     });
+    it(`${lang}: cada tarjeta de open source lleva su trazo decorativo y su indice`, () => {
+      const os = renderToStaticMarkup(<OpenSource lang={lang} />);
+      expect(os.match(/<svg data-layer="trace" aria-hidden="true"/g)).toHaveLength(3);
+      expect(os).toMatch(/--i:0/);
+      expect(os).toMatch(/pathLength="1"/);
+    });
   }
   it("el eslogan de SkyQuetz es la frase de marca en español, también en inglés", () => {
     const html = renderToStaticMarkup(<SkyQuetz lang="en" />);
