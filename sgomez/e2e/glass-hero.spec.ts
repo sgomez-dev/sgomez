@@ -16,7 +16,7 @@ test.describe("cristal vivo del hero (escritorio)", () => {
     await forceGlass(page);
     await page.goto("/");
     await expect(page.locator(HERO)).toHaveAttribute("data-glass", "live", { timeout: 45_000 });
-    await expect(page.locator(`${HERO} canvas`)).toHaveCSS("opacity", "1");
+    await expect(page.locator(`${HERO} canvas:not([data-hero-loop-canvas])`)).toHaveCSS("opacity", "1");
     expect(await longTasksDuringGlass(page, "hero")).toEqual([]);
     // El LCP sigue siendo el titular o el retrato y llega antes de que el cristal esté listo (no compite con él).
     const lcp = await page.evaluate(() => ({ ...(window as unknown as { __lcp: { tag: string; t: number } }).__lcp, ready: performance.getEntriesByName("glass:ready:hero")[0]?.startTime ?? 0 }));
@@ -47,12 +47,12 @@ test.describe("cristal vivo del hero (escritorio)", () => {
     await page.setViewportSize({ width: 800, height: 800 });
     expect(await opacity).toBe("1");
     await expect(page.locator(HERO)).toHaveAttribute("data-glass", "off");
-    await expect(page.locator(`${HERO} canvas`)).toHaveCount(0);
+    await expect(page.locator(`${HERO} canvas:not([data-hero-loop-canvas])`)).toHaveCount(0);
     await expect(page.locator(`${HERO} button[aria-pressed]`)).toHaveCount(0);
     await expect.poll(() => workers(page)).toBe(0);
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.waitForTimeout(1500);
-    await expect(page.locator(`${HERO} canvas`)).toHaveCount(0);
+    await expect(page.locator(`${HERO} canvas:not([data-hero-loop-canvas])`)).toHaveCount(0);
   });
 
   test("Review Focus 2: movimiento reducido a mitad de visita devuelve el póster", async ({ page }) => {
@@ -169,13 +169,13 @@ test.describe("cristal vivo del hero (escritorio)", () => {
   });
 });
 
-test("móvil y horizontal: nunca hay lienzo ni worker", async ({ page }, info) => {
+test("móvil y horizontal: nunca hay lienzo 3D ni worker (el único canvas es el del bucle de vídeo)", async ({ page }, info) => {
   test.skip(!["mobile", "landscape", "small", "tablet"].includes(info.project.name), "solo por debajo de lg");
   await forceGlass(page);
   await page.goto("/", { waitUntil: "networkidle" });
   await page.waitForTimeout(3500);
   await expect(page.locator(HERO)).toHaveAttribute("data-glass", "poster");
-  await expect(page.locator(`${HERO} canvas`)).toHaveCount(0);
+  await expect(page.locator(`${HERO} canvas:not([data-hero-loop-canvas])`)).toHaveCount(0);
 });
 
 test("sin JS: póster en su sitio", async ({ browser }) => {
