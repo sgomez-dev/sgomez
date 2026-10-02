@@ -42,3 +42,7 @@ El MP4 con alfa HEVC (ProRes 4444 a HEVC) necesita VideoToolbox, que solo existe
 ## Secuencia del capítulo 03
 
 `npm run render -- --only=build` renderiza `BuildDesktop` (1200 por 1200) y `BuildMobile` (600 por 600), 90 fotogramas a 30 fps, y los convierte a WebP con alfa en `sgomez/public/media/build/{desktop,mobile}/0001.webp`, más `poster.webp`. Presupuesto: 4 MB en escritorio, 1,5 MB en móvil y 200 KB el póster (`sgomez/tests/build-media.test.ts`). Las losas usan la silueta del póster del hero y el material de `GLASS_LIVE`.
+
+## Reels del capítulo 05
+
+`node scripts/capture-projects.mjs` captura (Playwright, 1440 por 900) la primera pantalla y otra a media página de las URL de los tres proyectos destacados, a `public/projects/<slug>/`. Se miran antes de usarlas y se commitean. `npm run render -- --only=reels` renderiza `ProjectReel` (960 por 540, 8 s a 30 fps, sin texto, bucle sin salto) a `sgomez/public/media/reels/<slug>.{webm,mp4,webp}`. Presupuesto: 600 KB cada vídeo (`sgomez/tests/reel-media.test.ts`). Si una URL no responde, ese proyecto se queda sin reel y se quita de `scripts/projects.mjs` y de `sgomez/src/lib/reels.ts`.

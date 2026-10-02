@@ -2,6 +2,8 @@ import { Composition } from "remotion";
 import { Shatter404 } from "./Shatter404";
 import { BuildSequence } from "./BuildSequence";
 import { BUILD_FPS, BUILD_FRAMES } from "./build-timeline";
+import { ProjectReel } from "./ProjectReel";
+import { REEL_FPS, REEL_FRAMES, REEL_H, REEL_W } from "./reel-timeline";
 
 export const FPS = 60;
 export const FRAMES = 120;
@@ -19,5 +21,6 @@ export const Root = () => (
     />
     <Composition id="BuildDesktop" component={BuildSequence} durationInFrames={BUILD_FRAMES} fps={BUILD_FPS} width={1200} height={1200} defaultProps={{ width: 1200, height: 1200 }} />
     <Composition id="BuildMobile" component={BuildSequence} durationInFrames={BUILD_FRAMES} fps={BUILD_FPS} width={600} height={600} defaultProps={{ width: 600, height: 600 }} />
+    <Composition id="ProjectReel" component={ProjectReel} durationInFrames={REEL_FRAMES} fps={REEL_FPS} width={REEL_W} height={REEL_H} defaultProps={{ slug: "claude-canvas" }} />
   </>
 );

@@ -5,11 +5,13 @@
 //   npm run draft             10 fotogramas a video/out, para probar la tubería
 //   npm run render -- --only=webm,mp4,posters
 //   npm run render -- --only=build      secuencia de fotogramas del capítulo 03, a sgomez/public/media/build
+//   npm run render -- --only=reels      un reel por proyecto destacado (capítulo 05), a sgomez/public/media/reels
 import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync, statSync, existsSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import { PROJECTS } from "./projects.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const media = resolve(root, "..", "sgomez", "public", "media", "404");
@@ -29,6 +31,12 @@ const draft = args.includes("--draft");
 const BUILD_WEBP = { quality: 70, alphaQuality: 70 };
 const BUILD_POSTER_QUALITY = 78;
 const buildMedia = resolve(root, "..", "sgomez", "public", "media", "build");
+
+// Reels del capítulo 05 (ProjectReel): 960x540, 8 s a 30 fps, opacos, sin audio. Presupuesto: <= 600 KB cada fichero.
+const REEL_WEBM_CRF = 52;
+const REEL_MP4_CRF = 30;
+const REEL_POSTER_QUALITY = 82;
+const reelsMedia = resolve(root, "..", "sgomez", "public", "media", "reels");
 
 const only = (args.find((a) => a.startsWith("--only=")) ?? "").slice(7).split(",").filter(Boolean);
 const want = (k) => only.length === 0 || only.includes(k);
@@ -104,6 +112,29 @@ if (want("build") && !draft) {
       await sharp(join(seq, pngs[pngs.length - 1])).webp({ quality: BUILD_POSTER_QUALITY, alphaQuality: 90, effort: 6, smartSubsample: true }).toFile(out);
       sizes["build/poster.webp"] = out;
     }
+  }
+}
+
+if (want("reels") && !draft) {
+  mkdirSync(reelsMedia, { recursive: true });
+  for (const { slug } of PROJECTS) {
+    if (!existsSync(join(root, "public", "projects", slug, "top.png"))) {
+      console.warn(`  reels/${slug}: sin capturas (node scripts/capture-projects.mjs), se omite`);
+      continue;
+    }
+    const p = props(`reel-${slug}`, { slug });
+    const webm = join(reelsMedia, `${slug}.webm`);
+    const mp4 = join(reelsMedia, `${slug}.mp4`);
+    remotion(["render", entry, "ProjectReel", webm, "--codec=vp9", "--pixel-format=yuv420p", "--image-format=png", `--crf=${REEL_WEBM_CRF}`, "--muted", p]);
+    remotion(["render", entry, "ProjectReel", mp4, "--codec=h264", "--pixel-format=yuv420p", "--image-format=png", `--crf=${REEL_MP4_CRF}`, "--x264-preset=veryslow", "--muted", p]);
+    // El póster es el fotograma 0: el vídeo arranca exactamente donde estaba la imagen.
+    const png = join(tmp, `reel-${slug}.png`);
+    remotion(["still", entry, "ProjectReel", png, "--frame=0", "--image-format=png", p]);
+    const poster = join(reelsMedia, `${slug}.webp`);
+    await sharp(png).webp({ quality: REEL_POSTER_QUALITY, effort: 6, smartSubsample: true }).toFile(poster);
+    sizes[`reels/${slug}.webm`] = webm;
+    sizes[`reels/${slug}.mp4`] = mp4;
+    sizes[`reels/${slug}.webp`] = poster;
   }
 }
 

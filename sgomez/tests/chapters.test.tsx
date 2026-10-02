@@ -135,7 +135,8 @@ describe("capítulos 04–07", () => {
     it(`${lang}: ningún hueco de reel vacío`, () => {
       const reels = [...html.matchAll(/data-motion="reel"[^>]*>([\s\S]*?)<\/div>/g)];
       expect(reels).toHaveLength(3);
-      for (const m of reels) expect(m[1]!.replace(/<[^>]+>/g, "").trim()).not.toBe("");
+      // con reel hay un póster (<img>); sin él, las iniciales y el stack
+      for (const m of reels) expect(/<img\s[^>]*src="\/media\/reels\//.test(m[1]!) || m[1]!.replace(/<[^>]+>/g, "").trim() !== "").toBe(true);
     });
     it(`${lang}: pista de experiencia y enlaces de proyecto accesibles`, () => {
       expect(html).toContain('data-motion="timeline"');
