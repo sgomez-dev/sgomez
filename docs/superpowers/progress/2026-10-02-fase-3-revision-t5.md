@@ -56,3 +56,12 @@ Hacer capturas a 1440x900 y 1920x1080 en tres estados: póster, a mitad del fund
 - la losa no se pone de canto.
 
 Guardarlas en `docs/superpowers/progress/` para que el dueño las vea.
+
+## Re-revisión con opus de e374733
+
+**Veredicto:** se puede fusionar. Los 11 hallazgos están resueltos, el 404 sigue idéntico y el relevo ya no se ve como un bajón.
+
+1. El matiz no casa del todo, porque el 3D pierde el turquesa del borde inferior. Queda para el dueño. Si hay que afinarlo, se puede subir la mancha `110,240,220` de `GLASS_LIVE` o bajar los haces solo ahí.
+2. La prueba de visibilidad era débil. **Arreglado:** ahora exige que el primer mensaje tras "init" sea "visible".
+3. La prueba de opacidad mira `[data-glass-body]`. Si alguien volviera a poner la regla antigua sobre el SVG entero, no lo detectaría.
+4. La pose del contacto ha cambiado y no se ha medido. Se mide en la tarea 6 con `scripts/glass-capture.mjs`.

@@ -115,8 +115,8 @@ test.describe("cristal vivo del hero (escritorio)", () => {
     await page.goto("/");
     await expect(page.locator(HERO)).toHaveAttribute("data-glass", "live", { timeout: 45_000 });
     const types = (await glassMessages(page)).map((m) => m.type);
-    // la primera visibilidad sale justo tras init, sin esperar a que cambie nada
-    expect(types.slice(types.indexOf("init"))).toContain("visible");
+    // la primera visibilidad sale justo tras init, antes que el IntersectionObserver o un resize
+    expect(types[types.indexOf("init") + 1]).toBe("visible");
     await page.evaluate(() => {
       Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
       document.dispatchEvent(new Event("visibilitychange"));

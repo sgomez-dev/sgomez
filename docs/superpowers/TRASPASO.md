@@ -2,7 +2,7 @@
 
 Este documento existe para que otra sesión retome el trabajo y llegue al mismo resultado sin depender de la conversación anterior. Léelo entero antes de tocar nada.
 
-Actualizado el 2026-10-02.
+Actualizado el 2026-10-02 por la tarde.
 
 ---
 
@@ -24,7 +24,7 @@ Actualizado el 2026-10-02.
 ## 2. Dónde está el código
 
 - **Repositorio:** `sgomez-dev/sgomez` en GitHub. Rama de trabajo: **`feat/redesign-v3`**.
-- **Copia local:** `C:\Users\santiago.gomez\Desktop\Repos\sgomez-v3`.
+- **Copia local:** `C:\Users\santiago.gomez\Desktop\Repos\sgomez-v3` en Windows, y `~/Desktop/sgomez/sgomez` en el Mac (desde el 2026-10-02).
   - La app está en `sgomez/`.
   - El proyecto de Remotion está en `video/`.
   - La carpeta antigua `Repos\sgomez` perdió su `.git` y se borró el 2026-10-01. Esta es la copia buena.
@@ -54,7 +54,7 @@ Actualizado el 2026-10-02.
 | 1 | Cimientos: tokens, fuentes, `[lang]` e i18n, nav y footer, sin `/lab`, páginas estáticas | ✅ Hecha y revisada |
 | — | 404 a medida: vídeo de Remotion y constelación 3D | ✅ Hecho y revisado (hasta 3b09675) |
 | 2 | Movimiento del DOM | ✅ Hecha y revisada con opus (hasta 1039bf4) |
-| 3 | 3D en vivo: `GlassScene` en el hero y el contacto, y los pendientes | 🔄 En curso: tareas 1, 3 y 4 hechas, la 5 pendiente de su ronda visual (ver §7) |
+| 3 | 3D en vivo: `GlassScene` en el hero y el contacto, y los pendientes | 🔄 En curso: tareas 1 a 4 hechas, la 5 con su ronda visual aplicada y pendiente de re-revisión y del visto bueno del dueño (ver §7) |
 | 4 | Taller de Remotion: `BuildSequence`, `SkyQuetzMonogram`, `HeroLoop`, reels y `ScrollSequence` (capítulos 03, 05 y 07) | ⏳ |
 | 5 | Casos de estudio, contacto por intención, SEO/GEO y lanzamiento | ⏳ Hace falta contenido del dueño para los casos |
 
@@ -180,33 +180,26 @@ Siempre se indica el modelo explícitamente.
 
 ## 7. Siguiente paso concreto
 
-### Estado de la fase 3 a 2026-10-02, hacia las 13:15
+### Estado de la fase 3 a 2026-10-02, por la tarde
 
 El plan es `docs/superpowers/plans/2026-10-02-redesign-fase-3-3d.md`, con las respuestas del dueño F1 a F5 en `…-fase-3-3d-enmiendas.md`, que prevalecen sobre el plan. Los informes de cada tarea están en `docs/superpowers/progress/2026-10-02-fase-3.md` y las revisiones en `…-fase-3-revision-*.md`.
 
 | # | Tarea | Estado |
 |---|---|---|
 | 1 | Fuentes autoalojadas con `next/font/local` | ✅ Fusionada (57e5cf2 → merge 49cf3f2) |
-| 2 | Sonda del LCP móvil en el CI de Linux (`.github/workflows/lcp-probe.yml`, se ejecuta al hacer push a `feat/redesign-v3`) | 🔄 El workflow existe. La primera ejecución falló (Lighthouse abortaba con el 404 de `/en/no-existe`) y está arreglado en c1d9317. Ver «Pendiente inmediato» |
+| 2 | Sonda del LCP móvil en el CI de Linux (`.github/workflows/lcp-probe.yml`, se ejecuta al hacer push a `feat/redesign-v3`) | ✅ Informe en `progress/2026-10-02-fase-3-lcp.md`. En Linux el LCP es de unos 2,8 s simulado y unos 2,0 s con throttling real; los 10 s eran de la máquina de Windows. **Falta que el dueño elija** cómo medir el LCP móvil en el CI del PR (pregunta abierta 2) |
 | 3 | `glass-kit` y una puerta única (núcleo) | ✅ Revisada con opus y arreglada |
 | 4 | Escena en un worker con OffscreenCanvas (núcleo) | ✅ Revisada con opus y arreglada. Perfil "full" con `compileAsync`: listo en 1,2 s en frío y 0,3 s en caliente, huecos de rAF ≤17 ms, sin tareas largas |
-| 5 | `GlassStage` en el hero (núcleo) | ⚠️ Implementada (adbc647). La revisión con opus dice que **no se puede fusionar**: el relevo se ve como un bajón. Hallazgos en `docs/superpowers/progress/2026-10-02-fase-3-revision-t5.md`, **por aplicar** |
+| 5 | `GlassStage` en el hero (núcleo) | 🔄 Ronda visual aplicada (e374733): la silueta coincide al píxel, el brillo es equivalente, el halo se queda y el giro está acotado. Capturas en `progress/fase-3-task5-*`. Pendiente de la re-revisión con opus y del visto bueno del dueño sobre el matiz del color |
 | 6 a 11 | Contacto, nombre con luz, relevo del 404, el 404 en el worker, verificación y cierre | ⏳ |
 
 ### Pendiente inmediato (por este orden)
 
-1. **Lee el resultado de la sonda del LCP.** Ejecuta `gh run list -R sgomez-dev/sgomez -b feat/redesign-v3` y abre la última ejecución de «LCP probe». Las tablas están en la pestaña Summary y los LHR completos en el artefacto `lcp-probe`.
-   - Si falla, `gh run view <id> --log-failed`.
-   - Con las cifras, escribe `docs/superpowers/progress/2026-10-02-fase-3-lcp.md`, como pide la tarea 2 del plan.
-   - Referencia en Windows: con throttling real (devtools) el LCP fue de 3,8 s, frente a unos 10 s simulados. Apunta a que la mayor parte es un artefacto de Lantern.
-2. **Ronda visual de la tarea 5.** Aplica todo `2026-10-02-fase-3-revision-t5.md` con sonnet.
-   - Primero lo crítico:
-     - acotar el giro;
-     - una pose casi frontal y la intro a escala 1, para que coincida la silueta;
-     - más brillo y el color del póster, solo en el hero y el contacto;
-     - un halo que se mantenga.
-   - Verifica con las capturas que se describen en ese fichero y enséñaselas al dueño.
-   - Después, una re-revisión acotada con opus, porque es núcleo y visual.
+1. **Decisiones del dueño:**
+   - cómo medir el LCP móvil en el CI del PR (`progress/2026-10-02-fase-3-lcp.md`; se recomienda devtools);
+   - si vale el matiz del cristal (`progress/fase-3-task5-*`).
+2. **Re-revisión con opus hecha: fusionable.** Lo que queda está en `progress/2026-10-02-fase-3-revision-t5.md`. En la tarea 6, mide la pose del contacto.
+   - Para medir y capturar el relevo: `HEADED=1 node scripts/glass-capture.mjs <carpeta>` con el build en :3101. En headless Chromium pinta con SwiftShader y el color no vale.
 3. **Sigue con las tareas 6 a 11** con el flujo de la §5.
    - La tarea 8 empieza por el diagnóstico visual (F4): una tira de fotogramas que hay que enseñar al dueño.
    - La tarea 9 es de alto riesgo y la revisa opus.
