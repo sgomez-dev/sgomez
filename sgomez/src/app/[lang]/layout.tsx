@@ -7,6 +7,8 @@ import { machineHref } from "@/lib/routing/pages";
 import { OG_ALT, OG_SIZE, SITE_NAME, ogImagePath } from "@/lib/seo/metadata";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import MotionDirector from "@/motion/MotionDirector";
+import MotionBoot from "@/motion/MotionBoot";
 import "../globals.css";
 
 const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", weight: ["400", "500", "600"], display: "swap" });
@@ -154,7 +156,11 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   return (
-    <html lang={lang === "es" ? "es-ES" : "en"} className={`${sans.variable} ${serif.variable}`}>
+    <html lang={lang === "es" ? "es-ES" : "en"} className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Antes del primer pintado: decide si hay movimiento (ver src/motion/boot.ts). */}
+        <MotionBoot />
+      </head>
       <body className="antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-[color:var(--text)] focus:px-4 focus:py-2 focus:text-sm focus:text-[color:var(--bg)]">
           {getDictionary(lang).nav.skip}
@@ -164,6 +170,7 @@ export default async function LangLayout({
           {children}
         </main>
         <Footer lang={lang} />
+        <MotionDirector />
         {/* Relaciones de enlace que anuncian las superficies para agentes.
             React las eleva al <head>. `service-desc` es la relación
             registrada (RFC 8631) con la que un cliente encuentra la

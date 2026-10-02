@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-// @ts-expect-error módulo .mjs sin tipos
 import { initialScripts, legacyScripts } from "../scripts/js-budget-lib.mjs";
 
 const HTML = `<!DOCTYPE html><html><head>

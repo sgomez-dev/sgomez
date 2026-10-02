@@ -1,11 +1,12 @@
 @import "tailwindcss";
 @import "./styles/tokens.css";
+@import "../motion/motion.css";
 
 /* Movil apaisado: ancho de tablet pero muy poca altura. */
 @custom-variant sl (@media (min-width: 700px) and (max-height: 500px));
 
 @media (prefers-reduced-motion: no-preference) {
-  html {
+  :root[data-motion-state="on"] {
     scroll-behavior: smooth;
   }
 }
