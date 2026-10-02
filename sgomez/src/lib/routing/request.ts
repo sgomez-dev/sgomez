@@ -63,7 +63,8 @@ export function isUnknownHtmlPath(pathname: string): boolean {
   // Fase 5: las rutas dinámicas (`/work/[slug]`) tendrán que comprobarse contra su lista de slugs aquí;
   // hoy toda ruta fuera de PAGES es desconocida.
   const { path } = splitLang(pathname);
-  if (path === "/opengraph-image") return false;
+  // la imagen Open Graph de la home y la de cada página
+  if (/^(\/(about|contact|developers|privacy))?\/opengraph-image$/.test(path)) return false;
   if (e2eFixturesEnabled() && (E2E_FIXTURE_PATHS as readonly string[]).includes(path)) return false;
   return !(PAGES as readonly string[]).includes(path.replace(/\/$/, "") || "/");
 }

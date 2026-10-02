@@ -14,9 +14,14 @@ export const OG_ALT: Record<Lang, string> = {
   en: "Santiago Gómez de la Torre, full-stack engineer who takes AI to production",
 };
 
-/** Ruta pública de la imagen Open Graph de un idioma: `/opengraph-image` (es) o `/en/opengraph-image`. */
-export function ogImagePath(lang: Lang): string {
-  return localizedPath(lang, "/opengraph-image");
+/** Ruta pública de la imagen Open Graph de una página: `/opengraph-image`, `/en/about/opengraph-image`… */
+export function ogImagePath(lang: Lang, path = "/"): string {
+  return localizedPath(lang, path === "/" ? "/opengraph-image" : `${path}/opengraph-image`);
+}
+
+/** Texto alternativo de la imagen de una página: el de la home, o el nombre con el de la página. */
+export function ogAlt(lang: Lang, path: string, pageTitle: string): string {
+  return path === "/" ? OG_ALT[lang] : `Santiago Gómez de la Torre, ${pageTitle}`;
 }
 
 export type BuildMetadataOptions = {
@@ -25,6 +30,8 @@ export type BuildMetadataOptions = {
   path: string;
   title: string;
   description: string;
+  /** Nombre corto de la página para el alt de su imagen Open Graph («Contacto»). */
+  ogTitle?: string;
 };
 
 /**
@@ -40,9 +47,9 @@ export type BuildMetadataOptions = {
  * - `title` va como `absolute`: el título de cada página ya lleva la marca, y
  *   con la plantilla del layout saldría dos veces.
  */
-export function buildMetadata({ lang, path, title, description }: BuildMetadataOptions): Metadata {
+export function buildMetadata({ lang, path, title, description, ogTitle = title }: BuildMetadataOptions): Metadata {
   const canonical = localizedPath(lang, path);
-  const image = { url: ogImagePath(lang), ...OG_SIZE, alt: OG_ALT[lang] };
+  const image = { url: ogImagePath(lang, path), ...OG_SIZE, alt: ogAlt(lang, path, ogTitle) };
   return {
     title: { absolute: title },
     description,

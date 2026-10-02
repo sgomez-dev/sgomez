@@ -110,15 +110,18 @@ describe("metadata", () => {
     expect(m.alternates?.canonical).toBe("/");
     expect((m.alternates?.types as Record<string, string>)["text/markdown"]).toBe("/index.md");
   });
-  it("Open Graph por idioma, con la imagen de ese idioma y su alt", () => {
-    const en = buildMetadata({ lang: "en", path: "/about", title: "t", description: "d" });
-    const es = buildMetadata({ lang: "es", path: "/about", title: "t", description: "d" });
+  it("Open Graph por página e idioma, con la imagen de esa página y su alt", () => {
+    const en = buildMetadata({ lang: "en", path: "/about", title: "t", description: "d", ogTitle: "About me" });
+    const es = buildMetadata({ lang: "es", path: "/about", title: "t", description: "d", ogTitle: "Sobre mí" });
     expect(en.openGraph).toMatchObject({ locale: "en_US", alternateLocale: ["es_ES"] });
     expect(es.openGraph).toMatchObject({ locale: "es_ES", alternateLocale: ["en_US"] });
     const enImage = (en.openGraph!.images as { url: string; alt: string; width: number; height: number }[])[0];
     const esImage = (es.openGraph!.images as { url: string; alt: string }[])[0];
-    expect(enImage.url).toBe("/en/opengraph-image");
-    expect(esImage.url).toBe("/opengraph-image");
+    expect(enImage.url).toBe("/en/about/opengraph-image");
+    expect(esImage.url).toBe("/about/opengraph-image");
+    expect(esImage.alt).toBe("Santiago Gómez de la Torre, Sobre mí");
+    const home = buildMetadata({ lang: "es", path: "/", title: "t", description: "d" });
+    expect((home.openGraph!.images as { url: string }[])[0]!.url).toBe("/opengraph-image");
     expect(enImage).toMatchObject({ width: 1200, height: 630 });
     expect(enImage.alt).not.toBe(esImage.alt);
   });

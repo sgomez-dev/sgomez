@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { StaticPage } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo/metadata";
+import { routeTitle, type LogicalPath } from "@/lib/routing/pages";
 
 /**
  * Metadata de una página estática.
@@ -17,5 +18,6 @@ export function pageMetadata(page: StaticPage): Metadata {
     path: `/${page.slug}`,
     title: page.metaTitle,
     description: page.description,
+    ogTitle: routeTitle(`/${page.slug}` as LogicalPath, page.lang),
   });
 }

@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { CONTENT_UPDATED, PAGES } from "@/lib/routing/pages";
-// @ts-expect-error módulo .mjs sin tipos
 import { SOURCES } from "../scripts/content-dates.mjs";
 
 describe("fechas de contenido desde git", () => {

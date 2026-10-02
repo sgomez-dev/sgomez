@@ -4,6 +4,8 @@ import { ImageResponse } from "next/og";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { OG_SIZE } from "@/lib/seo/metadata";
+import { routeTitle, type LogicalPath } from "@/lib/routing/pages";
+import { staticPage, type StaticPageSlug } from "@/lib/content/pages";
 
 /**
  * Imagen Open Graph de un idioma (1200×630).
@@ -34,7 +36,21 @@ const COLORS = {
   line: "rgba(255,255,255,0.14)",
 };
 
-export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
+/**
+ * La de cada página: el mismo diseño, con el nombre de la página arriba y su título en la línea serif
+ * (en /about, el lema, porque su título ya repite el nombre; en /contact, la invitación del capítulo,
+ * porque su título es el mismo nombre de la página).
+ */
+export function renderPageOgImage(path: Exclude<LogicalPath, "/">, lang: Lang): Promise<ImageResponse> {
+  const ch = getDictionary(lang).chapters;
+  const line =
+    path === "/about" ? ch.hero.serif
+    : path === "/contact" ? `${ch.contact.heading} ${ch.contact.serif}`
+    : staticPage(path.slice(1) as StaticPageSlug, lang).title;
+  return renderOgImage(lang, { eyebrow: routeTitle(path, lang), line });
+}
+
+export async function renderOgImage(lang: Lang, page?: { eyebrow: string; line: string }): Promise<ImageResponse> {
   const [sans, serif, portrait] = await Promise.all([
     readFile(path.join(FONTS_DIR, "InterTight-SemiBold.ttf")),
     readFile(path.join(FONTS_DIR, "InstrumentSerif-Italic.ttf")),
@@ -69,7 +85,7 @@ export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
               color: COLORS.light1,
             }}
           >
-            {d.eyebrow}
+            {page?.eyebrow ?? d.eyebrow}
           </div>
           <div
             style={{
@@ -101,7 +117,7 @@ export async function renderOgImage(lang: Lang): Promise<ImageResponse> {
               color: COLORS.serifInk,
             }}
           >
-            {d.serif}
+            {page?.line ?? d.serif}
           </div>
           <div style={{ display: "flex", alignItems: "center", marginTop: 48, fontSize: 26, color: COLORS.text2 }}>
             <div
