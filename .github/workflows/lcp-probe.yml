@@ -47,7 +47,7 @@ jobs:
           for i in $(seq 1 60); do curl -fs http://localhost:3000/ >/dev/null && { up=1; break; }; sleep 1; done
           [ "$up" = 1 ] || { echo "server did not start"; exit 1; }
           URLS="--collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/about --collect.url=http://localhost:3000/developers --collect.url=http://localhost:3000/en/no-existe"
-          BASE="--collect.numberOfRuns=5 --collect.settings.skipAudits=robots-txt"
+          BASE="--collect.numberOfRuns=5 --collect.settings.skipAudits=robots-txt --collect.settings.ignoreStatusCode=true"
           FLAGS="--no-sandbox --headless=new"
           # A: simulado, igual que el CI (Lantern)
           npx lhci collect $URLS $BASE --collect.settings.chromeFlags="$FLAGS" && mv .lighthouseci .lighthouseci-probe-simulate
