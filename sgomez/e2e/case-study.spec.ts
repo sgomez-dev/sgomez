@@ -87,7 +87,7 @@ test.describe("caso de estudio: cabecera, SEO y negociación", () => {
         en: "https://sgomez.dev/en/work/claude-canvas",
         "x-default": "https://sgomez.dev/work/claude-canvas",
       });
-      await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute("href", `${path}.md`);
+      await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute("href", `https://sgomez.dev${path}.md`);
       await expect(page.locator('html')).toHaveAttribute("lang", lang === "es" ? "es-ES" : "en");
 
       const og = `https://sgomez.dev${path}/opengraph-image`;
@@ -147,8 +147,9 @@ test.describe("caso de estudio: cabecera, SEO y negociación", () => {
     for (const c of CASES) {
       for (const lang of LANGS) {
         const loc = `https://sgomez.dev${url(lang, c.slug)}`;
-        const entry = new RegExp(`<url><loc>${loc}</loc><lastmod>2026-10-02[^<]*</lastmod>[\\s\\S]*?</url>`).exec(xml);
+        const entry = new RegExp(`<url>\\s*<loc>${loc}</loc>[\\s\\S]*?</url>`).exec(xml);
         expect(entry, loc).not.toBeNull();
+        expect(entry![0]).toContain("<lastmod>2026-10-02");
         expect(entry![0]).toContain(`hreflang="x-default" href="https://sgomez.dev/work/${c.slug}"`);
         expect(entry![0]).toContain(`hreflang="en" href="https://sgomez.dev/en/work/${c.slug}"`);
       }
