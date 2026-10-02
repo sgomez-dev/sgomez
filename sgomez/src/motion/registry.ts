@@ -8,6 +8,8 @@ import type { Registry } from "./types";
 export const REGISTRY: Registry = {
   "text-reveal": { load: () => import("./primitives/text-reveal") },
   build: { load: () => import("./primitives/build") },
+  "word-reveal": { load: () => import("./primitives/word-reveal") },
+  count: { load: () => import("./primitives/count") },
 };
 
 /** Titulares y tarjetas que el respaldo de Firefox revela al entrar. */

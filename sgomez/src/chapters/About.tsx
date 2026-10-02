@@ -8,6 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
+import { WordReveal, wordRevealStyle } from "@/components/motion/WordReveal";
 
 /** Capítulo 02. Las cifras salen de los datos; si los años no se pueden derivar, son dos, no tres. */
 export default function About({ lang }: { lang: Lang }) {
@@ -27,9 +28,9 @@ export default function About({ lang }: { lang: Lang }) {
       <Container>
         <Eyebrow>{d.chapters.about.eyebrow}</Eyebrow>
         <Display as="h2" id="about-h" lead={d.chapters.about.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[22ch]" />
-        <div className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
-          <p data-motion="text-reveal" className="lg:sticky lg:top-[calc(4rem+var(--safe-top)+2rem)] lg:self-start text-[length:clamp(1.5rem,1.2rem+1.2vw,1.75rem)] font-medium leading-[1.3] tracking-[-0.02em] text-[color:var(--text)]">
-            {lead}
+        <div data-reveal-scope="" className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+          <p data-motion="word-reveal" style={wordRevealStyle(lead ?? "")} className="lg:sticky lg:top-[calc(4rem+var(--safe-top)+2rem)] lg:self-start text-[length:clamp(1.5rem,1.2rem+1.2vw,1.75rem)] font-medium leading-[1.3] tracking-[-0.02em] text-[color:var(--text)]">
+            <WordReveal text={lead ?? ""} />
           </p>
           <div className="space-y-5 text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">
             {rest.map((p, i) => (
@@ -42,7 +43,10 @@ export default function About({ lang }: { lang: Lang }) {
             <div key={it.key} className="flex flex-col-reverse justify-end gap-2 bg-[color:var(--bg-2)] p-6">
               <dt className="text-[length:var(--step-0)] text-[color:var(--text-2)]">{fill(it.template, { n: "" }).trim()}</dt>
               <dd data-motion="count" data-value={it.n} className="text-[length:var(--step-4)] font-semibold leading-none tracking-[-0.04em] text-[color:var(--text)]">
-                {it.n}
+                <span aria-hidden="true" data-count="" className="inline-block tabular-nums" style={{ minWidth: `${String(it.n).length}ch` }}>
+                  {it.n}
+                </span>
+                <span className="sr-only">{it.n}</span>
               </dd>
             </div>
           ))}
