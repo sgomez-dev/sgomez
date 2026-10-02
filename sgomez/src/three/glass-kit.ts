@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/immutability -- objetos de three.js, imperativos */
 import * as THREE from "three";
 import { GLASS, GLASS_ENV, GLASS_MATERIAL, mulberry32, slabOutlinePoints, type Shard } from "@/lib/lost/shards";
 
@@ -34,11 +33,14 @@ export function glassMaterial(env: THREE.Texture, profile: GlassProfile = "full"
   return m;
 }
 
+/** Puntos del contorno: con 72 el lateral del bisel se veia en facetas; con 160 la silueta redondeada se lee lisa. */
+const SLAB_POINTS = 160;
+
 /** El cristal entero: silueta redondeada del póster, mismo grosor y bisel que un fragmento, a escala del cristal. */
 export function slabGeometry(): THREE.ExtrudeGeometry {
   const k = GLASS.slabRadius;
   const B = GLASS.bevel;
-  const shape = new THREE.Shape(slabOutlinePoints().map(([x, y]) => new THREE.Vector2(x, y)));
+  const shape = new THREE.Shape(slabOutlinePoints(SLAB_POINTS).map(([x, y]) => new THREE.Vector2(x, y)));
   const g = new THREE.ExtrudeGeometry(shape, {
     depth: GLASS.depth * k,
     bevelEnabled: true,
