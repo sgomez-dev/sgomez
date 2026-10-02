@@ -298,3 +298,28 @@ describe("Proof: disclosure del original", () => {
     expect(html).toMatch(/<summary[^>]*>[^<]*<svg[^>]*aria-hidden="true"/);
   });
 });
+
+describe("Tasks 5 y 6: contratos de marcado del movimiento", () => {
+  for (const lang of ["es", "en"] as const) {
+    it(`${lang}: la experiencia lleva su escena fijable con el número de tarjetas`, () => {
+      const html = renderToStaticMarkup(<Experience lang={lang} />);
+      const n = getExperience(lang).length;
+      expect(html).toMatch(new RegExp(`<section[^>]*data-pin=""[^>]*style="--n:${n}"`));
+      expect(html).toMatch(/data-pin-stage=""/);
+      expect(html).toMatch(/data-pin-progress=""[^>]*aria-hidden="true"/);
+      expect(html).toMatch(/data-motion="timeline"[^>]*tabindex="0"/i);
+    });
+    it(`${lang}: las intenciones son magnéticas y siguen siendo enlaces mailto`, () => {
+      const html = renderToStaticMarkup(<Contact lang={lang} />);
+      expect(html.match(/data-motion="intent"/g)).toHaveLength(3);
+      expect(html).toMatch(/data-motion="intent"[^>]*style="--i:2"/);
+      for (const intent of ["freelance", "job", "other"] as const) expect(html).toContain(`href="${esc(contactMailto(intent, lang))}"`);
+      expect(html).toMatch(/data-motion="magnetic"[^>]*href="mailto:|href="mailto:[^"]*"[^>]*data-motion="magnetic"/);
+    });
+    it(`${lang}: las insignias llevan su columna y nada depende de JS para verse`, () => {
+      const html = renderToStaticMarkup(<Proof lang={lang} />);
+      expect(html).toMatch(/data-motion="badge"[^>]*style="--i:1"/);
+      expect(html).not.toMatch(/opacity:\s*0|visibility:\s*hidden/);
+    });
+  }
+});

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { getExperience } from "@/lib/api/data";
@@ -14,12 +15,13 @@ export default function Experience({ lang }: { lang: Lang }) {
   const d = getDictionary(lang);
   const entries = getExperience(lang);
   return (
-    <Section id="experience" labelledBy="experience-h">
+    <Section id="experience" labelledBy="experience-h" dataAttrs={{ "data-pin": "" }} style={{ "--n": entries.length } as CSSProperties}>
+      <div data-pin-stage="" className="flex flex-col justify-center">
       <Container>
         <Eyebrow>{d.chapters.experience.eyebrow}</Eyebrow>
         <Display as="h2" id="experience-h" lead={d.chapters.experience.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
       </Container>
-      <Container className="mt-10 lg:mt-14">
+      <Container className="mt-10 [container-type:inline-size] lg:mt-14">
         <ol
           data-motion="timeline"
           tabIndex={0}
@@ -42,7 +44,9 @@ export default function Experience({ lang }: { lang: Lang }) {
             </li>
           ))}
         </ol>
+        <div data-pin-progress="" aria-hidden="true" className="mt-6 hidden h-0.5 w-full origin-left bg-[color:var(--light-1)]" />
       </Container>
+      </div>
     </Section>
   );
 }

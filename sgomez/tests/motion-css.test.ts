@@ -28,3 +28,24 @@ describe("motion.css", () => {
     expect(css).not.toMatch(/(^|[\s,{])\[data-motion="text-reveal"\]/m);
   });
 });
+
+describe("escena fijada del capítulo 04", () => {
+  const at = css.indexOf("@media (min-width: 64rem) and (min-height: 48rem)");
+  const block = css.slice(at);
+  it("las reglas pegajosas solo existen en pantallas anchas y altas y detrás de la puerta", () => {
+    expect(at).toBeGreaterThan(css.indexOf("@supports (animation-timeline: view())"));
+    expect(css.lastIndexOf("@media (prefers-reduced-motion: no-preference)", at)).toBeGreaterThan(-1);
+    expect(block).toMatch(/\[data-pin-stage\]\s*\{[^}]*position:\s*sticky/);
+    expect(css.slice(0, at)).not.toMatch(/position:\s*sticky/);
+  });
+  it("la escena recorta con clip, nunca con hidden (hidden crearía un scroller)", () => {
+    expect(block).toMatch(/overflow:\s*clip/);
+    expect(css).not.toMatch(/\[data-pin-stage\][^{]*\{[^}]*overflow:\s*hidden/);
+  });
+  it("la pista nunca se desplaza hacia la derecha si cabe entera", () => {
+    expect(css).toMatch(/min\(0px,/);
+  });
+  it("el alto sale del número de tarjetas y está en el CSS global: ya está en el primer pintado", () => {
+    expect(block).toMatch(/height:\s*calc\(100svh \+ var\(--n/);
+  });
+});

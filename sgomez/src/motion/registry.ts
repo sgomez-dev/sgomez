@@ -10,6 +10,12 @@ export const REGISTRY: Registry = {
   build: { load: () => import("./primitives/build") },
   "word-reveal": { load: () => import("./primitives/word-reveal") },
   count: { load: () => import("./primitives/count") },
+  // Task 5 y 6 (la escena fijada del capitulo 04 es CSS estatico en motion.css, ver alli). Cada entrada trae su módulo (run y/o css) solo cuando hay un elemento que lo usa.
+  card: { load: () => import("./primitives/card") },
+  badge: { load: () => import("./primitives/badge") },
+  quote: { load: () => import("./primitives/quote") },
+  intent: { load: () => import("./primitives/intent") },
+  magnetic: { load: () => import("./primitives/magnetic") },
 };
 
 /** Titulares y tarjetas que el respaldo de Firefox revela al entrar. */
