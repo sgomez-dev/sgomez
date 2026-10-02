@@ -1,6 +1,6 @@
 # Fase 4: revisión con opus y ronda de arreglos
 
-**Veredicto:** se puede integrar una vez arreglados el 1 y el 2. Esta ronda está **por aplicar** y se aplica entera, en una sola ronda.
+**Veredicto:** se puede integrar una vez arreglados el 1 y el 2. Esta ronda está **aplicada** (puntos 1 a 9 y 11 a 15, el 10 queda como deuda). Commits 0e3e28e, 9769f5f y 8ba1754, informe en «Ronda de arreglos tras la revisión» de `2026-10-02-fase-4.md`.
 
 ## De la revisión con opus
 
