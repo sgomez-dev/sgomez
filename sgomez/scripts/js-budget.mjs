@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { gzipSync } from "node:zlib";
 import { initialScripts, legacyScripts } from "./js-budget-lib.mjs";
 
-export const BUDGET = { initialKB: 170, runtimeKB: 12 /* runtime + motor + lo que cuelga de su grafo */, cssKB: 18 /* linea base 9,7 KB (build limpia) redondeada a 10, mas 8 */ };
+export const BUDGET = { initialKB: 170, runtimeKB: 15 /* runtime + motor + primitivas. Medido 12,9 KB (10,6 de runtime y motor, 2,3 de los chunks de primitivas) mas unos 2 KB de margen */, cssKB: 18 /* linea base 9,7 KB (build limpia) redondeada a 10, mas 8 */ };
 const ROUTES = {};
 for (const l of ["es", "en"]) {
   ROUTES[l === "es" ? "/" : "/en"] = `${l}.html`;
@@ -36,6 +36,14 @@ const initialAll = new Set(INITIAL.map((src) => src.split("/").pop()));
 const marked = files.filter((f) => f.endsWith(".js") && readFileSync(join(chunks, f), "utf8").includes("sgomez-motion-runtime"));
 const graph = new Set();
 const queue = [...marked];
+// Los chunks de las primitivas los pide el REGISTRO con import(), y el registro va en el JS inicial: no cuelgan del
+// grafo del runtime y antes no se contaban (unos 2,7 KB). Se siembran desde el chunk que contiene el registro.
+const registryChunks = files.filter((f) => f.endsWith(".js") && /"text-reveal"/.test(readFileSync(join(chunks, f), "utf8")) && /fallbackOnly/.test(readFileSync(join(chunks, f), "utf8")));
+if (registryChunks.length === 0) { failed = true; console.error("  FALLA: no encuentro el chunk del registro; las primitivas no se estan contando"); }
+for (const r of registryChunks) {
+  const text = readFileSync(join(chunks, r), "utf8");
+  for (const g of files) if (g.endsWith(".js") && g !== r && text.includes(g)) queue.push(g);
+}
 while (queue.length) {
   const f = queue.pop();
   if (graph.has(f) || initialAll.has(f)) continue;

@@ -9,7 +9,7 @@ const FIRST = '#about dd[data-motion="count"]';
 test.describe("capitulo 02", () => {
   test("a mitad, unas palabras encendidas y otras no, todas AA", async ({ page }) => {
     await page.goto("/");
-    await page.waitForSelector("style[data-motion-css]", { state: "attached" });
+    await expect(page.locator("html")).toHaveAttribute("data-motion-state", "on"); // el CSS es estatico: vivo desde el primer pintado
     // La bio es sticky desde lg: manda la rejilla, no el parrafo. Se baja hasta pillarla a medias.
     let colors = 0;
     for (let y = 0; y < 2200 && colors < 2; y += 60) {

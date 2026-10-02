@@ -71,10 +71,16 @@ describe("runtime de movimiento", () => {
     await flush();
     expect(run).toHaveBeenCalledTimes(1);
   });
-  it("una entrada solo con css no pide el contexto ni falla", async () => {
-    const { root } = fakeRoot(["css-only"]);
-    expect(() => start(root, { "css-only": { css: "" } }, { supported: true })()).not.toThrow();
+  it("una entrada sin run ni fallback no pide el contexto ni falla", async () => {
+    const { root } = fakeRoot(["empty"]);
+    expect(() => start(root, { empty: {} }, { supported: true })()).not.toThrow();
     await flush();
+  });
+  it("una entrada fallbackOnly no carga su módulo donde hay animation-timeline", async () => {
+    const load = vi.fn(async () => ({ fallback: vi.fn() }));
+    start(fakeRoot(["x"]).root, { x: { fallbackOnly: true, load } }, { ctx, supported: true })();
+    await flush();
+    expect(load).not.toHaveBeenCalled();
   });
   it("los hooks de ciclo de vida corren y uno roto no frena a los demás", () => {
     const a = vi.fn();

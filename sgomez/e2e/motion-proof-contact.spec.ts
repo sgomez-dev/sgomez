@@ -5,7 +5,8 @@ import { scrollToProgress, settledInViewport } from "./motion-utils";
 
 const starts = (page: Page) => page.evaluate(() => (window as { __MOTION_STARTS__?: number }).__MOTION_STARTS__ ?? 0);
 const mx = (page: Page) => page.locator('[data-motion="intent"]').first().evaluate((el) => el.style.getPropertyValue("--mx"));
-const hasCss = (page: Page, name: string) => page.waitForFunction((n) => document.querySelector("style[data-motion-css]")?.textContent?.includes(n), name, { timeout: 8000 });
+/** El CSS de movimiento es estatico (E5 revisada): esta vivo en cuanto el estado es on. */
+const hasCss = (page: Page, _name: string) => expect(page.locator("html")).toHaveAttribute("data-motion-state", "on");
 
 /** Cuenta los oyentes de `pointermove` vivos en las tarjetas del contacto (los pone y quita el imán). */
 const countPointerListeners = (page: Page) =>

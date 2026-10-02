@@ -7,9 +7,129 @@
   --mo-stagger: 8%;
 }
 
+/* E5 revisada: todo lo ligado al scroll vive aqui, estatico, y esta activo desde el primer
+   pintado (el atributo data-motion-state lo pone el script del head). Nada se inyecta
+   despues de idle: un elemento a medio entrar no salta ni cambia el layout a mitad de scroll.
+   Lo que depende de JS (el iman) cuelga de data-motion-ready. */
+@keyframes mo-rise {
+  from { clip-path: inset(-0.25em -0.25em 100% -0.25em); translate: 0 0.4em; }
+  to { clip-path: inset(-0.25em); translate: 0 0; }
+}
+@keyframes mo-trace {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mo-deco-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mo-fill {
+  from { clip-path: inset(100% 0 0 0 round var(--radius)); }
+  to { clip-path: inset(0 round var(--radius)); }
+}
+@keyframes mo-content {
+  from { clip-path: inset(0 0 100% 0); translate: 0 var(--mo-rise); }
+  to { clip-path: inset(-2rem); translate: 0 0; }
+}
+@keyframes mo-light {
+  from { color: var(--text-2); }
+  to { color: var(--text); }
+}
+@keyframes mo-card {
+  from { clip-path: inset(0 0 100% 0 round var(--radius)); translate: 0 var(--mo-rise); }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; }
+}
+@keyframes mo-badge {
+  from { clip-path: inset(0 0 100% 0 round var(--radius)); translate: 0 var(--mo-rise); scale: 0.96; }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; scale: 1; }
+}
+@keyframes mo-quote {
+  from { translate: 0 2rem; }
+  to { translate: 0 0; }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    /* Tasks 3 a 6 añaden aquí sus reglas, todas con el prefijo :root[data-motion-state="on"]. */
+    /* Titulares de capitulo: suben desde una mascara al entrar. Solo h2 (el h1 del hero es el LCP y no se anima). */
+    :root[data-motion-state="on"] h2[data-motion="text-reveal"] {
+      animation: mo-rise linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    /* Tarjetas de OpenSource: se construyen en cuatro tiempos sobre una linea de tiempo con nombre, todo termina en entry 100%. */
+    :root[data-motion-state="on"] [data-motion="build"] { view-timeline: --build block; }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="trace"] rect {
+      animation: mo-trace linear both;
+      animation-timeline: --build;
+      animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(45% + calc(var(--i, 0) * var(--mo-stagger)));
+    }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="outline"] {
+      animation: mo-deco-fade linear both;
+      animation-timeline: --build;
+      animation-range: entry calc(35% + calc(var(--i, 0) * var(--mo-stagger))) entry calc(55% + calc(var(--i, 0) * var(--mo-stagger)));
+    }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="fill"] {
+      animation: mo-fill linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: --build;
+      animation-range: entry calc(40% + calc(var(--i, 0) * var(--mo-stagger))) entry calc(70% + calc(var(--i, 0) * var(--mo-stagger)));
+    }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="content"] {
+      animation: mo-content linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: --build;
+      animation-range: entry calc(55% + calc(var(--i, 0) * var(--mo-stagger))) entry 100%;
+    }
+    /* La bio se enciende palabra a palabra (color entre tokens AA). Es el unico rango que usa contain. */
+    :root[data-motion-state="on"] [data-motion="word-reveal"] { view-timeline: --reveal block; }
+    :root[data-motion-state="on"] [data-motion="word-reveal"] [data-w] {
+      animation: mo-light linear both;
+      animation-timeline: --reveal;
+      animation-range: contain calc(var(--i) / var(--n) * 60%) contain calc((var(--i) + 1) / var(--n) * 60%);
+    }
+    @media (min-width: 64rem) {
+      :root[data-motion-state="on"] [data-reveal-scope] { view-timeline: --reveal block; }
+      :root[data-motion-state="on"] [data-motion="word-reveal"] { view-timeline: none; }
+    }
+    /* Tarjetas de la experiencia en lista vertical (bajo md); desde md son una fila con scroll propio. */
+    @media (max-width: 47.99rem) {
+      :root[data-motion-state="on"] [data-motion="card"] {
+        animation: mo-card linear both;
+        animation-timing-function: var(--mo-ease);
+        animation-timeline: view();
+        animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(70% + var(--i, 0) * var(--mo-stagger));
+      }
+    }
+    /* Muro de insignias: se ensambla escalonado por columna. */
+    :root[data-motion-state="on"] [data-motion="badge"] {
+      animation: mo-badge linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(70% + var(--i, 0) * var(--mo-stagger));
+    }
+    /* Citas en secuencia: solo translate, sin recorte. */
+    :root[data-motion-state="on"] [data-motion="quote"] {
+      animation: mo-quote linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+    /* Intenciones del contacto: suben escalonadas. */
+    :root[data-motion-state="on"] [data-motion="intent"] {
+      animation: mo-card linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(70% + var(--i, 0) * var(--mo-stagger));
+    }
+    /* El iman usa transform (las entradas, translate y clip-path) y solo existe con el runtime enganchado,
+       con puntero fino y hover. --mx y --my los pone el JS. */
+    @media (hover: hover) and (pointer: fine) {
+      :root[data-motion-state="on"][data-motion-ready] [data-motion="intent"],
+      :root[data-motion-state="on"][data-motion-ready] [data-motion="magnetic"] {
+        transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+      }
+    }
   }
 }
 

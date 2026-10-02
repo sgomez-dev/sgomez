@@ -59,22 +59,12 @@ export function start(root: ParentNode, registry: Registry = REGISTRY, opts: Sta
   html?.setAttribute(READY_ATTR, "");
 
   const mine = new Set<Element>();
-  const cssByKey = new Map<string, string>();
-  let styleEl: HTMLStyleElement | undefined;
   let ctxP: Promise<Ctx> | undefined;
   let alive = true;
   const getCtx = () => (ctxP ??= Promise.resolve(opts.ctx ?? import("./ctx").then((m) => m.createCtx())));
 
-  const addCss = (key: string, css: string | undefined) => {
-    if (!css || !supported || cssByKey.has(key) || typeof document === "undefined") return;
-    cssByKey.set(key, css);
-    styleEl ??= Object.assign(document.createElement("style"), { textContent: "" });
-    styleEl.setAttribute("data-motion-css", "");
-    styleEl.textContent = [...cssByKey.values()].join("\n");
-    if (!styleEl.isConnected) document.head.append(styleEl);
-  };
-
   const hook = async (el: HTMLElement, entry: Entry) => {
+    if (supported && entry.fallbackOnly) return;
     const claim = () => {};
     hooked.set(el, claim);
     mine.add(el);
@@ -82,7 +72,6 @@ export function start(root: ParentNode, registry: Registry = REGISTRY, opts: Sta
       const mod = entry.load ? await entry.load() : {};
       if (!alive || hooked.get(el) !== claim) return;
       const e = { ...entry, ...mod };
-      addCss(el.dataset.motion ?? "", e.css);
       const fn = supported ? e.run : (e.fallback ?? e.run);
       if (!fn) return;
       // Las primitivas que no piden contexto (exactamente `(el) => ...`) no cargan el chunk del motor.
@@ -154,7 +143,6 @@ export function start(root: ParentNode, registry: Registry = REGISTRY, opts: Sta
     alive = false;
     mo?.disconnect();
     for (const el of [...mine]) release(el);
-    styleEl?.remove();
     html?.removeAttribute(READY_ATTR);
     lifecycle.emit("stop");
   };

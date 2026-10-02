@@ -26,14 +26,14 @@ export type Primitive = (el: HTMLElement, ctx: Ctx) => (() => void) | void;
 
 /**
  * Entrada del registro. `load` trae el módulo de la primitiva solo cuando hay un
- * elemento que la usa; el módulo exporta lo mismo que la entrada (`run`, `fallback`, `css`).
+ * elemento que la usa; el módulo exporta lo mismo que la entrada (`run`, `fallback`).
  */
 export type Entry = {
   run?: Primitive;
   /** Se usa en lugar de `run` donde no hay `animation-timeline` (Firefox). */
   fallback?: Primitive;
-  /** CSS de view-timeline de esta primitiva (bajo `:root[data-motion-state="on"]`). Se inyecta si hay soporte, se retira al parar. */
-  css?: string;
+  /** Solo tiene `fallback` (el movimiento es CSS estático): el runtime no se pide donde hay `animation-timeline`. */
+  fallbackOnly?: boolean;
   load?: () => Promise<Partial<Omit<Entry, "load">>>;
 };
 

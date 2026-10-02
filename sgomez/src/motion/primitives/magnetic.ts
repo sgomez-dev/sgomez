@@ -1,6 +1,6 @@
 import type { Primitive } from "../types";
 
-/** Solo con puntero fino y hover. El elemento sigue siendo un <a> normal: su zona activa se mueve con él. */
+/** Solo con puntero fino y hover. El elemento sigue siendo un <a> normal: su zona activa se mueve con él. El `transform` que lo mueve está en motion.css, tras `data-motion-ready`. */
 const FINE = "(hover: hover) and (pointer: fine)";
 
 const px = (v: number) => `${Math.round(v * 10) / 10}px`;
@@ -21,14 +21,3 @@ export const run: Primitive = (el, ctx) => {
     el.style.removeProperty("--my");
   };
 };
-
-/** El imán usa `transform`; las entradas, `translate` y `clip-path`: nunca dos mecanismos sobre la misma propiedad. */
-export const magnetCss = `
-@media ${FINE} {
-  :root[data-motion-state="on"] [data-motion="intent"],
-  :root[data-motion-state="on"] [data-motion="magnetic"] {
-    transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
-  }
-}`;
-
-export const css = magnetCss;

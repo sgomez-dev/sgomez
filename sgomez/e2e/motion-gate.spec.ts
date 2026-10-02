@@ -4,15 +4,19 @@ import { test, expect } from "./fixtures";
 const starts = (page: Page) => page.evaluate(() => (window as { __MOTION_STARTS__?: number }).__MOTION_STARTS__ ?? 0);
 
 /**
- * Hoy el registro está vacío: en Chromium (con animation-timeline) el runtime no
- * se pide, a propósito. Para ejercitar la puerta de verdad se simula un navegador
- * sin animation-timeline, que sí lo necesita (respaldo de Firefox). Cuando la
- * Task 4 registre `count`, estos tests pueden volver a prescindir de la simulación.
+ * Para ejercitar el respaldo de Firefox se simula un navegador sin animation-timeline:
+ * el JS ve `CSS.supports` en falso y se anula el CSS estático (E5 revisada), que en
+ * Chromium sí casaría con `@supports`.
  */
 const withoutTimeline = (page: Page) =>
   page.addInitScript(() => {
     const orig = CSS.supports.bind(CSS);
     CSS.supports = ((p: string, v?: string) => (String(p).includes("animation-timeline") ? false : v === undefined ? orig(p) : orig(p, v))) as typeof CSS.supports;
+    document.addEventListener("DOMContentLoaded", () => {
+      const st = document.createElement("style");
+      st.textContent = "[data-motion], [data-motion] * { animation: none !important; }";
+      document.head.append(st);
+    });
   });
 
 test.describe("puerta del movimiento", () => {

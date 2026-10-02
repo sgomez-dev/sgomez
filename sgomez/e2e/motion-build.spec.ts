@@ -4,7 +4,8 @@ import { test, expect } from "./fixtures";
 import { scrollToProgress, settledInViewport } from "./motion-utils";
 
 /** El CSS de las primitivas lo inyecta el runtime tras idle: se espera a que esté. */
-const motionCss = (page: Page) => page.waitForSelector("style[data-motion-css]", { state: "attached" });
+/** El CSS de movimiento es estatico (E5 revisada): esta vivo en cuanto el estado es on. */
+const motionCss = (page: Page) => expect(page.locator("html")).toHaveAttribute("data-motion-state", "on");
 
 test.describe("titulares y open source", () => {
   test("a mitad de la entrada la tarjeta esta a medio construir y sin violaciones de axe", async ({ page }) => {
@@ -39,7 +40,7 @@ test.describe("titulares y open source", () => {
     expect(await page.locator("h1").first().evaluate((el) => el.getAnimations().length)).toBe(0);
   });
 
-  test("movimiento reducido: sin estilo de movimiento y todo el contenido visible", async ({ page }) => {
+  test("movimiento reducido: sin movimiento y todo el contenido visible", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await page.waitForTimeout(2500);
@@ -50,7 +51,7 @@ test.describe("titulares y open source", () => {
     await expect(page.locator("#open-source h2")).toBeVisible();
   });
 
-  test("Review Focus 2: pasar a reducido a mitad de visita retira el CSS y deja todo en su estado final", async ({ page }) => {
+  test("Review Focus 2: pasar a reducido a mitad de visita apaga el movimiento y deja todo en su estado final", async ({ page }) => {
     await page.goto("/");
     await motionCss(page);
     await scrollToProgress(page, "#open-source ul", 0.85);

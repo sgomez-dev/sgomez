@@ -1,19 +1,15 @@
 import type { Registry } from "./types";
 
 /**
- * Valor de `data-motion` → entrada. Solo hay `load` (un import() por primitiva):
- * este fichero va en el JS inicial y tiene que seguir siendo diminuto.
- * Las Tasks 4 y 6 añaden `count`, `word-reveal`, `intent` y `magnetic`.
+ * Valor de `data-motion` → entrada (un import() por primitiva): va en el JS inicial y tiene que seguir siendo diminuto.
+ * Solo están las primitivas que necesitan JS; el resto del movimiento es CSS estático en motion.css (E5 revisada).
  */
 export const REGISTRY: Registry = {
-  "text-reveal": { load: () => import("./primitives/text-reveal") },
-  build: { load: () => import("./primitives/build") },
-  "word-reveal": { load: () => import("./primitives/word-reveal") },
+  // Titulares y tarjetas: el movimiento es CSS estático; solo hay respaldo de Firefox.
+  "text-reveal": { fallbackOnly: true, load: () => import("./primitives/text-reveal") },
+  build: { fallbackOnly: true, load: () => import("./primitives/build") },
+  // Con JS de verdad.
   count: { load: () => import("./primitives/count") },
-  // Task 5 y 6 (la escena fijada del capitulo 04 es CSS estatico en motion.css, ver alli). Cada entrada trae su módulo (run y/o css) solo cuando hay un elemento que lo usa.
-  card: { load: () => import("./primitives/card") },
-  badge: { load: () => import("./primitives/badge") },
-  quote: { load: () => import("./primitives/quote") },
   intent: { load: () => import("./primitives/intent") },
   magnetic: { load: () => import("./primitives/magnetic") },
 };
@@ -31,6 +27,9 @@ export function supportsScrollTimeline(css: { supports(p: string): boolean } | u
 
 /** ¿Hay algo que el runtime tenga que hacer en esta página? Si no, ni se pide su chunk. */
 export function needsRuntime(root: ParentNode, registry: Registry = REGISTRY, supported = supportsScrollTimeline()): boolean {
-  for (const el of root.querySelectorAll<HTMLElement>("[data-motion]")) if (registry[el.dataset.motion ?? ""]) return true;
+  for (const el of root.querySelectorAll<HTMLElement>("[data-motion]")) {
+    const entry = registry[el.dataset.motion ?? ""];
+    if (entry && (!entry.fallbackOnly || !supported)) return true;
+  }
   return !supported && !!root.querySelector(REVEAL_SELECTOR);
 }
