@@ -1,6 +1,7 @@
 // Capturas y sondas de píxel del relevo póster → cristal del hero (fase 3, tarea 5).
 // Uso: con el build servido en :3101, HEADED=1 node scripts/glass-capture.mjs <carpeta> [all|quick].
 // HEADED=1 usa la GPU real; en headless Chromium pinta con SwiftShader y el color no vale. ONE=1 solo mide 1440x900.
+// SEC=contact mide el cristal del contacto (por defecto, el hero).
 // "poster body" y "3d relay frame" dan la caja de la silueta y el color medio (total y por tercios) de cada capa aislada.
 import { chromium } from "@playwright/test";
 import sharp from "sharp";
@@ -8,8 +9,9 @@ const OUT = process.argv[2];
 const ONLY = process.argv[3] ?? "all";
 const BASE = process.env.BASE ?? "http://localhost:3101/";
 const b = await chromium.launch({ headless: process.env.HEADED ? false : true, args: ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist"] });
-const STAGE = "#top [data-glass]";
-const isolate = `#top *{visibility:hidden!important} #top [data-glass], #top [data-glass] *{visibility:visible!important} #top [data-glass] button{visibility:hidden!important}`;
+const SEC = `#${process.env.SEC ?? "top"}`;
+const STAGE = `${SEC} [data-glass]`;
+const isolate = `${SEC} *{visibility:hidden!important} ${STAGE}, ${STAGE} *{visibility:visible!important} ${STAGE} button{visibility:hidden!important}`;
 
 async function mask(buf) {
   const { data, info } = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
@@ -36,9 +38,10 @@ for (const [W, H] of (process.env.ONE ? [[1440, 900]] : [[1440, 900], [1920, 108
     const p = await ctx.newPage();
     await p.addInitScript(() => { delete HTMLCanvasElement.prototype.transferControlToOffscreen; });
     await p.goto(BASE, { waitUntil: "networkidle" });
+    await p.locator(SEC).scrollIntoViewIfNeeded();
     await p.waitForTimeout(2500);
-    await p.screenshot({ path: `${OUT}/fase-3-task5-${tag}-1-poster.png` });
-    await p.addStyleTag({ content: isolate + ` #top [data-glass] svg > g > path:first-child{visibility:hidden!important}` });
+    await p.screenshot({ path: `${OUT}/fase-3-${process.env.SEC ?? "task5"}-${tag}-1-poster.png` });
+    await p.addStyleTag({ content: isolate + ` ${STAGE} svg > g > path:first-child{visibility:hidden!important}` });
     const buf = await p.locator(STAGE).screenshot({ path: `${OUT}/iso-${tag}-poster.png` });
     const m = await mask(buf);
     console.log(tag, "poster body", JSON.stringify(m));
@@ -50,10 +53,11 @@ for (const [W, H] of (process.env.ONE ? [[1440, 900]] : [[1440, 900], [1920, 108
     const p = await ctx.newPage();
     await p.addInitScript(() => { window.__GLASS_FORCE_GATE__ = true; });
     await p.goto(BASE);
+    await p.locator(SEC).scrollIntoViewIfNeeded();
     await p.waitForSelector(`${STAGE}[data-glass="live"]`, { timeout: 45000 });
     await p.locator(`${STAGE} button`).click(); // congela t en el fotograma del relevo
     await p.waitForTimeout(1200);
-    await p.addStyleTag({ content: isolate + ` #top [data-glass] svg, #top [data-glass] svg *{visibility:hidden!important}` });
+    await p.addStyleTag({ content: isolate + ` ${STAGE} svg, ${STAGE} svg *{visibility:hidden!important}` });
     const buf = await p.locator(STAGE).screenshot({ path: `${OUT}/iso-${tag}-3d.png` });
     const m = await mask(buf);
     console.log(tag, "3d relay frame", JSON.stringify(m));
@@ -64,14 +68,15 @@ for (const [W, H] of (process.env.ONE ? [[1440, 900]] : [[1440, 900], [1920, 108
     const p = await ctx.newPage();
     await p.addInitScript(() => { window.__GLASS_FORCE_GATE__ = true; });
     await p.goto(BASE);
+    await p.locator(SEC).scrollIntoViewIfNeeded();
     await p.waitForSelector(`${STAGE}[data-glass="live"]`, { timeout: 45000 });
     await p.waitForTimeout(400);
-    await p.screenshot({ path: `${OUT}/fase-3-task5-${tag}-2-fundido.png` });
+    await p.screenshot({ path: `${OUT}/fase-3-${process.env.SEC ?? "task5"}-${tag}-2-fundido.png` });
     await p.waitForTimeout(2600);
-    await p.screenshot({ path: `${OUT}/fase-3-task5-${tag}-3-vivo.png` });
+    await p.screenshot({ path: `${OUT}/fase-3-${process.env.SEC ?? "task5"}-${tag}-3-vivo.png` });
     if (ONLY === "all") {
       await p.waitForTimeout(57000);
-      await p.screenshot({ path: `${OUT}/fase-3-task5-${tag}-4-a-60s.png` });
+      await p.screenshot({ path: `${OUT}/fase-3-${process.env.SEC ?? "task5"}-${tag}-4-a-60s.png` });
     }
     const gl = await p.evaluate(() => { const c = document.createElement("canvas").getContext("webgl2"); const e = c.getExtension("WEBGL_debug_renderer_info"); return e ? c.getParameter(e.UNMASKED_RENDERER_WEBGL) : "?"; });
     console.log(tag, "renderer", gl);

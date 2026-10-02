@@ -31,7 +31,7 @@ export type Placement = { left: number; top: number; z: number; scale: number; r
 export const PLACEMENTS: Record<"hero" | "contact", Placement> = {
   // Reposo casi frontal: los 18° del póster ya van en la silueta y una pose más girada enseñaba la pared lateral.
   hero: { left: 63.6, top: 42.1, z: 0, scale: 0.985, rest: { rx: -0.1, ry: 0.12, rz: 0 } },
-  contact: { left: 59.5, top: 41.5, z: 0, scale: 0.9, rest: { rx: 0.1, ry: -0.12, rz: 0 } },
+  contact: { left: 63.0, top: 42.1, z: 0, scale: 0.972, rest: { rx: 0.1, ry: -0.12, rz: 0 } },
 };
 
 const clamp = (v: number) => Math.min(1, Math.max(-1, v));

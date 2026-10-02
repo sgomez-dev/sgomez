@@ -191,16 +191,15 @@ El plan es `docs/superpowers/plans/2026-10-02-redesign-fase-3-3d.md`, con las re
 | 3 | `glass-kit` y una puerta única (núcleo) | ✅ Revisada con opus y arreglada |
 | 4 | Escena en un worker con OffscreenCanvas (núcleo) | ✅ Revisada con opus y arreglada. Perfil "full" con `compileAsync`: listo en 1,2 s en frío y 0,3 s en caliente, huecos de rAF ≤17 ms, sin tareas largas |
 | 5 | `GlassStage` en el hero (núcleo) | 🔄 Ronda visual aplicada (e374733): la silueta coincide al píxel, el brillo es equivalente, el halo se queda y el giro está acotado. Capturas en `progress/fase-3-task5-*`. Pendiente de la re-revisión con opus y del visto bueno del dueño sobre el matiz del color |
-| 6 a 11 | Contacto, nombre con luz, relevo del 404, el 404 en el worker, verificación y cierre | ⏳ |
+| 6 | El cristal en el contacto | ✅ Hecha, con la pose medida al píxel |
+| 7 a 11 | Nombre con luz, relevo del 404, el 404 en el worker, verificación y cierre | ⏳ |
 
 ### Pendiente inmediato (por este orden)
 
-1. **Decisiones del dueño:**
-   - cómo medir el LCP móvil en el CI del PR (`progress/2026-10-02-fase-3-lcp.md`; se recomienda devtools);
-   - si vale el matiz del cristal (`progress/fase-3-task5-*`).
-2. **Re-revisión con opus hecha: fusionable.** Lo que queda está en `progress/2026-10-02-fase-3-revision-t5.md`. En la tarea 6, mide la pose del contacto.
-   - Para medir y capturar el relevo: `HEADED=1 node scripts/glass-capture.mjs <carpeta>` con el build en :3101. En headless Chromium pinta con SwiftShader y el color no vale.
-3. **Sigue con las tareas 6 a 11** con el flujo de la §5.
+1. Hecho el 2026-10-02: el dueño eligió devtools para el LCP móvil del CI y aprobó el tono; la tarea 5 está revisada y fusionable y la 6 está hecha (ver `progress/2026-10-02-fase-3.md`).
+   - Para medir y capturar un relevo: `HEADED=1 [SEC=contact] node scripts/glass-capture.mjs <carpeta>` con el build en :3101. En headless Chromium pinta con SwiftShader y el color no vale.
+   - Riesgo al abrir el PR: el TBT simulado de `/` estuvo en 209 ms y el umbral es 200.
+2. **Sigue con las tareas 7 a 11** con el flujo de la §5.
    - La tarea 8 empieza por el diagnóstico visual (F4): una tira de fotogramas que hay que enseñar al dueño.
    - La tarea 9 es de alto riesgo y la revisa opus.
 

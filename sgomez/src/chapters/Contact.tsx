@@ -9,6 +9,7 @@ import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
 import GlassPoster from "@/components/GlassPoster";
+import GlassStage from "@/components/GlassStage";
 
 const CV = "/CV_Santiago_Gómez_de_la_Torre_Romero.pdf";
 const INTENTS: ContactIntent[] = ["freelance", "job", "other"];
@@ -83,7 +84,9 @@ export default function Contact({ lang }: { lang: Lang }) {
             </div>
           </div>
           <div className="relative isolate mx-auto hidden aspect-square w-full max-w-[420px] lg:block">
-            <GlassPoster className="absolute inset-0 h-full w-full" />
+            <GlassStage id="contact" pauseLabel={d.lost.pause} className="absolute inset-0">
+              <GlassPoster className="h-full w-full" />
+            </GlassStage>
           </div>
         </div>
       </Container>

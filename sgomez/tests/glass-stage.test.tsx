@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import Hero from "@/chapters/Hero";
+import Contact from "@/chapters/Contact";
 import { getDictionary } from "@/i18n";
 
 describe("GlassStage en el HTML del servidor", () => {
@@ -19,5 +20,13 @@ describe("GlassStage en el HTML del servidor", () => {
     expect(getDictionary("es").lost.pause).toBe("Pausar movimiento");
     expect(getDictionary("en").lost.pause).toBe("Pause motion");
     expect((getDictionary("es") as Record<string, unknown>).glass).toBeUndefined();
+  });
+});
+
+describe("GlassStage en el contacto", () => {
+  it("el póster del contacto va dentro de un GlassStage y sigue oculto por debajo de lg", () => {
+    const html = renderToStaticMarkup(<Contact lang="es" />);
+    expect(html).toMatch(/hidden[^"]*lg:block[^>]*>\s*<div[^>]*data-glass="poster"/);
+    expect(html).not.toMatch(/<canvas/);
   });
 });

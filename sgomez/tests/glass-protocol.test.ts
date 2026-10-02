@@ -9,9 +9,11 @@ describe("protocolo del cristal", () => {
     expect(pointerTarget(5000, -50, 1000, 800)).toEqual({ x: 1, y: -1 });
   });
   it("el cristal del hero se coloca donde el póster pinta el suyo", () => {
-    // GlassPoster: translate(238 166) sobre una caja de 400
-    expect(PLACEMENTS.hero.left).toBeCloseTo(59.5, 1);
-    expect(PLACEMENTS.hero.top).toBeCloseTo(41.5, 1);
-    expect(PLACEMENTS.contact.left).toBeCloseTo(59.5, 1);
+    // GlassPoster: translate(238 166) sobre una caja de 400, es decir, 59.5 y 41.5. Con la perspectiva y la pose
+    // de reposo, el centro 3D se corrige unos puntos para que la silueta casara al píxel (medido con
+    // scripts/glass-capture.mjs, ver progress/2026-10-02-fase-3.md); más de 5 puntos sería otro sitio.
+    expect(Math.abs(PLACEMENTS.hero.left - 59.5)).toBeLessThan(5);
+    expect(Math.abs(PLACEMENTS.hero.top - 41.5)).toBeLessThan(5);
+    expect(Math.abs(PLACEMENTS.contact.left - 59.5)).toBeLessThan(5);
   });
 });
