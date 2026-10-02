@@ -43,7 +43,7 @@ export default function About({ lang }: { lang: Lang }) {
             <div key={it.key} className="flex flex-col-reverse justify-end gap-2 bg-[color:var(--bg-2)] p-6">
               <dt className="text-[length:var(--step-0)] text-[color:var(--text-2)]">{fill(it.template, { n: "" }).trim()}</dt>
               <dd data-motion="count" data-value={it.n} className="text-[length:var(--step-4)] font-semibold leading-none tracking-[-0.04em] text-[color:var(--text)]">
-                <span aria-hidden="true" data-count="" className="inline-block tabular-nums" style={{ minWidth: `${String(it.n).length}ch` }}>
+                <span aria-hidden="true" data-count="" className="inline-block select-none tabular-nums" style={{ minWidth: `${String(it.n).length}ch` }}>
                   {it.n}
                 </span>
                 <span className="sr-only">{it.n}</span>

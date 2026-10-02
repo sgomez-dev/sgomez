@@ -6,6 +6,8 @@
   --mo-rise: 1.25rem;
   --mo-stagger: 8%;
 }
+@property --mx { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --my { syntax: "<length>"; inherits: false; initial-value: 0px; }
 
 /* E5 revisada: todo lo ligado al scroll vive aqui, estatico, y esta activo desde el primer
    pintado (el atributo data-motion-state lo pone el script del head). Nada se inyecta
@@ -144,14 +146,17 @@
    seccion: tiene que estar desde el primer pintado (el atributo lo pone el
    script del head), o aterrizar en /#contact o restaurar el scroll queda
    desfasado por el crecimiento posterior. No depende del runtime: sin JS,
-   con movimiento reducido o sin animation-timeline no aplica nada y es la
-   lista de la fase 1. Solo con pantalla ancha y alta (48rem: las tarjetas
-   llevan texto largo y overflow: clip cortaria lo que no cupiera).
-   Geometria: alto = 100svh + n tarjetas * 23.5rem; la escena se pega bajo la
-   nav y la pista se desliza durante el rango `contain` de la seccion. El inset
-   de 4rem alinea el inicio del recorrido con el momento en que se pega; el
-   relleno vertical de la seccion pasa a la escena para que no se despegue
-   antes de acabar. */
+   con movimiento reducido, sin animation-timeline o al imprimir no aplica
+   nada y es la lista de la fase 1 con el texto completo.
+   Puerta: ancho de 64rem y alto de 40rem (un portatil de 1366x768 deja unos
+   650 a 740 px de viewport). Cada entrada es una diapositiva de keynote:
+   periodo, rol y organizacion grandes y una sola frase (`summary`); el texto
+   completo (`desc`) sigue en el DOM, recortado a 1px, para los lectores de pantalla.
+   Geometria: alto = 100svh + n * 23.5rem; la escena se pega bajo la nav y la
+   pista se desliza durante el rango `contain` de la seccion. El inset de 4rem
+   alinea el inicio del recorrido con el momento en que se pega; el relleno
+   vertical de la seccion pasa a la escena para que no se despegue antes de
+   acabar. */
 @keyframes mo-pin {
   from { translate: 0 0; }
   to { translate: min(0px, calc(-100% + 100cqw)) 0; }
@@ -160,9 +165,9 @@
   from { scale: 0 1; }
   to { scale: 1 1; }
 }
-@media (prefers-reduced-motion: no-preference) {
+@media screen and (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    @media (min-width: 64rem) and (min-height: 48rem) {
+    @media (min-width: 64rem) and (min-height: 40rem) {
       :root[data-motion-state="on"] [data-pin] {
         height: calc(100svh + var(--n, 6) * 23.5rem);
         padding-block: 0;
@@ -173,30 +178,66 @@
         position: sticky;
         top: calc(4rem + var(--safe-top, 0px));
         height: calc(100svh - 4rem - var(--safe-top, 0px));
-        padding-block: 1rem;
+        padding-block: clamp(0.75rem, 3svh, 2rem);
         overflow: clip;
       }
-      :root[data-motion-state="on"] [data-pin-stage] h2 {
-        font-size: var(--step-3);
-        max-width: none;
+      /* Las flechas no tienen nada que desplazar en el ol (overflow visible): siguen moviendo la pagina. El anillo de foco
+         va al escenario, no al ol, que mide miles de px de ancho. */
+      :root[data-motion-state="on"] [data-pin-stage]:has([data-motion="timeline"]:focus-visible) {
+        outline: 2px solid var(--light-1);
+        outline-offset: -4px;
       }
+      :root[data-motion-state="on"] [data-pin] [data-motion="timeline"]:focus-visible { outline: none; }
+      :root[data-motion-state="on"] [data-pin-stage] h2 { max-width: none; }
+      :root[data-motion-state="on"] [data-pin-stage] > .mt-10 { margin-top: clamp(1rem, 4svh, 2.5rem); }
       :root[data-motion-state="on"] [data-pin] [data-motion="timeline"] {
         overflow: visible;
         width: max-content;
+        gap: 0;
         scroll-snap-type: none;
         animation: mo-pin linear both;
         animation-timeline: --pin;
         animation-range: contain 0% contain 100%;
       }
+      /* La diapositiva: sin caja, un filete a la izquierda y tipografia grande. */
       :root[data-motion-state="on"] [data-pin] [data-motion="timeline"] > li {
-        width: min(36rem, 44vw);
-        padding: 1.25rem;
+        position: relative;
+        width: min(38rem, 46vw);
+        gap: 0.75rem;
+        padding: 0 clamp(1.5rem, 3vw, 3rem);
+        border-width: 0 0 0 1px;
+        border-radius: 0;
+        background: transparent;
       }
-      @media (max-width: 79.99rem) {
-        :root[data-motion-state="on"] [data-pin] [data-motion="timeline"] > li > p:last-child {
-          font-size: var(--step--1);
-          line-height: 1.5;
-        }
+      :root[data-motion-state="on"] [data-pin] [data-e="period"] {
+        font-size: var(--step-0);
+        color: var(--light-1);
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="role"] {
+        font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="org"] {
+        font-size: var(--step-0);
+        color: var(--text-2);
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="summary"] {
+        display: block;
+        margin-top: 0.5rem;
+        max-width: 32ch;
+        font-size: max(0.9375rem, var(--step-1));
+        line-height: 1.4;
+        color: var(--text);
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="desc"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
       :root[data-motion-state="on"] [data-pin-progress] {
         display: block;

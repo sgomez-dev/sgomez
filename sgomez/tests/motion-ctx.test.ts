@@ -75,7 +75,7 @@ describe("ctx: split", () => {
 });
 
 describe("ctx: puntero", () => {
-  it("engancha pointermove y pointerleave; al parar quita los oyentes y vuelve a 0", () => {
+  it("engancha pointerenter, pointermove y pointerleave; al parar quita los oyentes y vuelve a 0", () => {
     const on: Record<string, unknown> = {};
     const el = {
       addEventListener: (k: string, f: unknown) => (on[k] = f),
@@ -87,7 +87,7 @@ describe("ctx: puntero", () => {
     vi.stubGlobal("performance", { now: () => 0 });
     const onMove = vi.fn();
     const stop = createCtx().pointer(el, { onMove });
-    expect(Object.keys(on).sort()).toEqual(["pointerleave", "pointermove"]);
+    expect(Object.keys(on).sort()).toEqual(["pointerenter", "pointerleave", "pointermove"]);
     stop();
     expect(Object.keys(on)).toEqual([]);
     expect(onMove).toHaveBeenLastCalledWith(0, 0);

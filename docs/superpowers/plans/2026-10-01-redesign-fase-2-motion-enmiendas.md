@@ -39,3 +39,7 @@ Las pistas A y B midieron lo mismo: el `css` de una entrada del registro se inye
 - Lo que depende de JS (hoy, el `transform` del imán, que lee `--mx` y `--my`) cuelga además de `data-motion-ready`.
 - El campo `css` de `Entry` desaparece. El registro solo lleva primitivas con JS: `count`, `intent` y `magnetic` (con `run`), y `text-reveal` y `build` con `fallbackOnly` (solo respaldo de Firefox, no se piden donde hay `animation-timeline`). `card`, `badge`, `quote` y `word-reveal` ya no son entradas: son atributos `data-motion` que enganchan el CSS.
 - Consecuencia: en Chromium el runtime solo se pide en páginas con cifras o imanes (la home); la política y el resto de páginas internas no lo cargan.
+
+## E6. Límite del runtime: 15 KB
+
+El runtime (motor, registro y chunks de primitivas) mide 12,9 KB gzip y su límite pasa a 15 KB. Es coherente con E1 porque la puerta del dueño es el JS inicial (≤ 170 KB, hoy 148,7 a 154,0 KB), y el runtime se carga en diferido, tras idle, y solo en la home. El medidor siembra el cómputo únicamente con los objetivos `import()` del chunk del registro, no con todos los chunks que ese chunk nombra.

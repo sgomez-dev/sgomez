@@ -59,6 +59,8 @@ export type ExperienceEntry = {
   organization: string;
   period: string;
   description: string;
+  /** Una frase para la escena fijada de la home; el texto completo es `description`. */
+  summary: string;
 };
 
 export type SkillCategory = {
@@ -180,6 +182,7 @@ export function getExperience(lang: Lang = ES): ExperienceEntry[] {
       organization: `${entry.organization} - ${t(entry.location, lang)}`,
       period: t(entry.period, lang),
       description: collapse(t(entry.desc, lang)),
+      summary: t(entry.summary, lang),
     };
   });
 }

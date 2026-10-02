@@ -30,7 +30,7 @@ describe("motion.css", () => {
 });
 
 describe("escena fijada del capítulo 04", () => {
-  const at = css.indexOf("@media (min-width: 64rem) and (min-height: 48rem)");
+  const at = css.indexOf("@media (min-width: 64rem) and (min-height: 40rem)");
   const block = css.slice(at);
   it("las reglas pegajosas solo existen en pantallas anchas y altas y detrás de la puerta", () => {
     expect(at).toBeGreaterThan(css.indexOf("@supports (animation-timeline: view())"));
@@ -41,6 +41,14 @@ describe("escena fijada del capítulo 04", () => {
   it("la escena recorta con clip, nunca con hidden (hidden crearía un scroller)", () => {
     expect(block).toMatch(/overflow:\s*clip/);
     expect(css).not.toMatch(/\[data-pin-stage\][^{]*\{[^}]*overflow:\s*hidden/);
+  });
+  it("las reglas del pin no se aplican al imprimir, y el h2 no cambia de tamano al cruzar la puerta", () => {
+    expect(css.lastIndexOf("@media screen and (prefers-reduced-motion: no-preference)", at)).toBeGreaterThan(-1);
+    expect(block).not.toMatch(/\[data-pin-stage\] h2\s*\{[^}]*font-size/);
+  });
+  it("el resumen solo se muestra fijado y el texto completo sigue en el DOM (recortado, no display none)", () => {
+    expect(block).toMatch(/\[data-e="summary"\]\s*\{[^}]*display:\s*block/);
+    expect(block).not.toMatch(/\[data-e="desc"\]\s*\{[^}]*display:\s*none/);
   });
   it("la pista nunca se desplaza hacia la derecha si cabe entera", () => {
     expect(css).toMatch(/min\(0px,/);

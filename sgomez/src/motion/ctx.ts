@@ -71,17 +71,24 @@ export function createCtx(): Ctx {
           raf = requestAnimationFrame(frame);
         }
       };
+      // El rect se mide al entrar, con el elemento en reposo: si se midiera en cada movimiento incluiría el transform del propio imán y realimentaría.
+      let rect = el.getBoundingClientRect();
+      const enter = () => {
+        rect = el.getBoundingClientRect();
+      };
       const move = (e: PointerEvent) => {
-        [tx, ty] = magneticOffset(e.clientX, e.clientY, el.getBoundingClientRect(), strength);
+        [tx, ty] = magneticOffset(e.clientX, e.clientY, rect, strength);
         kick();
       };
       const leave = () => {
         tx = ty = 0;
         kick();
       };
+      el.addEventListener("pointerenter", enter);
       el.addEventListener("pointermove", move);
       el.addEventListener("pointerleave", leave);
       return () => {
+        el.removeEventListener("pointerenter", enter);
         el.removeEventListener("pointermove", move);
         el.removeEventListener("pointerleave", leave);
         cancelAnimationFrame(raf);

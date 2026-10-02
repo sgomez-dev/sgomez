@@ -42,7 +42,8 @@ const registryChunks = files.filter((f) => f.endsWith(".js") && /"text-reveal"/.
 if (registryChunks.length === 0) { failed = true; console.error("  FALLA: no encuentro el chunk del registro; las primitivas no se estan contando"); }
 for (const r of registryChunks) {
   const text = readFileSync(join(chunks, r), "utf8");
-  for (const g of files) if (g.endsWith(".js") && g !== r && text.includes(g)) queue.push(g);
+  // Solo los objetivos de import() (las rutas "static/chunks/x.js" que pasa a e.l), no todo chunk que el registro nombre.
+  for (const [, g] of text.matchAll(/static\/chunks\/([\w.~-]+\.js)/g)) if (g !== r && files.includes(g)) queue.push(g);
 }
 while (queue.length) {
   const f = queue.pop();
