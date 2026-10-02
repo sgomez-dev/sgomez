@@ -294,3 +294,37 @@
 [data-glass="live"] > [data-glass-canvas] { opacity: 1; }
 /* La transición solo va al entrar en live: al apagarse el cristal el póster vuelve al instante. El halo no se apaga. */
 [data-glass="live"] > [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 700ms var(--mo-ease-out) 200ms; }
+
+/* Nombre escrito con luz (E3). El texto del h1 es el LCP: no se toca. La luz es un
+   pseudo-elemento decorativo en multiply: blanco fuera de la banda (no cambia nada),
+   --light-1 y --light-2 dentro (tiñe solo las letras). Su caja es el h1 (relative) y el serif va
+   encima (z-index 1), así que solo tiñe el nombre en todas sus líneas. Sin isolation: el multiply
+   tiene que mezclarse con el fondo de la página, o la capa se ve blanca. Una vez, 1,8 s. */
+@keyframes mo-light-write {
+  from { background-position: 100% 0; }
+  to { background-position: 0% 0; }
+}
+@keyframes mo-light-sheen {
+  from { translate: -30% -20%; }
+  to { translate: 18% 14%; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion-state="on"] [data-light-write]::after {
+    content: "";
+    position: absolute;
+    inset: -0.05em -0.1em;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    background: linear-gradient(100deg, #fff 0 38%, var(--light-1) 46%, var(--light-2) 50%, var(--light-1) 54%, #fff 62% 100%);
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    animation: mo-light-write 1.8s var(--mo-ease) 350ms 1 both;
+  }
+  /* El póster del hero (móvil, horizontal y quien no pasa la puerta): el brillo cruza una vez. Solo el
+     del hero: el del contacto cruzaría al cargar, fuera de pantalla, y al aterrizar en #contact no estaría quieto. */
+  :root[data-motion-state="on"] #top [data-motion="glass"] [data-glass-sheen] {
+    transform-box: fill-box;
+    animation: mo-light-sheen 2.4s var(--mo-ease) 500ms 1 both;
+  }
+}
+/* Fin nombre escrito con luz */

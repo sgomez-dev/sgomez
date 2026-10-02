@@ -62,6 +62,7 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
           fill={`url(#${depth})`}
         />
         <path
+          data-glass-sheen=""
           d={POSTER_SILHOUETTE.d}
           fill={`url(#${sheen})`}
         />

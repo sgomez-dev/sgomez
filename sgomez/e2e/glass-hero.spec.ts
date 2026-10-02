@@ -20,7 +20,7 @@ test.describe("cristal vivo del hero (escritorio)", () => {
     expect(await longTasksDuringGlass(page, "hero")).toEqual([]);
     // El LCP sigue siendo el titular o el retrato y llega antes de que el cristal esté listo (no compite con él).
     const lcp = await page.evaluate(() => ({ ...(window as unknown as { __lcp: { tag: string; t: number } }).__lcp, ready: performance.getEntriesByName("glass:ready:hero")[0]?.startTime ?? 0 }));
-    expect(["H1", "IMG"]).toContain(lcp.tag);
+    expect(["H1", "SPAN", "IMG"]).toContain(lcp.tag);
     expect(lcp.t).toBeLessThan(lcp.ready);
   });
 

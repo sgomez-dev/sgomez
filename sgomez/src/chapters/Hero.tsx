@@ -32,6 +32,7 @@ export default function Hero({ lang }: { lang: Lang }) {
               serif={d.chapters.hero.serif}
               size="text-[length:clamp(44px,7vw,96px)]"
               motion="text-reveal"
+              light
               className="mt-4 !leading-[0.95] !tracking-[-0.045em]"
             />
             <p data-answer className="mt-6 max-w-[34rem] text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text-2)]">

@@ -11,6 +11,8 @@ export async function settledInViewport(page: Page): Promise<string[]> {
       // la bio (Task 4) y la escena fijada (Task 5) dependen de la posición a propósito: no son entradas
       if (el.closest('[data-motion="word-reveal"], [data-pin]')) continue;
       for (const a of el.getAnimations()) {
+        // el barrido de luz (E3) es un adorno de una pasada, no una entrada: no tiene que estar terminado al aterrizar
+        if ((a as CSSAnimation).animationName?.startsWith("mo-light")) continue;
         if (a.effect?.getComputedTiming().progress !== 1) {
           out.push(`${el.tagName.toLowerCase()}[data-motion=${el.closest<HTMLElement>("[data-motion]")?.dataset.motion}] ${(a as CSSAnimation).animationName ?? ""}`);
         }
