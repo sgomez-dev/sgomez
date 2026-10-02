@@ -70,7 +70,9 @@ test.describe("capítulo 05, reels de proyectos", () => {
 
   test("la ficha sigue siendo un único enlace accesible con su nombre", async ({ page }) => {
     await page.goto("/");
-    const card = page.locator("#work li").first().locator("a");
+    // la ficha es el enlace externo; el del caso de estudio es un segundo enlace interno, aparte y sin anidar
+    const card = page.locator("#work li").first().locator('a[target="_blank"]');
+    await expect(page.locator("#work li").first().locator("a")).toHaveCount(2);
     await expect(card).toHaveCount(1);
     await expect(card).toHaveAttribute("rel", /noopener/);
     expect(await card.getAttribute("aria-label")).toBeNull();
