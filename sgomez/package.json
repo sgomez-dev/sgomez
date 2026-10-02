@@ -10,11 +10,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
+    "budget": "node scripts/js-budget.mjs",
     "lhci": "next build && lhci autorun"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.1",
-    "framer-motion": "^12.23.25",
     "next": "16.2.6",
     "react": "19.2.0",
     "react-dom": "19.2.0",
