@@ -40,10 +40,8 @@
               }
             ],
             "largest-contentful-paint": [
-              "error",
-              {
-                "maxNumericValue": 2500
-              }
+              "off",
+              {}
             ],
             "categories:seo": [
               "off",
@@ -79,10 +77,8 @@
               }
             ],
             "largest-contentful-paint": [
-              "error",
-              {
-                "maxNumericValue": 2500
-              }
+              "off",
+              {}
             ]
           }
         }

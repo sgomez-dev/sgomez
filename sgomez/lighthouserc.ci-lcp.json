@@ -1,0 +1,35 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/en",
+        "http://localhost:3000/about",
+        "http://localhost:3000/en/no-existe"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "chromeFlags": "--no-sandbox --headless=new",
+        "ignoreStatusCode": true,
+        "skipAudits": [
+          "robots-txt"
+        ],
+        "throttlingMethod": "devtools"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "largest-contentful-paint": [
+          "error",
+          {
+            "maxNumericValue": 2500
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci-lcp"
+    }
+  }
+}

@@ -90,8 +90,10 @@ jobs:
         env:
           BLOG_API_DISABLED: ""
 
-      # LCP is an error here (lighthouserc.ci.json); locally it is a warning
-      # because antivirus SSL filtering distorts it.
+      # Mobile LCP is measured with real throttling (devtools) in its own pass
+      # (lighthouserc.ci-lcp.json): Lantern's simulation overstates it (about
+      # 2.8 s simulated vs 2.0 s real, see docs/superpowers/progress/
+      # 2026-10-02-fase-3-lcp.md). The simulated pass checks everything else.
       - name: Lighthouse budgets
         run: |
           export CHROME_PATH="$(node -e 'console.log(require("@playwright/test").chromium.executablePath())')"
@@ -100,5 +102,6 @@ jobs:
           for i in $(seq 1 60); do curl -fs http://localhost:3000/ >/dev/null && { up=1; break; }; sleep 1; done
           [ "$up" = 1 ] || { echo "server did not start"; exit 1; }
           npx lhci autorun --config=./lighthouserc.ci.json
+          npx lhci autorun --config=./lighthouserc.ci-lcp.json
           sed "s/\"warn\", { \"maxNumericValue\": 2500/\"error\", { \"maxNumericValue\": 2500/" lighthouserc.desktop.json > lighthouserc.desktop.ci.json
           npx lhci autorun --config=./lighthouserc.desktop.ci.json
