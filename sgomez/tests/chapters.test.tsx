@@ -66,7 +66,7 @@ describe("capítulos 01–03 en HTML de servidor", () => {
     });
     it(`${lang}: el retrato es prioritario, con sizes y alt localizado`, () => {
       const img = html.match(/<img[^>]*>/)![0];
-      expect(img).toContain('data-priority="true"');
+      expect(img).toContain('fetchPriority="high"');
       expect(img).toContain(`sizes="${PORTRAIT_SIZES}"`);
       // En píxeles y no en vw: la precarga y la imagen no deben poder elegir candidatos distintos.
       expect(PORTRAIT_SIZES).not.toMatch(/vw/);
