@@ -1,48 +1,89 @@
 import { describe, expect, it, vi } from "vitest";
-import { revealOnEnter, supportsScrollTimeline } from "@/motion/reveal-fallback";
+import { revealOnEnter } from "@/motion/reveal-fallback";
+import { needsRuntime, supportsScrollTimeline } from "@/motion/registry";
 
-describe("respaldo de revelado (sin animation-timeline)", () => {
-  it("detecta el soporte con CSS.supports", () => {
+describe("detección de soporte", () => {
+  it("usa CSS.supports", () => {
     expect(supportsScrollTimeline({ supports: () => true })).toBe(true);
     expect(supportsScrollTimeline({ supports: () => false })).toBe(false);
     expect(supportsScrollTimeline(undefined)).toBe(false);
   });
+  it("no pide el runtime si no hay nada que hacer", () => {
+    const root = (hasReveal: boolean, motion: string[]) =>
+      ({ querySelectorAll: () => motion.map((m) => ({ dataset: { motion: m } })), querySelector: () => (hasReveal ? {} : null) }) as unknown as ParentNode;
+    expect(needsRuntime(root(true, ["text-reveal"]), {}, true)).toBe(false);
+    expect(needsRuntime(root(true, ["text-reveal"]), {}, false)).toBe(true);
+    expect(needsRuntime(root(false, ["text-reveal"]), {}, false)).toBe(false);
+    expect(needsRuntime(root(false, ["count"]), { count: {} }, true)).toBe(true);
+  });
+});
 
-  function setup(inView: boolean) {
+describe("respaldo de revelado (sin animation-timeline)", () => {
+  function setup(top: number) {
     const animate = vi.fn(() => ({ cancel: vi.fn() }));
-    const el = { getBoundingClientRect: () => ({ top: inView ? 100 : 5000, bottom: inView ? 200 : 5100 }), animate } as unknown as HTMLElement;
+    const props: Record<string, string> = {};
+    const style = {
+      set clipPath(v: string) {
+        props["clip-path"] = v;
+      },
+      set translate(v: string) {
+        props["translate"] = v;
+      },
+      removeProperty(k: string) {
+        delete props[k];
+      },
+    };
+    const el = { getBoundingClientRect: () => ({ top, bottom: top + 100 }), animate, style } as unknown as HTMLElement;
     let cb: IntersectionObserverCallback = () => {};
+    const observe = vi.fn();
     const unobserve = vi.fn();
     const disconnect = vi.fn();
-    const observe = vi.fn();
     class IO {
-      constructor(c: IntersectionObserverCallback) { cb = c; }
+      constructor(c: IntersectionObserverCallback) {
+        cb = c;
+      }
       observe = observe;
       unobserve = unobserve;
       disconnect = disconnect;
     }
-    return { el, animate, observe, fire: (e: HTMLElement) => cb([{ isIntersecting: true, target: e } as unknown as IntersectionObserverEntry], {} as IntersectionObserver), IO, disconnect, unobserve };
+    return {
+      el,
+      props,
+      animate,
+      observe,
+      unobserve,
+      disconnect,
+      IO: IO as unknown as typeof IntersectionObserver,
+      fire: () => cb([{ isIntersecting: true, target: el } as unknown as IntersectionObserverEntry], {} as IntersectionObserver),
+    };
   }
 
-  it("no toca lo que ya está en pantalla al engancharse", () => {
-    const s = setup(true);
-    const stop = revealOnEnter([s.el], { IO: s.IO as unknown as typeof IntersectionObserver, vh: 800 });
+  it("no toca lo que ya está en pantalla", () => {
+    const s = setup(100);
+    revealOnEnter([s.el], { IO: s.IO, vh: 800 })();
     expect(s.observe).not.toHaveBeenCalled();
-    stop();
+    expect(s.props).toEqual({});
   });
-  it("anima una vez, con translate (nunca opacity), al entrar un elemento que estaba fuera", () => {
-    const s = setup(false);
-    revealOnEnter([s.el], { IO: s.IO as unknown as typeof IntersectionObserver, vh: 800 });
-    s.fire(s.el);
+  it("esconde de antemano lo de abajo (sin parpadeo), con clip-path y translate, nunca opacity", () => {
+    const s = setup(5000);
+    revealOnEnter([s.el], { IO: s.IO, vh: 800 });
+    expect(s.observe).toHaveBeenCalledTimes(1);
+    expect(Object.keys(s.props).sort()).toEqual(["clip-path", "translate"]);
+  });
+  it("al entrar anima una vez y quita los estilos en línea", () => {
+    const s = setup(5000);
+    revealOnEnter([s.el], { IO: s.IO, vh: 800 });
+    s.fire();
     expect(s.animate).toHaveBeenCalledTimes(1);
-    const keyframes = (s.animate.mock.calls[0] as unknown as [Record<string, unknown>[]])[0];
-    expect(JSON.stringify(keyframes)).not.toMatch(/opacity|filter/);
+    expect(JSON.stringify(s.animate.mock.calls[0])).not.toMatch(/opacity|filter/);
     expect(s.unobserve).toHaveBeenCalled();
+    expect(s.props).toEqual({});
   });
-  it("el parado cancela y desconecta", () => {
-    const s = setup(false);
-    const stop = revealOnEnter([s.el], { IO: s.IO as unknown as typeof IntersectionObserver, vh: 800 });
+  it("el parado desconecta y deja los estilos limpios aunque no haya entrado", () => {
+    const s = setup(5000);
+    const stop = revealOnEnter([s.el], { IO: s.IO, vh: 800 });
     stop();
     expect(s.disconnect).toHaveBeenCalled();
+    expect(s.props).toEqual({});
   });
 });
