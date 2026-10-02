@@ -1,4 +1,5 @@
 import { splitLang } from "@/i18n/languages";
+import { E2E_FIXTURE_PATHS, e2eFixturesEnabled } from "@/lib/e2e";
 import { PAGES } from "@/lib/routing/pages";
 import { LOCALIZED_MACHINE_PATHS, NEGOTIATION_EXEMPT_PATHS } from "@/lib/site";
 
@@ -63,5 +64,6 @@ export function isUnknownHtmlPath(pathname: string): boolean {
   // hoy toda ruta fuera de PAGES es desconocida.
   const { path } = splitLang(pathname);
   if (path === "/opengraph-image") return false;
+  if (e2eFixturesEnabled() && (E2E_FIXTURE_PATHS as readonly string[]).includes(path)) return false;
   return !(PAGES as readonly string[]).includes(path.replace(/\/$/, "") || "/");
 }

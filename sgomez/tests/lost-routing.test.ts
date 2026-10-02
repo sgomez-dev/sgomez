@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { E2E_FIXTURE_PATHS } from "@/lib/e2e";
 import { isUnknownHtmlPath } from "@/lib/routing/request";
 import { fetchMolde, fallback404Html, __resetMoldeCache } from "@/lib/lost/molde";
 
@@ -109,7 +110,7 @@ describe("las páginas estáticas existen en PAGES (Minor 7)", () => {
   it("cada app/[lang]/*/page.tsx estático está en PAGES", () => {
     const dir = join(process.cwd(), "src/app", "[lang]");
     const found = readdirSync(dir, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && d.name !== "perdido" && !d.name.startsWith("["))
+      .filter((d) => d.isDirectory() && d.name !== "perdido" && !d.name.startsWith("[") && !(E2E_FIXTURE_PATHS as readonly string[]).includes(`/${d.name}`))
       .filter((d) => existsSync(join(dir, d.name, "page.tsx")))
       .map((d) => `/${d.name}`);
     expect(found.length).toBeGreaterThan(0);

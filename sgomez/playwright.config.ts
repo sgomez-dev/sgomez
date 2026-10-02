@@ -20,11 +20,12 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `npm run build && npx next start -p ${PORT}`,
+    // El fixture de ScrollSequence se genera antes de construir y la ruta /e2e-sequence solo existe con E2E_FIXTURES=1.
+    command: `node scripts/make-fixture-sequence.mjs && npm run build && npx next start -p ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: true,
     // El build y el servidor no llaman a blog.sgomez.dev (ver LatestPosts).
-    env: { BLOG_API_DISABLED: "1" },
+    env: { BLOG_API_DISABLED: "1", E2E_FIXTURES: "1" },
     timeout: 300_000,
   },
   projects: [
