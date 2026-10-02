@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { LANGS, isLang, localizedPath, type Lang } from "@/i18n/languages";
@@ -10,10 +9,8 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import MotionDirector from "@/motion/MotionDirector";
 import MotionBoot from "@/motion/MotionBoot";
+import { sans, serif } from "../fonts";
 import "../globals.css";
-
-const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", weight: ["400", "500", "600"], display: "swap" });
-const serif = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrument-serif", weight: "400", style: ["normal", "italic"], display: "swap" });
 
 const siteUrl = "https://sgomez.dev";
 const siteName = SITE_NAME;
