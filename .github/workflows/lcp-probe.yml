@@ -63,4 +63,5 @@ jobs:
         with:
           name: lcp-probe
           path: sgomez/.lighthouseci-probe-*
+          include-hidden-files: true
           retention-days: 14
