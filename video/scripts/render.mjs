@@ -6,6 +6,7 @@
 //   npm run render -- --only=webm,mp4,posters
 //   npm run render -- --only=build      secuencia de fotogramas del capítulo 03, a sgomez/public/media/build
 //   npm run render -- --only=monogram   el logotipo de SkyQuetz que se forma (capítulo 07), a sgomez/public/media/skyquetz
+//   npm run render -- --only=hero       el bucle del cristal del hero (móvil y horizontal), a sgomez/public/media/hero
 //   npm run render -- --only=reels      un reel por proyecto destacado (capítulo 05), a sgomez/public/media/reels
 import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync, statSync, existsSync, readdirSync, rmSync } from "node:fs";
@@ -44,6 +45,11 @@ const reelsMedia = resolve(root, "..", "sgomez", "public", "media", "reels");
 const MONO_WEBM_CRF = 52;
 const MONO_MP4_CRF = 24;
 const monoMedia = resolve(root, "..", "sgomez", "public", "media", "skyquetz");
+
+// Bucle del hero (HeroLoop): 720x720 a 30 fps, 6 s. WebM con alfa y MP4 sobre negro. Presupuesto: <= 500 KB cada fichero.
+const HERO_WEBM_CRF = 36;
+const HERO_MP4_CRF = 22;
+const heroMedia = resolve(root, "..", "sgomez", "public", "media", "hero");
 
 const only = (args.find((a) => a.startsWith("--only=")) ?? "").slice(7).split(",").filter(Boolean);
 const want = (k) => only.length === 0 || only.includes(k);
@@ -156,6 +162,16 @@ if (want("monogram") && !draft) {
   remotion(["render", entry, "SkyQuetzMonogram", mp4, "--codec=h264", "--pixel-format=yuv420p", "--image-format=png", `--crf=${MONO_MP4_CRF}`, "--x264-preset=veryslow", "--muted", "--gl=angle", props("mono-mp4", { bg: BG })]);
   sizes["skyquetz/monogram.webm"] = webm;
   sizes["skyquetz/monogram.mp4"] = mp4;
+}
+
+if (want("hero") && !draft) {
+  mkdirSync(heroMedia, { recursive: true });
+  const webm = join(heroMedia, "loop.webm");
+  const mp4 = join(heroMedia, "loop.mp4");
+  remotion(["render", entry, "HeroLoop", webm, "--codec=vp9", "--pixel-format=yuva420p", "--image-format=png", `--crf=${HERO_WEBM_CRF}`, "--muted", "--gl=angle", props("hero-webm", { bg: "transparent" })]);
+  remotion(["render", entry, "HeroLoop", mp4, "--codec=h264", "--pixel-format=yuv420p", "--image-format=png", `--crf=${HERO_MP4_CRF}`, "--x264-preset=veryslow", "--muted", "--gl=angle", props("hero-mp4", { bg: BG })]);
+  sizes["hero/loop.webm"] = webm;
+  sizes["hero/loop.mp4"] = mp4;
 }
 
 console.log("\nTamaños:");

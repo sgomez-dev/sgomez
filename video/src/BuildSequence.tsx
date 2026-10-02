@@ -11,7 +11,7 @@ import { LAYERS, VIEW, slabState } from "./build-timeline";
 const SOFT_BACKDROP = { ...GLASS_LIVE.backdrop, count: 0 };
 
 /** Losa con la silueta redondeada del póster, extruida como la escena en vivo (`slabGeometry` de glass-kit). */
-function useSlabGeometry() {
+export function useSlabGeometry() {
   return useMemo(() => {
     const k = GLASS.slabRadius;
     const B = GLASS.bevel;

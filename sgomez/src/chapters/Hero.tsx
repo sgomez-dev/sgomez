@@ -10,6 +10,7 @@ import { Section } from "@/components/ui/Section";
 import Portrait from "@/components/Portrait";
 import GlassPoster from "@/components/GlassPoster";
 import GlassStage from "@/components/GlassStage";
+import HeroLoop from "@/components/HeroLoop";
 
 /** Capítulo 01. El cristal vive solo en la columna del retrato, nunca detrás del texto. */
 export default function Hero({ lang }: { lang: Lang }) {
@@ -20,6 +21,7 @@ export default function Hero({ lang }: { lang: Lang }) {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-10 sl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] sl:gap-8">
           <div className="relative isolate mx-auto aspect-square w-[min(320px,100%)] lg:order-2 lg:ml-auto lg:w-full lg:max-w-[560px] sl:order-2 sl:w-[min(62svh,100%)]">
             <GlassStage id="hero" pauseLabel={d.lost.pause} className="absolute inset-0 -z-10">
+              <HeroLoop pauseLabel={d.lost.pause} />
               <GlassPoster className="h-full w-full" />
             </GlassStage>
             <Portrait alt={d.chapters.hero.portraitAlt} className="absolute bottom-0 left-0 w-[70%]" />

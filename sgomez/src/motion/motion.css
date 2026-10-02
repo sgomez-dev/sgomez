@@ -295,6 +295,9 @@
 /* La transición solo va al entrar en live: al apagarse el cristal el póster vuelve al instante. El halo no se apaga. */
 [data-glass="live"] > [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 700ms var(--mo-ease-out) 200ms; }
 
+/* Bucle del hero por debajo de lg (HeroLoop, hermano anterior del póster): mientras suena, el cuerpo del póster se apaga. */
+[data-hero-loop="live"] ~ [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 500ms var(--mo-ease-out) 150ms; }
+
 /* Nombre escrito con luz (E3). El texto del h1 es el LCP: no se toca. La luz es un
    pseudo-elemento decorativo en multiply: blanco fuera de la banda (no cambia nada),
    --light-1 y --light-2 dentro (tiñe solo las letras). Su caja es el h1 (relative) y el serif va
