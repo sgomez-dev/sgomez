@@ -19,6 +19,9 @@ jobs:
         working-directory: sgomez
     steps:
       - uses: actions/checkout@v4
+        with:
+          # content-dates.mjs lee la fecha de cada página de la historia de git
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -34,6 +37,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Content dates from git are up to date
+        run: node scripts/content-dates.mjs --check
 
       - name: Unit tests
         run: npx vitest run

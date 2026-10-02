@@ -1,5 +1,7 @@
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { LOCALIZED_MACHINE_PATHS } from "@/lib/site";
+// Fecha real del último cambio de contenido, desde git: la escribe scripts/content-dates.mjs y el CI comprueba que está al día.
+import CONTENT_DATES from "./content-dates.json";
 
 /**
  * Catálogo localizado de rutas HTML.
@@ -31,17 +33,11 @@ export const ROUTE_CATALOGUE: Record<
 };
 
 /**
- * Fecha en que cambió el contenido de cada página (ISO). Se edita a mano
- * cuando cambia el contenido: el sitemap la publica como `lastModified` y un
+ * Fecha en que cambió el contenido de cada página (ISO), sacada de git por
+ * `npm run content-dates`: el sitemap la publica como `lastModified` y un
  * `new Date()` por petición le diría al buscador que todo cambia a cada rato.
  */
-export const CONTENT_UPDATED: Record<LogicalPath, string> = {
-  "/": "2026-09-30",
-  "/about": "2026-09-30",
-  "/contact": "2026-09-30",
-  "/developers": "2026-09-30",
-  "/privacy": "2026-09-30",
-};
+export const CONTENT_UPDATED: Record<LogicalPath, string> = CONTENT_DATES;
 
 export function routeTitle(logical: LogicalPath, lang: Lang): string {
   return ROUTE_CATALOGUE[logical].title[lang];
