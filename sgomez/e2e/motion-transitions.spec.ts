@@ -16,7 +16,19 @@ const hook = () => {
     document.startViewTransition = ((...a: Parameters<typeof orig>) => {
       w.__vt.client++;
       save();
-      return orig(...a);
+      const t = orig(...a);
+      // Las animaciones de los pseudoelementos se anotan cuando la transición está lista: sondear con rAF perdía a veces
+      // una transición de 280 ms en el CI.
+      t.ready
+        .then(() => {
+          const seen = ((window as unknown as { __pseudo?: Set<string> }).__pseudo ??= new Set());
+          for (const an of document.getAnimations()) {
+            const pe = (an.effect as KeyframeEffect | null)?.pseudoElement;
+            if (pe && an instanceof CSSAnimation) seen.add(`${pe}:${an.animationName}`);
+          }
+        })
+        .catch(() => {});
+      return t;
     }) as typeof document.startViewTransition;
   }
   window.addEventListener("pagereveal", (e) => {
@@ -37,18 +49,6 @@ test.describe("transiciones de página", () => {
     await page.goto("/");
     const nav = page.locator("header").first();
     const before = (await nav.boundingBox())!;
-    await page.evaluate(() => {
-      const w = window as unknown as { __pseudo: Set<string> };
-      w.__pseudo = new Set();
-      const tick = () => {
-        for (const a of document.getAnimations()) {
-          const pe = (a.effect as KeyframeEffect | null)?.pseudoElement;
-          if (pe && a instanceof CSSAnimation) w.__pseudo.add(`${pe}:${a.animationName}`);
-        }
-        requestAnimationFrame(tick);
-      };
-      tick();
-    });
     await page.locator("footer").getByRole("link", { name: /sobre mí|about/i }).first().click();
     await expect(page).toHaveURL(/\/about$/);
     await expect(page.locator("h1")).toContainText("Santiago Gómez de la Torre Romero");
@@ -56,7 +56,8 @@ test.describe("transiciones de página", () => {
     expect(after.y).toBe(before.y);
     expect((await counts(page)).client).toBeGreaterThan(0);
     // La pagina sube con nuestra animacion y la nav no entra en la del contenido.
-    const seen = await page.evaluate(() => [...(window as unknown as { __pseudo: Set<string> }).__pseudo]);
+    await expect.poll(() => page.evaluate(() => [...((window as unknown as { __pseudo?: Set<string> }).__pseudo ?? [])])).toContain("::view-transition-new(page):mo-deco-vt-in");
+    const seen = await page.evaluate(() => [...((window as unknown as { __pseudo?: Set<string> }).__pseudo ?? [])]);
     expect(seen).toContain("::view-transition-new(page):mo-deco-vt-in");
     expect(seen).toContain("::view-transition-old(page):mo-deco-vt-out");
     expect(seen.filter((s) => s.includes("(site-nav)") && s.includes("mo-deco"))).toEqual([]);
