@@ -267,7 +267,7 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
         </div>
 
         {/* Vídeo del estallido y escena 3D viva encima de lo estático; los enlaces de arriba siguen siendo LOS enlaces. */}
-        <LostExperience lang={lang} pause={dict.lost.pause} gyro={dict.lost.gyro} />
+        <LostExperience lang={lang} pause={dict.lost.pause} />
       </div>
     </section>
   );

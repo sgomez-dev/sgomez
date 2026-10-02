@@ -4,7 +4,7 @@ import { test, expect } from "./fixtures";
 /**
  * Ruta 3D del 404. El Chromium de CI pinta WebGL por software y la puerta de
  * `LostExperience` lo descarta; un init-script pone `__LOST_FORCE_GATE__` y
- * `readGate` lo respeta, así que aquí la ruta con vídeo y escena sí corre.
+ * el worker lo respeta, así que aquí la ruta con vídeo y escena sí corre.
  */
 const PATH = "/en/no-existe";
 const SAFARI_UA =
@@ -21,13 +21,16 @@ async function forceGate(page: Page) {
   });
 }
 
-/** Aborta el chunk 3D por su CONTENIDO (el nombre del fichero cambia en cada build). */
+/**
+ * Aborta el worker del cristal por su CONTENIDO (el nombre del fichero cambia en cada build): el marcador que lleva `glass.worker.ts`.
+ * Las peticiones de un worker no pasan por `page.route`, por eso la ruta va en el contexto.
+ */
 async function blockSceneChunk(page: Page) {
   const state = { aborted: false };
-  await page.route("**/_next/static/chunks/**/*.js", async (route) => {
+  await page.context().route("**/_next/static/chunks/**/*.js", async (route) => {
     const res = await route.fetch();
     const body = await res.text();
-    if (body.includes("PMREMGenerator")) {
+    if (body.includes("sgomez-glass-worker")) {
       state.aborted = true;
       await route.abort();
     } else await route.fulfill({ response: res, body });
@@ -47,9 +50,9 @@ test("escena bloqueada: constelación estática completa, sin botón de pausa y 
   });
   await page.goto(PATH);
 
-  // la puerta pasó (el vídeo llegó a montarse, aunque se retire enseguida al fallar la escena) y el chunk 3D se abortó de verdad: si no, el test pasaría en vacío
+  // la puerta pasó (el vídeo llegó a montarse, aunque se retire enseguida al fallar la escena) y el worker del cristal se abortó de verdad: si no, el test pasaría en vacío
   await expect.poll(() => page.evaluate(() => (window as unknown as { __sawVideo?: boolean }).__sawVideo === true), { timeout: 20_000 }).toBe(true);
-  await expect.poll(() => blocked.aborted, { timeout: 20_000 }).toBe(true);
+  await expect.poll(() => blocked.aborted, { timeout: 20_000, message: "el worker del cristal no llegó a pedirse: el test pasaría en vacío" }).toBe(true);
 
   const stage = page.locator('[data-stage="lost"]');
   // Pase lo que pase con el vídeo, la capa de vídeo acaba retirada y la estática visible.
@@ -66,7 +69,7 @@ test("escena bloqueada: constelación estática completa, sin botón de pausa y 
   expect(await page.locator('svg[data-lost-lines] line').count()).toBeGreaterThan(0);
   await expect(page.locator("button[aria-pressed]")).toHaveCount(0);
   await expect(page.locator('[data-lost-lines]').first()).toHaveCSS("opacity", "1");
-  // el aborto del chunk 3D es lo que provoca este único mensaje de consola: se espera, se filtra solo ese
+  // el aborto del worker es lo que provoca este único mensaje de consola: se espera, se filtra solo ese
   expect(blocked.aborted).toBe(true);
   const rest = consoleErrors.filter((e) => !/ERR_FAILED \(.*\/_next\/static\/chunks\/.+\.js\)/.test(e));
   consoleErrors.splice(0, consoleErrors.length, ...rest);

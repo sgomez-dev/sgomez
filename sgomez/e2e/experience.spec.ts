@@ -1,6 +1,4 @@
 import { gzipSync } from "node:zlib";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
 import { test, expect } from "./fixtures";
 
 const CHAPTERS = ["top", "about", "build", "experience", "work", "open-source", "skyquetz", "proof", "contact"];
@@ -137,19 +135,4 @@ test.describe("presupuesto de JS", () => {
       expect(gzipped).toBeLessThanOrEqual(170 * 1024);
     });
   }
-
-  /**
-   * El chunk perezoso de la escena 3D (three + R3F) tiene su propio presupuesto. El
-   * Chromium sin GPU de CI usa WebGL por software y la escena no se carga (puerta de
-   * `LostExperience`), así que el chunk se mide en disco, como lo sirve `next start`.
-   */
-  test("el chunk 3D perezoso no pasa de 250 KB (gzip)", () => {
-    const dir = join(process.cwd(), ".next", "static", "chunks");
-    const files = readdirSync(dir).filter((f) => f.endsWith(".js") && readFileSync(join(dir, f), "utf8").match(/PMREMGenerator|webglcontextlost|__r3f/) && !readFileSync(join(dir, f), "utf8").includes("sgomez-glass-worker"));
-    expect(files.length).toBeGreaterThan(0);
-    // el import dinámico reparte three y R3F en varios chunks: se suman todos, los que contienen three (PMREMGenerator), la escena (webglcontextlost) o R3F (__r3f)
-    const gz = files.reduce((sum, f) => sum + gzipSync(readFileSync(join(dir, f))).length, 0);
-    console.log(`[budget] chunk 3D: ${(gz / 1024).toFixed(1)} KB gzip`);
-    expect(gz).toBeLessThanOrEqual(250 * 1024);
-  });
 });

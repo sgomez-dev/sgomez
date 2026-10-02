@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { FRAME_MS, PLACEMENTS, pointerTarget } from "@/three/protocol";
+import { FRAME_MS, PLACEMENTS, PROJECTED_IDS, pointerTarget } from "@/three/protocol";
+import { SHARDS } from "@/lib/lost/shards";
 
 describe("protocolo del cristal", () => {
   it("30 fps como máximo", () => expect(FRAME_MS).toBe(33));
@@ -15,5 +16,12 @@ describe("protocolo del cristal", () => {
     expect(Math.abs(PLACEMENTS.hero.left - 59.5)).toBeLessThan(5);
     expect(Math.abs(PLACEMENTS.hero.top - 41.5)).toBeLessThan(5);
     expect(Math.abs(PLACEMENTS.contact.left - 59.5)).toBeLessThan(5);
+  });
+});
+
+describe("protocolo del 404", () => {
+  it("los desplazamientos van en el orden de los fragmentos con enlace", () => {
+    expect(PROJECTED_IDS).toEqual(SHARDS.filter((s) => s.target !== null).map((s) => s.id));
+    expect(PROJECTED_IDS).toHaveLength(7);
   });
 });

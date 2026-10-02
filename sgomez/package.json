@@ -15,7 +15,6 @@
     "lhci": "next build && lhci autorun && lhci autorun --config=./lighthouserc.desktop.json"
   },
   "dependencies": {
-    "@react-three/fiber": "9.8.1",
     "motion": "^13.5.0",
     "next": "16.2.6",
     "react": "19.2.0",

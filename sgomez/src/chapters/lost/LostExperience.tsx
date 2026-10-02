@@ -1,16 +1,17 @@
 "use client";
 
-import { Component, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { initial, step, type Event } from "./sequence";
-import { gatingPasses, needsOpaqueVideo, VIDEO_SRC } from "./media";
-import { LG_QUERY, readGate } from "@/lib/three/gate";
-import type { SceneProps } from "@/three/ConstellationScene";
+import { needsOpaqueVideo, VIDEO_SRC } from "./media";
+import { LG_QUERY, glassGatePasses, readGlassEnv } from "@/lib/three/gate";
+import { PROJECTED_IDS, type ToWorker } from "@/three/protocol";
 
 /**
  * La experiencia del 404 encima del escenario estático. Es el ÚNICO componente
- * cliente nuevo de la página y solo recibe cadenas: el callback que mueve los
- * enlaces vive aquí dentro, donde están a la vez la escena y los `<a>`.
+ * cliente nuevo de la página y solo recibe cadenas. La escena vive en el worker del
+ * cristal (`glass-client`): aquí solo hay postMessage, y el mensaje con los
+ * desplazamientos de los fragmentos mueve los `<a>`, que están en este hilo.
  *
  * Secuencia (ver `sequence.ts`):
  *  - escritorio: estático, vídeo del estallido, escena 3D viva. El vídeo acaba en
@@ -24,27 +25,14 @@ import type { SceneProps } from "@/three/ConstellationScene";
 type Props = {
   lang: string;
   pause: string;
-  gyro: string;
 };
 
 type VideoState = "idle" | "playing" | "ended" | "error";
 
-class Boundary extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  componentDidCatch() {
-    this.props.onError();
-  }
-  render() {
-    return this.state.failed ? null : this.props.children;
-  }
-}
+type Handle = { resize(w: number, h: number, dpr: number): void; visible(v: boolean): void; send(m: ToWorker): void; dispose(): void };
+type Client = typeof import("@/three/glass-client");
 
-type IOSOrientation = typeof DeviceOrientationEvent & { requestPermission?: () => Promise<"granted" | "denied"> };
-
-export default function LostExperience({ lang, pause, gyro }: Props) {
+export default function LostExperience({ lang, pause }: Props) {
   const [s, dispatch] = useReducer(step, undefined, initial);
   const send = useCallback((e: Event) => dispatch(e), []);
   const root = useRef<HTMLDivElement>(null);
@@ -52,13 +40,16 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   const anchors = useRef(new Map<string, HTMLElement>());
 
   const [enabled, setEnabled] = useState(false);
-  const [desktop, setDesktop] = useState(false);
   // El vídeo se decide UNA vez, al pasar la puerta: nunca se reactiva después.
   const [videoWanted, setVideoWanted] = useState(false);
   const [layer, setLayer] = useState<HTMLElement | null>(null);
   const videoStateRef = useRef<VideoState>("idle");
   const [opaque, setOpaque] = useState(false);
-  const [Scene, setScene] = useState<ComponentType<SceneProps> | null>(null);
+  const [host, setHost] = useState<HTMLDivElement | null>(null);
+  const client = useRef<Client | null>(null);
+  const glass = useRef<Handle | null>(null);
+  const latest = useRef<ToWorker>({ type: "lost", live: false, highlightId: "", linesOn: false });
+  const pausedRef = useRef(false);
   const [videoState, setVideoStateRaw] = useState<VideoState>("idle");
   const setVideoState = useCallback((v: VideoState | ((p: VideoState) => VideoState)) => {
     const n = typeof v === "function" ? v(videoStateRef.current) : v;
@@ -68,8 +59,6 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   const [videoGone, setVideoGone] = useState(false);
   const [coverScene, setCoverScene] = useState(false);
   const [highlight, setHighlight] = useState("");
-  const [gyroOn, setGyroOn] = useState(false);
-  const [needsGyroButton, setNeedsGyroButton] = useState(false);
   const [fromVideo, setFromVideo] = useState(false);
   const [linesBack, setLinesBack] = useState(false);
   const [videoFading, setVideoFading] = useState(false);
@@ -84,13 +73,12 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   }, [setVideoState]);
 
   // 1. Puerta de entrada: nada de esto corre en el servidor ni sin JS. Por debajo de lg la puerta falla: escenario estático
-  // (sin sonda WebGL2, sin chunk three, sin lienzo; el coste de enlazar el shader de cristal bloquea el hilo, ver spec §7).
+  // (sin worker, sin lienzo). La sonda de WebGL2 y de renderizador por software la hace el worker; su fallo llega como `fail`.
   useEffect(() => {
     const lg = matchMedia(LG_QUERY);
-    if (!lg.matches || !gatingPasses(readGate())) return;
+    if (!glassGatePasses(readGlassEnv())) return;
     const rm = matchMedia("(prefers-reduced-motion: reduce)");
     setEnabled(true);
-    setDesktop(true);
     setVideoWanted(true);
     // la capa se decide UNA vez
     setLayer(root.current?.closest("section")?.querySelector<HTMLElement>("[data-lost-layer]") ?? null);
@@ -100,7 +88,6 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     // cruzar a móvil tras la puerta: la capa queda oculta, así que escenario estático
     const onLg = () => {
       if (lg.matches) return;
-      setDesktop(false);
       killVideo();
       dispatch("sceneFailed");
     };
@@ -112,30 +99,64 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     };
     lg.addEventListener("change", onLg);
     rm.addEventListener("change", onRm);
-
-    const ori = typeof DeviceOrientationEvent !== "undefined" ? (DeviceOrientationEvent as IOSOrientation) : null;
-    if (ori) {
-      if (typeof ori.requestPermission === "function") setNeedsGyroButton(matchMedia("(pointer: coarse)").matches);
-      else if (matchMedia("(pointer: coarse)").matches) setGyroOn(true);
-    }
     return () => {
       lg.removeEventListener("change", onLg);
       rm.removeEventListener("change", onRm);
     };
   }, [killVideo]);
 
-  // 2. El chunk 3D se carga EN PARALELO con el vídeo. Si no llega, escenario estático.
+  // 2. El worker del cristal se monta en PARALELO con el vídeo, tras `load` y un hueco ocioso. El `<canvas>` lo crea y lo quita este
+  // efecto (solo puede pasar una vez a `transferControlToOffscreen` y StrictMode ejecuta los efectos dos veces). Si no llega o
+  // falla, escenario estático.
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !host) return;
     let cancelled = false;
     let idle = 0;
     let timer = 0;
+    let el: HTMLCanvasElement | null = null;
+    let ro: ResizeObserver | null = null;
+    let io: IntersectionObserver | null = null;
+    let sendVisible = () => {};
     const load = () => {
-      import("@/three/ConstellationScene")
-        .then((m) => !cancelled && setScene(() => m.default))
+      import("@/three/glass-client")
+        .then((c) => {
+          if (cancelled) return;
+          client.current = c;
+          const canvas = document.createElement("canvas");
+          canvas.setAttribute("aria-hidden", "true");
+          canvas.className = "absolute inset-0 h-full w-full";
+          host.appendChild(canvas);
+          el = canvas;
+          const r = host.getBoundingClientRect();
+          const h = c.mountGlass(
+            canvas,
+            { id: "lost", width: Math.round(r.width), height: Math.round(r.height), dpr: devicePixelRatio, force: (window as { __LOST_FORCE_GATE__?: boolean }).__LOST_FORCE_GATE__ === true },
+            (m) => {
+              if (m.type === "ready") send("sceneReady");
+              else if (m.type === "project") {
+                for (let i = 0; i < PROJECTED_IDS.length; i++) {
+                  const a = anchors.current.get(PROJECTED_IDS[i]!);
+                  if (a) a.style.transform = `translate3d(${m.offsets[2 * i]!.toFixed(1)}px,${m.offsets[2 * i + 1]!.toFixed(1)}px,0)`;
+                }
+              } else send("sceneFailed");
+            },
+          );
+          glass.current = h;
+          c.setPaused(pausedRef.current);
+          h.send(latest.current);
+          ro = new ResizeObserver(([e]) => e && h.resize(Math.round(e.contentRect.width), Math.round(e.contentRect.height), devicePixelRatio));
+          ro.observe(host);
+          let intersecting = true;
+          sendVisible = () => h.visible(intersecting && !document.hidden);
+          io = new IntersectionObserver(([e]) => {
+            intersecting = !!e?.isIntersecting;
+            sendVisible();
+          });
+          io.observe(host);
+          document.addEventListener("visibilitychange", sendVisible);
+        })
         .catch(() => !cancelled && send("sceneFailed"));
     };
-    // el import espera a un hueco ocioso tras `load` (el vídeo ya corre); si llega tarde al relevo rige el comportamiento de escena tardía
     const schedule = () => {
       if (typeof requestIdleCallback === "function") idle = requestIdleCallback(load, { timeout: 3000 });
       else timer = window.setTimeout(load, 300);
@@ -147,8 +168,14 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
       window.removeEventListener("load", schedule);
       if (idle && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
       window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", sendVisible);
+      ro?.disconnect();
+      io?.disconnect();
+      glass.current?.dispose();
+      glass.current = null;
+      el?.remove();
     };
-  }, [enabled, send]);
+  }, [enabled, host, send]);
 
   // 3. El vídeo: la fuente se elige aquí (Safari no puede decidirlo con el orden de <source>).
   const wantsVideo = enabled && videoWanted;
@@ -225,10 +252,9 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenePhase]);
 
-  // si la escena falla, el escenario estático vuelve entero y los enlaces a su sitio
+  // si la escena falla, el escenario estático vuelve entero y los enlaces a su sitio (sin lienzo, el efecto 2 desmonta el worker)
   useEffect(() => {
     if (!s.failed) return;
-    setScene(null);
     setCoverScene(false);
     anchors.current.forEach((a) => (a.style.transform = ""));
     setHighlight("");
@@ -259,25 +285,20 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     };
   }, [enabled]);
 
-  const onProject = useCallback((id: string, dx: number, dy: number) => {
-    const a = anchors.current.get(id);
-    if (a) a.style.transform = `translate3d(${dx.toFixed(1)}px,${dy.toFixed(1)}px,0)`;
-  }, []);
-  const onReady = useCallback(() => send("sceneReady"), [send]);
-  const onFail = useCallback(() => send("sceneFailed"), [send]);
-
-  const askGyro = async () => {
-    try {
-      const r = await (DeviceOrientationEvent as IOSOrientation).requestPermission?.();
-      if (r === "granted") setGyroOn(true);
-    } catch {
-      /* sin permiso: se queda con el puntero */
-    }
-    setNeedsGyroButton(false);
-  };
+  // El estado del 404 para el worker. `linesOn` ya vale desde el primer mensaje del relevo (no espera al `fromVideo` enganchado), para
+  // que no haya un fotograma con las líneas a 0 entre los dos.
+  const linesOn = fromVideo || (scenePhase && (videoState === "ended" || videoState === "playing"));
+  useEffect(() => {
+    latest.current = { type: "lost", live: scenePhase, highlightId: highlight, linesOn };
+    glass.current?.send(latest.current);
+  }, [scenePhase, highlight, linesOn]);
+  // la pausa del 404 es la única de su página: se comparte con el cliente del cristal
+  useEffect(() => {
+    pausedRef.current = s.paused;
+    client.current?.setPaused(s.paused);
+  }, [s.paused]);
 
   const motion = s.phase !== "static" && !s.failed;
-  const layout = desktop ? "desktop" : "mobile";
   const canvasVisible = scenePhase && !s.failed;
 
   const videoEl = showVideo ? (
@@ -320,27 +341,15 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
           }}
         />
   ) : null;
-  const canvasEl = Scene && !s.failed ? (
-        <div
-          data-lost-canvas=""
-          className="absolute inset-0"
-          style={{ opacity: canvasVisible ? 1 : 0, transition: fromVideo ? "none" : "opacity 200ms ease-out" }}
-        >
-          <Boundary onError={onFail}>
-            <Scene
-              layout={layout}
-              highlightId={highlight}
-              paused={s.paused}
-              live={scenePhase}
-              linesOn={fromVideo}
-              gyro={gyroOn}
-              onReady={onReady}
-              onFail={onFail}
-              onProject={onProject}
-            />
-          </Boundary>
-        </div>
-  ) : null;
+  const canvasEl =
+    enabled && !s.failed ? (
+      <div
+        ref={setHost}
+        data-lost-canvas=""
+        className="absolute inset-0"
+        style={{ opacity: canvasVisible ? 1 : 0, transition: fromVideo ? "none" : "opacity 200ms ease-out" }}
+      />
+    ) : null;
 
   // L8: en escritorio vídeo y lienzo viven en una capa hermana del escenario (sin transform ni z-index) y pintan bajo el texto.
   const inLayer = layer !== null;
@@ -357,11 +366,6 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
 
       {motion ? (
         <div className="pointer-events-auto absolute bottom-2 right-2 z-20 flex flex-wrap justify-end gap-2">
-          {needsGyroButton && scenePhase ? (
-            <button type="button" onClick={askGyro} className={BTN}>
-              {gyro}
-            </button>
-          ) : null}
           <button type="button" aria-pressed={s.paused} onClick={() => send(s.paused ? "resume" : "pause")} className={BTN}>
             <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" className="mr-2 fill-current">
               {s.paused ? <path d="M4 2.5v11l9-5.5z" /> : <path d="M3.5 2h3v12h-3zm6 0h3v12h-3z" />}

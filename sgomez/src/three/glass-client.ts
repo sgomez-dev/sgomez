@@ -67,7 +67,7 @@ function startPointer() {
   };
 }
 
-const NOOP = { resize() {}, visible() {}, dispose() {} };
+const NOOP = { resize() {}, visible() {}, send() {}, dispose() {} };
 
 export function mountGlass(canvas: HTMLCanvasElement, o: { id: GlassId; width: number; height: number; dpr: number; force: boolean }, on: Listener) {
   let off: OffscreenCanvas;
@@ -87,6 +87,8 @@ export function mountGlass(canvas: HTMLCanvasElement, o: { id: GlassId; width: n
   return {
     resize: (width: number, height: number, dpr: number) => !gone && send({ type: "resize", id: o.id, width, height, dpr }),
     visible: (v: boolean) => !gone && send({ type: "visible", id: o.id, visible: v }),
+    /** Mensajes propios del montaje (el 404 manda su estado y el hero y el contacto no mandan nada). */
+    send: (m: ToWorker) => !gone && send(m),
     dispose() {
       if (gone) return;
       gone = true;
