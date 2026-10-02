@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COARSE_STEP, frameForProgress, loadOrder, nearestLoaded, sectionProgress, sequenceGatePasses } from "@/motion/scroll-sequence/player";
+import { COARSE_STEP, frameForProgress, loadOrder, chapterProgress, nearestLoaded, sectionProgress, sequenceGatePasses } from "@/motion/scroll-sequence/player";
 import { defineSequence, framePath } from "@/motion/scroll-sequence/manifest";
 import type { GlassEnv } from "@/lib/three/gate";
 import { e2eFixturesEnabled } from "@/lib/e2e";
@@ -102,5 +102,16 @@ describe("la ruta de prueba no existe en producción", () => {
     expect(e2eFixturesEnabled()).toBe(false);
     expect(isUnknownHtmlPath("/e2e-sequence")).toBe(true);
     expect(isUnknownHtmlPath("/en/e2e-sequence")).toBe(true);
+  });
+});
+
+describe("chapterProgress", () => {
+  it("0 al llegar arriba del viewport, 1 cuando el final llega abajo, y se acota", () => {
+    expect(chapterProgress({ top: 500, height: 2000 }, 800)).toBe(0);
+    expect(chapterProgress({ top: 0, height: 2000 }, 800)).toBe(0);
+    expect(chapterProgress({ top: -600, height: 2000 }, 800)).toBe(0.5);
+    expect(chapterProgress({ top: -1200, height: 2000 }, 800)).toBe(1);
+    expect(chapterProgress({ top: -3000, height: 2000 }, 800)).toBe(1);
+    expect(chapterProgress({ top: 0, height: 600 }, 800)).toBe(0);
   });
 });

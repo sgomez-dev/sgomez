@@ -154,12 +154,24 @@ export function useRefractionBackdrop(B: Backdrop = GLASS_ENV.backdrop) {
 }
 
 /** El plano del fondo de refracción, solo visible en el pase de transmisión. */
-export function RefractionPlane({ material }: { material: THREE.MeshBasicMaterial }) {
+export function RefractionPlane({
+  material,
+  pos,
+  rotation,
+  scale,
+}: {
+  material: THREE.MeshBasicMaterial;
+  pos?: readonly [number, number, number];
+  rotation?: readonly [number, number, number];
+  scale?: number;
+}) {
   const plane = GLASS_ENV.backdrop.plane;
+  const k = scale ?? plane.scale;
   return (
     <mesh
-      position={[...plane.pos]}
-      scale={[plane.scale, plane.scale, 1]}
+      position={[...(pos ?? plane.pos)]}
+      rotation={rotation ? [...rotation] : [0, 0, 0]}
+      scale={[k, k, 1]}
       material={material}
       onBeforeRender={(renderer) => {
         const inTransmission = renderer.getRenderTarget() !== null;

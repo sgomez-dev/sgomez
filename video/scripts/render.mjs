@@ -83,7 +83,7 @@ if (want("posters") && !draft) {
 
 if (want("build") && !draft) {
   let total = {};
-  for (const [size, comp, w] of [["desktop", "BuildDesktop", 1600], ["mobile", "BuildMobile", 800]]) {
+  for (const [size, comp, w] of [["desktop", "BuildDesktop", 1200], ["mobile", "BuildMobile", 600]]) {
     const seq = join(tmp, `build-${size}`);
     rmSync(seq, { recursive: true, force: true });
     remotion(["render", entry, comp, seq, "--sequence", "--image-format=png", "--gl=angle"]);

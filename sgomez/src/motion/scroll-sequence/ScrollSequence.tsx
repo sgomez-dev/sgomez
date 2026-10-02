@@ -16,7 +16,7 @@ type Idle = (cb: () => void, o?: { timeout: number }) => number;
  *
  * Como en GlassStage, el canvas lo crea y quita el efecto, no React, para sobrevivir al doble efecto de StrictMode.
  */
-export default function ScrollSequence({ manifest, className = "" }: { manifest: SequenceManifest; className?: string }) {
+export default function ScrollSequence({ manifest, className = "", trackSelector }: { manifest: SequenceManifest; className?: string; trackSelector?: string }) {
   const box = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<State>("poster");
   const active = state === "loading" || state === "live";
@@ -87,6 +87,8 @@ export default function ScrollSequence({ manifest, className = "" }: { manifest:
         canvas: el,
         manifest,
         size: lg.matches ? "desktop" : "mobile",
+        // Desde lg la caja va pegajosa dentro de un capítulo alto: el progreso es el del capítulo.
+        track: lg.matches && trackSelector ? document.querySelector<HTMLElement>(trackSelector) : null,
         onLive: () => alive && setState("live"),
         onFail: off,
       });
@@ -109,7 +111,7 @@ export default function ScrollSequence({ manifest, className = "" }: { manifest:
       player?.dispose();
       el.remove();
     };
-  }, [active, manifest]);
+  }, [active, manifest, trackSelector]);
 
   return (
     <div

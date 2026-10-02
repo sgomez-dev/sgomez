@@ -14,10 +14,10 @@ export const Root = () => (
       durationInFrames={FRAMES}
       fps={FPS}
       width={1920}
-      height={1080}
+      height={1200}
       defaultProps={{ bg: "transparent" }}
     />
-    <Composition id="BuildDesktop" component={BuildSequence} durationInFrames={BUILD_FRAMES} fps={BUILD_FPS} width={1600} height={900} defaultProps={{ width: 1600, height: 900 }} />
-    <Composition id="BuildMobile" component={BuildSequence} durationInFrames={BUILD_FRAMES} fps={BUILD_FPS} width={800} height={450} defaultProps={{ width: 800, height: 450 }} />
+    <Composition id="BuildDesktop" component={BuildSequence} durationInFrames={BUILD_FRAMES} fps={BUILD_FPS} width={1200} height={1200} defaultProps={{ width: 1200, height: 1200 }} />
+    <Composition id="BuildMobile" component={BuildSequence} durationInFrames={BUILD_FRAMES} fps={BUILD_FPS} width={600} height={600} defaultProps={{ width: 600, height: 600 }} />
   </>
 );

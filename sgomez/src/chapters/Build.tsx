@@ -11,7 +11,7 @@ import { defineSequence } from "@/motion/scroll-sequence/manifest";
 import ScrollSequence from "@/motion/scroll-sequence/ScrollSequence";
 
 /** Las seis losas que se apilan (video/src/BuildSequence.tsx). Sin texto: la lista de al lado es la leyenda. */
-const BUILD_SEQUENCE = defineSequence("build", 90, { w: 1600, h: 900 }, { w: 800, h: 450 });
+const BUILD_SEQUENCE = defineSequence("build", 90, { w: 1200, h: 1200 }, { w: 600, h: 600 });
 
 const skillsOf = (category: string) =>
   technologies.find((c) => t(c.category, "es") === category)?.skills.map((s) => s.name) ?? [];
@@ -37,7 +37,7 @@ export default function Build({ lang }: { lang: Lang }) {
       <Container>
         <Eyebrow>{d.chapters.build.eyebrow}</Eyebrow>
         <Display as="h2" id="build-h" lead={d.chapters.build.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
-        <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-2 lg:items-center lg:gap-12">
+        <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-12">
           <ol className="flex flex-col gap-[10px]">
             {layers.map((layer, i) => (
               <li
@@ -62,7 +62,9 @@ export default function Build({ lang }: { lang: Lang }) {
               </li>
             ))}
           </ol>
-          <ScrollSequence manifest={BUILD_SEQUENCE} className="order-first lg:order-none" />
+          <div className="order-first lg:sticky lg:top-[15vh] lg:order-none lg:flex lg:h-[70vh] lg:items-center">
+            <ScrollSequence manifest={BUILD_SEQUENCE} trackSelector="#build" />
+          </div>
         </div>
       </Container>
     </Section>

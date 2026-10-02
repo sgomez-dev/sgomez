@@ -33,6 +33,13 @@ export function sectionProgress(rect: { top: number; height: number }, viewportH
   return Math.min(1, Math.max(0, (viewportHeight - rect.top) / span));
 }
 
+/** Progreso de un capítulo alto: 0 cuando su borde superior llega arriba del viewport, 1 cuando su borde inferior llega abajo. */
+export function chapterProgress(rect: { top: number; height: number }, viewportHeight: number): number {
+  const span = rect.height - viewportHeight;
+  if (!(span > 0)) return 0;
+  return Math.min(1, Math.max(0, -rect.top / span));
+}
+
 export function frameForProgress(progress: number, frames: number): number {
   if (frames <= 1 || !(progress > 0)) return 0;
   return Math.min(frames - 1, Math.round(Math.min(1, progress) * (frames - 1)));
@@ -53,6 +60,8 @@ export type PlayerOptions = {
   canvas: HTMLCanvasElement;
   manifest: SequenceManifest;
   size: SizeKey;
+  /** Si se da, el progreso sale de este elemento (un capítulo alto con la caja pegajosa) y no de la propia caja. */
+  track?: HTMLElement | null;
   /** Se pintó el primer fotograma. */
   onLive(): void;
   /** No se pudo cargar ni un fotograma. */
@@ -93,9 +102,12 @@ export function createPlayer(o: PlayerOptions): { dispose(): void } {
     if (disposed || !near) return;
     const [w, h] = fit();
     const has = (i: number) => bitmaps[i] !== undefined;
-    const r = root.getBoundingClientRect();
-    const idx = nearestLoaded(frameForProgress(sectionProgress(r, innerHeight), manifest.frames), manifest.frames, has);
+    const r = (o.track ?? root).getBoundingClientRect();
+    const p = o.track ? chapterProgress(r, innerHeight) : sectionProgress(r, innerHeight);
+    const idx = nearestLoaded(frameForProgress(p, manifest.frames), manifest.frames, has);
     if (idx < 0 || idx === lastDrawn) return;
+    // Los fotogramas llevan alfa: sin borrar, cada pintado se acumula sobre el anterior y deja estelas.
+    ctx.clearRect(0, 0, w, h);
     ctx.drawImage(bitmaps[idx]!, 0, 0, w, h);
     lastDrawn = idx;
     canvas.dataset.frame = String(idx + 1);
