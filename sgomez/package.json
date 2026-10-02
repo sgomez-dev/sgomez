@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "budget": "node scripts/js-budget.mjs",
+    "lcp:report": "node scripts/lcp-report.mjs",
     "lhci": "next build && lhci autorun && lhci autorun --config=./lighthouserc.desktop.json"
   },
   "dependencies": {
