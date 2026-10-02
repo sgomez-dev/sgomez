@@ -5,7 +5,14 @@ import type { Registry } from "./types";
  * este fichero va en el JS inicial y tiene que seguir siendo diminuto.
  * Las Tasks 4 y 6 añaden `count`, `word-reveal`, `intent` y `magnetic`.
  */
-export const REGISTRY: Registry = {};
+export const REGISTRY: Registry = {
+  // Task 5 y 6 (la escena fijada del capitulo 04 es CSS estatico en motion.css, ver alli). Cada entrada trae su módulo (run y/o css) solo cuando hay un elemento que lo usa.
+  card: { load: () => import("./primitives/card") },
+  badge: { load: () => import("./primitives/badge") },
+  quote: { load: () => import("./primitives/quote") },
+  intent: { load: () => import("./primitives/intent") },
+  magnetic: { load: () => import("./primitives/magnetic") },
+};
 
 /** Titulares y tarjetas que el respaldo de Firefox revela al entrar. */
 export const REVEAL_SELECTOR = 'h2[data-motion="text-reveal"], [data-motion="build"]';

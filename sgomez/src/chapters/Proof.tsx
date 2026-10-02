@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { getCertifications, getEducation, getRecommendations } from "@/lib/api/data";
@@ -110,8 +110,8 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
         <div className="mt-16 lg:mt-24" role="group" aria-labelledby="proof-certs">
           <Label id="proof-certs">{d.chapters.proof.certifications}</Label>
           <ul className="mt-6 grid list-none gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {certifications.map((c) => (
-              <li key={c.slug} data-motion="badge" className="flex min-w-0">
+            {certifications.map((c, i) => (
+              <li key={c.slug} data-motion="badge" style={{ "--i": i % 3 } as CSSProperties} className="flex min-w-0">
                 <a
                   href={c.credential_url}
                   rel="noopener"

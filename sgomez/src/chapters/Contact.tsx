@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { contactLinks } from "@/app/content";
@@ -41,10 +42,10 @@ export default function Contact({ lang }: { lang: Lang }) {
               className="mt-4"
             />
             <ul className="mt-10 grid list-none gap-3 sm:grid-cols-3 sm:gap-4 lg:mt-14">
-              {INTENTS.map((intent) => {
+              {INTENTS.map((intent, index) => {
                 const c = d.contact.intent[intent];
                 return (
-                  <li key={intent} className="relative flex min-w-0 flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 transition-colors focus-within:bg-[color:var(--bg-3)] hover:bg-[color:var(--bg-3)]">
+                  <li key={intent} data-motion="intent" style={{ "--i": index } as CSSProperties} className="relative flex min-w-0 flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 transition-colors focus-within:bg-[color:var(--bg-3)] hover:bg-[color:var(--bg-3)]">
                     <a
                       href={contactMailto(intent, lang)}
                       className={`group flex min-h-11 items-start justify-between gap-3 rounded-[var(--radius)] text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)] after:absolute after:inset-0 after:rounded-[var(--radius)] after:content-[''] ${focus}`}
@@ -66,6 +67,7 @@ export default function Contact({ lang }: { lang: Lang }) {
             <p className="mt-8 text-[length:var(--step--1)] uppercase tracking-[0.14em] text-[color:var(--text-2)]">{d.contact.emailLabel}</p>
             <a
               href={`mailto:${IDENTITY.email}`}
+              data-motion="magnetic"
               className={`mt-1 inline-flex min-h-11 items-center text-[length:var(--step-2)] font-semibold tracking-[-0.02em] text-[color:var(--text)] underline-offset-4 [overflow-wrap:anywhere] hover:underline ${focus}`}
             >
               {IDENTITY.email}

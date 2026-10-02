@@ -17,7 +17,8 @@ const withoutTimeline = (page: Page) =>
 
 test.describe("puerta del movimiento", () => {
   test("sin nada que animar, el runtime no se pide (Chromium con animation-timeline)", async ({ page }) => {
-    await page.goto("/");
+    // Desde la Task 5/6 la home tiene primitivas registradas; la política legal no tiene ninguna.
+    await page.goto("/es/privacy");
     await expect(page.locator("html")).toHaveAttribute("data-motion-state", "on");
     await page.waitForTimeout(2500);
     expect(await starts(page)).toBe(0);
