@@ -15,7 +15,7 @@ const MINT = "#6EF0DC";
 const INDIGO = "#5B6CFF";
 
 /** Entorno HDR de estudio: es lo que el cristal refleja. */
-function useStudioEnv() {
+export function useStudioEnv() {
   const gl = useThree((s) => s.gl);
   return useMemo(() => {
     const env = new THREE.Scene();
@@ -53,15 +53,16 @@ function useStudioEnv() {
   }, [gl]);
 }
 
-function useGlassMaterial() {
+/** `override` pisa parámetros del material (el aspecto claro de `GLASS_LIVE.material`). Sin él, es el del 404. */
+export function useGlassMaterial(override?: { attenuationColor?: string; attenuationDistance?: number; envMapIntensity?: number }) {
   return useMemo(() => {
-    const { attenuationColor, iridescenceThicknessRange, ...rest } = GLASS_MATERIAL;
+    const { attenuationColor, iridescenceThicknessRange, ...rest } = { ...GLASS_MATERIAL, ...override };
     return new THREE.MeshPhysicalMaterial({
       ...rest,
       iridescenceThicknessRange: [...iridescenceThicknessRange],
       attenuationColor: new THREE.Color(attenuationColor),
     });
-  }, []);
+  }, [override]);
 }
 
 type CrackMats = { core: THREE.MeshBasicMaterial; halo: THREE.MeshBasicMaterial; haze: THREE.MeshBasicMaterial };
@@ -102,9 +103,18 @@ function Shard({ index, frame, geo, glass, cracks }: { index: number; frame: num
  * plano se dibuja únicamente en el render target de transmisión (colorWrite falso
  * en el pase principal), así que el vídeo sigue siendo transparente.
  */
-function useRefractionBackdrop() {
+type Backdrop = {
+  seed: number;
+  size: number;
+  base: string;
+  count: number;
+  blobs: readonly { x: number; y: number; r: number; rgb: string; a: number }[];
+  beams: readonly { rgb: string; a: number }[];
+  plane: { repeat: number };
+};
+
+export function useRefractionBackdrop(B: Backdrop = GLASS_ENV.backdrop) {
   return useMemo(() => {
-    const B = GLASS_ENV.backdrop;
     const c = document.createElement("canvas");
     c.width = B.size;
     c.height = B.size;
@@ -140,7 +150,43 @@ function useRefractionBackdrop() {
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
     tex.repeat.set(B.plane.repeat, B.plane.repeat);
     return new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
-  }, []);
+  }, [B]);
+}
+
+/** El plano del fondo de refracción, solo visible en el pase de transmisión. */
+export function RefractionPlane({ material }: { material: THREE.MeshBasicMaterial }) {
+  const plane = GLASS_ENV.backdrop.plane;
+  return (
+    <mesh
+      position={[...plane.pos]}
+      scale={[plane.scale, plane.scale, 1]}
+      material={material}
+      onBeforeRender={(renderer) => {
+        const inTransmission = renderer.getRenderTarget() !== null;
+        material.colorWrite = inTransmission;
+        material.depthWrite = inTransmission;
+      }}
+    >
+      <planeGeometry args={[1, 1]} />
+    </mesh>
+  );
+}
+
+/** Las luces de `GLASS_ENV`. */
+export function StudioLights() {
+  return (
+    <>
+      {GLASS_ENV.lights.map((l, i) =>
+        l.type === "ambient" ? (
+          <ambientLight key={i} intensity={l.intensity} color={l.color} />
+        ) : l.type === "directional" ? (
+          <directionalLight key={i} position={[...l.pos!]} intensity={l.intensity} color={l.color} />
+        ) : (
+          <pointLight key={i} position={[...l.pos!]} intensity={l.intensity} color={l.color} distance={0} decay={2} />
+        ),
+      )}
+    </>
+  );
 }
 
 /** Todo el cristal roto: 12 fragmentos y escombro. `frame` en 0 a 119. */

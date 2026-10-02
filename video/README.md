@@ -39,3 +39,6 @@ Los vídeos juntos pesan como mucho 1,5 MB y el WebP como mucho 200 KB. El test 
 ## Notas
 
 El MP4 con alfa HEVC (ProRes 4444 a HEVC) necesita VideoToolbox, que solo existe en macOS, así que aquí Safari recibe el MP4 opaco. 
+## Secuencia del capítulo 03
+
+`npm run render -- --only=build` renderiza `BuildDesktop` (1600 por 900) y `BuildMobile` (800 por 450), 90 fotogramas a 30 fps, y los convierte a WebP con alfa en `sgomez/public/media/build/{desktop,mobile}/0001.webp`, más `poster.webp`. Presupuesto: 4 MB en escritorio, 1,5 MB en móvil y 200 KB el póster (`sgomez/tests/build-media.test.ts`). Las losas usan la silueta del póster del hero y el material de `GLASS_LIVE`.

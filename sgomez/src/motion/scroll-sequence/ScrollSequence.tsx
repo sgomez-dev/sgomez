@@ -21,7 +21,7 @@ export default function ScrollSequence({ manifest, className = "" }: { manifest:
   const [state, setState] = useState<State>("poster");
   const active = state === "loading" || state === "live";
 
-  // 1. Puerta y arranque: tras load y un hueco ocioso.
+  // 1. Puerta y arranque: al estar a un viewport de la sección, tras load y un hueco ocioso.
   useEffect(() => {
     let cancelled = false;
     let idle = 0;
@@ -37,10 +37,23 @@ export default function ScrollSequence({ manifest, className = "" }: { manifest:
         idle = w.requestIdleCallback ? w.requestIdleCallback(go, { timeout: 3000 }) : window.setTimeout(go, 300);
       });
     };
-    if (document.readyState === "complete") schedule();
-    else addEventListener("load", schedule, { once: true });
+    const arm = () => {
+      if (document.readyState === "complete") schedule();
+      else addEventListener("load", schedule, { once: true });
+    };
+    // El chunk del reproductor solo se pide cuando la caja está a un viewport: lejos no cuesta ni un byte de JS.
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        io.disconnect();
+        arm();
+      },
+      { rootMargin: "100% 0px" },
+    );
+    if (box.current) io.observe(box.current);
     return () => {
       cancelled = true;
+      io.disconnect();
       removeEventListener("load", schedule);
       if (w.cancelIdleCallback) w.cancelIdleCallback(idle);
       else window.clearTimeout(idle);

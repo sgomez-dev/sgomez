@@ -4,8 +4,9 @@
 //   npm run render            vídeos y pósters, a sgomez/public/media/404
 //   npm run draft             10 fotogramas a video/out, para probar la tubería
 //   npm run render -- --only=webm,mp4,posters
+//   npm run render -- --only=build      secuencia de fotogramas del capítulo 03, a sgomez/public/media/build
 import { spawnSync } from "node:child_process";
-import { mkdirSync, writeFileSync, statSync, existsSync } from "node:fs";
+import { mkdirSync, writeFileSync, statSync, existsSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -24,6 +25,11 @@ const BG = "#000000";
 
 const args = process.argv.slice(2);
 const draft = args.includes("--draft");
+// Secuencia del capítulo 03 (BuildSequence): 90 fotogramas WebP con alfa. Presupuesto: <= 4 MB en escritorio, <= 1,5 MB en móvil.
+const BUILD_WEBP = { quality: 70, alphaQuality: 70 };
+const BUILD_POSTER_QUALITY = 78;
+const buildMedia = resolve(root, "..", "sgomez", "public", "media", "build");
+
 const only = (args.find((a) => a.startsWith("--only=")) ?? "").slice(7).split(",").filter(Boolean);
 const want = (k) => only.length === 0 || only.includes(k);
 
@@ -72,6 +78,32 @@ if (want("posters") && !draft) {
     const out = join(media, `${s.name}.webp`);
     await sharp(png).webp({ quality: WEBP_QUALITY[s.name], alphaQuality: 90, effort: 6, smartSubsample: true }).toFile(out);
     sizes[`${s.name}.webp`] = out;
+  }
+}
+
+if (want("build") && !draft) {
+  let total = {};
+  for (const [size, comp, w] of [["desktop", "BuildDesktop", 1600], ["mobile", "BuildMobile", 800]]) {
+    const seq = join(tmp, `build-${size}`);
+    rmSync(seq, { recursive: true, force: true });
+    remotion(["render", entry, comp, seq, "--sequence", "--image-format=png", "--gl=angle"]);
+    const dest = join(buildMedia, size);
+    rmSync(dest, { recursive: true, force: true });
+    mkdirSync(dest, { recursive: true });
+    const pngs = readdirSync(seq).filter((f) => f.endsWith(".png")).sort();
+    let bytes = 0;
+    for (const [i, f] of pngs.entries()) {
+      const out = join(dest, `${String(i + 1).padStart(4, "0")}.webp`);
+      await sharp(join(seq, f)).webp({ ...BUILD_WEBP, effort: 6, smartSubsample: true }).toFile(out);
+      bytes += statSync(out).size;
+    }
+    total[size] = bytes;
+    console.log(`  build/${size}: ${pngs.length} fotogramas, ${(bytes / 1024).toFixed(0)} KB`);
+    if (size === "desktop") {
+      const out = join(buildMedia, "poster.webp");
+      await sharp(join(seq, pngs[pngs.length - 1])).webp({ quality: BUILD_POSTER_QUALITY, alphaQuality: 90, effort: 6, smartSubsample: true }).toFile(out);
+      sizes["build/poster.webp"] = out;
+    }
   }
 }
 
