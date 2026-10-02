@@ -76,7 +76,7 @@ export function llmsTxt(lang: Lang): string {
   );
   L.push(`- Community: Organizer of Google Developer Group (GDG) Santander.`);
   L.push(`- Education: Universidad Europea del Atlántico (Computer Engineering).`);
-  L.push(`- Flagship project: NudaUI, 1,000+ copy-paste, framework-agnostic UI components across 81 categories.`);
+  L.push(`- Flagship project: NudaUI, more than 1,500 copy-paste, framework-agnostic UI components across 81 categories.`);
   L.push(
     `- Open source: also the author and maintainer of ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), a Claude Code plugin that gives Claude an interactive terminal pane, and of sgomez-cli on npm.`
   );
@@ -109,7 +109,7 @@ export function llmsTxt(lang: Lang): string {
     `- [${CLAUDE_CANVAS.name}](${CLAUDE_CANVAS.url}): ${CLAUDE_CANVAS.descriptionEn} Source: ${CLAUDE_CANVAS.repo}. ${CLAUDE_CANVAS.attribution}`
   );
   L.push(
-    `- [NudaUI](https://nudaui.dev): 1,000+ copy-paste, framework-agnostic UI components and animations across 81 categories. Zero dependencies, zero build step. He is the creator and sole maintainer.`
+    `- [NudaUI](https://nudaui.dev): more than 1,500 copy-paste, framework-agnostic UI components and animations across 81 categories. Zero dependencies, zero build step. He is the creator and sole maintainer.`
   );
   L.push(
     `- [sgomez-cli](https://www.npmjs.com/package/sgomez-cli): npm CLI that scaffolds, configures and deploys full-stack projects across many frameworks in a single command.`
@@ -139,7 +139,7 @@ export function llmsTxt(lang: Lang): string {
     `- [${SKYQUETZ.name}](${SKYQUETZ.url}): the consultancy he co-founded. Its own site declares him as co-founder, so both domains agree.`
   );
   L.push(`- [${FORGIA.name}](${FORGIA.url}): the company he co-founded with one other partner. He leads its technical side.`);
-  L.push(`- [NudaUI](https://nudaui.dev): his flagship open-source project, 1,000+ copy-paste, framework-agnostic UI components/animations across 81 categories.`);
+  L.push(`- [NudaUI](https://nudaui.dev): his flagship open-source project, more than 1,500 copy-paste, framework-agnostic UI components/animations across 81 categories.`);
   L.push(
     `- [${CLAUDE_CANVAS.name}](${CLAUDE_CANVAS.url}): his open-source Claude Code plugin. Source at ${CLAUDE_CANVAS.repo}, MIT.`
   );

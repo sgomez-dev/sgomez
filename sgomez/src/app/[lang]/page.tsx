@@ -21,12 +21,12 @@ const HOME_META = {
   es: {
     title: `${IDENTITY.name} · Full-Stack Engineer que lleva la IA a producción`,
     description:
-      'Full-stack engineer que lleva la IA y los LLM a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI (más de 1.000 componentes) y de una búsqueda semántica (RAG) en vivo. React, Next.js, Node.js, Python, Google Cloud.',
+      'Full-stack engineer que lleva la IA y los LLM a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI (más de 1.500 componentes) y de una búsqueda semántica (RAG) en vivo. React, Next.js, Node.js, Python, Google Cloud.',
   },
   en: {
     title: `${IDENTITY.name} · Full-Stack Engineer shipping AI to production`,
     description:
-      'Full-stack engineer building and shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (1,000+ components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.',
+      'Full-stack engineer building and shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (more than 1,500 components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.',
   },
 } as const
 

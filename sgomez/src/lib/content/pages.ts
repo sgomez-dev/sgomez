@@ -113,8 +113,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Y cuando no construyo para clientes, construyo para la comunidad. Soy el creador y único mantenedor de NudaUI, una librería open-source con más de 1.000 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando. Además organizo eventos con GDG Santander y he competido en Hack2Progress.",
-              "And when I'm not building for clients, I build for the community. I am the creator and sole maintainer of NudaUI, an open-source library with more than 1,000 copy-paste UI components in 81 categories that work in any framework, and of sgomez-cli, a tool published on npm to start full-stack projects with a single command. I also organize events with GDG Santander and have competed in Hack2Progress.",
+              "Y cuando no construyo para clientes, construyo para la comunidad. Soy el creador y único mantenedor de NudaUI, una librería open-source con más de 1.500 componentes UI copy-paste en 81 categorías que funcionan en cualquier framework, y de sgomez-cli, una herramienta publicada en npm para arrancar proyectos full-stack en un solo comando. Además organizo eventos con GDG Santander y he competido en Hack2Progress.",
+              "And when I'm not building for clients, I build for the community. I am the creator and sole maintainer of NudaUI, an open-source library with more than 1,500 copy-paste UI components in 81 categories that work in any framework, and of sgomez-cli, a tool published on npm to start full-stack projects with a single command. I also organize events with GDG Santander and have competed in Hack2Progress.",
             ),
           },
           {

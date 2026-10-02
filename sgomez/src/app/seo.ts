@@ -275,7 +275,7 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "¿Qué es NudaUI?",
-      a: "NudaUI es una librería open-source creada y mantenida por Santiago Gómez de la Torre. Reúne más de 1.000 componentes y animaciones UI copy-paste, framework-agnósticos, organizados en 81 categorías. No tiene dependencias ni paso de build y funciona en React, Vue, Svelte, Astro, Laravel, Django o un simple archivo HTML.",
+      a: "NudaUI es una librería open-source creada y mantenida por Santiago Gómez de la Torre. Reúne más de 1.500 componentes y animaciones UI copy-paste, framework-agnósticos, organizados en 81 categorías. No tiene dependencias ni paso de build y funciona en React, Vue, Svelte, Astro, Laravel, Django o un simple archivo HTML.",
     },
     {
       q: "¿Qué es NudaUI Semantic Search (RAG)?",
@@ -309,7 +309,7 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
     },
     {
       q: "What is NudaUI?",
-      a: "NudaUI is an open-source library created and maintained by Santiago Gómez de la Torre. It gathers more than 1,000 copy-paste, framework-agnostic UI components and animations, organized in 81 categories. It has no dependencies and no build step and works in React, Vue, Svelte, Astro, Laravel, Django or a plain HTML file.",
+      a: "NudaUI is an open-source library created and maintained by Santiago Gómez de la Torre. It gathers more than 1,500 copy-paste, framework-agnostic UI components and animations, organized in 81 categories. It has no dependencies and no build step and works in React, Vue, Svelte, Astro, Laravel, Django or a plain HTML file.",
     },
     {
       q: "What is NudaUI Semantic Search (RAG)?",
@@ -601,7 +601,7 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       url: "https://nudaui.dev",
       sameAs: ["https://github.com/sgomez-dev/nudaui"],
       description:
-        "Open-source library of 1,000+ copy-paste, framework-agnostic UI components and animations across 81 categories. Zero dependencies, zero build step.",
+        "Open-source library of more than 1,500 copy-paste, framework-agnostic UI components and animations across 81 categories. Zero dependencies, zero build step.",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       isAccessibleForFree: true,
       license: "https://opensource.org/licenses/MIT",
