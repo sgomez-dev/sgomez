@@ -37,10 +37,12 @@ test.describe("capítulos 08 y 09", () => {
   test("las insignias se ensamblan al entrar y quedan enteras", async ({ page }) => {
     await page.goto("/");
     await hasCss(page, "mo-badge");
-    const badge = page.locator('#proof [data-motion="badge"]').last();
-    await scrollToProgress(page, '#proof [data-motion="badge"]:last-child', 0.97);
+    // La última insignia es la última pastilla de emisores; `:last-child` a secas casaba antes con la tercera destacada.
+    const last = '#proof ul:has(> [data-motion="badge"]):last-of-type > [data-motion="badge"]:last-child';
+    const badge = page.locator(last);
+    await scrollToProgress(page, last, 0.97);
     const mid = await badge.evaluate((el) => getComputedStyle(el).clipPath);
-    await scrollToProgress(page, '#proof [data-motion="badge"]:last-child', 0.4);
+    await scrollToProgress(page, last, 0.4);
     await expect.poll(() => badge.evaluate((el) => getComputedStyle(el).scale)).toBe("1");
     expect(await badge.evaluate((el) => getComputedStyle(el).clipPath)).not.toBe(mid);
     expect(await settledInViewport(page)).toEqual([]);

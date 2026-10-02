@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import Link from "next/link";
@@ -26,7 +27,7 @@ export default function Projects({ lang }: { lang: Lang }) {
   return (
     <Section id="work" labelledBy="work-h">
       <Container>
-        <Eyebrow>{d.chapters.work.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.work.eyebrow}</Eyebrow>
         <Display as="h2" id="work-h" lead={d.chapters.work.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
         <ul className="mt-10 grid list-none grid-flow-row-dense gap-3 sm:gap-4 md:grid-cols-2 lg:mt-14 lg:grid-cols-3">
           {projects.map((p, i) => {
@@ -57,8 +58,8 @@ export default function Projects({ lang }: { lang: Lang }) {
                         >
                           <span aria-hidden="true" className="text-[length:var(--step-4)] font-semibold leading-none tracking-[-0.06em] text-[color:var(--text)]">{initials(p.title)}</span>
                           <span className="flex flex-wrap gap-1.5">
-                            {p.stack.map((s) => (
-                              <span key={s} className="rounded-full border border-[color:var(--line)] px-2.5 py-0.5 text-[length:var(--step--1)] text-[color:var(--text-2)]">{s}</span>
+                            {p.stack.map((s, k) => (
+                              <span key={s} data-motion="tag" style={{ "--i": k } as CSSProperties} className="rounded-full border border-[color:var(--line)] px-2.5 py-0.5 text-[length:var(--step--1)] text-[color:var(--text-2)]">{s}</span>
                             ))}
                           </span>
                         </div>
@@ -77,8 +78,8 @@ export default function Projects({ lang }: { lang: Lang }) {
                     <p className="flex-1 text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{hardPercent(p.description)}</p>
                     {featured && !reel ? null : (
                       <ul className="flex flex-wrap gap-2">
-                        {p.stack.map((s) => (
-                          <li key={s} className="rounded-full border border-[color:var(--line)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
+                        {p.stack.map((s, k) => (
+                          <li key={s} data-motion="tag" style={{ "--i": k } as CSSProperties} className="rounded-full border border-[color:var(--line)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
                             {s}
                           </li>
                         ))}

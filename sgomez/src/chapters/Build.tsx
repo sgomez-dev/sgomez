@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { technologies } from "@/app/content";
@@ -35,10 +36,10 @@ export default function Build({ lang }: { lang: Lang }) {
   return (
     <Section id="build" labelledBy="build-h">
       <Container>
-        <Eyebrow>{d.chapters.build.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.build.eyebrow}</Eyebrow>
         <Display as="h2" id="build-h" lead={d.chapters.build.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
         <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-12">
-          <ol className="flex flex-col gap-[10px]">
+          <ol className="flex flex-col gap-[10px] [overflow-x:clip]">
             {layers.map((layer, i) => (
               <li
                 key={i}
@@ -53,8 +54,8 @@ export default function Build({ lang }: { lang: Lang }) {
                   {layer.label}
                 </span>
                 <ul className="flex flex-wrap gap-2 md:justify-end lg:justify-start">
-                  {layer.chips.map((chip) => (
-                    <li key={chip} className="rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
+                  {layer.chips.map((chip, k) => (
+                    <li key={chip} data-motion="tag" style={{ "--i": k } as CSSProperties} className="rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
                       {chip}
                     </li>
                   ))}

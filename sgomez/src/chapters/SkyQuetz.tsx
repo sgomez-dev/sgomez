@@ -8,6 +8,7 @@ import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
 import MonogramReveal from "@/components/MonogramReveal";
+import { WordReveal, wordRevealStyle } from "@/components/motion/WordReveal";
 
 const linkClass =
   "inline-flex min-h-11 items-center gap-1.5 text-[length:var(--step-0)] font-medium text-[color:var(--light-2)] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
@@ -22,7 +23,7 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
   return (
     <Section id="skyquetz" labelledBy="skyquetz-h">
       <Container>
-        <Eyebrow>{d.chapters.skyquetz.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.skyquetz.eyebrow}</Eyebrow>
         <Display as="h2" id="skyquetz-h" lead={d.chapters.skyquetz.heading} size="text-[length:clamp(1.75rem,1.5rem+1vw,2.5rem)]" motion="text-reveal" className="mt-4 max-w-[26ch]" />
         <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
           <div className="flex min-w-0 flex-col gap-5">
@@ -35,8 +36,11 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
               </a>
             </div>
             <p className="text-[length:var(--step-0)] italic text-[color:var(--serif-ink)]" lang="es">{skyquetz.slogan}</p>
-            <p className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">{t(skyquetz.desc, lang)}</p>
-            <p className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text)]">{t(skyquetz.myPart, lang)}</p>
+            <p data-motion="lede" className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">{t(skyquetz.desc, lang)}</p>
+            {/* Su parte es la frase que se enciende palabra a palabra, como la bio. */}
+            <p data-motion="word-reveal" style={wordRevealStyle(t(skyquetz.myPart, lang))} className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text)]">
+              <WordReveal text={t(skyquetz.myPart, lang)} />
+            </p>
             <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--line)]">
               {skyquetz.stats.map((s) => (
                 <div key={t(s.label, "es")} className="flex min-w-0 flex-col-reverse justify-end gap-1 bg-[color:var(--bg-2)] p-3 sm:p-4">

@@ -26,7 +26,7 @@ export default function About({ lang }: { lang: Lang }) {
   return (
     <Section id="about" labelledBy="about-h">
       <Container>
-        <Eyebrow>{d.chapters.about.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.about.eyebrow}</Eyebrow>
         <Display as="h2" id="about-h" lead={d.chapters.about.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[22ch]" />
         <div data-reveal-scope="" className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
           <p data-motion="word-reveal" style={wordRevealStyle(lead ?? "")} className="lg:sticky lg:top-[calc(4rem+var(--safe-top)+2rem)] lg:self-start text-[length:clamp(1.5rem,1.2rem+1.2vw,1.75rem)] font-medium leading-[1.3] tracking-[-0.02em] text-[color:var(--text)]">
@@ -34,7 +34,7 @@ export default function About({ lang }: { lang: Lang }) {
           </p>
           <div className="space-y-5 text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">
             {rest.map((p, i) => (
-              <p key={i}>{p}</p>
+              <p key={i} data-motion="lede">{p}</p>
             ))}
           </div>
         </div>

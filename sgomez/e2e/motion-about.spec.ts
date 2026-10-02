@@ -15,7 +15,7 @@ test.describe("capitulo 02", () => {
     for (let y = 0; y < 2200 && colors < 2; y += 60) {
       await page.evaluate((top) => scrollTo({ top, behavior: "instant" }), await page.evaluate(() => document.querySelector("#about")!.getBoundingClientRect().top + scrollY) + y - 200);
       await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
-      colors = await page.locator('[data-motion="word-reveal"] [data-w]').evaluateAll((els) => new Set(els.map((e) => getComputedStyle(e).color)).size);
+      colors = await page.locator('#about [data-motion="word-reveal"] [data-w]').evaluateAll((els) => new Set(els.map((e) => getComputedStyle(e).color)).size);
     }
     expect(colors).toBeGreaterThan(1);
     const r = await new AxeBuilder({ page }).include("#about").withTags(["wcag2a", "wcag2aa"]).analyze();
@@ -59,7 +59,7 @@ test.describe("capitulo 02", () => {
     await page.goto("/");
     const first = page.locator(FIRST).first();
     await expect(first.locator("[data-count]")).toHaveText((await first.getAttribute("data-value"))!);
-    await expect(page.locator('[data-motion="word-reveal"]')).toBeVisible();
+    await expect(page.locator('#about [data-motion="word-reveal"]')).toBeVisible();
     await ctx.close();
   });
 });

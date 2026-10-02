@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getDictionary } from "@/i18n";
 import type { Lang } from "@/i18n/languages";
 import { hero } from "@/app/content";
@@ -27,7 +28,7 @@ export default function Hero({ lang }: { lang: Lang }) {
             <Portrait alt={d.chapters.hero.portraitAlt} className="absolute bottom-0 left-0 w-[70%]" />
           </div>
           <div className="min-w-0 lg:order-1 sl:order-1">
-            <Eyebrow>{d.chapters.hero.eyebrow}</Eyebrow>
+            <Eyebrow intro={0}>{d.chapters.hero.eyebrow}</Eyebrow>
             <Display
               as="h1"
               lead={`${hero.name.replace(/ Romero$/, "")}.`}
@@ -37,14 +38,14 @@ export default function Hero({ lang }: { lang: Lang }) {
               light
               className="mt-4 !leading-[0.95] !tracking-[-0.045em]"
             />
-            <p data-answer className="mt-6 max-w-[34rem] text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text-2)]">
+            <p data-answer data-intro="" style={{ "--k": 1 } as CSSProperties} className="mt-6 max-w-[34rem] text-[length:var(--step-0)] leading-[1.55] text-[color:var(--text-2)]">
               {t(hero.subtitle, lang)}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div data-intro="" style={{ "--k": 2 } as CSSProperties} className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href="#contact" variant="primary">{d.cta.talk}</ButtonLink>
               <ButtonLink href="#work" variant="ghost">{d.cta.work}</ButtonLink>
             </div>
-            <p className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] px-4 py-2 text-[length:var(--step--1)] text-[color:var(--text-2)]">
+            <p data-intro="" style={{ "--k": 3 } as CSSProperties} className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] px-4 py-2 text-[length:var(--step--1)] text-[color:var(--text-2)]">
               <span aria-hidden="true" className="size-2 rounded-full bg-[color:var(--light-2)] shadow-[0_0_10px_var(--light-2)]" />
               {d.chapters.hero.available}
             </p>

@@ -32,7 +32,7 @@ export default function Contact({ lang }: { lang: Lang }) {
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-14">
           <div className="min-w-0">
-            <Eyebrow>{d.chapters.contact.eyebrow}</Eyebrow>
+            <Eyebrow motion>{d.chapters.contact.eyebrow}</Eyebrow>
             <Display
               as="h2"
               id="contact-h"

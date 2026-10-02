@@ -68,7 +68,7 @@ export default function OpenSource({ lang }: { lang: Lang }) {
   return (
     <Section id="open-source" labelledBy="open-source-h">
       <Container>
-        <Eyebrow>{d.chapters.openSource.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.openSource.eyebrow}</Eyebrow>
         <Display as="h2" id="open-source-h" lead={d.chapters.openSource.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
         <ul className="mt-10 grid list-none gap-3 sm:gap-4 lg:mt-14 lg:grid-cols-3">
           {blocks.map((b, i) => (

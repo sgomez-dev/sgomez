@@ -20,7 +20,7 @@ export default function Experience({ lang }: { lang: Lang }) {
     <Section id="experience" labelledBy="experience-h" dataAttrs={{ "data-pin": "" }} style={{ "--n": entries.length } as CSSProperties}>
       <div data-pin-stage="" className="flex flex-col justify-center">
       <Container>
-        <Eyebrow>{d.chapters.experience.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.experience.eyebrow}</Eyebrow>
         <Display as="h2" id="experience-h" lead={d.chapters.experience.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
       </Container>
       <Container className="mt-10 [container-type:inline-size] lg:mt-14">

@@ -49,7 +49,7 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
   return (
     <Section id="proof" labelledBy="proof-h">
       <Container>
-        <Eyebrow>{d.chapters.proof.eyebrow}</Eyebrow>
+        <Eyebrow motion>{d.chapters.proof.eyebrow}</Eyebrow>
         <Display as="h2" id="proof-h" lead={d.chapters.proof.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
 
         <div className="mt-10 lg:mt-14" role="group" aria-labelledby="proof-recs">

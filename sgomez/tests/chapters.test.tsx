@@ -62,7 +62,7 @@ describe("capítulos 01–03 en HTML de servidor", () => {
     it(`${lang}: cada capa tiene al menos una tecnología`, () => {
       const layers = html.split('data-motion="layer"').slice(1);
       expect(layers).toHaveLength(6);
-      for (const layer of layers) expect(layer.match(/<li class="rounded-full/g)?.length ?? 0).toBeGreaterThan(0);
+      for (const layer of layers) expect(layer.match(/<li data-motion="tag"[^>]*class="rounded-full/g)?.length ?? 0).toBeGreaterThan(0);
     });
     it(`${lang}: el retrato es prioritario, con sizes y alt localizado`, () => {
       const img = html.match(/<img[^>]*>/)![0];

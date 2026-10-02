@@ -19,21 +19,18 @@ describe("detección de soporte", () => {
 });
 
 describe("respaldo de revelado (sin animation-timeline)", () => {
-  function setup(top: number) {
+  function setup(top: number, kind = "text-reveal", even = false) {
     const animate = vi.fn(() => ({ cancel: vi.fn() }));
     const props: Record<string, string> = {};
     const style = {
-      set clipPath(v: string) {
-        props["clip-path"] = v;
-      },
-      set translate(v: string) {
-        props["translate"] = v;
+      setProperty(k: string, v: string) {
+        props[k] = v;
       },
       removeProperty(k: string) {
         delete props[k];
       },
     };
-    const el = { getBoundingClientRect: () => ({ top, bottom: top + 100 }), animate, style } as unknown as HTMLElement;
+    const el = { dataset: { motion: kind }, matches: (q: string) => q === ":nth-child(even)" && even, getBoundingClientRect: () => ({ top, bottom: top + 100 }), animate, style } as unknown as HTMLElement;
     let cb: IntersectionObserverCallback = () => {};
     const observe = vi.fn();
     const unobserve = vi.fn();
@@ -78,6 +75,20 @@ describe("respaldo de revelado (sin animation-timeline)", () => {
     expect(JSON.stringify(s.animate.mock.calls[0])).not.toMatch(/opacity|filter/);
     expect(s.unobserve).toHaveBeenCalled();
     expect(s.props).toEqual({});
+  });
+  it("el antetítulo cierra su espaciado y las capas entran por su lado", () => {
+    const eb = setup(5000, "eyebrow");
+    revealOnEnter([eb.el], { IO: eb.IO, vh: 800 });
+    expect(eb.props["letter-spacing"]).toBe("0.5em");
+    eb.fire();
+    expect(eb.props).toEqual({});
+    const left = setup(5000, "layer");
+    revealOnEnter([left.el], { IO: left.IO, vh: 800 });
+    expect(left.props.translate).toBe("-2.5rem 0");
+    const right = setup(5000, "layer", true);
+    revealOnEnter([right.el], { IO: right.IO, vh: 800 });
+    expect(right.props.translate).toBe("2.5rem 0");
+    expect(JSON.stringify(right.props)).not.toMatch(/opacity|filter|transform/);
   });
   it("el parado desconecta y deja los estilos limpios aunque no haya entrado", () => {
     const s = setup(5000);

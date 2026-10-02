@@ -13,6 +13,9 @@ export async function settledInViewport(page: Page): Promise<string[]> {
       for (const a of el.getAnimations()) {
         // el barrido de luz (E3) es un adorno de una pasada, no una entrada: no tiene que estar terminado al aterrizar
         if ((a as CSSAnimation).animationName?.startsWith("mo-light")) continue;
+        // el antetitulo cierra su espaciado con la linea de tiempo de su h2 (es diminuto: con la suya propia no se veria).
+        // Excluido a proposito: el texto se lee entero en cualquier punto y no cambia de sitio; el h2 si tiene que acabar.
+        if ((a as CSSAnimation).animationName === "mo-track") continue;
         if (a.effect?.getComputedTiming().progress !== 1) {
           out.push(`${el.tagName.toLowerCase()}[data-motion=${el.closest<HTMLElement>("[data-motion]")?.dataset.motion}] ${(a as CSSAnimation).animationName ?? ""}`);
         }

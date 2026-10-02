@@ -38,6 +38,12 @@ export const lifecycle = {
   },
 };
 
+/**
+ * Lo que el respaldo revela al entrar: los titulares y tarjetas del registro y, de la pasada para el móvil,
+ * párrafos, antetítulos, capas, fichas y etiquetas. Vive aquí y no en el registro, que va en el JS inicial.
+ */
+const FALLBACK_SELECTOR = `${REVEAL_SELECTOR}, [data-motion="lede"], [data-motion="eyebrow"], [data-motion="layer"], [data-motion="tile"], [data-motion="tag"]`;
+
 /** Un elemento se engancha una sola vez, aunque `start` o el observador lo vean varias veces. */
 const hooked = new WeakMap<Element, () => void>();
 
@@ -94,7 +100,7 @@ export function start(root: ParentNode, registry: Registry = REGISTRY, opts: Sta
       if (hooked.has(el)) continue;
       const entry = registry[el.dataset.motion ?? ""];
       if (entry) void hook(el, entry);
-      else if (!supported && el.matches(REVEAL_SELECTOR)) reveal.push(el);
+      else if (!supported && el.matches(FALLBACK_SELECTOR)) reveal.push(el);
     }
     // Firefox y compañía: revelado ligero al entrar (E2), por primitiva: se salta lo registrado.
     if (reveal.length) {
