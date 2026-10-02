@@ -272,3 +272,16 @@ describe("Proof: disclosure del original", () => {
     expect(html).toMatch(/<summary[^>]*>[^<]*<svg[^>]*aria-hidden="true"/);
   });
 });
+
+describe("Tasks 5 y 6: contratos de marcado del movimiento", () => {
+  for (const lang of ["es", "en"] as const) {
+    it(`${lang}: la experiencia lleva su escena fijable con el número de tarjetas`, () => {
+      const html = renderToStaticMarkup(<Experience lang={lang} />);
+      const n = getExperience(lang).length;
+      expect(html).toMatch(new RegExp(`<section[^>]*data-pin=""[^>]*style="--n:${n}"`));
+      expect(html).toMatch(/data-pin-stage=""/);
+      expect(html).toMatch(/data-pin-progress=""[^>]*aria-hidden="true"/);
+      expect(html).toMatch(/data-motion="timeline"[^>]*tabindex="0"/i);
+    });
+  }
+});
