@@ -16,12 +16,12 @@ const withoutTimeline = (page: Page) =>
   });
 
 test.describe("puerta del movimiento", () => {
-  test("sin nada que animar, el runtime no se pide (Chromium con animation-timeline)", async ({ page }) => {
+  test("Chromium con animation-timeline: se pide el runtime solo para inyectar el CSS, sin cargar el motor", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("data-motion-state", "on");
-    await page.waitForTimeout(2500);
-    expect(await starts(page)).toBe(0);
-    await expect(page.locator("html")).not.toHaveAttribute("data-motion-ready", /.*/);
+    await expect.poll(() => starts(page), { timeout: 5000 }).toBe(1);
+    await expect(page.locator("html")).toHaveAttribute("data-motion-ready", "");
+    await expect(page.locator("style[data-motion-css]")).toHaveCount(1);
   });
 
   test("con movimiento: estado on y el runtime se engancha tras idle y avisa con data-motion-ready", async ({ page }) => {

@@ -19,6 +19,8 @@ import { CLAUDE_CANVAS } from "@/app/seo";
 import { siteFigures } from "@/lib/content/figures";
 import { getDictionary } from "@/i18n";
 import { fill } from "@/i18n/fill";
+import { about } from "@/app/content";
+import { t } from "@/lib/content/localized";
 
 const figuresMock = vi.hoisted(() => ({ override: null as null | { years: number | null; projects: number; certifications: number } }));
 vi.mock("@/lib/content/figures", async (orig) => {
@@ -71,6 +73,24 @@ describe("capítulos 01–03 en HTML de servidor", () => {
       expect(img).toContain(`alt="${d.chapters.hero.portraitAlt}"`);
     });
     it(`${lang}: el cristal es decorativo`, () => expect(html).toMatch(/data-motion="glass"[^>]*aria-hidden="true"|aria-hidden="true"[^>]*data-motion="glass"/));
+    it(`${lang}: la bio se divide en palabras sin cambiar su texto`, () => {
+      const h = renderToStaticMarkup(<About lang={lang} />);
+      const lead = /<p[^>]*data-motion="word-reveal"[^>]*>([\s\S]*?)<\/p>/.exec(h)![1]!;
+      const text = lead.replace(/<[^>]+>/g, "");
+      const [expected] = t(about.description, lang).split(/\n+/).map((p) => p.trim()).filter(Boolean);
+      expect(text).toBe(esc(expected!));
+      expect(lead).toMatch(/data-w/);
+      expect(h).toMatch(/data-motion="word-reveal"[^>]*style="[^"]*--n:\d+/);
+    });
+    it(`${lang}: cada cifra tiene su numero visible y su numero para lectores de pantalla`, () => {
+      const h = renderToStaticMarkup(<About lang={lang} />);
+      const dds = [...h.matchAll(/<dd[^>]*data-value="(\d+)"[^>]*>([\s\S]*?)<\/dd>/g)];
+      expect(dds.length).toBeGreaterThanOrEqual(2);
+      for (const m of dds) {
+        expect(m[2]).toMatch(new RegExp(`<span aria-hidden="true" data-count="" [^>]*>${m[1]}</span>`));
+        expect(m[2]).toMatch(new RegExp(`<span class="sr-only">${m[1]}</span>`));
+      }
+    });
     it(`${lang}: tres cifras con años y dos sin ellos`, () => {
       expect(count(renderToStaticMarkup(<About lang={lang} />))).toBe(3);
       figuresMock.override = { years: null, projects: 7, certifications: 9 };
@@ -134,6 +154,12 @@ describe("capítulos 04–07", () => {
     });
     it(`${lang}: Open source con tres bloques build`, () => {
       expect(html.match(/data-motion="build"/g)).toHaveLength(3);
+    });
+    it(`${lang}: cada tarjeta de open source lleva su trazo decorativo y su indice`, () => {
+      const os = renderToStaticMarkup(<OpenSource lang={lang} />);
+      expect(os.match(/<svg data-layer="trace" aria-hidden="true"/g)).toHaveLength(3);
+      expect(os).toMatch(/--i:0/);
+      expect(os).toMatch(/pathLength="1"/);
     });
   }
   it("el eslogan de SkyQuetz es la frase de marca en español, también en inglés", () => {
