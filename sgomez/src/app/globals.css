@@ -72,6 +72,12 @@ body {
   opacity: 0;
   transition: opacity 120ms linear;
 }
+/* Líneas (Task 8). Se van con el estallido en 300 ms, vuelven en los últimos 400 ms
+   del vídeo y se retiran en el mismo fotograma en que la escena ya pinta las suyas. */
+[data-stage="lost"] [data-lost-lines] { transition: opacity 300ms ease-out; }
+[data-stage="lost"][data-lost-lines="out"] [data-lost-lines] { opacity: 0; }
+[data-stage="lost"][data-lost-lines="in"] [data-lost-lines] { opacity: 1; transition-duration: 400ms; }
+[data-stage="lost"][data-lost-cover="scene"] [data-lost-lines] { opacity: 0; transition: none; }
 [data-stage="lost"][data-lost-cover="video"] a[data-shard-id] > span {
   opacity: 0;
 }

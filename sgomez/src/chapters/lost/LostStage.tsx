@@ -189,7 +189,7 @@ export default function LostStage({ lang, hasEndPoster = HAS_END_POSTER }: { lan
           <svg
             key={variant}
             aria-hidden="true"
-            data-lost-static=""
+            data-lost-lines=""
             focusable="false"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"

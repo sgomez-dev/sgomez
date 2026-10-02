@@ -193,14 +193,15 @@ El plan es `docs/superpowers/plans/2026-10-02-redesign-fase-3-3d.md`, con las re
 | 5 | `GlassStage` en el hero (núcleo) | 🔄 Ronda visual aplicada (e374733): la silueta coincide al píxel, el brillo es equivalente, el halo se queda y el giro está acotado. Capturas en `progress/fase-3-task5-*`. Pendiente de la re-revisión con opus y del visto bueno del dueño sobre el matiz del color |
 | 6 | El cristal en el contacto | ✅ Hecha, con la pose medida al píxel |
 | 7 | El nombre escrito con luz | ✅ Hecha |
-| 8 a 11 | Relevo del 404, el 404 en el worker, verificación y cierre | ⏳ |
+| 8 | Relevo del vídeo al 3D en el 404 | ✅ Diagnóstico y arreglo: sin salto de geometría; líneas sin apagón y fundido de 300 ms para el cambio de brillo (`fase-3-404-relevo.png`) |
+| 9 a 11 | El 404 en el worker, verificación y cierre | ⏳ |
 
 ### Pendiente inmediato (por este orden)
 
 1. Hecho el 2026-10-02: el dueño eligió devtools para el LCP móvil del CI y aprobó el tono; la tarea 5 está revisada y fusionable y la 6 está hecha (ver `progress/2026-10-02-fase-3.md`).
    - Para medir y capturar un relevo: `HEADED=1 [SEC=contact] node scripts/glass-capture.mjs <carpeta>` con el build en :3101. En headless Chromium pinta con SwiftShader y el color no vale.
    - Riesgo al abrir el PR: el TBT simulado de `/` estuvo en 209 ms y el umbral es 200.
-2. **Sigue con las tareas 8 a 11** con el flujo de la §5.
+2. **Sigue con las tareas 9 a 11** con el flujo de la §5.
    - La tarea 8 empieza por el diagnóstico visual (F4): una tira de fotogramas que hay que enseñar al dueño.
    - La tarea 9 es de alto riesgo y la revisa opus.
 

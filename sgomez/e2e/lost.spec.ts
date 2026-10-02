@@ -140,6 +140,6 @@ test("móvil: escenario estático, sin lienzo ni petición del chunk 3D", async 
   expect(chunks).toEqual([]);
   await expect(page.locator("canvas")).toHaveCount(0);
   await expect(page.locator("video")).toHaveCount(0);
-  await expect(page.locator("[data-lost-static]").first()).toBeVisible();
+  await expect(page.locator("[data-lost-lines]").first()).toBeVisible();
   await expect(page.locator("a[data-shard-id]")).toHaveCount(7);
 });

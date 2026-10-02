@@ -63,9 +63,9 @@ test("escena bloqueada: constelación estática completa, sin botón de pausa y 
     expect(((await a.textContent()) ?? "").trim().length).toBeGreaterThan(0);
     await expect(a).toHaveAttribute("href", /.+/);
   }
-  expect(await page.locator('svg[data-lost-static] line').count()).toBeGreaterThan(0);
+  expect(await page.locator('svg[data-lost-lines] line').count()).toBeGreaterThan(0);
   await expect(page.locator("button[aria-pressed]")).toHaveCount(0);
-  await expect(page.locator('[data-lost-static]').first()).toHaveCSS("opacity", "1");
+  await expect(page.locator('[data-lost-lines]').first()).toHaveCSS("opacity", "1");
   // el aborto del chunk 3D es lo que provoca este único mensaje de consola: se espera, se filtra solo ese
   expect(blocked.aborted).toBe(true);
   const rest = consoleErrors.filter((e) => !/ERR_FAILED \(.*\/_next\/static\/chunks\/.+\.js\)/.test(e));
@@ -124,7 +124,7 @@ test("cruzar el breakpoint con el vídeo en marcha lo abandona y no vuelve", asy
   await expect(page.locator('[data-stage="lost"]')).toHaveAttribute("data-lost-phase", "static");
   await expect(page.locator("[data-lost-canvas]")).toHaveCount(0);
   await expect(page.locator('[data-stage="lost"]')).not.toHaveAttribute("data-lost-cover", /.+/);
-  await expect(page.locator("[data-lost-static]").first()).toBeVisible();
+  await expect(page.locator("[data-lost-lines]").first()).toBeVisible();
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.waitForTimeout(1000);
   await expect(page.locator("[data-lost-video]")).toHaveCount(0);

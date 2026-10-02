@@ -71,6 +71,8 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
   const [gyroOn, setGyroOn] = useState(false);
   const [needsGyroButton, setNeedsGyroButton] = useState(false);
   const [fromVideo, setFromVideo] = useState(false);
+  const [linesBack, setLinesBack] = useState(false);
+  const [videoFading, setVideoFading] = useState(false);
 
   const stage = () => root.current?.closest<HTMLElement>('[data-stage="lost"]') ?? null;
 
@@ -191,19 +193,25 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
     else delete el.dataset.lostCover;
     if (s.paused) el.dataset.lostPaused = "";
     else delete el.dataset.lostPaused;
-  }, [s.phase, cover, s.paused]);
+    if (videoState === "playing") el.dataset.lostLines = linesBack ? "in" : "out";
+    else delete el.dataset.lostLines;
+  }, [s.phase, cover, s.paused, videoState, linesBack]);
 
-  // relevo: el vídeo desaparece cuando el lienzo ya pintó; sin vídeo, fundido de 200 ms y luego se retira lo estático
+  // relevo: el vídeo se funde en 300 ms sobre el lienzo, que ya pinta los mismos fragmentos en el mismo sitio (medido en la
+  // Task 8: sin salto de posición, pero el 3D sale un 22 % más brillante y un corte seco se veía como un fogonazo);
+  // sin vídeo, fundido de 200 ms y luego se retira lo estático
   useEffect(() => {
     if (!scenePhase) return;
     const viaVideo = videoState === "ended" || videoState === "playing";
     setFromVideo(viaVideo);
     if (viaVideo) {
       setCoverScene(true);
-      const r1 = requestAnimationFrame(() => requestAnimationFrame(() => setVideoGone(true)));
-      const t = window.setTimeout(() => send("settled"), 300);
+      const r1 = requestAnimationFrame(() => requestAnimationFrame(() => setVideoFading(true)));
+      const gone = window.setTimeout(() => setVideoGone(true), 360);
+      const t = window.setTimeout(() => send("settled"), 380);
       return () => {
         cancelAnimationFrame(r1);
+        window.clearTimeout(gone);
         window.clearTimeout(t);
       };
     }
@@ -285,7 +293,12 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
           className="absolute inset-0 hidden h-full w-full object-fill lg:block"
           style={{
             mixBlendMode: opaque ? "screen" : undefined,
-            opacity: videoState === "idle" || videoState === "error" ? 0 : 1,
+            opacity: videoState === "idle" || videoState === "error" || videoFading ? 0 : 1,
+            transition: videoFading ? "opacity 300ms ease-out" : undefined,
+          }}
+          onTimeUpdate={(e) => {
+            const v = e.currentTarget;
+            if (v.duration - v.currentTime <= 0.45) setLinesBack(true);
           }}
           onPlaying={(e) => {
             const v = e.currentTarget;
@@ -319,6 +332,7 @@ export default function LostExperience({ lang, pause, gyro }: Props) {
               highlightId={highlight}
               paused={s.paused}
               live={scenePhase}
+              linesOn={fromVideo}
               gyro={gyroOn}
               onReady={onReady}
               onFail={onFail}

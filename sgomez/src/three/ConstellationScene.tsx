@@ -17,6 +17,8 @@ import { buildBackdrop, buildEnv, glassMaterial, shardGeometry } from "./glass-k
  */
 
 export type SceneProps = {
+  /** La escena entra tras el vídeo: sus líneas empiezan ya encendidas. */
+  linesOn: boolean;
   /** Escritorio: poses de `shards.ts`. Móvil: `stage.mobile` desproyectado a la profundidad de cada pose (L3). */
   layout: "desktop" | "mobile";
   /** Id del fragmento señalado (hover o foco de su enlace), o "". */
@@ -97,7 +99,7 @@ function disposeAssets(a: Assets) {
   a.lineMat.dispose();
 }
 
-function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onProject }: SceneProps) {
+function Content({ layout, highlightId, paused, live, linesOn, gyro, onReady, onFail, onProject }: SceneProps) {
   const gl = useThree((s) => s.gl);
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
@@ -255,7 +257,7 @@ function Content({ layout, highlightId, paused, live, gyro, onReady, onFail, onP
     }
     // la animación entra suave: en el relevo todo está EXACTAMENTE en reposo
     const ramp = live ? smooth(clamp(c.live / 1.6, 0, 1)) : 0;
-    const lineRamp = live ? smooth(clamp(c.live / 0.9, 0, 1)) : 0;
+    const lineRamp = linesOn ? 1 : live ? smooth(clamp(c.live / 0.9, 0, 1)) : 0;
 
     const inp = input.current;
     if (!paused) {
