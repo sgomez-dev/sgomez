@@ -142,7 +142,9 @@ export default function LostExperience({ lang, pause }: Props) {
             },
           );
           glass.current = h;
-          c.setPaused(pausedRef.current);
+          // si el usuario pausó en el hero y llegó aquí por navegación de cliente, se respeta su pausa
+          if (c.isPaused()) dispatch("pause");
+          else c.setPaused(pausedRef.current);
           h.send(latest.current);
           ro = new ResizeObserver(([e]) => e && h.resize(Math.round(e.contentRect.width), Math.round(e.contentRect.height), devicePixelRatio));
           ro.observe(host);

@@ -121,6 +121,8 @@ ctx.onmessage = async (e) => {
       }
       s?.scene?.resize(m.width, m.height, m.dpr);
       if (paused && s?.scene) draw(s, 0, true);
+      // setSize limpia el lienzo: en reposo hay que pedir un fotograma o se queda en blanco hasta el siguiente mensaje
+      else if (s?.lost) kick();
       return;
     }
     case "visible": {
