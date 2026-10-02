@@ -144,7 +144,6 @@ const es = {
     here: "Estás aquí, fuera del mapa",
     pause: "Pausar movimiento",
     resume: "Reanudar movimiento",
-    gyro: "Mover con el móvil",
     group: "Fragmentos que llevan a páginas del sitio",
     shard: {
       home: "Inicio",

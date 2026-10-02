@@ -31,8 +31,7 @@ function getWorker(): Worker {
   live(1);
   worker.onmessage = (e: MessageEvent<FromWorker>) => {
     const m = e.data;
-    if (m.id === "*") listeners.forEach((l) => l(m));
-    else listeners.get(m.id)?.(m);
+    listeners.get(m.id)?.(m);
   };
   worker.onerror = (ev) => {
     ev.preventDefault();

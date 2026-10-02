@@ -306,7 +306,7 @@
 }
 @keyframes mo-light-sheen {
   from { translate: -30% -20%; }
-  to { translate: 18% 14%; }
+  to { translate: 0 0; }
 }
 @media (prefers-reduced-motion: no-preference) {
   :root[data-motion-state="on"] [data-light-write]::after {

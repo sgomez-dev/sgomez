@@ -33,7 +33,8 @@ export default function GlassStage({ id, pauseLabel, className = "", children }:
     let idle = 0;
     let io: IntersectionObserver | null = null;
     const go = () => {
-      if (cancelled) return;
+      // la puerta se vuelve a leer: en el hueco ocioso se pudo bajar de lg o activar el movimiento reducido
+      if (cancelled || !glassGatePasses(readGlassEnv())) return;
       performance.mark(`glass:start:${id}`);
       setState("loading");
     };
@@ -154,7 +155,7 @@ export default function GlassStage({ id, pauseLabel, className = "", children }:
   }, [state]);
 
   return (
-    <div ref={box} data-glass={state} className={`relative ${className}`}>
+    <div ref={box} data-glass={state} className={/\b(absolute|fixed|relative|sticky)\b/.test(className) ? className : `relative ${className}`}>
       {children}
       {state === "live" ? (
         <button

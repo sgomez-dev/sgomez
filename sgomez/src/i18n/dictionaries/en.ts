@@ -146,7 +146,6 @@ const en: Dictionary = {
     here: "You are here, off the map",
     pause: "Pause motion",
     resume: "Resume motion",
-    gyro: "Tilt with your phone",
     group: "Fragments that lead to pages of the site",
     shard: {
       home: "Home",

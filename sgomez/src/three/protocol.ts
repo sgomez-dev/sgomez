@@ -15,7 +15,7 @@ export type ToWorker =
 
 export type FromWorker =
   | { type: "ready"; id: GlassId; ms: number }
-  | { type: "fail"; id: GlassId | "*"; reason: FailReason }
+  | { type: "fail"; id: GlassId; reason: FailReason }
   /** Solo el 404: pares `dx, dy` en px del centro de cada fragmento con enlace respecto a su reposo, en el orden de `PROJECTED_IDS`. */
   | { type: "project"; id: "lost"; offsets: Float32Array };
 

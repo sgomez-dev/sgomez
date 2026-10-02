@@ -104,4 +104,6 @@ jobs:
           npx lhci autorun --config=./lighthouserc.ci.json
           npx lhci autorun --config=./lighthouserc.ci-lcp.json
           sed "s/\"warn\", { \"maxNumericValue\": 2500/\"error\", { \"maxNumericValue\": 2500/" lighthouserc.desktop.json > lighthouserc.desktop.ci.json
+          # si alguien reformatea el JSON el sed no cambiaría nada y el LCP de escritorio volvería a ser solo aviso
+          [ "$(grep -c '"error", { "maxNumericValue": 2500' lighthouserc.desktop.ci.json)" = 2 ] || { echo "el sed del LCP de escritorio no encontró sus 2 líneas"; exit 1; }
           npx lhci autorun --config=./lighthouserc.desktop.ci.json

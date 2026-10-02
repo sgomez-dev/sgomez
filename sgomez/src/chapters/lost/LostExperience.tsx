@@ -17,7 +17,7 @@ import { PROJECTED_IDS, type ToWorker } from "@/three/protocol";
  *  - escritorio: estático, vídeo del estallido, escena 3D viva. El vídeo acaba en
  *    el MISMO fotograma que `poster-end.webp`; la escena (ya construida y con su
  *    primer fotograma pintado) toma el relevo en reposo y se invisibiliza el vídeo.
- *  - móvil: sin vídeo (L5), estático y, cuando la escena está lista, fundido a ella.
+ *  - móvil: sin vídeo (L5) y sin 3D (spec 404 §7.1): el escenario estático.
  *  - sin WebGL2, con reduced-motion, con Save-Data, con pocos núcleos, sin JS o si
  *    el chunk 3D no carga: el escenario estático completo, con los mismos enlaces.
  */

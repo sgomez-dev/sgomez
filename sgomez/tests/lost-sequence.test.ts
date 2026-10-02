@@ -116,11 +116,10 @@ describe("media y gating", () => {
 });
 
 describe("diccionarios", () => {
-  it("pause, resume y gyro existen en los dos idiomas", () => {
+  it("pause y resume existen en los dos idiomas", () => {
     for (const d of [es, en]) {
       expect(d.lost.pause.length).toBeGreaterThan(3);
       expect(d.lost.resume.length).toBeGreaterThan(3);
-      expect(d.lost.gyro.length).toBeGreaterThan(3);
     }
     expect(es.lost.pause).toBe("Pausar movimiento");
     expect(en.lost.pause).toBe("Pause motion");

@@ -20,7 +20,8 @@ describe("D1: GlassPoster con ids por instancia", () => {
       </>,
     );
     const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
-    expect(ids.length).toBe(8);
+    // cinco por póster: cuerpo, brillo, profundidad, halo y el recorte del brillo
+    expect(ids.length).toBe(10);
     expect(new Set(ids).size).toBe(ids.length);
     for (const ref of html.matchAll(/url\(#([^)]+)\)/g)) expect(ids).toContain(ref[1]);
   });

@@ -15,6 +15,7 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
   const sheen = `glass-sheen-${uid}`;
   const depth = `glass-depth-${uid}`;
   const glow = `glass-glow-${uid}`;
+  const clip = `glass-clip-${uid}`;
   return (
     <svg
       aria-hidden="true"
@@ -39,6 +40,9 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
           <stop offset="0" stopColor="#5B6CFF" stopOpacity="0.7" />
           <stop offset="1" stopColor="#5B6CFF" stopOpacity="0" />
         </radialGradient>
+        <clipPath id={clip}>
+          <path d={POSTER_SILHOUETTE.d} />
+        </clipPath>
         <filter id={glow} x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="11" />
         </filter>
@@ -61,11 +65,14 @@ export default function GlassPoster({ className = "" }: { className?: string }) 
           d={POSTER_SILHOUETTE.d}
           fill={`url(#${depth})`}
         />
-        <path
-          data-glass-sheen=""
-          d={POSTER_SILHOUETTE.d}
-          fill={`url(#${sheen})`}
-        />
+        {/* El brillo cruza recortado a la silueta y acaba en su sitio, el mismo que ve quien no tiene movimiento. */}
+        <g clipPath={`url(#${clip})`}>
+          <path
+            data-glass-sheen=""
+            d={POSTER_SILHOUETTE.d}
+            fill={`url(#${sheen})`}
+          />
+        </g>
         <path
           d={POSTER_SILHOUETTE.d}
           fill="none"
