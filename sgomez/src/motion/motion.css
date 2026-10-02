@@ -139,6 +139,45 @@
   html {
     scroll-behavior: auto;
   }
+  /* Sin transicion de pagina: se anulan tambien las que arranca React en la
+     navegacion de cliente (la de documentos ni siquiera se declara abajo). */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Task 7: transiciones de pagina. La pagina vieja se hunde 12 px y se
+   desvanece en 180 ms; la nueva sube 12 px y entra en 280 ms. La nav lleva su
+   propio nombre (site-nav, en Nav.tsx) y se queda quieta. Son instantaneas de
+   la pagina, no texto vivo: la regla de no animar opacity no les aplica (de
+   ahi el prefijo mo-deco-). @view-transition cubre las navegaciones de
+   documento completo (cambio de idioma, el 404); los navegadores sin soporte
+   navegan como siempre. La navegacion de cliente la arranca React con
+   <ViewTransition> y usa estas mismas reglas. */
+@keyframes mo-deco-vt-out {
+  to { opacity: 0; translate: 0 12px; }
+}
+@keyframes mo-deco-vt-in {
+  from { opacity: 0; translate: 0 12px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-old(page) {
+    animation: 180ms ease-in both mo-deco-vt-out;
+  }
+  ::view-transition-new(root),
+  ::view-transition-new(page) {
+    animation: 280ms var(--mo-ease-out) both mo-deco-vt-in;
+  }
+  /* El contenido de <ViewTransition name="page"> no cambia de caja con animacion: queda en la nueva. */
+  ::view-transition-group(page) {
+    animation: none;
+  }
 }
 
 /* Task 5, capitulo 04: la experiencia se fija y se desliza en horizontal.

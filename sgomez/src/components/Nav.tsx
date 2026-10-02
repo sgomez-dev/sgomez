@@ -25,7 +25,7 @@ export default function Nav({ lang }: { lang: Lang }) {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 h-[calc(4rem+var(--safe-top))] pt-[var(--safe-top)] border-b border-[color:var(--line)] bg-[color-mix(in_oklab,var(--bg)_78%,transparent)] backdrop-blur-[12px]">
+    <header className="[view-transition-name:site-nav] fixed inset-x-0 top-0 z-50 h-[calc(4rem+var(--safe-top))] pt-[var(--safe-top)] border-b border-[color:var(--line)] bg-[color-mix(in_oklab,var(--bg)_78%,transparent)] backdrop-blur-[12px]">
       <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between gap-3 pl-[max(var(--gutter),var(--safe-left))] pr-[max(var(--gutter),var(--safe-right))]">
         <Link
           prefetch={false}
