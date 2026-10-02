@@ -14,6 +14,7 @@ const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
 
 const nextConfig: NextConfig = {
+  experimental: { viewTransition: true },
   images: {
     // Las portadas del blog viven en el almacenamiento de Supabase. Se listan solo
     // ellas para que el optimizador no sea un proxy abierto: el servidor las

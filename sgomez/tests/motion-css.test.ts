@@ -49,3 +49,18 @@ describe("escena fijada del capítulo 04", () => {
     expect(block).toMatch(/height:\s*calc\(100svh \+ var\(--n/);
   });
 });
+
+describe("transiciones de página", () => {
+  it("la transición entre documentos solo se declara sin movimiento reducido", () => {
+    const at = css.indexOf("@view-transition");
+    expect(at).toBeGreaterThan(-1);
+    expect(css.lastIndexOf("@media (prefers-reduced-motion: no-preference)", at)).toBeGreaterThan(-1);
+  });
+  it("con movimiento reducido se anulan las animaciones de la transición", () => {
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)[\s\S]*::view-transition-(group|old|new)\(\*\)[\s\S]*animation:\s*none/);
+  });
+  it("los keyframes de la transición llevan el prefijo mo-deco-", () => {
+    expect(css).toMatch(/@keyframes mo-deco-vt-out/);
+    expect(css).toMatch(/@keyframes mo-deco-vt-in/);
+  });
+});

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Instrument_Serif } from "next/font/google";
+import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { LANGS, isLang, localizedPath, type Lang } from "@/i18n/languages";
 import { getDictionary } from "@/i18n";
@@ -167,7 +168,7 @@ export default async function LangLayout({
         </a>
         <Nav lang={lang} />
         <main id="main" className="pt-[calc(4rem+var(--safe-top))]">
-          {children}
+          <ViewTransition name="page">{children}</ViewTransition>
         </main>
         <Footer lang={lang} />
         <MotionDirector />
