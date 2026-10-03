@@ -68,6 +68,8 @@ Cada texto visible existe en español y en inglés. Las cadenas de interfaz vive
 | `/llms-full.txt` y `/en/llms-full.txt` | Todo el contenido del sitio en markdown. |
 | `/agents.md` y `/en/agents.md` | Instrucciones de uso: cuándo es esta la fuente correcta y cómo llamarla. |
 | `/openapi.json`, `/api/openapi.yaml` | Especificación OpenAPI 3.1 de la API pública. |
+| `/api` y `/api/v1` | Índice de la API en JSON, con cada operación, su método y su `operationId`. |
+| `/.well-known/api-catalog` | Catálogo de la API según el RFC 9727 (`application/linkset+json`), con `service-desc` y `service-doc`. Las respuestas de `/api` y la home lo anuncian en la cabecera `Link`. |
 | `/api/v1/*` | API REST de solo lectura, sin autenticación y con CORS abierto. En español por defecto; `?lang=en` o `Accept-Language: en` la sirven en inglés. |
 | `/developers` y `/en/developers` | Portal: quickstart, tabla de endpoints, errores y versionado. |
 | `Accept: text/markdown` | Cualquier página responde en markdown en su URL canónica. También sirve `/about.md` y `/en/about.md`, con sus `Link` hreflang. |

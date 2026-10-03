@@ -85,6 +85,16 @@ export const MACHINE_ROUTES = [
     markdown: false,
   },
   {
+    path: "/.well-known/api-catalog",
+    title: "api-catalog",
+    description: {
+      es: "Catálogo de la API según el RFC 9727, con enlaces a la especificación y a la documentación.",
+      en: "API catalog as defined by RFC 9727, linking the specification and the documentation.",
+    },
+    type: "application/linkset+json",
+    markdown: false,
+  },
+  {
     path: "/sitemap.xml",
     title: "sitemap.xml",
     description: {
@@ -138,6 +148,16 @@ export type MachineRoute = (typeof MACHINE_ROUTES)[number];
  */
 export const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
+
+/** Ruta del catálogo de la API (RFC 9727). */
+export const API_CATALOG_PATH = "/.well-known/api-catalog";
+
+/**
+ * Cabecera `Link` de descubrimiento de la API (RFC 8631 y RFC 9727). La llevan
+ * todas las respuestas de /api y la home, para que un cliente que solo mire
+ * cabeceras encuentre la especificación, la documentación y el catálogo.
+ */
+export const API_DISCOVERY_LINK = `</openapi.json>; rel="service-desc", </developers>; rel="service-doc", <${API_CATALOG_PATH}>; rel="api-catalog"`;
 
 /** Vary de las respuestas markdown y de la API, que no varían por RSC. */
 export const CONTENT_VARY = "Accept, Accept-Encoding";

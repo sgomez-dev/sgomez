@@ -179,7 +179,7 @@ describe("el documento describe las rutas que existen de verdad", () => {
         if (entry.startsWith("[...")) continue;
         const segment = entry.startsWith("[") ? `/{${entry.slice(1, -1)}}` : `/${entry}`;
         paths.push(...routeFiles(full, `${prefix}${segment}`));
-      } else if (entry === "route.ts" && prefix.startsWith("/v1")) {
+      } else if (entry === "route.ts" && (prefix === "" || prefix.startsWith("/v1"))) {
         paths.push(`/api${prefix}`);
       }
     }
