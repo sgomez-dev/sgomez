@@ -62,6 +62,8 @@ export const IDENTITY = {
     // La web de las skills y la forma canónica del perfil de LinkedIn (la misma
     // cuenta que la forma sin `www` de arriba, que se conserva).
     "https://skills.sgomez.dev",
+    // Su página de enlaces (tarjeta NFC y redes): declara esta misma persona con este mismo @id.
+    "https://links.sgomez.dev/",
     "https://www.linkedin.com/in/sgomez-dev/",
   ],
   knowsAbout: [
