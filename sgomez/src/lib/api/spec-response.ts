@@ -1,4 +1,5 @@
 import { openApiDocument } from "@/lib/api/openapi";
+import { API_DISCOVERY_LINK } from "@/lib/site";
 
 /**
  * Respuesta compartida por /openapi.json y /api/openapi.json.
@@ -14,6 +15,7 @@ export function openApiJsonResponse(): Response {
       "Cache-Control": "public, max-age=3600, s-maxage=3600",
       "Access-Control-Allow-Origin": "*",
       Vary: "Accept, Accept-Encoding",
+      Link: API_DISCOVERY_LINK,
     },
   });
 }

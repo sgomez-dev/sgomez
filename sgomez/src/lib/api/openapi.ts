@@ -156,6 +156,21 @@ function collectionOperation(config: {
   };
 }
 
+/** Operación GET del índice de la API, servida en /api y en /api/v1. */
+function indexOperation(config: { operationId: string; summary: string; description: string }): Json {
+  return {
+    get: {
+      operationId: config.operationId,
+      tags: ["Meta"],
+      summary: config.summary,
+      description: config.description,
+      responses: {
+        "200": objectResponse("The API index.", "#/components/schemas/ApiIndex"),
+      },
+    },
+  };
+}
+
 const SCHEMAS: Json = {
   Error: {
     type: "object",
@@ -425,6 +440,35 @@ const SCHEMAS: Json = {
       },
     },
   },
+  ApiIndex: {
+    type: "object",
+    description: "Entry point of the API: its version, where the specification and the documentation live, and every operation.",
+    required: ["name", "api_version", "base_url", "openapi_url", "documentation_url", "api_catalog_url", "endpoints"],
+    additionalProperties: false,
+    properties: {
+      name: { type: "string", description: "Name of the API." },
+      api_version: { type: "string", description: "Semantic version of the API contract." },
+      base_url: { type: "string", format: "uri", description: "Prefix of every data endpoint." },
+      openapi_url: { type: "string", format: "uri", description: "This OpenAPI document." },
+      documentation_url: { type: "string", format: "uri", description: "Developer portal." },
+      api_catalog_url: { type: "string", format: "uri", description: "API catalog as defined by RFC 9727." },
+      endpoints: {
+        type: "array",
+        description: "Every operation in this document, in the order it declares them.",
+        items: {
+          type: "object",
+          required: ["method", "path", "operation_id", "summary"],
+          additionalProperties: false,
+          properties: {
+            method: { type: "string", description: "HTTP method.", enum: ["GET"] },
+            path: { type: "string", description: "Path template, with {placeholders} for path parameters." },
+            operation_id: { type: "string", description: "The operationId of the operation in this document." },
+            summary: { type: "string", description: "What the operation returns, in one line." },
+          },
+        },
+      },
+    },
+  },
   Health: {
     type: "object",
     description: "Availability probe and API entry points.",
@@ -477,9 +521,21 @@ export function openApiDocument(): Json {
       { name: "Profile", description: "Who he is, where he is and whether he is available." },
       { name: "Portfolio", description: "Projects, experience, skills, certifications, education and recommendations." },
       { name: "Search", description: "Cross-content lookup over everything the API publishes." },
-      { name: "Meta", description: "Service health and unsupported-method behaviour." },
+      { name: "Meta", description: "API index, service health and unsupported-method behaviour." },
     ],
     paths: {
+      "/api": indexOperation({
+        operationId: "getApiRoot",
+        summary: "Get the API index from the root of /api",
+        description:
+          "Same body as getApiIndex, served at /api so that a client probing the bare prefix gets JSON and not an error page. Lists every operation with its method, path and operationId, plus the links to this document, the developer portal and the RFC 9727 API catalog.",
+      }),
+      [API_BASE]: indexOperation({
+        operationId: "getApiIndex",
+        summary: "Get the API index",
+        description:
+          "Returns the API name and version, the links to this document, the developer portal and the RFC 9727 API catalog, and every operation with its method, path and operationId. Call it to discover the surface without parsing the OpenAPI document.",
+      }),
       [`${API_BASE}/health`]: {
         get: {
           operationId: "getHealth",

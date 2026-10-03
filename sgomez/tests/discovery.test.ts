@@ -129,17 +129,17 @@ describe("JSON-LD de la organización", () => {
     expect(Array.isArray(contactPoints)).toBe(true);
     const [contact] = contactPoints;
     expect(contact["@type"]).toBe("ContactPoint");
-    expect(contact.contactType).toBeTruthy();
-    expect(String(contact.email)).toContain("@");
+    // Los mismos datos que el nodo #org de skyquetz.com, no el email personal.
+    expect(contact.contactType).toBe("sales");
+    expect(contact.email).toBe("contacto@skyquetz.com");
+    expect(contact.url).toBe("https://wa.me/34600013216");
+    expect(organization.email).toBe("contacto@skyquetz.com");
     expect(contact.availableLanguage).toEqual(["Spanish", "English"]);
   });
 
-  it("declara address como PostalAddress", () => {
+  it("declara address como PostalAddress, solo con el país que publica skyquetz.com", () => {
     const address = organization.address as Node;
-    expect(address["@type"]).toBe("PostalAddress");
-    expect(address.addressLocality).toBe("Santander");
-    expect(address.addressRegion).toBe("Cantabria");
-    expect(address.addressCountry).toBe("ES");
+    expect(address).toEqual({ "@type": "PostalAddress", addressCountry: "GT" });
   });
 
   it("mantiene la relación con la persona sin fusionar las dos entidades", () => {
@@ -264,13 +264,33 @@ describe("Vary: Accept en las páginas HTML", () => {
   });
 
   it("las reglas de cabeceras excluyen /api y los assets", () => {
-    for (const [name, content] of Object.entries(files)) {
-      expect(content, name).toContain("(?!api/|_next/static/|_next/image)");
-    }
+    expect(files["next.config.ts"]).toContain("(?!api$|api/|_next/static/|_next/image)");
+    expect(files["vercel.json"]).toContain("(?!api(?:/|$)|_next/static/|_next/image)");
   });
 
   it("vercel.json es JSON válido", () => {
     expect(() => JSON.parse(files["vercel.json"])).not.toThrow();
+  });
+
+  /**
+   * Un `headers` de vercel.json (con o sin `important`) no llega a las páginas
+   * que salen de la caché de Vercel: el Vary guardado con el prerender gana.
+   * Medido en una preview, solo una transformación `response.headers` con
+   * `op: "set"` lo sustituye. Si alguien vuelve a `headers`, el fallo no se ve
+   * en local; este test lo frena.
+   */
+  it("vercel.json fija el Vary con una transformación set de la respuesta", () => {
+    const config = JSON.parse(files["vercel.json"]) as {
+      headers?: unknown;
+      routes?: { src: string; transforms?: { type: string; op: string; target: { key: string }; args: string }[] }[];
+    };
+    expect(config.headers).toBeUndefined();
+    const transform = config.routes?.flatMap((route) => route.transforms ?? []).find((t) => t.target.key.toLowerCase() === "vary");
+    expect(transform).toMatchObject({ type: "response.headers", op: "set", args: PAGE_VARY });
+    const page = config.routes!.find((route) => route.transforms?.some((t) => t === transform))!;
+    const src = new RegExp(page.src);
+    for (const path of ["/", "/en", "/about", "/work/claude-canvas", "/llms.txt"]) expect(src.test(path), path).toBe(true);
+    for (const path of ["/api", "/api/v1", "/api/v1/profile", "/_next/static/chunks/a.js", "/_next/image"]) expect(src.test(path), path).toBe(false);
   });
 });
 
@@ -292,6 +312,12 @@ describe("JSON-LD de Forgia", () => {
 
   it("su founder referencia a la persona", () => {
     expect(forgia.founder).toEqual({ "@id": "https://sgomez.dev/#person" });
+  });
+
+  it("declara contactPoint con el WhatsApp que publica forgia.es", () => {
+    expect(forgia.contactPoint).toEqual([
+      { "@type": "ContactPoint", contactType: "sales", url: "https://wa.me/34644636000" },
+    ]);
   });
 
   it("la persona trabaja en Forgia y es miembro de ella", () => {

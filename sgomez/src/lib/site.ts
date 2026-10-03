@@ -85,6 +85,16 @@ export const MACHINE_ROUTES = [
     markdown: false,
   },
   {
+    path: "/.well-known/api-catalog",
+    title: "api-catalog",
+    description: {
+      es: "Catálogo de la API según el RFC 9727, con enlaces a la especificación y a la documentación.",
+      en: "API catalog as defined by RFC 9727, linking the specification and the documentation.",
+    },
+    type: "application/linkset+json",
+    markdown: false,
+  },
+  {
     path: "/sitemap.xml",
     title: "sitemap.xml",
     description: {
@@ -128,14 +138,26 @@ export type MachineRoute = (typeof MACHINE_ROUTES)[number];
  * Next varía por ellos para la navegación de cliente: publicar solo `Accept`
  * arreglaría la negociación y rompería el prefetch.
  *
- * OJO: Next 16 sobreescribe la cabecera `Vary` de las respuestas de página al
- * final del pipeline, así que ni el proxy ni `headers()` de next.config
- * bastan por sí solos; el valor que llega al cliente lo fija la capa de
- * hosting (`vercel.json`). Los tres sitios declaran ESTE mismo valor para que
- * gane quien gane, no se pierda ninguno de los dos motivos.
+ * OJO: en Vercel las páginas prerenderizadas salen de la caché con el `Vary`
+ * que el builder guarda junto al HTML (los tokens de RSC del routes-manifest),
+ * y ese valor gana a la cabecera del proxy, a `headers()` de next.config y a
+ * `headers` de vercel.json, incluso con `important`. Lo único que lo pisa, medido
+ * en una preview, es una transformación `response.headers` con `op: "set"` en
+ * los `routes` de `vercel.json`. Los tres sitios declaran ESTE mismo valor para
+ * que gane quien gane, no se pierda ninguno de los dos motivos.
  */
 export const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
+
+/** Ruta del catálogo de la API (RFC 9727). */
+export const API_CATALOG_PATH = "/.well-known/api-catalog";
+
+/**
+ * Cabecera `Link` de descubrimiento de la API (RFC 8631 y RFC 9727). La llevan
+ * todas las respuestas de /api y la home, para que un cliente que solo mire
+ * cabeceras encuentre la especificación, la documentación y el catálogo.
+ */
+export const API_DISCOVERY_LINK = `</openapi.json>; rel="service-desc", </developers>; rel="service-doc", <${API_CATALOG_PATH}>; rel="api-catalog"`;
 
 /** Vary de las respuestas markdown y de la API, que no varían por RSC. */
 export const CONTENT_VARY = "Accept, Accept-Encoding";

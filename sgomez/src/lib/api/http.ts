@@ -1,5 +1,5 @@
 import { isLang, type Lang } from "@/i18n/languages";
-import { absolute } from "@/lib/site";
+import { API_DISCOVERY_LINK, absolute } from "@/lib/site";
 
 /**
  * Respuestas HTTP de la API pública.
@@ -47,6 +47,8 @@ function baseHeaders(extra?: HeadersInit): Headers {
   // él o le serviría inglés a quien no pidió idioma. Constante propia de la
   // API: el Vary de las páginas y del markdown no cambia.
   headers.set("Vary", API_VARY);
+  // Descubrimiento: especificación, documentación y catálogo, también en los errores.
+  headers.set("Link", API_DISCOVERY_LINK);
   return headers;
 }
 

@@ -1,0 +1,44 @@
+name: Post-deploy smoke
+
+# Comprueba con curl las cabeceras de cada despliegue de Vercel, preview o producción.
+# Lo que vigila (el Vary del HTML prerenderizado, el índice de /api, el catálogo
+# RFC 9727, la cabecera Link y el JSON-LD) solo existe en la capa de Vercel, así que
+# ni vitest ni el e2e con next start pueden verlo.
+#
+# Las previews tienen Deployment Protection. Para que la sonda pase hay que crear el
+# secreto VERCEL_AUTOMATION_BYPASS_SECRET en GitHub (Settings, Secrets and variables,
+# Actions) con el valor de Vercel, Project Settings, Deployment Protection,
+# Protection Bypass for Automation. Sin él, en una preview el job avisa y no comprueba
+# nada (respondería 401). Producción se comprueba en https://sgomez.dev, que es
+# público; la URL propia del despliegue también está protegida.
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: sgomez/scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Headers of the deployed URL
+        env:
+          DEPLOY_URL: ${{ github.event.deployment_status.environment_url }}
+          DEPLOY_ENV: ${{ github.event.deployment.environment }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          if [ "$DEPLOY_ENV" = "Production" ]; then
+            DEPLOY_URL="https://sgomez.dev"
+          elif [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            echo "::warning::Preview protegida y sin VERCEL_AUTOMATION_BYPASS_SECRET; no se comprueba $DEPLOY_URL"
+            exit 0
+          fi
+          node sgomez/scripts/post-deploy-smoke.mjs "$DEPLOY_URL"

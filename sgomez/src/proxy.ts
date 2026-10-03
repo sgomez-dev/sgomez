@@ -4,7 +4,7 @@ import { decide } from "@/lib/markdown/routing";
 import { isRscRequest, isUnknownHtmlPath, routeRequest, type RouteDecision } from "@/lib/routing/request";
 import { BYPASS_HEADER, MOLDE_PATH, fallback404Html, fetchMolde, safeOrigin } from "@/lib/lost/molde";
 import { hreflangAlternates, splitLang } from "@/i18n/languages";
-import { CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
+import { API_DISCOVERY_LINK, CONTENT_VARY, PAGE_VARY, absolute } from "@/lib/site";
 
 /**
  * Negociación de contenido markdown (https://acceptmarkdown.com).
@@ -141,14 +141,18 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
   }
 
   const response = passThrough(request, route);
-  // Next sobreescribe esta cabecera en las respuestas de página, así que hoy
-  // quien la hace valer es `vercel.json`. Se declara igualmente: es el valor
-  // correcto para esta respuesta, y el día que Next deje de pisarla ya está.
+  // En Vercel la respuesta prerenderizada trae su propio Vary y pisa este, así
+  // que quien lo hace valer es la transformación de `vercel.json`. Se declara
+  // igualmente: es el valor correcto y cubre `next start`.
   response.headers.set("Vary", PAGE_VARY);
   response.headers.append(
     "Link",
     `<${absolute(decision.alternate)}>; rel="alternate"; type="text/markdown"`,
   );
+  // La home anuncia la API como cualquier respuesta de /api: especificación,
+  // documentación y catálogo. Va en cabecera porque el proxy la añade también
+  // a la página que sale de la caché, sin tocar el HTML prerenderizado.
+  if (pathname === "/" || pathname === "/en") response.headers.append("Link", API_DISCOVERY_LINK);
   return response;
 }
 
@@ -167,6 +171,6 @@ export const config = {
    * pero mantenerlo fuera del matcher ahorra una invocación por petición.
    */
   matcher: [
-    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt|llms-full.txt|agents.md|en/llms.txt|en/llms-full.txt|en/agents.md|openapi.json).*)",
+    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt|llms-full.txt|agents.md|en/llms.txt|en/llms-full.txt|en/agents.md|openapi.json|\\.well-known/).*)",
   ],
 };

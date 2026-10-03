@@ -23,7 +23,10 @@ const today = new Date().toISOString().slice(0, 10);
 
 function dateOf(paths) {
   if (git("status", "--porcelain", "--", ...paths)) return today;
-  const d = git("log", "-1", "--format=%as", "--", ...paths);
+  // La fecha de autor en UTC (%at), como `today`: con %as salía en la zona del autor y un commit hecho de
+  // madrugada en Madrid quedaba «en el futuro» para el test y para el sitemap.
+  const at = git("log", "-1", "--format=%at", "--", ...paths);
+  const d = at ? new Date(Number(at) * 1000).toISOString().slice(0, 10) : "";
   if (!d) throw new Error(`sin historia en git para ${paths.join(", ")}: ¿checkout superficial? (fetch-depth: 0)`);
   return d;
 }

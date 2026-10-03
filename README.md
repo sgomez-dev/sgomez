@@ -68,6 +68,8 @@ Cada texto visible existe en español y en inglés. Las cadenas de interfaz vive
 | `/llms-full.txt` y `/en/llms-full.txt` | Todo el contenido del sitio en markdown. |
 | `/agents.md` y `/en/agents.md` | Instrucciones de uso: cuándo es esta la fuente correcta y cómo llamarla. |
 | `/openapi.json`, `/api/openapi.yaml` | Especificación OpenAPI 3.1 de la API pública. |
+| `/api` y `/api/v1` | Índice de la API en JSON, con cada operación, su método y su `operationId`. |
+| `/.well-known/api-catalog` | Catálogo de la API según el RFC 9727 (`application/linkset+json`), con `service-desc` y `service-doc`. Las respuestas de `/api` y la home lo anuncian en la cabecera `Link`. |
 | `/api/v1/*` | API REST de solo lectura, sin autenticación y con CORS abierto. En español por defecto; `?lang=en` o `Accept-Language: en` la sirven en inglés. |
 | `/developers` y `/en/developers` | Portal: quickstart, tabla de endpoints, errores y versionado. |
 | `Accept: text/markdown` | Cualquier página responde en markdown en su URL canónica. También sirve `/about.md` y `/en/about.md`, con sus `Link` hreflang. |
@@ -78,7 +80,7 @@ Tres decisiones que conviene no deshacer sin querer:
 
 - **Los errores de `/api` son siempre JSON**, incluidos los 404 y los 405. El comodín `api/[...path]` existe para eso: sin él, un endpoint mal escrito devolvería una página HTML que un agente no sabe leer.
 - **El 404 lleva cuerpo.** Publica el mapa del sitio (páginas, ficheros para máquinas y puntos de entrada de la API) en HTML y en markdown.
-- **`Vary: Accept` en las páginas lo fija `vercel.json`.** Next 16 sobreescribe esa cabecera al final del pipeline, así que ni el proxy ni `headers()` de `next.config.ts` bastan. Los tres declaran el mismo valor, con los cuatro tokens de RSC dentro, y un test comprueba que no se separan.
+- **`Vary: Accept` en las páginas lo fija `vercel.json`, con una transformación de la respuesta.** Las páginas prerenderizadas salen de la caché de Vercel con el `Vary` que el builder guarda junto al HTML, y ese valor gana al proxy, a `headers()` de `next.config.ts` y a `headers` de `vercel.json`, incluso con `important`. Por eso `vercel.json` usa `routes` con `transforms` de tipo `response.headers` y `op: "set"`, lo único que lo sustituye en una preview real. Los tres sitios declaran el mismo valor, con los cuatro tokens de RSC dentro, y un test comprueba que no se separan. El workflow `post-deploy-smoke.yml` lo vuelve a comprobar con curl contra cada despliegue.
 
 ---
 

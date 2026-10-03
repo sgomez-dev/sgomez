@@ -1,5 +1,7 @@
 import Ajv from "ajv";
 import { describe, expect, it } from "vitest";
+import { GET as apiRoot } from "@/app/api/route";
+import { GET as apiIndex } from "@/app/api/v1/route";
 import { GET as health } from "@/app/api/v1/health/route";
 import { GET as profile } from "@/app/api/v1/profile/route";
 import { GET as about } from "@/app/api/v1/about/route";
@@ -25,6 +27,8 @@ const call = (path: string, handler: (r: Request, c: { params: Promise<{ slug: s
   handler(new Request(`https://sgomez.dev${path}`), { params: Promise.resolve({ slug }) });
 
 const ROUTES: Record<string, () => Response | Promise<Response>> = {
+  "/api": () => apiRoot(),
+  "": () => apiIndex(),
   "/health": () => health(),
   "/profile": () => call("/api/v1/profile", profile),
   "/about": () => call("/api/v1/about", about),
@@ -64,6 +68,8 @@ describe("las respuestas de la API cumplen el esquema OpenAPI", () => {
 
 function callEn(key: string): Response | Promise<Response> {
   const handlers: Record<string, (r: Request, c: { params: Promise<{ slug: string }> }) => Response | Promise<Response>> = {
+    "/api": () => apiRoot(),
+    "": () => apiIndex(),
     "/health": () => health(),
     "/profile": profile,
     "/about": about,
