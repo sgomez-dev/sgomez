@@ -1,14 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "headers": [
+  "routes": [
     {
-      "source": "/((?!api/|_next/static/|_next/image).*)",
-      "headers": [
+      "src": "^/(?!api(?:/|$)|_next/static/|_next/image)(?:.*)$",
+      "transforms": [
         {
-          "key": "Vary",
-          "value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding"
+          "type": "response.headers",
+          "op": "set",
+          "target": { "key": "Vary" },
+          "args": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding"
         }
-      ]
+      ],
+      "continue": true
     }
   ]
 }

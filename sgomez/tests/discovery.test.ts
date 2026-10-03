@@ -264,13 +264,33 @@ describe("Vary: Accept en las páginas HTML", () => {
   });
 
   it("las reglas de cabeceras excluyen /api y los assets", () => {
-    for (const [name, content] of Object.entries(files)) {
-      expect(content, name).toContain("(?!api/|_next/static/|_next/image)");
-    }
+    expect(files["next.config.ts"]).toContain("(?!api$|api/|_next/static/|_next/image)");
+    expect(files["vercel.json"]).toContain("(?!api(?:/|$)|_next/static/|_next/image)");
   });
 
   it("vercel.json es JSON válido", () => {
     expect(() => JSON.parse(files["vercel.json"])).not.toThrow();
+  });
+
+  /**
+   * Un `headers` de vercel.json (con o sin `important`) no llega a las páginas
+   * que salen de la caché de Vercel: el Vary guardado con el prerender gana.
+   * Medido en una preview, solo una transformación `response.headers` con
+   * `op: "set"` lo sustituye. Si alguien vuelve a `headers`, el fallo no se ve
+   * en local; este test lo frena.
+   */
+  it("vercel.json fija el Vary con una transformación set de la respuesta", () => {
+    const config = JSON.parse(files["vercel.json"]) as {
+      headers?: unknown;
+      routes?: { src: string; transforms?: { type: string; op: string; target: { key: string }; args: string }[] }[];
+    };
+    expect(config.headers).toBeUndefined();
+    const transform = config.routes?.flatMap((route) => route.transforms ?? []).find((t) => t.target.key.toLowerCase() === "vary");
+    expect(transform).toMatchObject({ type: "response.headers", op: "set", args: PAGE_VARY });
+    const page = config.routes!.find((route) => route.transforms?.some((t) => t === transform))!;
+    const src = new RegExp(page.src);
+    for (const path of ["/", "/en", "/about", "/work/claude-canvas", "/llms.txt"]) expect(src.test(path), path).toBe(true);
+    for (const path of ["/api", "/api/v1", "/api/v1/profile", "/_next/static/chunks/a.js", "/_next/image"]) expect(src.test(path), path).toBe(false);
   });
 });
 

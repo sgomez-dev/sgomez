@@ -141,9 +141,9 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
   }
 
   const response = passThrough(request, route);
-  // Next sobreescribe esta cabecera en las respuestas de página, así que hoy
-  // quien la hace valer es `vercel.json`. Se declara igualmente: es el valor
-  // correcto para esta respuesta, y el día que Next deje de pisarla ya está.
+  // En Vercel la respuesta prerenderizada trae su propio Vary y pisa este, así
+  // que quien lo hace valer es la transformación de `vercel.json`. Se declara
+  // igualmente: es el valor correcto y cubre `next start`.
   response.headers.set("Vary", PAGE_VARY);
   response.headers.append(
     "Link",

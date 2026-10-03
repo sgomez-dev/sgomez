@@ -8,7 +8,10 @@ import type { NextConfig } from "next";
  * rompería el prefetch de la navegación de cliente.
  *
  * Debe coincidir con `PAGE_VARY` de `src/lib/site.ts` y con `vercel.json`;
- * hay un test que lo comprueba.
+ * hay un test que lo comprueba. En Vercel quien manda es `vercel.json`: las
+ * páginas prerenderizadas salen de la caché con el `Vary` que el builder
+ * guarda junto al HTML, y solo una transformación de la respuesta lo pisa.
+ * Esta regla cubre `next start` y cualquier otro despliegue.
  */
 const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
@@ -44,7 +47,7 @@ const nextConfig: NextConfig = {
       },
       {
         // Solo las páginas: /api y los assets con hash sirven su propio Vary.
-        source: "/((?!api/|_next/static/|_next/image).*)",
+        source: "/((?!api$|api/|_next/static/|_next/image).*)",
         headers: [{ key: "Vary", value: PAGE_VARY }],
       },
     ];
