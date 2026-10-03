@@ -316,7 +316,7 @@ describe("JSON-LD de Forgia", () => {
 
   it("declara contactPoint con el WhatsApp que publica forgia.es", () => {
     expect(forgia.contactPoint).toEqual([
-      { "@type": "ContactPoint", contactType: "sales", url: "https://wa.me/593984847671" },
+      { "@type": "ContactPoint", contactType: "sales", url: "https://wa.me/34644636000" },
     ]);
   });
 

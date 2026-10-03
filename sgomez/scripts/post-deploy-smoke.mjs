@@ -83,7 +83,7 @@ for (const path of ["/api", "/api/v1"]) {
   const { headers, body } = await get("/", "text/html");
   const link = headers.get("link") ?? "";
   check(link.includes('rel="service-desc"') && link.includes('rel="api-catalog"'), "la home lleva Link service-desc y api-catalog");
-  check(body.includes('"@id":"https://sgomez.dev/#forgia-org"') && body.includes("wa.me/593984847671"), "el JSON-LD de Forgia lleva su contactPoint");
+  check(body.includes('"@id":"https://sgomez.dev/#forgia-org"') && body.includes("wa.me/34644636000"), "el JSON-LD de Forgia lleva su contactPoint");
   check(body.includes("contacto@skyquetz.com"), "el JSON-LD de SkyQuetz lleva su contactPoint");
 }
 

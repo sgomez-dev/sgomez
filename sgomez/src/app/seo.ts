@@ -167,12 +167,12 @@ export const FORGIA = {
   url: "https://forgia.es",
   address: { city: "Santander", region: "Cantabria", country: "ES" },
   /**
-   * El único canal de contacto que publica forgia.es es WhatsApp: el enlace
-   * «Contacto» del pie y el botón para hablar con el bot llevan a este número.
-   * No publica email ni JSON-LD propio (revisado el 4 de octubre de 2026).
+   * El único canal de contacto de Forgia es WhatsApp. El número es el nuevo
+   * español que dio el dueño el 4 de octubre de 2026 (+34 644 636 000); el
+   * ecuatoriano que aún sale en forgia.es se retira. No publica email ni JSON-LD propio.
    */
   contactType: "sales",
-  contactUrl: "https://wa.me/593984847671",
+  contactUrl: "https://wa.me/34644636000",
   description:
     "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
   descriptionEn:
