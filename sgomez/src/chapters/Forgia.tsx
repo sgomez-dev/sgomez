@@ -25,7 +25,7 @@ const SECTION_STYLE: CSSProperties = {
 };
 
 /**
- * Capítulo de Forgia, justo después de SkyQuetz y con su mismo peso (titular tope a 40 px). El ancla es `forgia`; el
+ * Capítulo de Forgia, justo antes de SkyQuetz y con su mismo peso (titular tope a 40 px). El ancla es `forgia`; el
  * nodo del grafo es `#forgia-org` (seo.ts) y no se repite aquí.
  *
  * La marca es «La Forja»: cada lead entra frío y sale al rojo. Tres adornos llevan esa idea, todos `aria-hidden` y en su

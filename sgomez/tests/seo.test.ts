@@ -278,3 +278,25 @@ describe("robots.txt: Content-Signal en cada grupo de IA", () => {
     }
   });
 });
+
+describe("Forgia antes que SkyQuetz", () => {
+  for (const lang of LANGS) {
+    it(`${lang}: el breadcrumb de la home sigue el orden de los capítulos`, () => {
+      const g = pageGraph({ lang, path: "/", title: "t", description: "d", type: "ProfilePage" }) as { "@graph": { "@type": string; itemListElement?: { position: number; item: string }[] }[] };
+      const items = g["@graph"].find((n) => n["@type"] === "BreadcrumbList")!.itemListElement!;
+      const pos = (anchor: string) => items.find((i) => i.item.endsWith(anchor))!.position;
+      expect(pos("#forgia")).toBe(pos("#skyquetz") - 1);
+    });
+    it(`${lang}: llms.txt y llms-full.txt cuentan Forgia antes que SkyQuetz`, () => {
+      const short = llmsTxt(lang);
+      expect(short.indexOf("## Co-founder: Forgia")).toBeLessThan(short.indexOf("## Co-founder: SkyQuetz Consulting"));
+      expect(short.indexOf("- [Forgia](")).toBeLessThan(short.indexOf("- [SkyQuetz Consulting]("));
+      const full = llmsFullTxt(lang);
+      expect(full.indexOf("https://forgia.es")).toBeLessThan(full.indexOf("https://skyquetz.com"));
+    });
+  }
+  it("la home pinta #forgia antes que #skyquetz", () => {
+    const src = fs.readFileSync("src/app/[lang]/page.tsx", "utf8");
+    expect(src.indexOf("<Forgia ")).toBeLessThan(src.indexOf("<SkyQuetz "));
+  });
+});

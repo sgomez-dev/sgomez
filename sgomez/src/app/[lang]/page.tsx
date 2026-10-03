@@ -58,8 +58,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
       <Experience lang={lang} />
       <Projects lang={lang} />
       <OpenSource lang={lang} />
-      <SkyQuetz lang={lang} />
       <Forgia lang={lang} />
+      <SkyQuetz lang={lang} />
       <Proof lang={lang}>
         <LatestPosts lang={lang} />
       </Proof>

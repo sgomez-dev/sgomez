@@ -117,6 +117,14 @@ export function llmsTxt(lang: Lang): string {
   );
   L.push("");
 
+  L.push("## Co-founder: Forgia");
+  L.push("");
+  L.push(
+    `Santiago co-founded ${FORGIA.name} in 2026 with one other partner (two founders in total). ${FORGIA.descriptionEn} The company is based in ${FORGIA.address.city}, ${FORGIA.address.region}. Santiago leads the whole technical side, which covers architecture, development, the bots and the CRM. Its product, Forgia IA, has three parts:`
+  );
+  for (const piece of forgia.pieces) L.push(`- ${t(piece.name, lang)}: ${t(piece.desc, lang)}`);
+  L.push("");
+
   L.push("## Co-founder: SkyQuetz Consulting");
   L.push("");
   L.push(
@@ -126,21 +134,13 @@ export function llmsTxt(lang: Lang): string {
   L.push(`- [${SKYQUETZ.packatrack.name}](${SKYQUETZ.packatrack.url}): ${lang === "es" ? SKYQUETZ.packatrack.description : SKYQUETZ.packatrack.descriptionEn}`);
   L.push("");
 
-  L.push("## Co-founder: Forgia");
-  L.push("");
-  L.push(
-    `Santiago co-founded ${FORGIA.name} in 2026 with one other partner (two founders in total). ${FORGIA.descriptionEn} The company is based in ${FORGIA.address.city}, ${FORGIA.address.region}. Santiago leads the whole technical side, which covers architecture, development, the bots and the CRM. Its product, Forgia IA, has three parts:`
-  );
-  for (const piece of forgia.pieces) L.push(`- ${t(piece.name, lang)}: ${t(piece.desc, lang)}`);
-  L.push("");
-
   L.push("## Profiles & properties");
   L.push("");
   L.push(`- [Portfolio](${lang === "es" ? IDENTITY.url : page("/")}): this site.`);
+  L.push(`- [${FORGIA.name}](${FORGIA.url}): the company he co-founded with one other partner. He leads its technical side.`);
   L.push(
     `- [${SKYQUETZ.name}](${SKYQUETZ.url}): the consultancy he co-founded. Its own site declares him as co-founder, so both domains agree.`
   );
-  L.push(`- [${FORGIA.name}](${FORGIA.url}): the company he co-founded with one other partner. He leads its technical side.`);
   L.push(`- [NudaUI](https://nudaui.dev): his flagship open-source project, more than 1,500 copy-paste, framework-agnostic UI components/animations across 81 categories.`);
   L.push(
     `- [${CLAUDE_CANVAS.name}](${CLAUDE_CANVAS.url}): his open-source Claude Code plugin. Source at ${CLAUDE_CANVAS.repo}, MIT.`
