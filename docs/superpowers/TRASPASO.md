@@ -58,7 +58,7 @@ Actualizado el 2026-10-02 por la tarde.
 | 4 | Taller de Remotion: `BuildSequence`, `SkyQuetzMonogram`, `HeroLoop`, reels y `ScrollSequence` (capítulos 03, 05 y 07) | ✅ Hecha, revisada con opus y con su ronda de arreglos (`progress/2026-10-02-fase-4*.md`) |
 | 5 | Casos de estudio, contacto por intención, SEO/GEO y lanzamiento | 🔄 Casos (aprobados por el dueño), IndexNow, fechas desde git y OG por página hechos. Falta el lanzamiento: PR abierto, a la espera del visto bueno (`LANZAMIENTO.md`) |
 
-**No hay nada en producción.** El dueño decidió «hacer la PR ya cuando todo esté listo». Las cinco fases están hechas y el PR está abierto el 2026-10-02. Hasta entonces:
+**Publicado en producción el 2026-10-03** (PR #29, merge 98c7ca1). Las cinco fases están hechas. Hasta entonces:
 
 - Cada avance se sube a `feat/redesign-v3`.
 - **Nunca se hace push a `main`.** Fusionar en `main` publica en Vercel, y `main` exige PR.
@@ -200,9 +200,9 @@ El plan es `docs/superpowers/plans/2026-10-02-redesign-fase-3-3d.md`, con las re
 
 ### Pendiente inmediato (por este orden)
 
-1. **El PR de `feat/redesign-v3` contra `main` está abierto.** Hay que revisar su CI y la preview de Vercel según `docs/superpowers/LANZAMIENTO.md` §1.
+1. **Lanzado.** PR #29 fusionado con el CI en verde. Comprobado en producción: los bots de IA y de búsqueda reciben 200 en `/`, `/en`, `/llms.txt`, `/sitemap.xml` y en un caso de estudio; la clave de IndexNow se sirve; IndexNow respondió 202 con las 23 URL del sitemap.
    - Los e2e de 3D (`glass-contact`, `glass-hero` y `lost-experience`) fallan a veces cuando corren en paralelo en una máquina cargada y pasan en serie. Si el CI los marca, se repiten antes de tocar código.
-2. **Se fusiona solo con el visto bueno del dueño.** Después, §2 y §3 de `LANZAMIENTO.md`.
+2. **Lo que queda es del dueño:** los pasos manuales de `LANZAMIENTO.md` §3 (Search Console, Bing y Brave) y probar en Safari y Firefox reales.
 3. Deuda conocida:
    - HEVC con alfa para Safari (revisión de la fase 4, punto 10);
    - Firefox y Safari reales sin probar;
