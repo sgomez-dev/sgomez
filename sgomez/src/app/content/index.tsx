@@ -1,6 +1,6 @@
 // src/content/index.ts
 
-import { CLAUDE_CANVAS } from '../seo'
+import { CLAUDE_CANVAS, FORGIA } from '../seo'
 import type { Localized } from '@/lib/content/localized'
 
 /**
@@ -123,6 +123,46 @@ export const skyquetz = {
   ],
 }
 
+/**
+ * Forgia, la segunda empresa que cofundé (junio de 2026).
+ *
+ * Mismo criterio que `FORGIA` en seo.ts: solo lo que se puede comprobar. Son dos socios y la parte de Santiago
+ * es toda la técnica. No se publican las cifras de marketing de forgia.es ni su eslogan, así que las cifras de
+ * aquí son la fecha, los socios y su parte. El canal que se nombra es WhatsApp, el único que la marca da por soportado.
+ * `who` es la semántica de color de la marca: teal para lo que hace el bot y oro para lo que hace una persona.
+ */
+export const forgia = {
+  name: FORGIA.name,
+  url: FORGIA.url,
+  cta: 'forgia.es',
+  logo: '/brand/forgia-logo.svg',
+  logoAlt: { es: 'Logotipo de Forgia', en: 'Forgia logo' },
+  desc: { es: 'Empresa que fundé en junio de 2026 en Santander con otro socio. Su producto, Forgia IA, es un sistema de bots de IA que atiende por WhatsApp a los clientes de un negocio y cualifica sus leads, para que una persona entre en la conversación cuando hay algo que cerrar.', en: `A company I founded in June 2026 in Santander with one other partner. Its product, Forgia IA, is an AI bot system that answers a business's customers on WhatsApp and qualifies its leads, so that a person steps into the conversation when there is something to close.` },
+  myPart: { es: 'Somos dos socios y mi parte es toda la técnica, desde la arquitectura y el desarrollo hasta los bots y el CRM.', en: 'There are two of us, and my part is the whole technical side, from the architecture and the development to the bots and the CRM.' },
+  stats: [
+    { value: '2026', label: { es: 'fundada', en: 'founded' } },
+    { value: '2', label: { es: 'socios', en: 'partners' } },
+    { value: '100%', label: { es: 'de la técnica', en: 'of the tech' } },
+  ],
+  pieces: [
+    {
+      name: { es: 'Bot inbound', en: 'Inbound bot' },
+      desc: { es: 'Atiende a los clientes que llegan solos y cualifica cada lead dentro de la misma conversación.', en: 'Answers the customers who arrive on their own and qualifies each lead inside the same conversation.' },
+      who: 'bot',
+    },
+    {
+      name: { es: 'Bot outbound', en: 'Outbound bot' },
+      desc: { es: 'Hace la prospección B2B por su cuenta. Abre la conversación con otras empresas y cualifica a las que responden.', en: 'Runs B2B prospecting on its own. It opens the conversation with other companies and qualifies the ones that reply.' },
+      who: 'bot',
+    },
+    {
+      name: { es: 'Panel CRM', en: 'CRM panel' },
+      desc: { es: 'Reúne los leads en tiempo real y deja que una persona tome la conversación cuando toca cerrar.', en: 'Gathers the leads in real time and lets a person take over the conversation when it is time to close.' },
+      who: 'you',
+    },
+  ],
+} as const
+
 export const certifications = [
   { title: "Software Engineer Intern", institution: "HackerRank", date: { es: "Septiembre 2025", en: "September 2025" }, img: "/models/assets/certifications/hackerrank.png", url: "https://drive.google.com/file/d/1IXV7yxijNfycqqqMvovNXFZMOV6fjJkK/view?usp=sharing" },
   { title: "McKinsey.org Forward Program", institution: "McKinsey.org", date: { es: "Julio 2025", en: "July 2025" }, img: "/models/assets/certifications/mckinsey.png", url: "https://drive.google.com/file/d/1hbWX1oyBi8zUXPsgUtvgZ8ueekno31pz/view?usp=sharing" },
@@ -215,7 +255,7 @@ export const education = [
 ]
 
 export const experience = [
-  { organization: 'Forgia', location: { es: 'Santander, Cantabria, España', en: 'Santander, Cantabria, Spain' }, role: { es: 'Cofundador', en: 'Co-founder' }, desc: { es: 'Cofundé Forgia con otro socio y llevo toda su parte técnica, desde la arquitectura y el desarrollo hasta los bots y el CRM. Forgia desarrolla un sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp y redes sociales. Su producto, Forgia IA, reúne un bot inbound para las consultas entrantes, un bot outbound para la prospección B2B automatizada y un panel CRM para gestionar los leads en tiempo real.', en: 'I co-founded Forgia with one other partner and lead its whole technical side, from architecture and development to the bots and the CRM. Forgia builds an AI bot system that answers customers and qualifies leads over WhatsApp and social media. Its product, Forgia IA, combines an inbound bot for incoming enquiries, an outbound bot for automated B2B prospecting and a CRM panel to manage leads in real time.' }, summary: { es: 'Llevo la parte técnica de un sistema de bots de IA que atiende clientes y cualifica leads por WhatsApp.', en: 'I lead the technical side of an AI bot system that answers customers and qualifies leads on WhatsApp.' }, period: { es: 'Junio 2026 - Actualidad', en: 'June 2026 - Present' } },
+  { organization: 'Forgia', location: { es: 'Santander, Cantabria, España', en: 'Santander, Cantabria, Spain' }, role: { es: 'Cofundador', en: 'Co-founder' }, desc: { es: 'Cofundé Forgia con otro socio y llevo toda su parte técnica, desde la arquitectura y el desarrollo hasta los bots y el CRM. Forgia desarrolla un sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp. Su producto, Forgia IA, reúne un bot inbound para las consultas entrantes, un bot outbound para la prospección B2B automatizada y un panel CRM para gestionar los leads en tiempo real.', en: 'I co-founded Forgia with one other partner and lead its whole technical side, from architecture and development to the bots and the CRM. Forgia builds an AI bot system that answers customers and qualifies leads over WhatsApp. Its product, Forgia IA, combines an inbound bot for incoming enquiries, an outbound bot for automated B2B prospecting and a CRM panel to manage leads in real time.' }, summary: { es: 'Llevo la parte técnica de un sistema de bots de IA que atiende clientes y cualifica leads por WhatsApp.', en: 'I lead the technical side of an AI bot system that answers customers and qualifies leads on WhatsApp.' }, period: { es: 'Junio 2026 - Actualidad', en: 'June 2026 - Present' } },
   { organization: 'SkyQuetz Consulting', location: { es: 'Remoto (España y Latinoamérica)', en: 'Remote (Spain and Latin America)' }, role: { es: 'Cofundador', en: 'Co-founder' }, desc: { es: 'Cofundé SkyQuetz Consulting con tres socios más para llevar ingeniería de software con estándar internacional a negocios de habla hispana, en remoto y sin intermediarios. Llevo la parte técnica, que abarca arquitectura, desarrollo y decisiones de producto, además de los productos propios de la casa. De ahí salen Synentria, un motor de auditoría SEO y GEO cuyos hallazgos son deterministas y no los decide ningún modelo de lenguaje, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla. Aquí no solo escribo el código, también decido el alcance, hablo con el cliente y respondo del resultado.', en: `I co-founded SkyQuetz Consulting with three more partners to bring software engineering with an international standard to Spanish-speaking businesses, remotely and with no intermediaries. I lead the technical side, which covers architecture, development and product decisions, as well as the company's in-house products. Two products have come out of it: Synentria, an SEO and GEO audit engine whose findings are deterministic and not decided by any language model, and Packatrack, a SaaS for settlement reconciliation for last-mile operators. Here I don't just write the code, I also decide the scope, talk to the client and answer for the result.` }, summary: { es: 'Llevo la parte técnica de una consultora de software en remoto y de sus productos, Synentria y Packatrack.', en: 'I lead the technical side of a remote software consultancy and of its own products, Synentria and Packatrack.' }, period: { es: '2026 - Actualidad', en: '2026 - Present' } },
   { organization: 'Evenbytes', location: { es: 'Santa Cruz de Bezana, Cantabria, España', en: 'Santa Cruz de Bezana, Cantabria, Spain' }, role: { es: 'Desarrollador de Software', en: 'Software Developer' }, desc: { es: 'En Evenbytes desarrollo y mantengo aplicaciones web escalables utilizando Angular, Node.js y Google Cloud, construyendo interfaces fluidas, APIs eficientes y sistemas seguros basados en Datastore y autenticación corporativa. Participo activamente en decisiones de arquitectura, revisión de código y definición técnica, asegurando calidad y consistencia en cada entrega. Además de programar, optimizo rendimiento, mejoro procesos y colaboro estrechamente con product managers y arquitectos para transformar requisitos complejos en soluciones claras, funcionales y listas para producción.', en: 'At Evenbytes I develop and maintain scalable web applications using Angular, Node.js and Google Cloud, building smooth interfaces, efficient APIs and secure systems based on Datastore and corporate authentication. I take an active part in architecture decisions, code review and technical definition, ensuring quality and consistency in every delivery. Besides programming, I optimize performance, improve processes and work closely with product managers and architects to turn complex requirements into clear, functional, production-ready solutions.' }, summary: { es: 'Desarrollo aplicaciones web escalables con Angular, Node.js y Google Cloud, y participo en la arquitectura.', en: 'I build scalable web applications with Angular, Node.js and Google Cloud, and help shape the architecture.' }, period: { es: 'Junio 2025 - Actualidad', en: 'June 2025 - Present' } },
   { organization: 'Google Developer Group (GDG) Santander', location: { es: 'Santander, Cantabria, España', en: 'Santander, Cantabria, Spain' }, role: { es: 'Organizador', en: 'Organizer' }, desc: { es: 'Como organizador de GDG Santander coordino charlas, talleres y eventos que fortalecen la comunidad tecnológica local, trabajando con ponentes y expertos para ofrecer contenido relevante y práctico. Me encargo de la planificación, logística y difusión de cada actividad, impulsando la participación, el aprendizaje y el crecimiento continuo de la comunidad de desarrolladores y entusiastas de la tecnología.', en: 'As an organizer at GDG Santander I coordinate talks, workshops and events that strengthen the local tech community, working with speakers and experts to deliver relevant, practical content. I handle the planning, logistics and promotion of each activity, driving participation, learning and continuous growth of the community of developers and technology enthusiasts.' }, summary: { es: 'Coordino charlas, talleres y eventos para la comunidad tecnológica de Santander.', en: 'I coordinate talks, workshops and events for the Santander tech community.' }, period: { es: 'Noviembre 2024 - Actualidad', en: 'November 2024 - Present' } },

@@ -166,9 +166,9 @@ export const FORGIA = {
   url: "https://forgia.es",
   address: { city: "Santander", region: "Cantabria", country: "ES" },
   description:
-    "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp y redes sociales, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
+    "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
   descriptionEn:
-    "An AI bot system that answers customers and qualifies leads over WhatsApp and social media, with an inbound bot, an outbound bot for B2B prospecting and a CRM panel.",
+    "An AI bot system that answers customers and qualifies leads over WhatsApp, with an inbound bot, an outbound bot for B2B prospecting and a CRM panel.",
 } as const;
 
 /** @id local del nodo de Forgia en este grafo (mismo criterio que SKYQUETZ_NODE). */
@@ -703,8 +703,9 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },
             { "@type": "ListItem", position: 2, name: x("Proyectos", "Projects"), item: `${homeBase}#work` },
             { "@type": "ListItem", position: 3, name: "SkyQuetz", item: `${homeBase}#skyquetz` },
-            { "@type": "ListItem", position: 4, name: "Open Source", item: `${homeBase}#open-source` },
-            { "@type": "ListItem", position: 5, name: x("Contacto", "Contact"), item: `${homeBase}#contact` },
+            { "@type": "ListItem", position: 4, name: "Forgia", item: `${homeBase}#forgia` },
+            { "@type": "ListItem", position: 5, name: "Open Source", item: `${homeBase}#open-source` },
+            { "@type": "ListItem", position: 6, name: x("Contacto", "Contact"), item: `${homeBase}#contact` },
           ]
         : [
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },

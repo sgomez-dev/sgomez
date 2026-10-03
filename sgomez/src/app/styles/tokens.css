@@ -8,6 +8,12 @@
   --light-1: #8fa8ff;
   --light-2: #6ef0dc;
   --line: #ffffff14;
+  /* Acento de Forgia (capítulo #forgia), de su libro de marca: la rampa de temperatura del lead.
+     Frío, teal (lo que hace el bot), oro claro (calor máximo) y oro (una persona, el resultado). */
+  --forge-cold: #4a4540;
+  --forge-teal: #6fc8d8;
+  --forge-hot: #e8d5a8;
+  --forge-gold: #c9a96e;
   --radius: 14px;
   --font-sans: var(--font-inter-tight);
   --font-serif: var(--font-instrument-serif);

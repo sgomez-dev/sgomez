@@ -10,6 +10,7 @@ export function Display({
   motion,
   light = false,
   className = "",
+  serifTone = "text-[color:var(--serif-ink)]",
 }: {
   as?: "h1" | "h2";
   lead: string;
@@ -26,6 +27,8 @@ export function Display({
    */
   light?: boolean;
   className?: string;
+  /** Color de la parte en serif. Por defecto la tinta del sitio; Forgia la pone en el oro de su marca. */
+  serifTone?: string;
 }) {
   return (
     <Tag
@@ -38,7 +41,7 @@ export function Display({
       {serif ? (
         <>
           {" "}
-          <span className={`text-[1.08em] font-normal italic leading-[0.9] tracking-[-0.01em] text-[color:var(--serif-ink)] [font-family:var(--font-serif),serif]`}>
+          <span className={`text-[1.08em] font-normal italic leading-[0.9] tracking-[-0.01em] ${serifTone} [font-family:var(--font-serif),serif]`}>
             {serif}
           </span>
         </>

@@ -53,6 +53,14 @@ const es = {
       heading: "Mi propio producto, de la idea a los usuarios",
       products: "Productos propios",
     },
+    forgia: {
+      eyebrow: "Forgia",
+      heading: "Cada lead entra frío",
+      headingSerif: "y sale al rojo",
+      pieces: "Forgia IA, en tres piezas",
+      whoBot: "Lo trabaja el bot",
+      whoYou: "Lo cierras tú",
+    },
     proof: {
       eyebrow: "Pruebas",
       heading: "Lo que respalda lo que cuento",

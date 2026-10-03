@@ -7,6 +7,7 @@ import Experience from "@/chapters/Experience";
 import Projects from "@/chapters/Projects";
 import OpenSource from "@/chapters/OpenSource";
 import SkyQuetz from "@/chapters/SkyQuetz";
+import Forgia from "@/chapters/Forgia";
 import Proof from "@/chapters/Proof";
 import Contact from "@/chapters/Contact";
 import SiteMap from "@/chapters/lost/SiteMap";
@@ -99,6 +100,7 @@ describe("A2: sin rayas ni dobles guiones en el texto", () => {
             <Projects lang={lang} />
             <OpenSource lang={lang} />
             <SkyQuetz lang={lang} />
+            <Forgia lang={lang} />
             <Proof lang={lang} />
             <Contact lang={lang} />
           </>,
