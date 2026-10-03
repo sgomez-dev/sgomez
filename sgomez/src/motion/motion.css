@@ -439,3 +439,75 @@
     animation: mo-intro 640ms var(--mo-ease-out) calc(var(--k, 0) * 80ms) 1 backwards;
   }
 }
+
+/* Capitulo de Forgia: la forja. Estado final estatico (sin JS, con movimiento reducido o sin animation-timeline se ve
+   todo encendido) y, con movimiento, el calor ligado al scroll. Los adornos son aria-hidden y sus animaciones se
+   llaman mo-heat-*: dependen de la posicion a proposito (el calor baja por el rail siguiendo una linea al 88 % de la
+   pantalla, como la bio se enciende con su rango contain), asi que settledInViewport las excluye. Las tarjetas, que
+   son contenido, entran con mo-card y acaban al terminar su propia entrada, como el resto. */
+[data-ember] {
+  background: var(--forge-gold);
+  box-shadow: 0 0 10px 2px color-mix(in oklab, var(--forge-gold) 45%, transparent);
+}
+[data-forge-node] {
+  --heat-c: var(--forge-teal);
+  background: var(--heat-c);
+  box-shadow: 0 0 0 4px var(--bg), 0 0 12px 2px color-mix(in oklab, var(--heat-c) 40%, transparent);
+}
+[data-forge-node="you"] { --heat-c: var(--forge-gold); }
+@keyframes mo-heat-ember {
+  0% { background-color: var(--forge-cold); box-shadow: 0 0 0 0 transparent; scale: 1; }
+  55% { background-color: var(--forge-hot); box-shadow: 0 0 24px 8px color-mix(in oklab, var(--forge-hot) 60%, transparent); scale: 1.4; }
+  100% { background-color: var(--forge-gold); box-shadow: 0 0 10px 2px color-mix(in oklab, var(--forge-gold) 45%, transparent); scale: 1; }
+}
+@keyframes mo-heat-rail {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0); }
+}
+@keyframes mo-heat-node {
+  0% { background-color: var(--forge-cold); box-shadow: 0 0 0 4px var(--bg), 0 0 0 0 transparent; scale: 0.75; }
+  55% { background-color: var(--forge-hot); box-shadow: 0 0 0 4px var(--bg), 0 0 20px 6px color-mix(in oklab, var(--forge-hot) 55%, transparent); scale: 1.3; }
+  100% { background-color: var(--heat-c); box-shadow: 0 0 0 4px var(--bg), 0 0 12px 2px color-mix(in oklab, var(--heat-c) 40%, transparent); scale: 1; }
+}
+@keyframes mo-heat-bar {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* La columna del logotipo: la brasa se enciende mientras la columna cruza el 70 % de la pantalla. */
+    :root[data-motion-state="on"] [data-forge-col] { view-timeline: --forge-col block; view-timeline-inset: 0% 30%; }
+    :root[data-motion-state="on"] [data-ember] {
+      animation: mo-heat-ember linear both;
+      animation-timeline: --forge-col;
+      animation-range: entry 0% entry 35%;
+    }
+    /* El calor sigue una linea al 88 % de la pantalla (al aterrizar en #forgia en un portatil, las tres piezas ya han
+       prendido). Cada tramo del rail se llena mientras cruza esa linea: su propia caja, de un nudo al siguiente. */
+    :root[data-motion-state="on"] [data-forge-track] { view-timeline: --rail block; view-timeline-inset: 0% 12%; }
+    :root[data-motion-state="on"] [data-forge-rail] {
+      animation: mo-heat-rail linear both;
+      animation-timeline: --rail;
+      animation-range: entry 0% entry 100%;
+    }
+    /* Cada pieza, con la misma linea: el nudo prende cuando el calor llega a el y el tramo de la rampa se llena despues. */
+    :root[data-motion-state="on"] [data-forge-piece] { view-timeline: --piece block; view-timeline-inset: 0% 12%; }
+    :root[data-motion-state="on"] [data-forge-node] {
+      animation: mo-heat-node linear both;
+      animation-timeline: --piece;
+      animation-range: entry 4% entry 30%;
+    }
+    :root[data-motion-state="on"] [data-forge-bar] {
+      animation: mo-heat-bar linear both;
+      animation-timing-function: var(--mo-ease-out);
+      animation-timeline: --piece;
+      animation-range: entry 30% entry 100%;
+    }
+    :root[data-motion-state="on"] [data-motion="piece"] {
+      animation: mo-card linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+  }
+}

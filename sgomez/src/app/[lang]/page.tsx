@@ -11,6 +11,7 @@ import Experience from '@/chapters/Experience'
 import Projects from '@/chapters/Projects'
 import OpenSource from '@/chapters/OpenSource'
 import SkyQuetz from '@/chapters/SkyQuetz'
+import Forgia from '@/chapters/Forgia'
 import Proof from '@/chapters/Proof'
 import LatestPosts from '@/chapters/LatestPosts'
 import Contact from '@/chapters/Contact'
@@ -58,6 +59,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
       <Projects lang={lang} />
       <OpenSource lang={lang} />
       <SkyQuetz lang={lang} />
+      <Forgia lang={lang} />
       <Proof lang={lang}>
         <LatestPosts lang={lang} />
       </Proof>

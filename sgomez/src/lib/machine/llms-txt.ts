@@ -1,5 +1,5 @@
 import { CLAUDE_CANVAS, FORGIA, HOME_FAQ, IDENTITY, IDENTITY_TEXT, SKYQUETZ } from "@/app/seo";
-import { projects, experience, agentProjectDescription } from "@/app/content";
+import { projects, experience, agentProjectDescription, forgia } from "@/app/content";
 import { t } from "@/lib/content/localized";
 import { localizedPath, type Lang } from "@/i18n/languages";
 import { getCaseStudies } from "@/lib/api/data";
@@ -129,8 +129,9 @@ export function llmsTxt(lang: Lang): string {
   L.push("## Co-founder: Forgia");
   L.push("");
   L.push(
-    `Santiago co-founded ${FORGIA.name} in 2026 with one other partner (two founders in total). ${FORGIA.descriptionEn} The company is based in ${FORGIA.address.city}, ${FORGIA.address.region}. Santiago leads the whole technical side, which covers architecture, development, the bots and the CRM.`
+    `Santiago co-founded ${FORGIA.name} in 2026 with one other partner (two founders in total). ${FORGIA.descriptionEn} The company is based in ${FORGIA.address.city}, ${FORGIA.address.region}. Santiago leads the whole technical side, which covers architecture, development, the bots and the CRM. Its product, Forgia IA, has three parts:`
   );
+  for (const piece of forgia.pieces) L.push(`- ${t(piece.name, lang)}: ${t(piece.desc, lang)}`);
   L.push("");
 
   L.push("## Profiles & properties");

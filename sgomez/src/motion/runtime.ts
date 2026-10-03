@@ -40,9 +40,9 @@ export const lifecycle = {
 
 /**
  * Lo que el respaldo revela al entrar: los titulares y tarjetas del registro y, de la pasada para el móvil,
- * párrafos, antetítulos, capas, fichas y etiquetas. Vive aquí y no en el registro, que va en el JS inicial.
+ * párrafos, antetítulos, capas, fichas y etiquetas, y las piezas de Forgia. Vive aquí y no en el registro, que va en el JS inicial.
  */
-const FALLBACK_SELECTOR = `${REVEAL_SELECTOR}, [data-motion="lede"], [data-motion="eyebrow"], [data-motion="layer"], [data-motion="tile"], [data-motion="tag"]`;
+const FALLBACK_SELECTOR = `${REVEAL_SELECTOR}, [data-motion="lede"], [data-motion="eyebrow"], [data-motion="layer"], [data-motion="tile"], [data-motion="tag"], [data-motion="piece"]`;
 
 /** Un elemento se engancha una sola vez, aunque `start` o el observador lo vean varias veces. */
 const hooked = new WeakMap<Element, () => void>();

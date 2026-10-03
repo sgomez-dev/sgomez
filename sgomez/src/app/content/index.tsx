@@ -1,6 +1,6 @@
 // src/content/index.ts
 
-import { CLAUDE_CANVAS } from '../seo'
+import { CLAUDE_CANVAS, FORGIA } from '../seo'
 import type { Localized } from '@/lib/content/localized'
 
 /**
@@ -122,6 +122,46 @@ export const skyquetz = {
     },
   ],
 }
+
+/**
+ * Forgia, la segunda empresa que cofundé (junio de 2026).
+ *
+ * Mismo criterio que `FORGIA` en seo.ts: solo lo que se puede comprobar. Son dos socios y la parte de Santiago
+ * es toda la técnica. No se publican las cifras de marketing de forgia.es ni su eslogan, así que las cifras de
+ * aquí son la fecha, los socios y su parte. El canal que se nombra es WhatsApp, el único que la marca da por soportado.
+ * `who` es la semántica de color de la marca: teal para lo que hace el bot y oro para lo que hace una persona.
+ */
+export const forgia = {
+  name: FORGIA.name,
+  url: FORGIA.url,
+  cta: 'forgia.es',
+  logo: '/brand/forgia-logo.svg',
+  logoAlt: { es: 'Logotipo de Forgia', en: 'Forgia logo' },
+  desc: { es: 'Empresa que fundé en junio de 2026 en Santander con otro socio. Su producto, Forgia IA, es un sistema de bots de IA que atiende por WhatsApp a los clientes de un negocio y cualifica sus leads, para que una persona entre en la conversación cuando hay algo que cerrar.', en: `A company I founded in June 2026 in Santander with one other partner. Its product, Forgia IA, is an AI bot system that answers a business's customers on WhatsApp and qualifies its leads, so that a person steps into the conversation when there is something to close.` },
+  myPart: { es: 'Somos dos socios y mi parte es toda la técnica, desde la arquitectura y el desarrollo hasta los bots y el CRM.', en: 'There are two of us, and my part is the whole technical side, from the architecture and the development to the bots and the CRM.' },
+  stats: [
+    { value: '2026', label: { es: 'fundada', en: 'founded' } },
+    { value: '2', label: { es: 'socios', en: 'partners' } },
+    { value: '100%', label: { es: 'de la técnica', en: 'of the tech' } },
+  ],
+  pieces: [
+    {
+      name: { es: 'Bot inbound', en: 'Inbound bot' },
+      desc: { es: 'Atiende a los clientes que llegan solos y cualifica cada lead dentro de la misma conversación.', en: 'Answers the customers who arrive on their own and qualifies each lead inside the same conversation.' },
+      who: 'bot',
+    },
+    {
+      name: { es: 'Bot outbound', en: 'Outbound bot' },
+      desc: { es: 'Hace la prospección B2B por su cuenta. Abre la conversación con otras empresas y cualifica a las que responden.', en: 'Runs B2B prospecting on its own. It opens the conversation with other companies and qualifies the ones that reply.' },
+      who: 'bot',
+    },
+    {
+      name: { es: 'Panel CRM', en: 'CRM panel' },
+      desc: { es: 'Reúne los leads en tiempo real y deja que una persona tome la conversación cuando toca cerrar.', en: 'Gathers the leads in real time and lets a person take over the conversation when it is time to close.' },
+      who: 'you',
+    },
+  ],
+} as const
 
 export const certifications = [
   { title: "Software Engineer Intern", institution: "HackerRank", date: { es: "Septiembre 2025", en: "September 2025" }, img: "/models/assets/certifications/hackerrank.png", url: "https://drive.google.com/file/d/1IXV7yxijNfycqqqMvovNXFZMOV6fjJkK/view?usp=sharing" },

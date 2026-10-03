@@ -55,6 +55,14 @@ const en: Dictionary = {
       heading: "My own product, from idea to users",
       products: "In-house products",
     },
+    forgia: {
+      eyebrow: "Forgia",
+      heading: "Every lead comes in cold",
+      headingSerif: "and leaves red hot",
+      pieces: "Forgia IA in three parts",
+      whoBot: "The bot works it",
+      whoYou: "You close it",
+    },
     proof: {
       eyebrow: "Proof",
       heading: "What backs up what I say",

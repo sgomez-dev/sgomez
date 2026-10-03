@@ -8,6 +8,7 @@ import Experience from "@/chapters/Experience";
 import Projects from "@/chapters/Projects";
 import OpenSource from "@/chapters/OpenSource";
 import SkyQuetz from "@/chapters/SkyQuetz";
+import Forgia from "@/chapters/Forgia";
 import Proof from "@/chapters/Proof";
 import Contact from "@/chapters/Contact";
 import LatestPosts, { blogApiDisabled } from "@/chapters/LatestPosts";
@@ -161,6 +162,37 @@ describe("capítulos 04–07", () => {
       expect(os.match(/<svg data-layer="trace" aria-hidden="true"/g)).toHaveLength(3);
       expect(os).toMatch(/--i:0/);
       expect(os).toMatch(/pathLength="1"/);
+    });
+  }
+  for (const lang of ["es", "en"] as const) {
+    describe(`${lang}: Forgia`, () => {
+      const d = getDictionary(lang);
+      const html = renderToStaticMarkup(<Forgia lang={lang} />);
+      it("ancla, logotipo y enlace a forgia.es con noopener", () => {
+        expect(html).toContain('id="forgia"');
+        expect(html).toContain('aria-labelledby="forgia-h"');
+        expect(html).toContain("/brand/forgia-logo.svg");
+        expect(html).toMatch(/<a href="https:\/\/forgia\.es" rel="noopener"/);
+      });
+      it("las tres piezas, con su parte en el bot o en la persona", () => {
+        expect(html.match(/data-motion="piece"/g)).toHaveLength(3);
+        expect(html.match(/data-forge-node="bot"/g)).toHaveLength(2);
+        expect(html.match(/data-forge-node="you"/g)).toHaveLength(1);
+        expect(html).toContain(esc(d.chapters.forgia.whoYou));
+      });
+      it("su parte se enciende palabra a palabra y las cifras son solo las ciertas", () => {
+        expect(html).toContain('data-motion="word-reveal"');
+        for (const v of ["2026", ">2<", "100%"]) expect(html).toContain(v);
+      });
+      it("ni las cifras de marketing de forgia.es ni nada que empiece invisible", () => {
+        for (const bad of ["+18", "78%", "78 %", "&lt;1 s", "99,8", "99.8"]) expect(html).not.toContain(bad);
+        expect(html).not.toMatch(/opacity:\s*0[;"]/);
+      });
+      it("los adornos de la forja no se leen", () => {
+        for (const attr of ["data-ember", "data-forge-node", "data-forge-bar"]) {
+          for (const m of html.matchAll(new RegExp(`<span[^>]*${attr}[^>]*>`, "g"))) expect(m[0]).toContain('aria-hidden="true"');
+        }
+      });
     });
   }
   it("el eslogan de SkyQuetz es la frase de marca en español, también en inglés", () => {

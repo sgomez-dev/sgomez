@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 import { layoutShiftDuring, scrollToProgress, settledInViewport } from "./motion-utils";
 
-const CHAPTERS = ["#about", "#experience", "#open-source", "#proof", "#contact"];
+const CHAPTERS = ["#about", "#experience", "#open-source", "#forgia", "#proof", "#contact"];
 const WIDTHS = [320, 375, 414, 768, 1024, 1280, 1440, 1920];
 
 /** Simula un navegador sin animation-timeline (Firefox): el JS lo ve y el CSS estático se anula. */
