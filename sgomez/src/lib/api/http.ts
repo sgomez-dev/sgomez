@@ -1,3 +1,4 @@
+import { isLang, type Lang } from "@/i18n/languages";
 import { absolute } from "@/lib/site";
 
 /**
@@ -42,13 +43,22 @@ function baseHeaders(extra?: HeadersInit): Headers {
   headers.set("Access-Control-Allow-Headers", "Accept, Content-Type");
   // La representación depende del Accept: sin esto una CDN puede servirle a un
   // agente la variante equivocada de la que ya tiene en caché.
-  headers.set("Vary", "Accept, Accept-Encoding");
+  // El idioma también sale de Accept-Language, así que la CDN debe separar por
+  // él o le serviría inglés a quien no pidió idioma. Constante propia de la
+  // API: el Vary de las páginas y del markdown no cambia.
+  headers.set("Vary", API_VARY);
   return headers;
 }
 
-/** Respuesta correcta. `path` es la ruta propia del recurso, para `meta.self`. */
-export function jsonOk(body: unknown, init?: { headers?: HeadersInit; status?: number }): Response {
+const API_VARY = "Accept, Accept-Encoding, Accept-Language";
+
+/**
+ * Respuesta correcta. `lang` (si el recurso depende del idioma) se anuncia en
+ * `Content-Language`.
+ */
+export function jsonOk(body: unknown, init?: { headers?: HeadersInit; status?: number; lang?: Lang }): Response {
   const headers = baseHeaders(init?.headers);
+  if (init?.lang) headers.set("Content-Language", init.lang);
   headers.set("Cache-Control", "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400");
   return new Response(JSON.stringify(body, null, 2) + "\n", {
     status: init?.status ?? 200,
@@ -75,6 +85,44 @@ export function jsonError(
 
 export function notFound(message: string, hint: string): Response {
   return jsonError("not_found", message, hint);
+}
+
+/**
+ * Idioma de la respuesta. `?lang=` manda; si no viene, una cabecera
+ * Accept-Language que empiece por "en" pide inglés; en cualquier otro caso,
+ * español, que es lo que la API devolvía antes de tener idioma.
+ */
+export function resolveLang(request: Request): Lang {
+  const param = new URL(request.url).searchParams.get("lang");
+  if (param !== null && param !== "") {
+    const value = param.trim().toLowerCase();
+    return isLang(value) ? value : "es";
+  }
+  const accept = request.headers.get("accept-language") ?? "";
+  // `en`, `en-GB`, `en_US`, `EN`: cualquier cosa que empiece por la etiqueta.
+  return /^\s*en(?![a-z])/i.test(accept) ? "en" : "es";
+}
+
+export type ParsedLang = { ok: true; lang: Lang } | { ok: false; response: Response };
+
+/**
+ * Valida `?lang=` (sin distinguir mayúsculas) y resuelve el idioma. Un valor
+ * desconocido es un 400, no un español silencioso: quien pide `lang=fr` debe
+ * enterarse de que no lo tiene. Sin `?lang=` decide Accept-Language.
+ */
+export function readLang(request: Request): ParsedLang {
+  const raw = new URL(request.url).searchParams.get("lang");
+  if (raw !== null && raw !== "" && !isLang(raw.trim().toLowerCase())) {
+    return {
+      ok: false,
+      response: jsonError(
+        "invalid_parameter",
+        `Query parameter "lang" must be "es" or "en". Received: ${JSON.stringify(raw)}.`,
+        "Use lang=es or lang=en, or omit the parameter to let Accept-Language decide (default es).",
+      ),
+    };
+  }
+  return { ok: true, lang: resolveLang(request) };
 }
 
 const ALLOWED_METHODS = "GET, HEAD, OPTIONS";

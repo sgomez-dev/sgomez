@@ -1,5 +1,6 @@
 import { collectionMeta } from "@/lib/api/data";
-import { jsonOk, readInt } from "@/lib/api/http";
+import { jsonOk, readInt, readLang } from "@/lib/api/http";
+import type { Lang } from "@/i18n/languages";
 
 /**
  * Handler genérico para las colecciones de solo lectura.
@@ -9,7 +10,7 @@ import { jsonOk, readInt } from "@/lib/api/http";
  * `{ data, meta }`. Escribir siete veces el mismo `limit`/`offset` era la
  * forma segura de que la séptima validara distinto que la primera.
  */
-export function collectionHandler<T>(path: string, load: () => T[]) {
+export function collectionHandler<T>(path: string, load: (lang: Lang) => T[]) {
   return function GET(request: Request): Response {
     const url = new URL(request.url);
 
@@ -19,12 +20,15 @@ export function collectionHandler<T>(path: string, load: () => T[]) {
     const offset = readInt(url, "offset", { fallback: 0, min: 0, max: 1000 });
     if (!offset.ok) return offset.response;
 
-    const all = load();
+    const lang = readLang(request);
+    if (!lang.ok) return lang.response;
+
+    const all = load(lang.lang);
     const page = all.slice(offset.value, offset.value + limit.value);
 
     return jsonOk({
       data: page,
       meta: { ...collectionMeta(page.length, path), total: all.length, limit: limit.value, offset: offset.value },
-    });
+    }, { lang: lang.lang });
   };
 }

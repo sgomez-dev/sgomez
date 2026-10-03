@@ -1,0 +1,67 @@
+name: LCP probe
+
+# ci.yml solo corre en pull_request y el PR de v3 no se abre hasta el final, asi que
+# esta sonda corre en cada push a la rama de trabajo y a mano. Solo mide, no falla por
+# umbrales. Resultado: resumen del job (Summary) y artefacto lcp-probe.
+on:
+  push:
+    branches: [feat/redesign-v3]
+    paths: ["sgomez/**", ".github/workflows/lcp-probe.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: lcp-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: sgomez
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: sgomez/package-lock.json
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Allow Chromium's sandbox (AppArmor)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Production build
+        run: npm run build
+        env:
+          BLOG_API_DISABLED: ""
+      - name: Lighthouse mobile, four variants
+        run: |
+          export CHROME_PATH="$(node -e 'console.log(require("@playwright/test").chromium.executablePath())')"
+          npx next start -p 3000 &
+          up=0
+          for i in $(seq 1 60); do curl -fs http://localhost:3000/ >/dev/null && { up=1; break; }; sleep 1; done
+          [ "$up" = 1 ] || { echo "server did not start"; exit 1; }
+          URLS="--collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/about --collect.url=http://localhost:3000/developers --collect.url=http://localhost:3000/en/no-existe"
+          BASE="--collect.numberOfRuns=5 --collect.settings.skipAudits=robots-txt --collect.settings.ignoreStatusCode=true"
+          FLAGS="--no-sandbox --headless=new"
+          # A: simulado, igual que el CI (Lantern)
+          npx lhci collect $URLS $BASE --collect.settings.chromeFlags="$FLAGS" && mv .lighthouseci .lighthouseci-probe-simulate
+          # B: estrangulado de verdad (devtools). Si aqui el LCP baja de 2,5 s, los ~10 s son el grafo de Lantern
+          npx lhci collect $URLS $BASE --collect.settings.throttlingMethod=devtools --collect.settings.chromeFlags="$FLAGS" && mv .lighthouseci .lighthouseci-probe-devtools
+          # C: H2, sin movimiento (el script del head pone data-motion-state=off y no aplica motion.css)
+          npx lhci collect $URLS $BASE --collect.settings.chromeFlags="$FLAGS --force-prefers-reduced-motion" && mv .lighthouseci .lighthouseci-probe-reduced
+          # D: H1, sin los chunks de JS de la app (Lighthouse no tiene disableJavaScript)
+          npx lhci collect $URLS $BASE --collect.settings.blockedUrlPatterns="*/_next/static/chunks/*" --collect.settings.chromeFlags="$FLAGS" && mv .lighthouseci .lighthouseci-probe-nojs
+          npm run lcp:report -- .lighthouseci-probe-simulate .lighthouseci-probe-devtools .lighthouseci-probe-reduced .lighthouseci-probe-nojs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lcp-probe
+          path: sgomez/.lighthouseci-probe-*
+          include-hidden-files: true
+          retention-days: 14

@@ -1,0 +1,28 @@
+name: IndexNow
+
+# Tras cada despliegue a producción en Vercel, avisa a IndexNow (Bing, Yandex, Seznam, Naver y los que
+# comparten el protocolo) de todas las URL del sitemap. El sitio tiene una docena: mandarlas todas es más
+# simple y más robusto que calcular cuáles cambiaron, y IndexNow lo admite.
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      SITE: https://sgomez.dev
+      KEY: 9f24f7814d138c217f41f29911b56dc7
+    steps:
+      - name: Submit sitemap URLs
+        run: |
+          urls=$(curl -fsS "$SITE/sitemap.xml" | grep -o '<loc>[^<]*</loc>' | sed 's/<\/\?loc>//g')
+          [ -n "$urls" ] || { echo "sitemap vacío"; exit 1; }
+          body=$(printf '%s\n' $urls | jq -R . | jq -s --arg host sgomez.dev --arg key "$KEY" --arg loc "$SITE/$KEY.txt" '{host:$host,key:$key,keyLocation:$loc,urlList:.}')
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST https://api.indexnow.org/indexnow -H 'Content-Type: application/json; charset=utf-8' -d "$body")
+          echo "IndexNow respondió $code con $(printf '%s\n' $urls | wc -l) URL"
+          case "$code" in 200|202) ;; *) exit 1 ;; esac

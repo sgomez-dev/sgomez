@@ -1,0 +1,441 @@
+/* Movimiento de la fase 2. Mejora progresiva: sin JS, con movimiento reducido,
+   con Save-Data o sin animation-timeline, no aplica NADA y se ve el estado final. */
+:root {
+  --mo-ease: cubic-bezier(0.2, 0.7, 0, 1);
+  --mo-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --mo-rise: 1.25rem;
+  --mo-stagger: 8%;
+}
+@property --mx { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --my { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+/* E5 revisada: todo lo ligado al scroll vive aqui, estatico, y esta activo desde el primer
+   pintado (el atributo data-motion-state lo pone el script del head). Nada se inyecta
+   despues de idle: un elemento a medio entrar no salta ni cambia el layout a mitad de scroll.
+   Lo que depende de JS (el iman) cuelga de data-motion-ready. */
+@keyframes mo-rise {
+  from { clip-path: inset(-0.25em -0.25em 100% -0.25em); translate: 0 0.4em; }
+  to { clip-path: inset(-0.25em); translate: 0 0; }
+}
+@keyframes mo-trace {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mo-deco-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mo-fill {
+  from { clip-path: inset(100% 0 0 0 round var(--radius)); }
+  to { clip-path: inset(0 round var(--radius)); }
+}
+@keyframes mo-content {
+  from { clip-path: inset(0 0 100% 0); translate: 0 var(--mo-rise); }
+  to { clip-path: inset(-2rem); translate: 0 0; }
+}
+@keyframes mo-light {
+  from { color: var(--text-2); }
+  to { color: var(--text); }
+}
+@keyframes mo-card {
+  from { clip-path: inset(0 0 100% 0 round var(--radius)); translate: 0 var(--mo-rise); }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; }
+}
+@keyframes mo-badge {
+  from { clip-path: inset(0 0 100% 0 round var(--radius)); translate: 0 var(--mo-rise); scale: 0.96; }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; scale: 1; }
+}
+@keyframes mo-quote {
+  from { translate: 0 2rem; }
+  to { translate: 0 0; }
+}
+
+/* Pasada de movimiento para el movil. Mismo patron: recorte y translate, nunca opacity ni transform. */
+@keyframes mo-lede {
+  from { clip-path: inset(0 0 100% 0); translate: 0 1.5rem; }
+  to { clip-path: inset(-0.5em); translate: 0 0; }
+}
+@keyframes mo-track {
+  from { letter-spacing: 0.5em; }
+  to { letter-spacing: 0.14em; }
+}
+@keyframes mo-tag {
+  from { clip-path: inset(0 0 100% 0 round 999px); translate: 0 0.5rem; scale: 0.9; }
+  to { clip-path: inset(-0.25rem round 999px); translate: 0 0; scale: 1; }
+}
+@keyframes mo-slide-l {
+  from { clip-path: inset(0 100% 0 0 round var(--radius)); translate: -2.5rem 0; }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; }
+}
+@keyframes mo-slide-r {
+  from { clip-path: inset(0 0 0 100% round var(--radius)); translate: 2.5rem 0; }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; }
+}
+@keyframes mo-tile {
+  from { clip-path: inset(0 0 100% 0 round var(--radius)); translate: 0 3rem; scale: 0.94; }
+  to { clip-path: inset(-0.5rem round var(--radius)); translate: 0 0; scale: 1; }
+}
+@keyframes mo-deco-rule {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Titulares de capitulo: suben desde una mascara al entrar. Solo h2 (el h1 del hero es el LCP y no se anima). */
+    :root[data-motion-state="on"] h2[data-motion="text-reveal"] {
+      animation: mo-rise linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    /* Tarjetas de OpenSource: se construyen en cuatro tiempos sobre una linea de tiempo con nombre. Todo termina hacia entry 50%
+       (escalonado incluido): un ancla deja las tarjetas de la segunda fila en el tercio inferior y han de verse acabadas. */
+    :root[data-motion-state="on"] [data-motion="build"] { view-timeline: --build block; --mo-b: calc(var(--i, 0) * 3%); }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="trace"] rect {
+      animation: mo-trace linear both;
+      animation-timeline: --build;
+      animation-range: entry var(--mo-b) entry calc(18% + var(--mo-b));
+    }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="outline"] {
+      animation: mo-deco-fade linear both;
+      animation-timeline: --build;
+      animation-range: entry calc(12% + var(--mo-b)) entry calc(26% + var(--mo-b));
+    }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="fill"] {
+      animation: mo-fill linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: --build;
+      animation-range: entry calc(16% + var(--mo-b)) entry calc(34% + var(--mo-b));
+    }
+    :root[data-motion-state="on"] [data-motion="build"] > [data-layer="content"] {
+      animation: mo-content linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: --build;
+      animation-range: entry calc(25% + var(--mo-b)) entry calc(44% + var(--mo-b));
+    }
+    /* La bio se enciende palabra a palabra (color entre tokens AA). Es el unico rango que usa contain. */
+    :root[data-motion-state="on"] [data-motion="word-reveal"] { view-timeline: --reveal block; }
+    :root[data-motion-state="on"] [data-motion="word-reveal"] [data-w] {
+      animation: mo-light linear both;
+      animation-timeline: --reveal;
+      animation-range: contain calc(var(--i) / var(--n) * 60%) contain calc((var(--i) + 1) / var(--n) * 60%);
+    }
+    @media (min-width: 64rem) {
+      :root[data-motion-state="on"] [data-reveal-scope] { view-timeline: --reveal block; }
+      :root[data-motion-state="on"] [data-reveal-scope] [data-motion="word-reveal"] { view-timeline: none; }
+    }
+    /* Pasada para el movil (vale para todos los anchos). Todo termina, como mucho, cuando su caja
+       acaba de entrar (entry 100%): al aterrizar en un ancla lo que se ve entero esta quieto. */
+    /* El antetitulo cierra su espaciado mientras sube el titular: la linea de tiempo es la del h2 (con la
+       suya, de 18 px, no se veria). Es la unica excepcion a "entero en pantalla = quieto": el e2e la excluye. */
+    :root[data-motion-state="on"] section:has([data-motion="eyebrow"]) { timeline-scope: --head; }
+    :root[data-motion-state="on"] h2[data-motion="text-reveal"] { view-timeline: --head block; }
+    :root[data-motion-state="on"] [data-motion="eyebrow"] {
+      animation: mo-track linear both;
+      animation-timing-function: var(--mo-ease-out);
+      animation-timeline: --head;
+      animation-range: entry 0% entry 60%;
+    }
+    /* Parrafos principales: suben desde su mascara. El recorte va por detras de la entrada, asi que
+       las lineas aparecen algo por encima del borde de la pantalla y no en el mismo borde. */
+    :root[data-motion-state="on"] [data-motion="lede"] {
+      animation: mo-lede linear both;
+      animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    /* Capas del capitulo 03: entran alternando de los lados (el ol recorta en horizontal). */
+    :root[data-motion-state="on"] [data-motion="layer"] {
+      animation: mo-slide-l linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    :root[data-motion-state="on"] [data-motion="layer"]:nth-child(even) { animation-name: mo-slide-r; }
+    /* Fichas de proyectos: suben y se asientan. Son altas: acaban a media entrada para que se note. */
+    :root[data-motion-state="on"] [data-motion="tile"] {
+      animation: mo-tile linear both;
+      animation-timing-function: var(--mo-ease-out);
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    /* Etiquetas de tecnologia: cada una sobre su propia entrada, asi una etiqueta entera en pantalla siempre esta
+       quieta (con la linea de la lista, la primera fila quedaba a medias). Las filas salen solas en cascada al
+       subir y, dentro de la fila, --i retrasa el arranque. */
+    :root[data-motion-state="on"] [data-motion="tag"] {
+      animation: mo-tag linear both;
+      animation-timing-function: var(--mo-ease-out);
+      animation-timeline: view();
+      animation-range: entry calc(min(var(--i, 0), 5) * 12%) entry 100%;
+    }
+    /* El filete de cada cita se dibuja de izquierda a derecha mientras la cita sube. */
+    :root[data-motion-state="on"] [data-motion="quote"] {
+      position: relative;
+      border-top-color: transparent;
+      view-timeline: --rule block;
+    }
+    :root[data-motion-state="on"] [data-motion="quote"]::before {
+      content: "";
+      position: absolute;
+      inset: -1px 0 auto;
+      height: 1px;
+      background: var(--line);
+      transform-origin: left;
+      animation: mo-deco-rule linear both;
+      animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+      animation-timeline: --rule;
+      animation-range: entry 0% entry 35%;
+    }
+    /* Tarjetas de la experiencia en lista vertical (bajo md); desde md son una fila con scroll propio. */
+    @media (max-width: 47.99rem) {
+      :root[data-motion-state="on"] [data-motion="card"] {
+        animation: mo-card linear both;
+        animation-timing-function: var(--mo-ease);
+        animation-timeline: view();
+        animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(70% + var(--i, 0) * var(--mo-stagger));
+      }
+    }
+    /* Muro de insignias: se ensambla escalonado por columna. */
+    :root[data-motion-state="on"] [data-motion="badge"] {
+      animation: mo-badge linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(70% + var(--i, 0) * var(--mo-stagger));
+    }
+    /* Citas en secuencia: solo translate, sin recorte. */
+    :root[data-motion-state="on"] [data-motion="quote"] {
+      animation: mo-quote linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+    /* Intenciones del contacto: suben escalonadas. */
+    :root[data-motion-state="on"] [data-motion="intent"] {
+      animation: mo-card linear both;
+      animation-timing-function: var(--mo-ease);
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * var(--mo-stagger)) entry calc(70% + var(--i, 0) * var(--mo-stagger));
+    }
+    /* El iman usa transform (las entradas, translate y clip-path) y solo existe con el runtime enganchado,
+       con puntero fino y hover. --mx y --my los pone el JS. */
+    @media (hover: hover) and (pointer: fine) {
+      :root[data-motion-state="on"][data-motion-ready] [data-motion="intent"],
+      :root[data-motion-state="on"][data-motion-ready] [data-motion="magnetic"] {
+        transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  /* Sin transicion de pagina: se anulan tambien las que arranca React en la
+     navegacion de cliente (la de documentos ni siquiera se declara abajo). */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Task 7: transiciones de pagina. La pagina vieja se hunde 12 px y se
+   desvanece en 180 ms; la nueva sube 12 px y entra en 280 ms. La nav lleva su
+   propio nombre (site-nav, en Nav.tsx) y se queda quieta. Son instantaneas de
+   la pagina, no texto vivo: la regla de no animar opacity no les aplica (de
+   ahi el prefijo mo-deco-). @view-transition cubre las navegaciones de
+   documento completo (cambio de idioma, el 404); los navegadores sin soporte
+   navegan como siempre. La navegacion de cliente la arranca React con
+   <ViewTransition> y usa estas mismas reglas. */
+@keyframes mo-deco-vt-out {
+  to { opacity: 0; translate: 0 12px; }
+}
+@keyframes mo-deco-vt-in {
+  from { opacity: 0; translate: 0 12px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-old(page) {
+    animation: 180ms ease-in both mo-deco-vt-out;
+  }
+  ::view-transition-new(root),
+  ::view-transition-new(page) {
+    animation: 280ms var(--mo-ease-out) both mo-deco-vt-in;
+  }
+  /* El contenido de <ViewTransition name="page"> no cambia de caja con animacion: queda en la nueva. */
+  ::view-transition-group(page) {
+    animation: none;
+  }
+}
+
+/* Task 5, capitulo 04: la experiencia se fija y se desliza en horizontal.
+   Es CSS estatico y no una entrada del registro porque cambia el ALTO de la
+   seccion: tiene que estar desde el primer pintado (el atributo lo pone el
+   script del head), o aterrizar en /#contact o restaurar el scroll queda
+   desfasado por el crecimiento posterior. No depende del runtime: sin JS,
+   con movimiento reducido, sin animation-timeline o al imprimir no aplica
+   nada y es la lista de la fase 1 con el texto completo.
+   Puerta: ancho de 64rem y alto de 40rem (un portatil de 1366x768 deja unos
+   650 a 740 px de viewport). Cada entrada es una diapositiva de keynote:
+   periodo, rol y organizacion grandes y una sola frase (`summary`); el texto
+   completo (`desc`) sigue en el DOM, recortado a 1px, para los lectores de pantalla.
+   Geometria: alto = 100svh + n * 23.5rem; la escena se pega bajo la nav y la
+   pista se desliza durante el rango `contain` de la seccion. El inset de 4rem
+   alinea el inicio del recorrido con el momento en que se pega; el relleno
+   vertical de la seccion pasa a la escena para que no se despegue antes de
+   acabar. */
+@keyframes mo-pin {
+  from { translate: 0 0; }
+  to { translate: min(0px, calc(-100% + 100cqw)) 0; }
+}
+@keyframes mo-deco-progress {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @media (min-width: 64rem) and (min-height: 40rem) {
+      :root[data-motion-state="on"] [data-pin] {
+        height: calc(100svh + var(--n, 6) * 23.5rem);
+        padding-block: 0;
+        view-timeline: --pin block;
+        view-timeline-inset: calc(4rem + var(--safe-top, 0px)) 0px;
+      }
+      :root[data-motion-state="on"] [data-pin-stage] {
+        position: sticky;
+        top: calc(4rem + var(--safe-top, 0px));
+        height: calc(100svh - 4rem - var(--safe-top, 0px));
+        padding-block: clamp(0.75rem, 3svh, 2rem);
+        overflow: clip;
+      }
+      /* Las flechas no tienen nada que desplazar en el ol (overflow visible): siguen moviendo la pagina. El anillo de foco
+         va al escenario, no al ol, que mide miles de px de ancho. */
+      :root[data-motion-state="on"] [data-pin-stage]:has([data-motion="timeline"]:focus-visible) {
+        outline: 2px solid var(--light-1);
+        outline-offset: -4px;
+      }
+      :root[data-motion-state="on"] [data-pin] [data-motion="timeline"]:focus-visible { outline: none; }
+      :root[data-motion-state="on"] [data-pin-stage] h2 { max-width: none; }
+      :root[data-motion-state="on"] [data-pin-stage] > .mt-10 { margin-top: clamp(1rem, 4svh, 2.5rem); }
+      :root[data-motion-state="on"] [data-pin] [data-motion="timeline"] {
+        overflow: visible;
+        width: max-content;
+        gap: 0;
+        scroll-snap-type: none;
+        animation: mo-pin linear both;
+        animation-timeline: --pin;
+        animation-range: contain 0% contain 100%;
+      }
+      /* La diapositiva: sin caja, un filete a la izquierda y tipografia grande. */
+      :root[data-motion-state="on"] [data-pin] [data-motion="timeline"] > li {
+        position: relative;
+        width: min(38rem, 46vw);
+        gap: 0.75rem;
+        padding: 0 clamp(1.5rem, 3vw, 3rem);
+        border-width: 0 0 0 1px;
+        border-radius: 0;
+        background: transparent;
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="period"] {
+        font-size: var(--step-0);
+        color: var(--light-1);
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="role"] {
+        font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="org"] {
+        font-size: var(--step-0);
+        color: var(--text-2);
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="summary"] {
+        display: block;
+        margin-top: 0.5rem;
+        max-width: 32ch;
+        font-size: max(0.9375rem, var(--step-1));
+        line-height: 1.4;
+        color: var(--text);
+      }
+      :root[data-motion-state="on"] [data-pin] [data-e="desc"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      :root[data-motion-state="on"] [data-pin-progress] {
+        display: block;
+        animation: mo-deco-progress linear both;
+        animation-timeline: --pin;
+        animation-range: contain 0% contain 100%;
+      }
+    }
+  }
+}
+
+/* Relevo poster a cristal vivo (Task 5). Solo capas decorativas con aria-hidden. */
+[data-glass] > [data-glass-canvas] { opacity: 0; transition: opacity 700ms var(--mo-ease-out); }
+[data-glass="live"] > [data-glass-canvas] { opacity: 1; }
+/* La transición solo va al entrar en live: al apagarse el cristal el póster vuelve al instante. El halo no se apaga. */
+[data-glass="live"] > [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 700ms var(--mo-ease-out) 200ms; }
+
+/* Bucle del hero por debajo de lg (HeroLoop, hermano anterior del póster): mientras suena, el cuerpo del póster se apaga. */
+[data-hero-loop="live"] ~ [data-motion="glass"] [data-glass-body] { opacity: 0; transition: opacity 500ms var(--mo-ease-out) 150ms; }
+
+/* Nombre escrito con luz (E3). El texto del h1 es el LCP: no se toca. La luz es un
+   pseudo-elemento decorativo del h1 en multiply: blanco fuera de la banda (no cambia nada),
+   --light-1 y --light-2 dentro (tiñe solo las letras, también las del serif al pasar). Nada se
+   posiciona dentro del h1: partiría el titular en candidatos de LCP más pequeños que el retrato.
+   Sin isolation: el multiply tiene que mezclarse con el fondo de la página, o la capa se ve blanca. Una vez, 2,2 s. */
+/* De 93 % a 7 %: la banda empieza tocando el borde izquierdo y acaba saliendo por el derecho, sin tenir
+   nada ni antes ni despues, y casi todo el tiempo es barrido visible (con 100 % a 0 % y la curva de
+   entrada solo se veia medio segundo). */
+@keyframes mo-light-write {
+  from { background-position: 93% 0; }
+  to { background-position: 7% 0; }
+}
+@keyframes mo-light-sheen {
+  from { translate: -30% -20%; }
+  to { translate: 0 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion-state="on"] [data-light-host]::after {
+    content: "";
+    position: absolute;
+    inset: -0.05em -0.1em;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    background: linear-gradient(100deg, #fff 0 38%, var(--light-1) 46%, var(--light-2) 50%, var(--light-1) 54%, #fff 62% 100%);
+    background-size: 300% 100%;
+    background-position: 93% 0;
+    animation: mo-light-write 2.2s cubic-bezier(0.4, 0, 0.6, 1) 300ms 1 both;
+  }
+  /* El póster del hero (móvil, horizontal y quien no pasa la puerta): el brillo cruza una vez. Solo el
+     del hero: el del contacto cruzaría al cargar, fuera de pantalla, y al aterrizar en #contact no estaría quieto. */
+  :root[data-motion-state="on"] #top [data-motion="glass"] [data-glass-sheen] {
+    transform-box: fill-box;
+    animation: mo-light-sheen 2.4s var(--mo-ease) 500ms 1 both;
+  }
+}
+/* Fin nombre escrito con luz */
+
+/* Entrada del hero al cargar: por tiempo, no por scroll. El h1 (LCP) no se toca; el antetitulo, el
+   subtitulo, los botones y la pastilla suben desde su mascara, escalonados (--k), y todo acaba antes
+   de 0,9 s. Con fill backwards: al terminar no queda ningun recorte puesto. */
+@keyframes mo-intro {
+  from { clip-path: inset(0 0 100% 0); translate: 0 0.9rem; }
+  to { clip-path: inset(-0.75rem); translate: 0 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion-state="on"] [data-intro] {
+    animation: mo-intro 640ms var(--mo-ease-out) calc(var(--k, 0) * 80ms) 1 backwards;
+  }
+}

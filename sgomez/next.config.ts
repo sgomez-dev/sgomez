@@ -13,9 +13,35 @@ import type { NextConfig } from "next";
 const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
 
+/**
+ * `E2E_FIXTURES=1` monta la ruta de prueba /e2e-sequence y sus fotogramas. Solo es para el build del e2e: un despliegue de
+ * Vercel (que define `VERCEL_ENV`) con la variable puesta publicaría una página de pruebas, así que el build se aborta.
+ */
+if (process.env.E2E_FIXTURES === "1" && process.env.VERCEL_ENV) {
+  throw new Error("E2E_FIXTURES=1 no puede usarse en un build de Vercel (VERCEL_ENV está definida).");
+}
+
 const nextConfig: NextConfig = {
+  experimental: { viewTransition: true },
+  images: {
+    // Las portadas del blog viven en el almacenamiento de Supabase. Se listan solo
+    // ellas para que el optimizador no sea un proxy abierto: el servidor las
+    // descarga y las sirve desde este dominio, así que el navegador no pide nada
+    // a terceros (la política de privacidad lo dice).
+    remotePatterns: [
+      { protocol: "https", hostname: "veelwadirgvhyvquvfnn.supabase.co", pathname: "/storage/v1/object/public/blog/**" },
+    ],
+  },
   async headers() {
     return [
+      {
+        // El molde del 404 no es una página pública: nunca se indexa ni se cachea en una CDN.
+        source: "/:lang(es|en)/perdido",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, follow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
       {
         // Solo las páginas: /api y los assets con hash sirven su propio Vary.
         source: "/((?!api/|_next/static/|_next/image).*)",

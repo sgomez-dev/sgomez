@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: sgomez
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # content-dates.mjs lee la fecha de cada página de la historia de git
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: sgomez/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Content dates from git are up to date
+        run: node scripts/content-dates.mjs --check
+
+      - name: Unit tests
+        run: npx vitest run
+
+      - name: Read Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      - name: Cache Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: sgomez/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('sgomez/package-lock.json') }}-${{ hashFiles('sgomez/src/**', 'sgomez/public/**') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('sgomez/package-lock.json') }}-
+
+      # With a cache hit the browser is already there; --with-deps still
+      # installs the system libraries, which are not cached.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Builds the app and starts `next start` through Playwright's webServer.
+      - name: End-to-end tests
+        run: npm run e2e
+
+      - name: JS and CSS budget
+        run: npm run budget
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: sgomez/playwright-report
+          retention-days: 7
+
+      # Ubuntu 24.04 blocks unprivileged user namespaces, and Chromium aborts
+      # with "No usable sandbox!" without this. Same fix as claude-skills' CI.
+      - name: Allow Chromium's sandbox (AppArmor)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      # The e2e build sets BLOG_API_DISABLED=1 (no blog block, no cover images),
+      # so it is lighter than production. Rebuild WITHOUT it before auditing, or
+      # the LCP/TBT/CLS budgets would be checked against a page nobody serves.
+      # .next/cache keeps this cheap. The e2e build was made with E2E_FIXTURES=1:
+      # its prerendered HTML and the fixture frames must not leak into this one.
+      - name: Remove the e2e fixtures
+        run: rm -rf .next/server public/media/__fixture
+
+      - name: Production build for Lighthouse
+        run: npm run build
+        env:
+          BLOG_API_DISABLED: ""
+
+      # Mobile TBT (simulated) is a warning, not an error: on CI hardware it sits at 200-250 ms and a 3-run
+      # median passes or fails at random. Known debt, decided by the owner on 2026-10-03 (TRASPASO §7).
+      # Desktop TBT stays an error.
+      # Mobile LCP is measured with real throttling (devtools) in its own pass
+      # (lighthouserc.ci-lcp.json): Lantern's simulation overstates it (about
+      # 2.8 s simulated vs 2.0 s real, see docs/superpowers/progress/
+      # 2026-10-02-fase-3-lcp.md). The simulated pass checks everything else.
+      - name: Lighthouse budgets
+        run: |
+          export CHROME_PATH="$(node -e 'console.log(require("@playwright/test").chromium.executablePath())')"
+          npx next start -p 3000 &
+          up=0
+          for i in $(seq 1 60); do curl -fs http://localhost:3000/ >/dev/null && { up=1; break; }; sleep 1; done
+          [ "$up" = 1 ] || { echo "server did not start"; exit 1; }
+          npx lhci autorun --config=./lighthouserc.ci.json
+          npx lhci autorun --config=./lighthouserc.ci-lcp.json
+          sed "s/\"warn\", { \"maxNumericValue\": 2500/\"error\", { \"maxNumericValue\": 2500/" lighthouserc.desktop.json > lighthouserc.desktop.ci.json
+          # si alguien reformatea el JSON el sed no cambiaría nada y el LCP de escritorio volvería a ser solo aviso
+          [ "$(grep -c '"error", { "maxNumericValue": 2500' lighthouserc.desktop.ci.json)" = 2 ] || { echo "el sed del LCP de escritorio no encontró sus 2 líneas"; exit 1; }
+          npx lhci autorun --config=./lighthouserc.desktop.ci.json

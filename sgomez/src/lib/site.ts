@@ -15,14 +15,17 @@ export const API_VERSION = "1.0.0";
 /** Prefijo de todos los endpoints de datos. */
 export const API_BASE = "/api/v1";
 
-/** Rutas HTML del sitio. `changeFrequency`/`priority` los consume el sitemap. */
+/**
+ * Rutas HTML del sitio, en español (las URLs sin prefijo). El catálogo con los
+ * dos idiomas vive en `lib/routing/pages.ts`; este fichero no importa `@/i18n`.
+ * `changeFrequency`/`priority` los consume el sitemap.
+ */
 export const HTML_ROUTES = [
   { path: "/", title: "Inicio", changeFrequency: "weekly", priority: 1 },
   { path: "/about", title: "Sobre mí", changeFrequency: "monthly", priority: 0.8 },
   { path: "/contact", title: "Contacto", changeFrequency: "monthly", priority: 0.8 },
   { path: "/developers", title: "Portal para desarrolladores y agentes", changeFrequency: "weekly", priority: 0.8 },
   { path: "/privacy", title: "Privacidad", changeFrequency: "yearly", priority: 0.4 },
-  { path: "/lab", title: "Lab", changeFrequency: "monthly", priority: 0.6 },
 ] as const;
 
 /**
@@ -34,49 +37,80 @@ export const MACHINE_ROUTES = [
   {
     path: "/llms.txt",
     title: "llms.txt",
-    description: "Resumen factual del sitio, con la sección de cuándo usarlo.",
+    description: {
+      es: "Resumen factual del sitio, con la sección de cuándo usarlo.",
+      en: "Factual summary of the site, including when to use it.",
+    },
+    type: "text/markdown",
+    markdown: true,
+  },
+  {
+    path: "/llms-full.txt",
+    title: "llms-full.txt",
+    description: {
+      es: "Todo el contenido del sitio en markdown, en un solo documento.",
+      en: "The whole site content in markdown, in a single document.",
+    },
     type: "text/markdown",
     markdown: true,
   },
   {
     path: "/agents.md",
     title: "agents.md",
-    description: "Instrucciones para agentes: cuándo venir aquí y cómo llamar al sitio.",
+    description: {
+      es: "Instrucciones para agentes: cuándo venir aquí y cómo llamar al sitio.",
+      en: "Instructions for agents: when to come here and how to call the site.",
+    },
     type: "text/markdown",
     markdown: true,
   },
   {
     path: "/openapi.json",
     title: "openapi.json",
-    description: "Especificación OpenAPI 3.1 de la API pública.",
+    description: {
+      es: "Especificación OpenAPI 3.1 de la API pública.",
+      en: "OpenAPI 3.1 specification of the public API.",
+    },
     type: "application/json",
     markdown: false,
   },
   {
     path: "/api/openapi.yaml",
     title: "openapi.yaml",
-    description: "La misma especificación, en YAML.",
+    description: {
+      es: "La misma especificación, en YAML.",
+      en: "The same specification, in YAML.",
+    },
     type: "application/yaml",
     markdown: false,
   },
   {
     path: "/sitemap.xml",
     title: "sitemap.xml",
-    description: "Todas las URLs publicadas.",
+    description: {
+      es: "Todas las URLs publicadas.",
+      en: "Every published URL.",
+    },
     type: "application/xml",
     markdown: false,
   },
   {
     path: "/robots.txt",
     title: "robots.txt",
-    description: "Reglas de rastreo. Los crawlers de IA están permitidos por nombre.",
+    description: {
+      es: "Reglas de rastreo. Los crawlers de IA están permitidos por nombre.",
+      en: "Crawl rules. AI crawlers are allowed by name.",
+    },
     type: "text/plain",
     markdown: false,
   },
   {
     path: "/manifest.webmanifest",
     title: "manifest.webmanifest",
-    description: "Manifiesto de la aplicación web.",
+    description: {
+      es: "Manifiesto de la aplicación web.",
+      en: "Web app manifest.",
+    },
     type: "application/manifest+json",
     markdown: false,
   },
@@ -112,10 +146,23 @@ export function absolute(path: string): string {
 }
 
 /**
+ * Ficheros de máquina que existen también bajo `/en`. `lib/routing/pages.ts`
+ * (`machineHref`) y la lista de exentos de más abajo salen de esta misma lista
+ * para que el HTML, el markdown y el proxy no puedan discrepar.
+ */
+export const LOCALIZED_MACHINE_PATHS = ["/llms.txt", "/llms-full.txt", "/agents.md"] as const;
+
+/** Imágenes Open Graph generadas: las sirve Next, no pasan por la negociación de markdown. */
+export const OG_IMAGE_PATHS: readonly string[] = ["/opengraph-image", "/en/opengraph-image"];
+
+/**
  * Rutas que el middleware no debe tocar nunca: o ya son markdown, o son
  * ficheros con su propio Content-Type que un agente no debe recibir
  * reescrito.
  */
-export const NEGOTIATION_EXEMPT_PATHS: readonly string[] = MACHINE_ROUTES.map(
-  (route) => route.path,
-);
+export const NEGOTIATION_EXEMPT_PATHS: readonly string[] = [
+  ...MACHINE_ROUTES.map((route) => route.path),
+  // Las versiones inglesas de los ficheros en markdown. `/en/agents.md`
+  // acaba en .md y sin esta excepción se leería como la variante de `/en/agents`.
+  ...LOCALIZED_MACHINE_PATHS.map((path) => `/en${path}`),
+];

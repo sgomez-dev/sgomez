@@ -1,4 +1,4 @@
-import { NEGOTIATION_EXEMPT_PATHS } from "@/lib/site";
+import { NEGOTIATION_EXEMPT_PATHS, OG_IMAGE_PATHS } from "@/lib/site";
 import { prefersMarkdown } from "@/lib/markdown/negotiate";
 
 /**
@@ -30,6 +30,9 @@ export function markdownVariantOf(pathname: string): string {
 export function canonicalOfVariant(pathname: string): string {
   const withoutSuffix = pathname.slice(0, -".md".length);
   if (withoutSuffix === "" || withoutSuffix === "/index") return "/";
+  // `/en/index.md` es la home inglesa, igual que `/index.md` es la española.
+  const home = /^(\/[a-z]{2})\/index$/.exec(withoutSuffix);
+  if (home) return home[1];
   return withoutSuffix;
 }
 
@@ -44,6 +47,9 @@ export function decide(pathname: string, accept: string | null | undefined, isRs
 
   // /llms.txt, /openapi.json, /sitemap.xml… ya sirven su propio formato.
   if (NEGOTIATION_EXEMPT_PATHS.includes(pathname)) return { kind: "skip" };
+
+  // La imagen Open Graph es una imagen: no tiene variante markdown.
+  if (OG_IMAGE_PATHS.includes(pathname)) return { kind: "skip" };
 
   if (pathname.endsWith(".md")) {
     const canonical = canonicalOfVariant(pathname);

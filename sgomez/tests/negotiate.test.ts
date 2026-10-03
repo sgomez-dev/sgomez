@@ -74,9 +74,19 @@ describe("prefersMarkdown", () => {
 
 describe("variantes .md", () => {
   it("va y vuelve entre la ruta canónica y su variante", () => {
-    for (const path of ["/", "/about", "/developers", "/lab"]) {
+    for (const path of ["/", "/about", "/developers", "/en/about"]) {
       expect(canonicalOfVariant(markdownVariantOf(path))).toBe(path);
     }
+  });
+
+  it("la home inglesa usa /en.md y vuelve a /en", () => {
+    expect(markdownVariantOf("/en")).toBe("/en.md");
+    expect(canonicalOfVariant("/en.md")).toBe("/en");
+  });
+
+  it("la versión inglesa de llms.txt y agents.md no se lee como variante .md", () => {
+    expect(decide("/en/agents.md", "text/markdown", false)).toEqual({ kind: "skip" });
+    expect(decide("/en/llms.txt", "text/markdown", false)).toEqual({ kind: "skip" });
   });
 
   it("la home usa /index.md y no /.md", () => {
