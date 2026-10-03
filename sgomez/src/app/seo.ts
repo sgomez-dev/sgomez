@@ -166,9 +166,9 @@ export const FORGIA = {
   url: "https://forgia.es",
   address: { city: "Santander", region: "Cantabria", country: "ES" },
   description:
-    "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp y redes sociales, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
+    "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
   descriptionEn:
-    "An AI bot system that answers customers and qualifies leads over WhatsApp and social media, with an inbound bot, an outbound bot for B2B prospecting and a CRM panel.",
+    "An AI bot system that answers customers and qualifies leads over WhatsApp, with an inbound bot, an outbound bot for B2B prospecting and a CRM panel.",
 } as const;
 
 /** @id local del nodo de Forgia en este grafo (mismo criterio que SKYQUETZ_NODE). */
