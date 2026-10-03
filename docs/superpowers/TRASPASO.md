@@ -208,6 +208,7 @@ El plan es `docs/superpowers/plans/2026-10-02-redesign-fase-3-3d.md`, con las re
    - Firefox y Safari reales sin probar;
    - el margen del presupuesto de JS del e2e es de unos 5 KB;
    - `src/lib/image-props.ts` usa un módulo interno de Next (fijado a 16.2.6 y con test).
+   - **TBT móvil simulado de la home en unos 200-250 ms** (presupuesto 200). En el CI es un aviso por decisión del dueño (2026-10-03) y en escritorio sigue siendo error. Para bajarlo hay que reducir la hidratación de la home (muchas islas de React) y el peso del payload RSC del HTML. La tarea larga de unos 170 ms es el chunk del framework hidratando y la de unos 220 ms es el análisis del documento.
 
 ### Lo que hizo falta saber en esta fase
 

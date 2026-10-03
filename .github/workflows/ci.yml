@@ -100,6 +100,9 @@ jobs:
         env:
           BLOG_API_DISABLED: ""
 
+      # Mobile TBT (simulated) is a warning, not an error: on CI hardware it sits at 200-250 ms and a 3-run
+      # median passes or fails at random. Known debt, decided by the owner on 2026-10-03 (TRASPASO §7).
+      # Desktop TBT stays an error.
       # Mobile LCP is measured with real throttling (devtools) in its own pass
       # (lighthouserc.ci-lcp.json): Lantern's simulation overstates it (about
       # 2.8 s simulated vs 2.0 s real, see docs/superpowers/progress/
