@@ -129,17 +129,17 @@ describe("JSON-LD de la organización", () => {
     expect(Array.isArray(contactPoints)).toBe(true);
     const [contact] = contactPoints;
     expect(contact["@type"]).toBe("ContactPoint");
-    expect(contact.contactType).toBeTruthy();
-    expect(String(contact.email)).toContain("@");
+    // Los mismos datos que el nodo #org de skyquetz.com, no el email personal.
+    expect(contact.contactType).toBe("sales");
+    expect(contact.email).toBe("contacto@skyquetz.com");
+    expect(contact.url).toBe("https://wa.me/34600013216");
+    expect(organization.email).toBe("contacto@skyquetz.com");
     expect(contact.availableLanguage).toEqual(["Spanish", "English"]);
   });
 
-  it("declara address como PostalAddress", () => {
+  it("declara address como PostalAddress, solo con el país que publica skyquetz.com", () => {
     const address = organization.address as Node;
-    expect(address["@type"]).toBe("PostalAddress");
-    expect(address.addressLocality).toBe("Santander");
-    expect(address.addressRegion).toBe("Cantabria");
-    expect(address.addressCountry).toBe("ES");
+    expect(address).toEqual({ "@type": "PostalAddress", addressCountry: "GT" });
   });
 
   it("mantiene la relación con la persona sin fusionar las dos entidades", () => {
@@ -312,6 +312,12 @@ describe("JSON-LD de Forgia", () => {
 
   it("su founder referencia a la persona", () => {
     expect(forgia.founder).toEqual({ "@id": "https://sgomez.dev/#person" });
+  });
+
+  it("declara contactPoint con el WhatsApp que publica forgia.es", () => {
+    expect(forgia.contactPoint).toEqual([
+      { "@type": "ContactPoint", contactType: "sales", url: "https://wa.me/593984847671" },
+    ]);
   });
 
   it("la persona trabaja en Forgia y es miembro de ella", () => {

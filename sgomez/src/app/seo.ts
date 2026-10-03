@@ -123,20 +123,19 @@ export const SKYQUETZ = {
   descriptionEn:
     "A software consultancy building custom systems, platforms, automations and integrations, plus websites, online stores, apps and maintenance. Fully remote, serving Spanish-speaking clients.",
   /**
-   * Contacto y sede que ESTE sitio declara de la empresa.
+   * Contacto y sede de la empresa, copiados del nodo `#org` que publica
+   * skyquetz.com (revisado el 4 de octubre de 2026). Antes este sitio daba el
+   * email personal de Santiago y una sede en Santander; skyquetz.com ya publica
+   * su propio `contactPoint` y su dirección, así que mandan esos.
    *
-   * El email es el de Santiago, no un buzón corporativo inventado: es el que
-   * ya publica este dominio y es cierto que llega a un socio fundador. Si
-   * skyquetz.com publica algún día su propio `contactPoint`, este debe pasar a
-   * ser ese, no seguir siendo el personal.
-   *
-   * La dirección es de ciudad, sin calle ni número: la empresa es 100% remota
-   * y una calle inventada sería peor que una dirección incompleta, porque una
-   * dirección que no se puede verificar es justo lo contrario de lo que un
-   * agente viene a comprobar aquí.
+   * La dirección es solo el país, porque es lo único que skyquetz.com declara
+   * en su `PostalAddress` (Guatemala). No se completa con ciudad ni calle: una
+   * dirección que la propia empresa no publica sería un dato inventado.
    */
-  contactEmail: "contact@sgomez.dev",
-  address: { city: "Santander", region: "Cantabria", country: "ES" },
+  contactType: "sales",
+  contactEmail: "contacto@skyquetz.com",
+  contactUrl: "https://wa.me/34600013216",
+  address: { country: "GT" },
   synentria: {
     name: "Synentria",
     url: "https://synentria.skyquetz.com",
@@ -167,6 +166,13 @@ export const FORGIA = {
   name: "Forgia",
   url: "https://forgia.es",
   address: { city: "Santander", region: "Cantabria", country: "ES" },
+  /**
+   * El único canal de contacto que publica forgia.es es WhatsApp: el enlace
+   * «Contacto» del pie y el botón para hablar con el bot llevan a este número.
+   * No publica email ni JSON-LD propio (revisado el 4 de octubre de 2026).
+   */
+  contactType: "sales",
+  contactUrl: "https://wa.me/593984847671",
   description:
     "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
   descriptionEn:
@@ -531,9 +537,9 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       contactPoint: [
         {
           "@type": "ContactPoint",
-          contactType: "business inquiries",
+          contactType: SKYQUETZ.contactType,
           email: SKYQUETZ.contactEmail,
-          url: SKYQUETZ.url,
+          url: SKYQUETZ.contactUrl,
           availableLanguage: ["Spanish", "English"],
           areaServed: ["ES", "419"],
         },
@@ -541,8 +547,6 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       email: SKYQUETZ.contactEmail,
       address: {
         "@type": "PostalAddress",
-        addressLocality: SKYQUETZ.address.city,
-        addressRegion: SKYQUETZ.address.region,
         addressCountry: SKYQUETZ.address.country,
       },
       owns: [
@@ -567,6 +571,13 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
         addressRegion: FORGIA.address.region,
         addressCountry: FORGIA.address.country,
       },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: FORGIA.contactType,
+          url: FORGIA.contactUrl,
+        },
+      ],
     },
     {
       "@type": "SoftwareApplication",
