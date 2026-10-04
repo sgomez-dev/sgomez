@@ -6,6 +6,7 @@
 //   npm run render -- --only=webm,mp4,posters
 //   npm run render -- --only=build      secuencia de fotogramas del capítulo 03, a sgomez/public/media/build
 //   npm run render -- --only=monogram   el logotipo de SkyQuetz que se forma (capítulo 07), a sgomez/public/media/skyquetz
+//   npm run render -- --only=forgia     el logotipo de Forgia que se forma con el mismo cristal, a sgomez/public/media/forgia
 //   npm run render -- --only=hero       el bucle del cristal del hero (móvil y horizontal), a sgomez/public/media/hero
 //   npm run render -- --only=reels      un reel por proyecto destacado (capítulo 05), a sgomez/public/media/reels
 import { spawnSync } from "node:child_process";
@@ -45,6 +46,11 @@ const reelsMedia = resolve(root, "..", "sgomez", "public", "media", "reels");
 const MONO_WEBM_CRF = 52;
 const MONO_MP4_CRF = 24;
 const monoMedia = resolve(root, "..", "sgomez", "public", "media", "skyquetz");
+
+// Capítulo de Forgia (ForgiaReveal): 912x264 a 60 fps, 2,5 s, la misma línea de tiempo. Presupuesto: <= 400 KB cada fichero.
+const FORGIA_WEBM_CRF = 52;
+const FORGIA_MP4_CRF = 24;
+const forgiaMedia = resolve(root, "..", "sgomez", "public", "media", "forgia");
 
 // Bucle del hero (HeroLoop): 720x720 a 30 fps, 6 s. WebM con alfa y MP4 sobre negro. Presupuesto: <= 500 KB cada fichero.
 const HERO_WEBM_CRF = 36;
@@ -162,6 +168,19 @@ if (want("monogram") && !draft) {
   remotion(["render", entry, "SkyQuetzMonogram", mp4, "--codec=h264", "--pixel-format=yuv420p", "--image-format=png", `--crf=${MONO_MP4_CRF}`, "--x264-preset=veryslow", "--muted", "--gl=angle", props("mono-mp4", { bg: BG })]);
   sizes["skyquetz/monogram.webm"] = webm;
   sizes["skyquetz/monogram.mp4"] = mp4;
+}
+
+if (want("forgia") && !draft) {
+  mkdirSync(forgiaMedia, { recursive: true });
+  // El último fotograma es la imagen de la página (la <img> de Forgia.tsx): se usa el mismo SVG, sin copia versionada.
+  mkdirSync(join(root, "public", "brand"), { recursive: true });
+  copyFileSync(resolve(root, "..", "sgomez", "public", "brand", "forgia-logo.svg"), join(root, "public", "brand", "forgia-logo.svg"));
+  const webm = join(forgiaMedia, "reveal.webm");
+  const mp4 = join(forgiaMedia, "reveal.mp4");
+  remotion(["render", entry, "ForgiaReveal", webm, "--codec=vp9", "--pixel-format=yuva420p", "--image-format=png", `--crf=${FORGIA_WEBM_CRF}`, "--muted", "--gl=angle", props("forgia-webm", { bg: "transparent" })]);
+  remotion(["render", entry, "ForgiaReveal", mp4, "--codec=h264", "--pixel-format=yuv420p", "--image-format=png", `--crf=${FORGIA_MP4_CRF}`, "--x264-preset=veryslow", "--muted", "--gl=angle", props("forgia-mp4", { bg: BG })]);
+  sizes["forgia/reveal.webm"] = webm;
+  sizes["forgia/reveal.mp4"] = mp4;
 }
 
 if (want("hero") && !draft) {

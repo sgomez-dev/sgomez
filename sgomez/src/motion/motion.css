@@ -511,3 +511,19 @@
     }
   }
 }
+
+/* El logotipo de Forgia que se forma con cristal (MonogramReveal). Mientras suena el vídeo la brasa del DOM no se ve (el
+   vídeo la dibuja apagada encima del punto, como el 0 % de mo-heat-ember). Al terminar, la brasa toma el relevo apagada y
+   se enciende por tiempo, una vez, en vez de seguir el scroll: el vídeo ya ha sido la entrada del logotipo. Sin vídeo
+   (movimiento reducido, Save-Data, sin JS, equipo modesto) data-monogram no pasa de "poster" y la brasa es la de siempre. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion-state="on"] [data-monogram="playing"] > [data-ember] {
+    opacity: 0;
+    animation: none;
+  }
+  :root[data-motion-state="on"] [data-monogram="done"] > [data-ember] {
+    animation: mo-heat-ember 1100ms var(--mo-ease-out) 120ms 1 both;
+    animation-timeline: auto;
+    animation-range: normal;
+  }
+}

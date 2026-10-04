@@ -37,7 +37,8 @@ export const F_GLASS_END = 126;
 
 /** Cómo se despliega la placa en el encuadre: más ancha que alta, como el logotipo. */
 /** `sx` estira la placa entera en horizontal (posiciones Y formas de cada fragmento), así las celdas siguen encajando. */
-export const LAYOUT = { sx: 1.7, scale: 1.45, shard: 0.99 };
+export type Layout = { sx: number; scale: number; shard: number };
+export const LAYOUT: Layout = { sx: 1.7, scale: 1.45, shard: 0.99 };
 
 export const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 export const smooth = (t: number) => {
@@ -66,19 +67,22 @@ const starts = SHARDS.map((_, i) => {
 });
 
 /** Sitio de reposo de la celda i en la placa entera (ya con el cabeceo). */
-export function restShard(i: number): MonoShard {
+export function restShard(i: number, layout: Layout = LAYOUT): MonoShard {
   const c = cells[i]!;
-  const local = new THREE.Vector3(c.cx * LAYOUT.sx * LAYOUT.scale, c.cy * LAYOUT.scale, (i % 4) * 0.014).applyQuaternion(TILT);
-  return { pos: local, q: TILT.clone(), scale: c.radius * LAYOUT.scale * LAYOUT.shard };
+  const local = new THREE.Vector3(c.cx * layout.sx * layout.scale, c.cy * layout.scale, (i % 4) * 0.014).applyQuaternion(TILT);
+  return { pos: local, q: TILT.clone(), scale: c.radius * layout.scale * layout.shard };
 }
 
-export function monoShardState(i: number, f: number): MonoShard {
-  const rest = restShard(i);
+export function monoShardState(i: number, f: number, layout: Layout = LAYOUT): MonoShard {
+  const rest = restShard(i, layout);
   const s = starts[i]!;
   const t = clamp01((f - s.delay) / FLY);
   if (t >= 1) return rest;
   const e = easeOutQuart(t);
-  const pos = rest.pos.clone().add(s.off.clone().multiplyScalar(1 - e));
+  // Un encuadre más apaisado que el de SkyQuetz (sx mayor) abre la salida en horizontal, para que nada empiece ya dentro.
+  const off = s.off.clone();
+  off.x *= layout.sx / LAYOUT.sx;
+  const pos = rest.pos.clone().add(off.multiplyScalar(1 - e));
   const k = 1 - easeOutCubic(t);
   const spin = new THREE.Quaternion().setFromAxisAngle(s.axis, Math.PI * 2 * s.turns * k);
   return { pos, q: spin.multiply(rest.q), scale: rest.scale * (0.4 + 0.6 * easeOutCubic(t * 1.15)) };
