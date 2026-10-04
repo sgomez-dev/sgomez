@@ -32,14 +32,14 @@ function homeMarkdown(lang: Lang): string {
   lines.push(x(`- Rol: ${IDENTITY.jobTitle}, en Evenbytes.`, `- Role: ${IDENTITY.jobTitle}, at Evenbytes.`));
   lines.push(
     x(
-      `- ${IDENTITY_TEXT.coFounderTitle.es} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios, no fundador único.`,
-      `- Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}). Co-founder, one of four partners, not the sole founder.`,
+      `- ${IDENTITY_TEXT.coFounderForgiaTitle.es} (${FORGIA.url}). Cofundador, uno de dos socios, y lleva toda la parte técnica.`,
+      `- Co-founder of ${FORGIA.name} (${FORGIA.url}). Co-founder, one of two partners, leading the whole technical side.`,
     ),
   );
   lines.push(
     x(
-      `- ${IDENTITY_TEXT.coFounderForgiaTitle.es} (${FORGIA.url}). Cofundador, uno de dos socios, y lleva toda la parte técnica.`,
-      `- Co-founder of ${FORGIA.name} (${FORGIA.url}). Co-founder, one of two partners, leading the whole technical side.`,
+      `- ${IDENTITY_TEXT.coFounderTitle.es} (${SKYQUETZ.url}). Cofundador, uno de cuatro socios, no fundador único.`,
+      `- Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}). Co-founder, one of four partners, not the sole founder.`,
     ),
   );
   lines.push(

@@ -7,6 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Display } from "@/components/ui/Display";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Section } from "@/components/ui/Section";
+import MonogramReveal from "@/components/MonogramReveal";
 import { WordReveal, wordRevealStyle } from "@/components/motion/WordReveal";
 
 const linkClass =
@@ -25,12 +26,14 @@ const SECTION_STYLE: CSSProperties = {
 };
 
 /**
- * Capítulo de Forgia, justo después de SkyQuetz y con su mismo peso (titular tope a 40 px). El ancla es `forgia`; el
+ * Capítulo de Forgia, justo antes de SkyQuetz y con su mismo peso (titular tope a 40 px). El ancla es `forgia`; el
  * nodo del grafo es `#forgia-org` (seo.ts) y no se repite aquí.
  *
  * La marca es «La Forja»: cada lead entra frío y sale al rojo. Tres adornos llevan esa idea, todos `aria-hidden` y en su
  * estado final en el HTML del servidor (sin JS, con movimiento reducido o sin `animation-timeline` se ven encendidos):
- * - el punto del logotipo es la brasa (`data-ember`), que se enciende al subir el capítulo;
+ * - el punto del logotipo es la brasa (`data-ember`), que se enciende al subir el capítulo; si el logotipo se forma con
+ *   cristal (MonogramReveal), la brasa se esconde mientras suena el vídeo, que acaba con ella apagada, y al terminar se
+ *   enciende por tiempo (motion.css);
  * - un raíl une los nudos de las tres piezas y se calienta de arriba abajo con el scroll (`data-forge-rail`, un tramo
  *   por pieza); cada nudo prende cuando el calor lo alcanza (`data-forge-node`), en teal el del bot y en oro el de la persona;
  * - cada tarjeta lleva su tramo de la rampa de temperatura (`data-forge-bar`), que leído de arriba abajo va de frío a oro.
@@ -61,16 +64,17 @@ export default function Forgia({ lang }: { lang: Lang }) {
               aria-label={`${forgia.name}, ${forgia.cta}`}
               className="inline-flex min-h-11 self-start rounded-[var(--radius)] py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]"
             >
-              <span className="relative inline-flex">
+              {/* Con movimiento, el logotipo se forma con cristal una vez al entrar (MonogramReveal, como el de SkyQuetz). */}
+              <MonogramReveal>
                 {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático de 1,6 KB: sin optimizador ni JS de cliente */}
-                <img src={forgia.logo} alt={t(forgia.logoAlt, lang)} width={4945} height={728} decoding="async" className="h-8 w-auto sm:h-10" />
+                <img src={forgia.logo} alt={t(forgia.logoAlt, lang)} width={4945} height={728} decoding="async" data-reveal="forgia" className="h-8 w-auto sm:h-10" />
                 {/* La brasa: tapa el punto del logotipo (centro al 98,08 % y al 86,95 % de la caja del SVG). */}
                 <span
                   aria-hidden="true"
                   data-ember=""
                   className="pointer-events-none absolute left-[98.08%] top-[86.95%] aspect-square w-[4.2%] -translate-x-1/2 -translate-y-1/2 rounded-full"
                 />
-              </span>
+              </MonogramReveal>
             </a>
             <p data-motion="lede" className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text-2)]">{t(forgia.desc, lang)}</p>
             {/* Su parte es la frase que se enciende palabra a palabra, como en SkyQuetz. */}

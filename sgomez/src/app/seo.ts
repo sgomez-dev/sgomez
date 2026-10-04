@@ -715,8 +715,8 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
         ? [
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },
             { "@type": "ListItem", position: 2, name: x("Proyectos", "Projects"), item: `${homeBase}#work` },
-            { "@type": "ListItem", position: 3, name: "SkyQuetz", item: `${homeBase}#skyquetz` },
-            { "@type": "ListItem", position: 4, name: "Forgia", item: `${homeBase}#forgia` },
+            { "@type": "ListItem", position: 3, name: "Forgia", item: `${homeBase}#forgia` },
+            { "@type": "ListItem", position: 4, name: "SkyQuetz", item: `${homeBase}#skyquetz` },
             { "@type": "ListItem", position: 5, name: "Open Source", item: `${homeBase}#open-source` },
             { "@type": "ListItem", position: 6, name: x("Contacto", "Contact"), item: `${homeBase}#contact` },
           ]
