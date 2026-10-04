@@ -35,3 +35,15 @@ describe("LCP del titular", () => {
     expect(h1.replace(/^<h1[^>]*>/, "")).not.toMatch(/class="[^"]*\b(relative|absolute|z-\[)/);
   });
 });
+
+describe("la luz no deja una caja blanca en Safari", () => {
+  const block = css.slice(css.indexOf("/* Nombre escrito con luz"), css.indexOf("/* Fin nombre escrito con luz */"));
+  it("el h1 es su propio grupo de mezcla, con el fondo de la página", () => {
+    expect(block).toMatch(/\[data-light-host\]\s*\{\s*isolation:\s*isolate;\s*background-color:\s*var\(--bg\);/);
+  });
+  it("la capa queda dentro del h1, sin tocar su borde, y se apaga al terminar", () => {
+    expect(block).toMatch(/\[data-light-host\]::after\s*\{[^}]*inset:\s*1px;/);
+    expect(block).toMatch(/@keyframes mo-deco-light-fade\s*\{[^@]*to\s*\{\s*opacity:\s*0;\s*\}/);
+    expect(block).toMatch(/mo-deco-light-fade 2\.2s/);
+  });
+});
