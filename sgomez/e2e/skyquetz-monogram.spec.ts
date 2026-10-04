@@ -3,7 +3,7 @@ import { test, expect } from "./fixtures";
 
 /** Capítulo 07: el logotipo se forma una vez con un vídeo. La `<img>` es el contenido y la que queda. */
 const VIDEO = /\/media\/skyquetz\/monogram\.(webm|mp4)/;
-const box = (page: Page) => page.locator("[data-monogram]");
+const box = (page: Page) => page.locator("#skyquetz [data-monogram]");
 const logo = (page: Page) => page.locator("#skyquetz [data-monogram] img");
 
 test.describe("capítulo 07, logotipo de SkyQuetz", () => {
@@ -58,7 +58,7 @@ test.describe("capítulo 07, logotipo de SkyQuetz", () => {
       const w = window as unknown as { __mono: string[] };
       w.__mono = [];
       new MutationObserver((ms) => {
-        for (const m of ms) for (const n of m.addedNodes) if (n instanceof HTMLVideoElement) {
+        for (const m of ms) for (const n of m.addedNodes) if (n instanceof HTMLVideoElement && n.querySelector("source")?.src.includes("/media/skyquetz/")) {
             w.__mono.push(n.paused || n.readyState < 2 ? "entra sin sonar" : "entra sonando");
             n.addEventListener("ended", () => w.__mono.push("ended"));
           }
