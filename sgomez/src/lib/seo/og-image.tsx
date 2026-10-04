@@ -22,7 +22,12 @@ import { getCaseStudy } from "@/lib/api/data";
  */
 
 const FONTS_DIR = path.join(process.cwd(), "src", "lib", "seo", "fonts");
-const PORTRAIT = path.join(process.cwd(), "public", "Santiago_Gómez_de_la_Torre_Romero.png");
+/**
+ * Versión de la foto para esta imagen: recortada al círculo azul y aplanada sobre ese azul, sin transparencias,
+ * porque satori pinta lo transparente de blanco y salía un aro blanco. Si cambia la foto, se regenera con
+ * `node scripts/og-portrait.mjs` (lo comprueba tests/og-portrait.test.ts).
+ */
+const PORTRAIT = path.join(process.cwd(), "src", "lib", "seo", "og-portrait.png");
 
 /** Nombre del titular en dos líneas: «Gómez de la Torre» es UN apellido y no se parte. */
 const NAME_LINES = ["Santiago", "Gómez de la Torre."] as const;
@@ -152,8 +157,10 @@ export async function renderOgImage(lang: Lang, page?: { eyebrow: string; line: 
             backgroundColor: "#0b0d14",
           }}
         >
+          {/* El redondeo va en la propia imagen: satori no recorta un <img> con el overflow redondeado del padre.
+              336 = 340 menos los 2 px de borde a cada lado. */}
           {/* eslint-disable-next-line @next/next/no-img-element -- next/og renderiza con satori, no con next/image */}
-          <img src={portraitSrc} width={340} height={340} alt="" style={{ objectFit: "cover" }} />
+          <img src={portraitSrc} width={336} height={336} alt="" style={{ objectFit: "cover", borderRadius: 168 }} />
         </div>
       </div>
     ),
