@@ -63,14 +63,14 @@ function siteMetadata(lang: Lang): Metadata {
       "max-snippet": -1,
     },
   },
+  // El cristal del póster sobre fondo casi negro, el mismo favicon que links.sgomez.dev.
   icons: {
     icon: [
-      { url: "/Santiago_Gómez_de_la_Torre_Romero.png" },
-      { url: "/Santiago_Gómez_de_la_Torre_Romero.png", sizes: "32x32", type: "image/png" },
-      { url: "/Santiago_Gómez_de_la_Torre_Romero.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
     ],
-    shortcut: "/Santiago_Gómez_de_la_Torre_Romero.png",
-    apple: "/Santiago_Gómez_de_la_Torre_Romero.png",
+    shortcut: "/favicon.ico",
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
   },
   keywords: [
     "Santiago Gómez de la Torre Romero",
