@@ -394,7 +394,10 @@
    pseudo-elemento decorativo del h1 en multiply: blanco fuera de la banda (no cambia nada),
    --light-1 y --light-2 dentro (tiñe solo las letras, también las del serif al pasar). Nada se
    posiciona dentro del h1: partiría el titular en candidatos de LCP más pequeños que el retrato.
-   Sin isolation: el multiply tiene que mezclarse con el fondo de la página, o la capa se ve blanca. Una vez, 2,2 s. */
+   El h1 es su propio grupo de mezcla (isolation + el fondo de la página): Safari, al componer el h1 en una
+   capa aparte, mezclaba la luz contra transparente y la pintaba como una caja blanca. Con el grupo explícito
+   el multiply sale igual en todos los navegadores. Y la capa se apaga al terminar, para que un navegador que
+   aun así no mezcle nunca deje la caja puesta. Una vez, 2,2 s. */
 /* De 93 % a 7 %: la banda empieza tocando el borde izquierdo y acaba saliendo por el derecho, sin tenir
    nada ni antes ni despues, y casi todo el tiempo es barrido visible (con 100 % a 0 % y la curva de
    entrada solo se veia medio segundo). */
@@ -402,21 +405,34 @@
   from { background-position: 93% 0; }
   to { background-position: 7% 0; }
 }
+
+/* La capa (no el texto) se apaga al final del barrido. */
+@keyframes mo-deco-light-fade {
+  0%, 92% { opacity: 1; }
+  to { opacity: 0; }
+}
 @keyframes mo-light-sheen {
   from { translate: -30% -20%; }
   to { translate: 0 0; }
 }
 @media (prefers-reduced-motion: no-preference) {
+  :root[data-motion-state="on"] [data-light-host] {
+    isolation: isolate;
+    background-color: var(--bg);
+  }
   :root[data-motion-state="on"] [data-light-host]::after {
     content: "";
     position: absolute;
-    inset: -0.05em -0.1em;
+    /* 1 px hacia dentro: en el borde (posición fraccionaria) la capa cubría el fondo a medias y dejaba una línea gris. */
+    inset: 1px;
     pointer-events: none;
     mix-blend-mode: multiply;
     background: linear-gradient(100deg, #fff 0 38%, var(--light-1) 46%, var(--light-2) 50%, var(--light-1) 54%, #fff 62% 100%);
     background-size: 300% 100%;
     background-position: 93% 0;
-    animation: mo-light-write 2.2s cubic-bezier(0.4, 0, 0.6, 1) 300ms 1 both;
+    animation:
+      mo-light-write 2.2s cubic-bezier(0.4, 0, 0.6, 1) 300ms 1 both,
+      mo-deco-light-fade 2.2s linear 300ms 1 both;
   }
   /* El póster del hero (móvil, horizontal y quien no pasa la puerta): el brillo cruza una vez. Solo el
      del hero: el del contacto cruzaría al cargar, fuera de pantalla, y al aterrizar en #contact no estaría quieto. */
