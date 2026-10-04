@@ -19,18 +19,11 @@ export default function manifest(): MetadataRoute.Manifest {
     dir: "ltr",
     categories: ["technology", "developer", "portfolio", "productivity"],
     icons: [
-      {
-        src: "/Santiago_Gómez_de_la_Torre_Romero.png",
-        sizes: "any",
-        type: "image/png",
-        purpose: "any",
-      },
-      {
-        src: "/Santiago_Gómez_de_la_Torre_Romero.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "maskable",
-      },
+      { src: "/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
+      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      // A sangre y con el cristal dentro de la zona segura: Android lo recorta con su propia forma.
+      { src: "/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
