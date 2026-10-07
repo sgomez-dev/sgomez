@@ -310,13 +310,27 @@ describe("JSON-LD de Forgia", () => {
     expect(address.addressCountry).toBe("ES");
   });
 
-  it("su founder referencia a la persona", () => {
-    expect(forgia.founder).toEqual({ "@id": "https://sgomez.dev/#person" });
+  it("sus founder son la persona y Valentino Vargas, con el @id de forgia.es", () => {
+    expect(forgia.founder).toEqual([
+      { "@id": "https://sgomez.dev/#person" },
+      { "@type": "Person", "@id": "https://forgia.es/#valentino-vargas", name: "Valentino Vargas" },
+    ]);
   });
 
-  it("declara contactPoint con el WhatsApp que publica forgia.es", () => {
+  it("se empareja con el nodo que forgia.es publica de sí misma", () => {
+    expect(forgia.sameAs).toEqual(["https://forgia.es/#organization"]);
+  });
+
+  it("declara contactPoint con el WhatsApp y el email que publica forgia.es", () => {
     expect(forgia.contactPoint).toEqual([
-      { "@type": "ContactPoint", contactType: "sales", url: "https://wa.me/34644636000" },
+      {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        url: "https://wa.me/34644636000",
+        email: "forgia@forgia.es",
+        telephone: "+34 644 63 60 00",
+        availableLanguage: ["Spanish"],
+      },
     ]);
   });
 

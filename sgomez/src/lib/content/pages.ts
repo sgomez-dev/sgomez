@@ -57,12 +57,12 @@ function buildAbout(lang: Lang): StaticPage {
       "About · Santiago Gómez de la Torre Romero | sgomez.dev",
     ),
     description: x(
-      "Santiago Gómez de la Torre Romero es full-stack engineer en Evenbytes, cofundador de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
-      "Santiago Gómez de la Torre Romero is a full-stack engineer at Evenbytes, co-founder of SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
+      "Santiago Gómez de la Torre Romero es full-stack engineer en Evenbytes, cofundador de Forgia y de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
+      "Santiago Gómez de la Torre Romero is a full-stack engineer at Evenbytes, co-founder of Forgia and SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
     ),
     lead: x(
-      "Full-stack engineer en Cantabria, España. Llevo la IA a producción, no a demos. Cofundador de SkyQuetz Consulting y creador de NudaUI.",
-      "Full-stack engineer in Cantabria, Spain. I take AI to production, not to demos. Co-founder of SkyQuetz Consulting and creator of NudaUI.",
+      "Full-stack engineer en Cantabria, España. Llevo la IA a producción, no a demos. Cofundador de Forgia y de SkyQuetz Consulting, y creador de NudaUI.",
+      "Full-stack engineer in Cantabria, Spain. I take AI to production, not to demos. Co-founder of Forgia and SkyQuetz Consulting, and creator of NudaUI.",
     ),
     sections: [
       {
@@ -72,8 +72,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Hoy desarrollo software en Evenbytes con Angular, Node.js y Google Cloud, y en 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería.",
-              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Today I build software at Evenbytes with Angular, Node.js and Google Cloud, and in 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering.",
+              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Hoy desarrollo software en Evenbytes con Angular, Node.js y Google Cloud, y en 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería. Ese mismo año cofundé también Forgia (forgia.es) con Valentino Vargas, una empresa de agentes de IA para WhatsApp en la que llevo toda la parte técnica.",
+              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Today I build software at Evenbytes with Angular, Node.js and Google Cloud, and in 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering. That same year I also co-founded Forgia (forgia.es) with Valentino Vargas, a company building AI agents for WhatsApp where I lead the whole technical side.",
             ),
           },
           {
@@ -150,8 +150,8 @@ function buildAbout(lang: Lang): StaticPage {
                 `Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}), founded in ${SKYQUETZ.foundingDate} by four partners.`,
               ),
               x(
-                `Cofundador de ${FORGIA.name} (${FORGIA.url}), con otro socio, y responsable de toda la parte técnica.`,
-                `Co-founder of ${FORGIA.name} (${FORGIA.url}), with one other partner, leading the whole technical side.`,
+                `Cofundador de ${FORGIA.name} (${FORGIA.url}), con ${FORGIA.partner.name}, y responsable de toda la parte técnica.`,
+                `Co-founder of ${FORGIA.name} (${FORGIA.url}), with ${FORGIA.partner.name}, leading the whole technical side.`,
               ),
               x(
                 "Formación: Grado en Ingeniería Informática, Universidad Europea del Atlántico (desde 2021).",
@@ -228,6 +228,14 @@ function buildContact(lang: Lang): StaticPage {
                 note: x(
                   "Para incidencias y contribuciones en mis proyectos open source.",
                   "For issues and contributions on my open source projects.",
+                ),
+              },
+              {
+                label: FORGIA.url,
+                href: FORGIA.url,
+                note: x(
+                  "Para agentes de IA para WhatsApp: Forgia, la empresa que cofundé con Valentino Vargas.",
+                  "For AI agents for WhatsApp: Forgia, the company I co-founded with Valentino Vargas.",
                 ),
               },
               {
