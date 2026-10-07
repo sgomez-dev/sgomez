@@ -20,8 +20,8 @@ import { CONTENT_UPDATED, ROUTE_CATALOGUE, latestContentUpdate, type LogicalPath
  */
 export const IDENTITY_TEXT = {
   description: {
-    es: "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Developer en Evenbytes y organizador de GDG Santander.",
-    en: "Santiago Gómez de la Torre Romero is a full-stack engineer who takes AI to production. Co-founder of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Developer at Evenbytes and organizer of GDG Santander.",
+    es: "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de Forgia (agentes de IA para WhatsApp) y de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Developer en Evenbytes y organizador de GDG Santander.",
+    en: "Santiago Gómez de la Torre Romero is a full-stack engineer who takes AI to production. Co-founder of Forgia (AI agents for WhatsApp) and of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Developer at Evenbytes and organizer of GDG Santander.",
   } satisfies Localized,
   // Segundo título real de la persona (ver `IDENTITY.coFounderTitle`), en los dos idiomas.
   coFounderTitle: {
@@ -167,12 +167,23 @@ export const FORGIA = {
   url: "https://forgia.es",
   address: { city: "Santander", region: "Cantabria", country: "ES" },
   /**
-   * El único canal de contacto de Forgia es WhatsApp. El número es el nuevo
-   * español que dio el dueño el 4 de octubre de 2026 (+34 644 636 000); el
-   * ecuatoriano que aún sale en forgia.es se retira. No publica email ni JSON-LD propio.
+   * Contacto copiado del nodo `#organization` que publica forgia.es: WhatsApp
+   * (+34 644 63 60 00, el número español que dio el dueño el 4 de octubre de
+   * 2026) y el buzón forgia@forgia.es.
    */
   contactType: "sales",
   contactUrl: "https://wa.me/34644636000",
+  contactEmail: "forgia@forgia.es",
+  telephone: "+34 644 63 60 00",
+  /**
+   * @id que forgia.es usa para sí misma en su propio JSON-LD. Va en el `sameAs`
+   * del nodo local de la organización (mismo criterio que `SKYQUETZ.orgId`):
+   * así los dos grafos coinciden en que hablan de la misma empresa.
+   */
+  orgId: "https://forgia.es/#organization",
+  foundingDate: "2026-06",
+  /** El otro socio fundador, con el @id que le da forgia.es. */
+  partner: { name: "Valentino Vargas", id: "https://forgia.es/#valentino-vargas" },
   description:
     "Sistema de bots de IA que atiende a clientes y cualifica leads por WhatsApp, con un bot inbound, un bot outbound para prospección B2B y un panel CRM.",
   descriptionEn:
@@ -279,7 +290,11 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
   es: [
     {
       q: "¿Quién es Santiago Gómez de la Torre Romero?",
-      a: "Santiago Gómez de la Torre Romero es un full-stack engineer afincado en Cantabria, España. Lleva la IA a producción, no a demos. Cofundó SkyQuetz Consulting, una consultora de software a medida, y es el creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Trabaja como developer en Evenbytes y organiza el GDG Santander.",
+      a: "Santiago Gómez de la Torre Romero es un full-stack engineer afincado en Cantabria, España. Lleva la IA a producción, no a demos. Cofundó Forgia, que crea agentes de IA para WhatsApp, y SkyQuetz Consulting, una consultora de software a medida, y es el creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Trabaja como developer en Evenbytes y organiza el GDG Santander.",
+    },
+    {
+      q: "¿Qué es Forgia y qué papel tiene Santiago Gómez de la Torre en ella?",
+      a: "Forgia (forgia.es) es una empresa que crea agentes de IA para WhatsApp: responden a los clientes de un negocio al instante, cualifican sus leads y avisan a una persona del equipo cuando hay algo que cerrar. Santiago Gómez de la Torre Romero la cofundó en junio de 2026 con Valentino Vargas, dos socios fundadores en total, y lleva toda la parte técnica: arquitectura, desarrollo, los bots y el panel CRM. Es cofundador, no fundador único, y Forgia es una empresa distinta de SkyQuetz Consulting.",
     },
     {
       q: "¿Qué hace Santiago Gómez de la Torre con IA y LLMs?",
@@ -313,7 +328,11 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
   en: [
     {
       q: "Who is Santiago Gómez de la Torre Romero?",
-      a: "Santiago Gómez de la Torre Romero is a full-stack engineer based in Cantabria, Spain. He takes AI to production, not to demos. He co-founded SkyQuetz Consulting, a custom software consultancy, and is the creator of NudaUI and of a live semantic search (RAG) over its catalog. He works as a developer at Evenbytes and organizes GDG Santander.",
+      a: "Santiago Gómez de la Torre Romero is a full-stack engineer based in Cantabria, Spain. He takes AI to production, not to demos. He co-founded Forgia, which builds AI agents for WhatsApp, and SkyQuetz Consulting, a custom software consultancy, and is the creator of NudaUI and of a live semantic search (RAG) over its catalog. He works as a developer at Evenbytes and organizes GDG Santander.",
+    },
+    {
+      q: "What is Forgia and what is Santiago Gómez de la Torre's role in it?",
+      a: "Forgia (forgia.es) is a company that builds AI agents for WhatsApp: they answer a business's customers instantly, qualify its leads and alert a person on the team when there is something to close. Santiago Gómez de la Torre Romero co-founded it in June 2026 with Valentino Vargas, two founders in total, and leads its whole technical side: architecture, development, the bots and the CRM panel. He is a co-founder, not the sole founder, and Forgia is a separate company from SkyQuetz Consulting.",
     },
     {
       q: "What does Santiago Gómez de la Torre do with AI and LLMs?",
@@ -560,9 +579,21 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       "@type": "Organization",
       "@id": FORGIA_NODE,
       name: FORGIA.name,
+      alternateName: "Forgia IA",
       url: FORGIA.url,
+      // El @id con el que forgia.es se describe a sí misma: empareja esta
+      // ORGANIZACIÓN con la suya. La persona sigue sin llevar forgia.es en su
+      // propio sameAs (una empresa no "es" él).
+      sameAs: [FORGIA.orgId],
+      logo: `${IDENTITY.url}/brand/forgia-logo.svg`,
       description: x(FORGIA.description, FORGIA.descriptionEn),
-      founder: { "@id": PERSON },
+      foundingDate: FORGIA.foundingDate,
+      // Los dos socios fundadores, igual que los declara forgia.es: Santiago
+      // (esta persona) y Valentino Vargas, con el @id que le da esa web.
+      founder: [
+        { "@id": PERSON },
+        { "@type": "Person", "@id": FORGIA.partner.id, name: FORGIA.partner.name },
+      ],
       member: { "@id": PERSON },
       employee: { "@id": PERSON },
       address: {
@@ -576,8 +607,12 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
           "@type": "ContactPoint",
           contactType: FORGIA.contactType,
           url: FORGIA.contactUrl,
+          email: FORGIA.contactEmail,
+          telephone: FORGIA.telephone,
+          availableLanguage: ["Spanish"],
         },
       ],
+      email: FORGIA.contactEmail,
     },
     {
       "@type": "SoftwareApplication",
