@@ -57,8 +57,8 @@ function buildAbout(lang: Lang): StaticPage {
       "About · Santiago Gómez de la Torre Romero | sgomez.dev",
     ),
     description: x(
-      "Santiago Gómez de la Torre Romero es full-stack engineer en Evenbytes, cofundador de Forgia y de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
-      "Santiago Gómez de la Torre Romero is a full-stack engineer at Evenbytes, co-founder of Forgia and SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
+      "Santiago Gómez de la Torre Romero es full-stack engineer, cofundador de Forgia y de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
+      "Santiago Gómez de la Torre Romero is a full-stack engineer, co-founder of Forgia and SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
     ),
     lead: x(
       "Full-stack engineer en Cantabria, España. Llevo la IA a producción, no a demos. Cofundador de Forgia y de SkyQuetz Consulting, y creador de NudaUI.",
@@ -72,8 +72,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Hoy desarrollo software en Evenbytes con Angular, Node.js y Google Cloud, y en 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería. Ese mismo año cofundé también Forgia (forgia.es) con Valentino Vargas, una empresa de agentes de IA para WhatsApp en la que llevo toda la parte técnica.",
-              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Today I build software at Evenbytes with Angular, Node.js and Google Cloud, and in 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering. That same year I also co-founded Forgia (forgia.es) with Valentino Vargas, a company building AI agents for WhatsApp where I lead the whole technical side.",
+              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Entre junio de 2025 y octubre de 2026 desarrollé software en Evenbytes con Angular, Node.js y Google Cloud. En 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería. Ese mismo año cofundé también Forgia (forgia.es) con Valentino Vargas, una empresa de agentes de IA para WhatsApp en la que llevo toda la parte técnica.",
+              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Between June 2025 and October 2026 I built software at Evenbytes with Angular, Node.js and Google Cloud. In 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering. That same year I also co-founded Forgia (forgia.es) with Valentino Vargas, a company building AI agents for WhatsApp where I lead the whole technical side.",
             ),
           },
           {
@@ -86,8 +86,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Mi trayectoria combina administración de sistemas, desarrollo web y arquitectura en la nube. Empecé en FUNIBER en el equipo de redacción técnica, pasé a sysadmin y QA, seguí como técnico de soporte IT en la Universidad Europea del Atlántico (donde además estudio Ingeniería Informática) y desde junio de 2025 soy desarrollador en Evenbytes. Esa mezcla de operar sistemas antes de escribirlos es la razón de que me interesen tanto el despliegue y la observabilidad como el código.",
-              "My career combines systems administration, web development and cloud architecture. I started at FUNIBER on the technical writing team, moved on to sysadmin and QA, continued as an IT support technician at Universidad Europea del Atlántico (where I am also studying Computer Engineering) and since June 2025 I have been a developer at Evenbytes. That mix of running systems before writing them is why I care as much about deployment and observability as about code.",
+              "Mi trayectoria combina administración de sistemas, desarrollo web y arquitectura en la nube. Empecé en FUNIBER en el equipo de redacción técnica, pasé a sysadmin y QA, seguí como técnico de soporte IT en la Universidad Europea del Atlántico (donde además estudio Ingeniería Informática) y de junio de 2025 a octubre de 2026 fui desarrollador en Evenbytes. Esa mezcla de operar sistemas antes de escribirlos es la razón de que me interesen tanto el despliegue y la observabilidad como el código.",
+              "My career combines systems administration, web development and cloud architecture. I started at FUNIBER on the technical writing team, moved on to sysadmin and QA, continued as an IT support technician at Universidad Europea del Atlántico (where I am also studying Computer Engineering) and from June 2025 to October 2026 I was a developer at Evenbytes. That mix of running systems before writing them is why I care as much about deployment and observability as about code.",
             ),
           },
         ],
@@ -144,7 +144,7 @@ function buildAbout(lang: Lang): StaticPage {
             kind: "list",
             items: [
               x("Nombre completo: Santiago Gómez de la Torre Romero.", "Full name: Santiago Gómez de la Torre Romero."),
-              x("Rol: Full-Stack Engineer (AI/LLM) en Evenbytes.", "Role: Full-Stack Engineer (AI/LLM) at Evenbytes."),
+              x("Rol: Full-Stack Engineer (AI/LLM).", "Role: Full-Stack Engineer (AI/LLM)."),
               x(
                 `Cofundador de ${SKYQUETZ.name} (${SKYQUETZ.url}), fundada en ${SKYQUETZ.foundingDate} por cuatro socios.`,
                 `Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}), founded in ${SKYQUETZ.foundingDate} by four partners.`,

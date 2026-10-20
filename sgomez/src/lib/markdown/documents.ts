@@ -29,7 +29,7 @@ function homeMarkdown(lang: Lang): string {
   lines.push(`Canonical URL: ${home === "/" ? SITE_URL : absolute(home)}`, "");
 
   lines.push(x("## Perfil", "## Profile"), "");
-  lines.push(x(`- Rol: ${IDENTITY.jobTitle}, en Evenbytes.`, `- Role: ${IDENTITY.jobTitle}, at Evenbytes.`));
+  lines.push(x(`- Rol: ${IDENTITY.jobTitle}.`, `- Role: ${IDENTITY.jobTitle}.`));
   lines.push(
     x(
       `- ${IDENTITY_TEXT.coFounderForgiaTitle.es} (${FORGIA.url}). Cofundador, uno de dos socios, y lleva toda la parte técnica.`,
