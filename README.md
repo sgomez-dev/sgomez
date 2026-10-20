@@ -1,6 +1,6 @@
 # sgomez.dev
 
-Portfolio personal de **Santiago Gómez de la Torre Romero**, Full-Stack Engineer en Evenbytes y cofundador de [SkyQuetz Consulting](https://skyquetz.com) (Santander, España).
+Portfolio personal de **Santiago Gómez de la Torre Romero**, Full-Stack Engineer y cofundador de [Forgia](https://forgia.es) y de [SkyQuetz Consulting](https://skyquetz.com) (Santander, España).
 
 > Una web que cuenta quién soy y que también se puede leer sin ojos: la misma información sale en HTML para una persona y en markdown, JSON y OpenAPI para un agente.
 

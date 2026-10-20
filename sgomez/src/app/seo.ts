@@ -20,8 +20,8 @@ import { CONTENT_UPDATED, ROUTE_CATALOGUE, latestContentUpdate, type LogicalPath
  */
 export const IDENTITY_TEXT = {
   description: {
-    es: "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de Forgia (agentes de IA para WhatsApp) y de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Developer en Evenbytes y organizador de GDG Santander.",
-    en: "Santiago Gómez de la Torre Romero is a full-stack engineer who takes AI to production. Co-founder of Forgia (AI agents for WhatsApp) and of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Developer at Evenbytes and organizer of GDG Santander.",
+    es: "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de Forgia (agentes de IA para WhatsApp) y de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Organizador de GDG Santander.",
+    en: "Santiago Gómez de la Torre Romero is a full-stack engineer who takes AI to production. Co-founder of Forgia (AI agents for WhatsApp) and of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Organizer of GDG Santander.",
   } satisfies Localized,
   // Segundo título real de la persona (ver `IDENTITY.coFounderTitle`), en los dos idiomas.
   coFounderTitle: {
@@ -290,7 +290,7 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
   es: [
     {
       q: "¿Quién es Santiago Gómez de la Torre Romero?",
-      a: "Santiago Gómez de la Torre Romero es un full-stack engineer afincado en Cantabria, España. Lleva la IA a producción, no a demos. Cofundó Forgia, que crea agentes de IA para WhatsApp, y SkyQuetz Consulting, una consultora de software a medida, y es el creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Trabaja como developer en Evenbytes y organiza el GDG Santander.",
+      a: "Santiago Gómez de la Torre Romero es un full-stack engineer afincado en Cantabria, España. Lleva la IA a producción, no a demos. Cofundó Forgia, que crea agentes de IA para WhatsApp, y SkyQuetz Consulting, una consultora de software a medida, y es el creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Además organiza el GDG Santander.",
     },
     {
       q: "¿Qué es Forgia y qué papel tiene Santiago Gómez de la Torre en ella?",
@@ -328,7 +328,7 @@ export const HOME_FAQ: Record<Lang, GraphFaq[]> = {
   en: [
     {
       q: "Who is Santiago Gómez de la Torre Romero?",
-      a: "Santiago Gómez de la Torre Romero is a full-stack engineer based in Cantabria, Spain. He takes AI to production, not to demos. He co-founded Forgia, which builds AI agents for WhatsApp, and SkyQuetz Consulting, a custom software consultancy, and is the creator of NudaUI and of a live semantic search (RAG) over its catalog. He works as a developer at Evenbytes and organizes GDG Santander.",
+      a: "Santiago Gómez de la Torre Romero is a full-stack engineer based in Cantabria, Spain. He takes AI to production, not to demos. He co-founded Forgia, which builds AI agents for WhatsApp, and SkyQuetz Consulting, a custom software consultancy, and is the creator of NudaUI and of a live semantic search (RAG) over its catalog. He also organizes GDG Santander.",
     },
     {
       q: "What is Forgia and what is Santiago Gómez de la Torre's role in it?",
@@ -442,25 +442,11 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
         addressRegion: IDENTITY.location.region,
         addressCountry: IDENTITY.location.country,
       },
-      // Dos organizaciones, las dos reales: el empleo y la empresa cofundada.
-      // La segunda va por referencia al nodo #skyquetz de más abajo (no
-      // repetida en línea) para que la organización exista UNA vez en el grafo
-      // y todo lo que la señale apunte al mismo sitio.
+      // Las dos empresas cofundadas, por referencia a sus nodos de más abajo
+      // (no repetidas en línea) para que cada organización exista UNA vez en
+      // el grafo y todo lo que la señale apunte al mismo sitio. Evenbytes ya
+      // no va aquí: dejó de trabajar allí en octubre de 2026.
       worksFor: [
-        {
-          "@type": "Organization",
-          name: "Evenbytes",
-          url: "https://evenbytes.com",
-          // La localidad no es un dato nuevo: la sección de experiencia ya la
-          // publica en texto. Aquí solo se declara en el formato que una
-          // máquina puede leer.
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Santa Cruz de Bezana",
-            addressRegion: "Cantabria",
-            addressCountry: "ES",
-          },
-        },
         { "@id": SKYQUETZ_NODE },
         { "@id": FORGIA_NODE },
       ],

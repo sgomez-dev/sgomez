@@ -200,7 +200,7 @@ const en: Dictionary = {
     },
     engagement: {
       q: "Does he take freelance work, or only employment?",
-      a: "He is currently a developer at Evenbytes and is open to freelance work and selected collaborations. Commissions that need a team, a contract and continuity go through SkyQuetz Consulting, the custom software consultancy he co-founded.",
+      a: "He currently works for himself on Forgia and SkyQuetz Consulting, the two companies he co-founded, and is open to freelance work and selected collaborations. Commissions that need a team, a contract and continuity go through SkyQuetz Consulting, the custom software consultancy he co-founded.",
     },
     timezone: {
       q: "Which time zone does he work in, and in which languages?",

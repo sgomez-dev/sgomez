@@ -155,8 +155,7 @@ describe("JSON-LD de la organización", () => {
 
   it("las organizaciones nombradas en la persona llevan su localidad", () => {
     const person = nodeOfType("Person");
-    const evenbytes = (person.worksFor as Node[])[0];
-    expect((evenbytes.address as Node).addressLocality).toBe("Santa Cruz de Bezana");
+    expect(JSON.stringify(person.worksFor)).not.toMatch(/Evenbytes/i);
     const gdg = (person.memberOf as Node[])[0];
     expect((gdg.address as Node).addressLocality).toBe("Santander");
   });

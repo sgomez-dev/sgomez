@@ -199,7 +199,7 @@ const es = {
     },
     engagement: {
       q: "¿Trabaja como freelance o solo por cuenta ajena?",
-      a: "Hoy es developer en Evenbytes y está abierto a freelance y a colaboraciones seleccionadas. Los encargos que necesitan un equipo, un contrato y continuidad se canalizan por SkyQuetz Consulting, la consultora de software a medida que cofundó.",
+      a: "Hoy trabaja por su cuenta en Forgia y SkyQuetz Consulting, las dos empresas que cofundó, y está abierto a freelance y a colaboraciones seleccionadas. Los encargos que necesitan un equipo, un contrato y continuidad se canalizan por SkyQuetz Consulting, la consultora de software a medida que cofundó.",
     },
     timezone: {
       q: "¿En qué zona horaria trabaja y en qué idiomas?",

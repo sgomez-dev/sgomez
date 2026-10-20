@@ -91,7 +91,8 @@ describe("FAQ de /contact", () => {
       const all = Object.values(faq).map((e) => e.q + e.a).join(" ");
       expect(all).toContain(IDENTITY.email);
       expect(all).toMatch(/CET\/CEST/);
-      expect(all).toMatch(/Evenbytes/);
+      expect(all).toMatch(/Forgia/);
+      expect(all).not.toMatch(/Evenbytes/);
       expect(all).toMatch(/SkyQuetz/);
     }
   });

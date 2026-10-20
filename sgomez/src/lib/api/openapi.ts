@@ -260,12 +260,6 @@ const SCHEMAS: Json = {
           role: { type: "string" },
         },
       },
-      employer: {
-        type: "object",
-        description: "Current employer.",
-        required: ["name", "url"],
-        properties: { name: { type: "string" }, url: { type: "string", format: "uri" } },
-      },
       summary: { type: "string", description: "Paragraph-length professional summary." },
       location: {
         type: "object",
@@ -566,7 +560,7 @@ export function openApiDocument(): Json {
           tags: ["Profile"],
           summary: "Get the professional profile",
           description:
-            "Returns name, headline, current role, employer, co-founded company, location, working languages, contact address, availability and the canonical list of profiles that belong to him. This is the endpoint to ground any factual claim about who he is.",
+            "Returns name, headline, current role, co-founded company, location, working languages, contact address, availability and the canonical list of profiles that belong to him. This is the endpoint to ground any factual claim about who he is.",
           parameters: [LANG_PARAM],
           responses: {
             "200": objectResponse("The profile.", "#/components/schemas/Profile"),

@@ -33,7 +33,6 @@ export type Profile = {
   headline: string;
   job_title: string;
   co_founder_of: { name: string; url: string; role: string };
-  employer: { name: string; url: string };
   summary: string;
   location: { city: string; region: string; country: string; remote: boolean };
   languages: string[];
@@ -121,7 +120,6 @@ export function getProfile(lang: Lang = ES): Profile {
       // superficies desde las que un modelo se lo puede llevar mal citado.
       role: "Co-founder (one of four founding partners), leads engineering",
     },
-    employer: { name: "Evenbytes", url: "https://evenbytes.com" },
     summary: t(IDENTITY_TEXT.description, lang),
     location: {
       city: IDENTITY.location.city,
