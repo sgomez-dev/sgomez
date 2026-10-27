@@ -59,4 +59,9 @@ El español va sin prefijo y el inglés bajo `/en`. Los tokens de diseño (color
 
 ## Deploy
 
-Vercel. `main` despliega a producción automáticamente.
+Cloudflare Workers con `@opennextjs/cloudflare`. Workers Builds despliega `main` a producción automáticamente (directorio raíz `sgomez`, build `npx opennextjs-cloudflare build`, deploy `npx opennextjs-cloudflare deploy`).
+
+- `npm run preview`: build de OpenNext y el Worker en local (workerd) en http://localhost:8787.
+- `npm run deploy`: build y despliegue a mano con wrangler.
+
+La configuración está en `wrangler.jsonc` y `open-next.config.ts`. La caché de páginas es de solo lectura y va con los assets del despliegue.

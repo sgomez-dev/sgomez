@@ -7,25 +7,23 @@ import type { NextConfig } from "next";
  * aplicando esta cabecera la fija entera, y quedarse solo con `Accept`
  * rompería el prefetch de la navegación de cliente.
  *
- * Debe coincidir con `PAGE_VARY` de `src/lib/site.ts` y con `vercel.json`;
- * hay un test que lo comprueba. En Vercel quien manda es `vercel.json`: las
- * páginas prerenderizadas salen de la caché con el `Vary` que el builder
- * guarda junto al HTML, y solo una transformación de la respuesta lo pisa.
- * Esta regla cubre `next start` y cualquier otro despliegue.
+ * Debe coincidir con `PAGE_VARY` de `src/lib/site.ts`; hay un test que lo
+ * comprueba. Es la única declaración para las páginas: en Cloudflare (OpenNext)
+ * y en `next start` esta regla se aplica también a las que salen de la caché.
  */
 const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";
 
 /**
- * `E2E_FIXTURES=1` monta la ruta de prueba /e2e-sequence y sus fotogramas. Solo es para el build del e2e: un despliegue de
- * Vercel (que define `VERCEL_ENV`) con la variable puesta publicaría una página de pruebas, así que el build se aborta.
+ * `E2E_FIXTURES=1` monta la ruta de prueba /e2e-sequence y sus fotogramas. Solo es para el build del e2e: un build de
+ * Cloudflare Workers Builds (que define `WORKERS_CI`) con la variable puesta publicaría una página de pruebas, así que
+ * el build se aborta.
  */
-if (process.env.E2E_FIXTURES === "1" && process.env.VERCEL_ENV) {
-  throw new Error("E2E_FIXTURES=1 no puede usarse en un build de Vercel (VERCEL_ENV está definida).");
+if (process.env.E2E_FIXTURES === "1" && process.env.WORKERS_CI) {
+  throw new Error("E2E_FIXTURES=1 no puede usarse en un build de Cloudflare (WORKERS_CI está definida).");
 }
 
 const nextConfig: NextConfig = {
-  experimental: { viewTransition: true },
   images: {
     // Las portadas del blog viven en el almacenamiento de Supabase. Se listan solo
     // ellas para que el optimizador no sea un proxy abierto: el servidor las
