@@ -1,3 +1,4 @@
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import type { Lang } from "@/i18n/languages";
 import { notFoundMarkdown } from "@/lib/markdown/documents";
 import { SITE_URL } from "@/lib/site";
@@ -18,14 +19,27 @@ const HOSTS = new Set(["sgomez.dev", "www.sgomez.dev", "localhost", "127.0.0.1"]
 /** Solo se pide el molde a un origen conocido: una cabecera Host falsa no puede dirigir el fetch a otro sitio. */
 export function safeOrigin(origin: string): string {
   try {
-    const host = new URL(origin).hostname;
-    const vercel = [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL].filter(Boolean) as string[];
-    if (HOSTS.has(host) || vercel.includes(host)) return origin;
+    if (HOSTS.has(new URL(origin).hostname)) return origin;
   } catch {
     /* cae al origen público */
   }
   return SITE_URL;
 }
+
+/**
+ * El fetch con el que el proxy se pide el molde a sí mismo. En Cloudflare un Worker no puede pedirse su propio dominio
+ * con un fetch normal, así que usa el binding `WORKER_SELF_REFERENCE` de wrangler.jsonc, que entra en este mismo Worker
+ * sea cual sea el host. Fuera del Worker (`next start`, vitest) no hay contexto de Cloudflare y queda el fetch global.
+ */
+export const selfFetch: typeof fetch = (input, init) => {
+  let self: { fetch: typeof fetch } | undefined;
+  try {
+    self = getCloudflareContext().env.WORKER_SELF_REFERENCE as { fetch: typeof fetch } | undefined;
+  } catch {
+    /* sin contexto de Cloudflare */
+  }
+  return self ? self.fetch(input, init) : fetch(input, init);
+};
 
 async function load(lang: Lang, origin: string, fetchImpl: typeof fetch, now: () => number, timeoutMs: number): Promise<string | null> {
   const ctrl = new AbortController();
@@ -61,7 +75,7 @@ async function load(lang: Lang, origin: string, fetchImpl: typeof fetch, now: ()
 export function fetchMolde(
   lang: Lang,
   origin: string,
-  fetchImpl: typeof fetch = fetch,
+  fetchImpl: typeof fetch = selfFetch,
   now: () => number = Date.now,
   timeoutMs: number = FETCH_TIMEOUT_MS,
 ): Promise<string | null> {

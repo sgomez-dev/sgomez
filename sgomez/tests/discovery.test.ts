@@ -237,21 +237,14 @@ describe("Claude Canvas en el grafo", () => {
 
 describe("Vary: Accept en las páginas HTML", () => {
   /**
-   * Next 16 sobreescribe el `Vary` de las respuestas de página, así que el
-   * valor que llega al cliente lo fija la capa de hosting. Lo que este test
-   * protege es que las tres declaraciones digan lo mismo: si alguien arregla
-   * una y se olvida de las otras, gana la desactualizada y el fallo es
-   * invisible en local.
+   * El `Vary` de las páginas lo pone la regla `headers()` de next.config, y el
+   * proxy declara el mismo valor en sus respuestas. Si alguien cambia uno y se
+   * olvida del otro, el fallo es invisible en local.
    */
-  const files = {
-    "next.config.ts": readFileSync("next.config.ts", "utf8"),
-    "vercel.json": readFileSync("vercel.json", "utf8"),
-  };
+  const nextConfig = readFileSync("next.config.ts", "utf8");
 
-  it("las tres declaraciones coinciden con PAGE_VARY", () => {
-    for (const [name, content] of Object.entries(files)) {
-      expect(content, name).toContain(PAGE_VARY);
-    }
+  it("next.config declara PAGE_VARY", () => {
+    expect(nextConfig).toContain(PAGE_VARY);
   });
 
   it("PAGE_VARY declara Accept y conserva los tokens de RSC", () => {
@@ -262,34 +255,8 @@ describe("Vary: Accept en las páginas HTML", () => {
     expect(PAGE_VARY).toContain("Accept-Encoding");
   });
 
-  it("las reglas de cabeceras excluyen /api y los assets", () => {
-    expect(files["next.config.ts"]).toContain("(?!api$|api/|_next/static/|_next/image)");
-    expect(files["vercel.json"]).toContain("(?!api(?:/|$)|_next/static/|_next/image)");
-  });
-
-  it("vercel.json es JSON válido", () => {
-    expect(() => JSON.parse(files["vercel.json"])).not.toThrow();
-  });
-
-  /**
-   * Un `headers` de vercel.json (con o sin `important`) no llega a las páginas
-   * que salen de la caché de Vercel: el Vary guardado con el prerender gana.
-   * Medido en una preview, solo una transformación `response.headers` con
-   * `op: "set"` lo sustituye. Si alguien vuelve a `headers`, el fallo no se ve
-   * en local; este test lo frena.
-   */
-  it("vercel.json fija el Vary con una transformación set de la respuesta", () => {
-    const config = JSON.parse(files["vercel.json"]) as {
-      headers?: unknown;
-      routes?: { src: string; transforms?: { type: string; op: string; target: { key: string }; args: string }[] }[];
-    };
-    expect(config.headers).toBeUndefined();
-    const transform = config.routes?.flatMap((route) => route.transforms ?? []).find((t) => t.target.key.toLowerCase() === "vary");
-    expect(transform).toMatchObject({ type: "response.headers", op: "set", args: PAGE_VARY });
-    const page = config.routes!.find((route) => route.transforms?.some((t) => t === transform))!;
-    const src = new RegExp(page.src);
-    for (const path of ["/", "/en", "/about", "/work/claude-canvas", "/llms.txt"]) expect(src.test(path), path).toBe(true);
-    for (const path of ["/api", "/api/v1", "/api/v1/profile", "/_next/static/chunks/a.js", "/_next/image"]) expect(src.test(path), path).toBe(false);
+  it("la regla de cabeceras excluye /api y los assets", () => {
+    expect(nextConfig).toContain("(?!api$|api/|_next/static/|_next/image)");
   });
 });
 

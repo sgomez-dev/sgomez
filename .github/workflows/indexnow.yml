@@ -1,17 +1,23 @@
 name: IndexNow
 
-# Tras cada despliegue a producción en Vercel, avisa a IndexNow (Bing, Yandex, Seznam, Naver y los que
+# Tras cada despliegue a producción en Cloudflare (el check run de Workers Builds en main), avisa a IndexNow (Bing, Yandex, Seznam, Naver y los que
 # comparten el protocolo) de todas las URL del sitemap. El sitio tiene una docena: mandarlas todas es más
 # simple y más robusto que calcular cuáles cambiaron, y IndexNow lo admite.
 on:
-  deployment_status:
+  check_run:
+    types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   ping:
-    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (startsWith(github.event.check_run.name, 'Workers Builds') &&
+       github.event.check_run.conclusion == 'success' &&
+       github.event.check_run.check_suite.head_branch == 'main')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:

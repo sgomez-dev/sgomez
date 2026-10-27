@@ -100,9 +100,7 @@ describe("safeOrigin", () => {
     expect(safeOrigin("https://sgomez.dev")).toBe("https://sgomez.dev");
     expect(safeOrigin("http://localhost:3320")).toBe("http://localhost:3320");
     expect(safeOrigin("https://evil.example")).toBe("https://sgomez.dev");
-    vi.stubEnv("VERCEL_URL", "sgomez-abc.vercel.app");
-    expect(safeOrigin("https://sgomez-abc.vercel.app")).toBe("https://sgomez-abc.vercel.app");
-    vi.unstubAllEnvs();
+    expect(safeOrigin("https://sgomez.example.workers.dev")).toBe("https://sgomez.dev");
   });
 });
 

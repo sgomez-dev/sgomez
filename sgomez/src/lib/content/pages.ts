@@ -410,8 +410,8 @@ function buildPrivacy(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "El sitio está alojado en Vercel. Como cualquier servidor web, su infraestructura registra las peticiones que recibe (dirección IP, agente de usuario, ruta pedida, fecha y hora) para servir la página y protegerse de abusos. Esos registros los genera y conserva el proveedor de alojamiento conforme a sus propias políticas, no una herramienta instalada por mí, y yo no los uso para identificar a nadie ni los cruzo con ninguna otra fuente.",
-              "The site is hosted on Vercel. Like any web server, its infrastructure logs the requests it receives (IP address, user agent, requested path, date and time) to serve the page and protect itself from abuse. Those logs are generated and kept by the hosting provider under its own policies, not by a tool I installed, and I do not use them to identify anyone or cross them with any other source.",
+              "El sitio está alojado en Cloudflare. Como cualquier servidor web, su infraestructura registra las peticiones que recibe (dirección IP, agente de usuario, ruta pedida, fecha y hora) para servir la página y protegerse de abusos. Esos registros los genera y conserva el proveedor de alojamiento conforme a sus propias políticas, no una herramienta instalada por mí, y yo no los uso para identificar a nadie ni los cruzo con ninguna otra fuente.",
+              "The site is hosted on Cloudflare. Like any web server, its infrastructure logs the requests it receives (IP address, user agent, requested path, date and time) to serve the page and protect itself from abuse. Those logs are generated and kept by the hosting provider under its own policies, not by a tool I installed, and I do not use them to identify anyone or cross them with any other source.",
             ),
           },
           {

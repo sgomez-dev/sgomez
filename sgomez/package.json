@@ -13,11 +13,13 @@
     "budget": "node scripts/js-budget.mjs",
     "lcp:report": "node scripts/lcp-report.mjs",
     "content-dates": "node scripts/content-dates.mjs",
-    "lhci": "next build && lhci autorun && lhci autorun --config=./lighthouserc.desktop.json"
+    "lhci": "next build && lhci autorun && lhci autorun --config=./lighthouserc.desktop.json",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "motion": "^13.5.0",
-    "next": "16.2.6",
+    "next": "16.4.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "three": "0.186.1"
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@lhci/cli": "^0.15.1",
+    "@opennextjs/cloudflare": "1.20.13",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -37,6 +40,7 @@
     "postcss": ">=8.5.10",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.2.7"
+    "vitest": "^3.2.7",
+    "wrangler": "4.153.0"
   }
 }

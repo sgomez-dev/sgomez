@@ -138,13 +138,8 @@ export type MachineRoute = (typeof MACHINE_ROUTES)[number];
  * Next varía por ellos para la navegación de cliente: publicar solo `Accept`
  * arreglaría la negociación y rompería el prefetch.
  *
- * OJO: en Vercel las páginas prerenderizadas salen de la caché con el `Vary`
- * que el builder guarda junto al HTML (los tokens de RSC del routes-manifest),
- * y ese valor gana a la cabecera del proxy, a `headers()` de next.config y a
- * `headers` de vercel.json, incluso con `important`. Lo único que lo pisa, medido
- * en una preview, es una transformación `response.headers` con `op: "set"` en
- * los `routes` de `vercel.json`. Los tres sitios declaran ESTE mismo valor para
- * que gane quien gane, no se pierda ninguno de los dos motivos.
+ * Lo declaran la regla `headers()` de next.config (las páginas) y el proxy (sus
+ * propias respuestas, el markdown y el 404). Un test comprueba que coinciden.
  */
 export const PAGE_VARY =
   "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept, Accept-Encoding";

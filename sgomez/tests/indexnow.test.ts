@@ -12,6 +12,8 @@ describe("IndexNow", () => {
     expect(readFileSync(file, "utf8")).toBe(key);
   });
   it("solo se dispara tras un despliegue de producción con éxito", () => {
-    expect(wf).toMatch(/deployment_status\.state == 'success' && github\.event\.deployment\.environment == 'Production'/);
+    expect(wf).toMatch(/startsWith\(github\.event\.check_run\.name, 'Workers Builds'\)/);
+    expect(wf).toMatch(/check_run\.conclusion == 'success'/);
+    expect(wf).toMatch(/check_run\.check_suite\.head_branch == 'main'/);
   });
 });

@@ -140,11 +140,10 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     return markdownResponse(document, 200, decision.canonical, decision.indexable);
   }
 
+  // El Vary de la página no se pone aquí: lo pone la regla `headers()` de
+  // next.config, que también cubre las rutas que este proxy no ve (/llms.txt).
+  // Declararlo en los dos sitios lo duplicaba en la respuesta.
   const response = passThrough(request, route);
-  // En Vercel la respuesta prerenderizada trae su propio Vary y pisa este, así
-  // que quien lo hace valer es la transformación de `vercel.json`. Se declara
-  // igualmente: es el valor correcto y cubre `next start`.
-  response.headers.set("Vary", PAGE_VARY);
   response.headers.append(
     "Link",
     `<${absolute(decision.alternate)}>; rel="alternate"; type="text/markdown"`,
