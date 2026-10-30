@@ -309,9 +309,9 @@ describe("JSON-LD de Forgia", () => {
     expect(JSON.stringify(person.sameAs)).not.toContain("forgia");
   });
 
-  it("el cargo de cofundador de Forgia existe en los dos idiomas", () => {
+  it("el cargo de cofundador y CTO de Forgia existe en los dos idiomas", () => {
     const en = (personGraph("en")["@graph"] as Node[]).find((n) => n["@type"] === "Person")!;
-    expect(en.jobTitle).toContain("Co-founder of Forgia");
-    expect(person.jobTitle).toContain("Cofundador de Forgia");
+    expect(en.jobTitle).toContain("Co-founder & CTO of Forgia");
+    expect(person.jobTitle).toContain("Cofundador y CTO de Forgia");
   });
 });

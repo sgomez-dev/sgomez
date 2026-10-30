@@ -20,7 +20,7 @@ import { CLAUDE_CANVAS } from "@/app/seo";
 import { siteFigures } from "@/lib/content/figures";
 import { getDictionary } from "@/i18n";
 import { fill } from "@/i18n/fill";
-import { about } from "@/app/content";
+import { about, experience } from "@/app/content";
 import { t } from "@/lib/content/localized";
 
 const figuresMock = vi.hoisted(() => ({ override: null as null | { years: number | null; projects: number; certifications: number } }));
@@ -338,7 +338,8 @@ describe("Tasks 5 y 6: contratos de marcado del movimiento", () => {
   for (const lang of ["es", "en"] as const) {
     it(`${lang}: la experiencia lleva su escena fijable con el número de tarjetas`, () => {
       const html = renderToStaticMarkup(<Experience lang={lang} />);
-      const n = getExperience(lang).length;
+      // Las entradas con `onPage: false` (SkyQuetz) siguen en la API pero no se pintan.
+      const n = getExperience(lang).filter((_, i) => experience[i].onPage !== false).length;
       expect(html).toMatch(new RegExp(`<section[^>]*data-pin=""[^>]*style="--n:${n}"`));
       expect(html).toMatch(/data-pin-stage=""/);
       expect(html).toMatch(/data-pin-progress=""[^>]*aria-hidden="true"/);

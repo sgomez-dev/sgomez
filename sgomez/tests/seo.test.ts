@@ -286,7 +286,9 @@ describe("Forgia antes que SkyQuetz", () => {
       const g = pageGraph({ lang, path: "/", title: "t", description: "d", type: "ProfilePage" }) as { "@graph": { "@type": string; itemListElement?: { position: number; item: string }[] }[] };
       const items = g["@graph"].find((n) => n["@type"] === "BreadcrumbList")!.itemListElement!;
       const pos = (anchor: string) => items.find((i) => i.item.endsWith(anchor))!.position;
-      expect(pos("#forgia")).toBe(pos("#skyquetz") - 1);
+      expect(pos("#forgia")).toBe(pos("#open-source") - 1);
+      // SkyQuetz no se pinta en la home: su ancla no puede estar en el breadcrumb.
+      expect(items.some((i) => i.item.endsWith("#skyquetz"))).toBe(false);
     });
     it(`${lang}: llms.txt y llms-full.txt cuentan Forgia antes que SkyQuetz`, () => {
       const short = llmsTxt(lang);
@@ -296,8 +298,9 @@ describe("Forgia antes que SkyQuetz", () => {
       expect(full.indexOf("https://forgia.es")).toBeLessThan(full.indexOf("https://skyquetz.com"));
     });
   }
-  it("la home pinta #forgia antes que #skyquetz", () => {
+  it("la home pinta #forgia y no pinta el capítulo de SkyQuetz", () => {
     const src = fs.readFileSync("src/app/[lang]/page.tsx", "utf8");
-    expect(src.indexOf("<Forgia ")).toBeLessThan(src.indexOf("<SkyQuetz "));
+    expect(src).toContain("<Forgia ");
+    expect(src).not.toContain("<SkyQuetz ");
   });
 });

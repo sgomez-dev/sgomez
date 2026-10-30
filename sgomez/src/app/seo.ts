@@ -20,18 +20,18 @@ import { CONTENT_UPDATED, ROUTE_CATALOGUE, latestContentUpdate, type LogicalPath
  */
 export const IDENTITY_TEXT = {
   description: {
-    es: "Santiago Gómez de la Torre Romero es un full-stack engineer que lleva la IA a producción. Cofundador de Forgia (agentes de IA para WhatsApp) y de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Organizador de GDG Santander.",
-    en: "Santiago Gómez de la Torre Romero is a full-stack engineer who takes AI to production. Co-founder of Forgia (AI agents for WhatsApp) and of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Organizer of GDG Santander.",
+    es: "Santiago Gómez de la Torre Romero es cofundador y CTO de Forgia (agentes de IA para WhatsApp) y un full-stack engineer que lleva la IA a producción. Cofundador también de SkyQuetz Consulting, creador de NudaUI y de una búsqueda semántica (RAG) en vivo sobre su catálogo. Organizador de GDG Santander.",
+    en: "Santiago Gómez de la Torre Romero is the co-founder & CTO of Forgia (AI agents for WhatsApp) and a full-stack engineer who takes AI to production. Also co-founder of SkyQuetz Consulting, creator of NudaUI and of a live semantic search (RAG) over its catalog. Organizer of GDG Santander.",
   } satisfies Localized,
   // Segundo título real de la persona (ver `IDENTITY.coFounderTitle`), en los dos idiomas.
   coFounderTitle: {
     es: "Cofundador de SkyQuetz Consulting",
     en: "Co-founder of SkyQuetz Consulting",
   } satisfies Localized,
-  // Tercer título real: cofundador de Forgia, en los dos idiomas.
+  // Título real en Forgia: cofundador y CTO, en los dos idiomas.
   coFounderForgiaTitle: {
-    es: "Cofundador de Forgia",
-    en: "Co-founder of Forgia",
+    es: "Cofundador y CTO de Forgia",
+    en: "Co-founder & CTO of Forgia",
   } satisfies Localized,
 };
 
@@ -429,8 +429,8 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       email: IDENTITY.email,
       jobTitle: [
         IDENTITY.jobTitle,
-        IDENTITY_TEXT.coFounderTitle[lang],
         IDENTITY_TEXT.coFounderForgiaTitle[lang],
+        IDENTITY_TEXT.coFounderTitle[lang],
       ],
       description: IDENTITY_TEXT.description[lang],
       sameAs: [...IDENTITY.sameAs],
@@ -737,9 +737,8 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },
             { "@type": "ListItem", position: 2, name: x("Proyectos", "Projects"), item: `${homeBase}#work` },
             { "@type": "ListItem", position: 3, name: "Forgia", item: `${homeBase}#forgia` },
-            { "@type": "ListItem", position: 4, name: "SkyQuetz", item: `${homeBase}#skyquetz` },
-            { "@type": "ListItem", position: 5, name: "Open Source", item: `${homeBase}#open-source` },
-            { "@type": "ListItem", position: 6, name: x("Contacto", "Contact"), item: `${homeBase}#contact` },
+            { "@type": "ListItem", position: 4, name: "Open Source", item: `${homeBase}#open-source` },
+            { "@type": "ListItem", position: 5, name: x("Contacto", "Contact"), item: `${homeBase}#contact` },
           ]
         : [
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },

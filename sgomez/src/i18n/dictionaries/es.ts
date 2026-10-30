@@ -13,7 +13,7 @@ const es = {
   },
   chapters: {
     hero: {
-      eyebrow: "Full-stack engineer · Santander",
+      eyebrow: "Cofundador y CTO de Forgia · Santander",
       serif: "IA que llega a producción.",
       heading: "Ingeniero full-stack que lleva la IA a producción",
       available: "Disponible para nuevos proyectos",
@@ -54,7 +54,7 @@ const es = {
       products: "Productos propios",
     },
     forgia: {
-      eyebrow: "Forgia",
+      eyebrow: "Forgia · Cofundador y CTO",
       heading: "Cada lead entra frío",
       headingSerif: "y sale al rojo",
       pieces: "Forgia IA, en tres piezas",

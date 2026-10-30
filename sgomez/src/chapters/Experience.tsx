@@ -15,7 +15,10 @@ import { Section } from "@/components/ui/Section";
  */
 export default function Experience({ lang }: { lang: Lang }) {
   const d = getDictionary(lang);
-  const entries = getExperience(lang);
+  // Las entradas con `onPage: false` siguen en la API y en el grafo, pero no se pintan aquí.
+  const entries = getExperience(lang)
+    .map((e, i) => ({ ...e, summary: experience[i].summary }))
+    .filter((_, i) => experience[i].onPage !== false);
   return (
     <Section id="experience" labelledBy="experience-h" dataAttrs={{ "data-pin": "" }} style={{ "--n": entries.length } as CSSProperties}>
       <div data-pin-stage="" className="flex flex-col justify-center">
@@ -44,7 +47,7 @@ export default function Experience({ lang }: { lang: Lang }) {
               <p data-e="org" className="text-[length:var(--step-0)] text-[color:var(--light-2)]">{e.organization}</p>
               <p data-e="desc" className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{e.description}</p>
               <p data-e="summary" aria-hidden="true" className="hidden">
-                {t(experience[i].summary, lang)}
+                {t(e.summary, lang)}
               </p>
             </li>
           ))}

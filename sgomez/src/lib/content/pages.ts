@@ -1,4 +1,4 @@
-import { CLAUDE_CANVAS, FORGIA, IDENTITY, SKYQUETZ } from "@/app/seo";
+import { CLAUDE_CANVAS, FORGIA, IDENTITY } from "@/app/seo";
 import { about } from "@/app/content";
 import { LANGS, localizedPath, type Lang } from "@/i18n/languages";
 import { t } from "./localized";
@@ -57,12 +57,12 @@ function buildAbout(lang: Lang): StaticPage {
       "About · Santiago Gómez de la Torre Romero | sgomez.dev",
     ),
     description: x(
-      "Santiago Gómez de la Torre Romero es full-stack engineer, cofundador de Forgia y de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
-      "Santiago Gómez de la Torre Romero is a full-stack engineer, co-founder of Forgia and SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
+      "Santiago Gómez de la Torre Romero es cofundador y CTO de Forgia, full-stack engineer, cofundador de SkyQuetz Consulting, creador de NudaUI y organizador de GDG Santander. Aquí se cuentan su trayectoria, su formación y en qué trabaja hoy.",
+      "Santiago Gómez de la Torre Romero is the co-founder & CTO of Forgia, a full-stack engineer, co-founder of SkyQuetz Consulting, creator of NudaUI and organizer of GDG Santander. This page covers his career, his education and what he works on today.",
     ),
     lead: x(
-      "Full-stack engineer en Cantabria, España. Llevo la IA a producción, no a demos. Cofundador de Forgia y de SkyQuetz Consulting, y creador de NudaUI.",
-      "Full-stack engineer in Cantabria, Spain. I take AI to production, not to demos. Co-founder of Forgia and SkyQuetz Consulting, and creator of NudaUI.",
+      "Cofundador y CTO de Forgia. Full-stack engineer en Cantabria, España, que lleva la IA a producción, no a demos, y creador de NudaUI.",
+      "Co-founder & CTO of Forgia. Full-stack engineer in Cantabria, Spain, who takes AI to production, not to demos, and creator of NudaUI.",
     ),
     sections: [
       {
@@ -72,8 +72,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Entre junio de 2025 y octubre de 2026 desarrollé software en Evenbytes con Angular, Node.js y Google Cloud. En 2026 cofundé SkyQuetz Consulting con tres socios más, donde llevo la parte de ingeniería. Ese mismo año cofundé también Forgia (forgia.es) con Valentino Vargas, una empresa de agentes de IA para WhatsApp en la que llevo toda la parte técnica.",
-              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Between June 2025 and October 2026 I built software at Evenbytes with Angular, Node.js and Google Cloud. In 2026 I co-founded SkyQuetz Consulting with three more partners, where I handle the engineering. That same year I also co-founded Forgia (forgia.es) with Valentino Vargas, a company building AI agents for WhatsApp where I lead the whole technical side.",
+              "Me llamo Santiago Gómez de la Torre Romero y soy full-stack engineer. «Gómez de la Torre» es un apellido compuesto, no dos apellidos sueltos. Vivo en Cantabria, España, y trabajo en remoto. Entre junio de 2025 y octubre de 2026 desarrollé software en Evenbytes con Angular, Node.js y Google Cloud. En 2026 cofundé Forgia (forgia.es) con Valentino Vargas, una empresa de agentes de IA para WhatsApp en la que soy CTO y llevo toda la parte técnica.",
+              "My name is Santiago Gómez de la Torre Romero and I'm a full-stack engineer. “Gómez de la Torre” is a compound surname, not separate surnames. I live in Cantabria, Spain, and work remotely. Between June 2025 and October 2026 I built software at Evenbytes with Angular, Node.js and Google Cloud. In 2026 I co-founded Forgia (forgia.es) with Valentino Vargas, a company building AI agents for WhatsApp where I am the CTO and lead the whole technical side.",
             ),
           },
           {
@@ -106,8 +106,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              `En 2026 cofundé ${SKYQUETZ.name} con tres socios más, una consultora de software a medida para negocios de habla hispana, en remoto y sin intermediarios. Soy cofundador, uno de cuatro socios, no fundador único. Llevo la ingeniería, y de ahí han salido dos productos propios: Synentria, un motor de auditoría SEO y GEO cuyos hallazgos son deterministas y no los decide ningún modelo, y Packatrack, un SaaS de conciliación de liquidaciones para operadores de última milla.`,
-              `In 2026 I co-founded ${SKYQUETZ.name} with three more partners, a custom software consultancy for Spanish-speaking businesses, fully remote and with no intermediaries. I am a co-founder, one of four partners, not the sole founder. I handle the engineering, and two in-house products have come out of it: Synentria, an SEO and GEO audit engine whose findings are deterministic and not decided by any model, and Packatrack, a settlement reconciliation SaaS for last-mile operators.`,
+              `Soy cofundador y CTO de ${FORGIA.name} (${FORGIA.url}), que puse en marcha en 2026 con ${FORGIA.partner.name}. Llevo toda la parte técnica, desde la arquitectura y el desarrollo hasta los bots y el CRM. Su producto, Forgia IA, es un sistema de bots de IA que atiende por WhatsApp a los clientes de un negocio y cualifica sus leads, con un bot inbound, un bot outbound para prospección B2B y un panel CRM para que una persona entre en la conversación cuando hay algo que cerrar.`,
+              `I am the co-founder & CTO of ${FORGIA.name} (${FORGIA.url}), which I started in 2026 with ${FORGIA.partner.name}. I lead the whole technical side, from the architecture and the development to the bots and the CRM. Its product, Forgia IA, is an AI bot system that answers a business's customers over WhatsApp and qualifies their leads, with an inbound bot, an outbound bot for B2B prospecting and a CRM panel so a person steps into the conversation when there is something to close.`,
             ),
           },
           {
@@ -120,8 +120,8 @@ function buildAbout(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              `El tercero es ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), un plugin de Claude Code que le da al modelo una pantalla propia. Abre un panel interactivo de terminal junto a la conversación (eliges un fichero, apruebas hunk a hunk un diff, rellenas un formulario) y tu respuesta le vuelve como un valor exacto en vez de prosa que tenga que interpretar. Son nueve tipos de panel, un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Partí del proof of concept de ${CLAUDE_CANVAS.basedOnAuthor} (${CLAUDE_CANVAS.basedOn}), que lo publicó como prueba de concepto sin soporte, y lo llevé a algo que aguanta el uso diario. Lo digo siempre que lo cuento. La idea es suya, la licencia es MIT y conserva su copyright. Es un proyecto mío, no un producto de ${SKYQUETZ.name}.`,
-              `The third is ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), a Claude Code plugin that gives the model a screen of its own. It opens an interactive terminal pane beside the conversation (you pick a file, approve a diff hunk by hunk, fill in a form) and your answer comes back to it as an exact value instead of prose it has to interpret. There are nine pane kinds, a transport of its own over a local socket, more than 600 tests and CI on Linux, macOS and Windows. I started from ${CLAUDE_CANVAS.basedOnAuthor}'s proof of concept (${CLAUDE_CANVAS.basedOn}), which he published as an unsupported proof of concept, and took it to something that holds up under daily use. I say this every time I tell the story. The idea is his, the license is MIT and it keeps his copyright. It is a project of mine, not a ${SKYQUETZ.name} product.`,
+              `El tercero es ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), un plugin de Claude Code que le da al modelo una pantalla propia. Abre un panel interactivo de terminal junto a la conversación (eliges un fichero, apruebas hunk a hunk un diff, rellenas un formulario) y tu respuesta le vuelve como un valor exacto en vez de prosa que tenga que interpretar. Son nueve tipos de panel, un transporte propio por socket local, más de 600 tests y CI en Linux, macOS y Windows. Partí del proof of concept de ${CLAUDE_CANVAS.basedOnAuthor} (${CLAUDE_CANVAS.basedOn}), que lo publicó como prueba de concepto sin soporte, y lo llevé a algo que aguanta el uso diario. Lo digo siempre que lo cuento. La idea es suya, la licencia es MIT y conserva su copyright. Es un proyecto personal mío, no un producto de ninguna de mis empresas.`,
+              `The third is ${CLAUDE_CANVAS.name} (${CLAUDE_CANVAS.url}), a Claude Code plugin that gives the model a screen of its own. It opens an interactive terminal pane beside the conversation (you pick a file, approve a diff hunk by hunk, fill in a form) and your answer comes back to it as an exact value instead of prose it has to interpret. There are nine pane kinds, a transport of its own over a local socket, more than 600 tests and CI on Linux, macOS and Windows. I started from ${CLAUDE_CANVAS.basedOnAuthor}'s proof of concept (${CLAUDE_CANVAS.basedOn}), which he published as an unsupported proof of concept, and took it to something that holds up under daily use. I say this every time I tell the story. The idea is his, the license is MIT and it keeps his copyright. It is a personal project of mine, not a product of any of my companies.`,
             ),
           },
         ],
@@ -144,14 +144,10 @@ function buildAbout(lang: Lang): StaticPage {
             kind: "list",
             items: [
               x("Nombre completo: Santiago Gómez de la Torre Romero.", "Full name: Santiago Gómez de la Torre Romero."),
-              x("Rol: Full-Stack Engineer (AI/LLM).", "Role: Full-Stack Engineer (AI/LLM)."),
+              x("Rol: cofundador y CTO de Forgia, y Full-Stack Engineer (AI/LLM).", "Role: co-founder & CTO of Forgia, and Full-Stack Engineer (AI/LLM)."),
               x(
-                `Cofundador de ${SKYQUETZ.name} (${SKYQUETZ.url}), fundada en ${SKYQUETZ.foundingDate} por cuatro socios.`,
-                `Co-founder of ${SKYQUETZ.name} (${SKYQUETZ.url}), founded in ${SKYQUETZ.foundingDate} by four partners.`,
-              ),
-              x(
-                `Cofundador de ${FORGIA.name} (${FORGIA.url}), con ${FORGIA.partner.name}, y responsable de toda la parte técnica.`,
-                `Co-founder of ${FORGIA.name} (${FORGIA.url}), with ${FORGIA.partner.name}, leading the whole technical side.`,
+                `Cofundador y CTO de ${FORGIA.name} (${FORGIA.url}), con ${FORGIA.partner.name}, y responsable de toda la parte técnica.`,
+                `Co-founder & CTO of ${FORGIA.name} (${FORGIA.url}), with ${FORGIA.partner.name}, leading the whole technical side.`,
               ),
               x(
                 "Formación: Grado en Ingeniería Informática, Universidad Europea del Atlántico (desde 2021).",
@@ -234,16 +230,8 @@ function buildContact(lang: Lang): StaticPage {
                 label: FORGIA.url,
                 href: FORGIA.url,
                 note: x(
-                  "Para agentes de IA para WhatsApp: Forgia, la empresa que cofundé con Valentino Vargas.",
-                  "For AI agents for WhatsApp: Forgia, the company I co-founded with Valentino Vargas.",
-                ),
-              },
-              {
-                label: SKYQUETZ.url,
-                href: SKYQUETZ.url,
-                note: x(
-                  "Para encargos de la consultora que cofundé, con contrato y equipo detrás.",
-                  "For commissions to the consultancy I co-founded, with a contract and a team behind it.",
+                  "Para agentes de IA para WhatsApp: Forgia, la empresa que cofundé con Valentino Vargas y de la que soy CTO.",
+                  "For AI agents for WhatsApp: Forgia, the company I co-founded with Valentino Vargas and where I am the CTO.",
                 ),
               },
             ],
@@ -273,8 +261,8 @@ function buildContact(lang: Lang): StaticPage {
                 "Full-stack development: React, Next.js, Angular, Node.js, Python and FastAPI, deployed on Google Cloud.",
               ),
               x(
-                "Encargos de software a medida a través de SkyQuetz Consulting, cuando el proyecto necesita un equipo y no una sola persona.",
-                "Custom software commissions through SkyQuetz Consulting, when the project needs a team and not a single person.",
+                "Agentes de IA para WhatsApp que atienden y cualifican a tus clientes, a través de Forgia, donde soy CTO.",
+                "AI agents for WhatsApp that answer and qualify your customers, through Forgia, where I am the CTO.",
               ),
               x(
                 "NudaUI: dudas, propuestas o errores de la librería. También valen los issues del repositorio.",
@@ -289,8 +277,8 @@ function buildContact(lang: Lang): StaticPage {
           {
             kind: "paragraph",
             text: x(
-              "Trabajo en remoto desde Santander, Cantabria (España), en horario europeo (CET/CEST). Estoy abierto a freelance y a colaboraciones seleccionadas; si el encargo requiere equipo, contrato y continuidad, lo natural es canalizarlo por SkyQuetz Consulting.",
-              "I work remotely from Santander, Cantabria (Spain), on European hours (CET/CEST). I am open to freelance work and selected collaborations; if the commission needs a team, a contract and continuity, the natural route is SkyQuetz Consulting.",
+              "Trabajo en remoto desde Santander, Cantabria (España), en horario europeo (CET/CEST). Estoy abierto a freelance y a colaboraciones seleccionadas; si lo que necesitas son agentes de IA para WhatsApp, lo natural es hacerlo a través de Forgia.",
+              "I work remotely from Santander, Cantabria (Spain), on European hours (CET/CEST). I am open to freelance work and selected collaborations; if what you need is AI agents for WhatsApp, the natural route is Forgia.",
             ),
           },
         ],

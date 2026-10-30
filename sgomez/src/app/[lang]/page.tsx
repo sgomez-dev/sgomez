@@ -10,7 +10,6 @@ import Build from '@/chapters/Build'
 import Experience from '@/chapters/Experience'
 import Projects from '@/chapters/Projects'
 import OpenSource from '@/chapters/OpenSource'
-import SkyQuetz from '@/chapters/SkyQuetz'
 import Forgia from '@/chapters/Forgia'
 import Proof from '@/chapters/Proof'
 import LatestPosts from '@/chapters/LatestPosts'
@@ -20,14 +19,14 @@ import Contact from '@/chapters/Contact'
 // con el texto inglés del layout; ahora cada uno lleva el suyo.
 const HOME_META = {
   es: {
-    title: `${IDENTITY.name} · Full-Stack Engineer que lleva la IA a producción`,
+    title: `${IDENTITY.name} · Cofundador y CTO de Forgia, Full-Stack Engineer de IA`,
     description:
-      'Full-stack engineer que lleva la IA y los LLM a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI (más de 1.500 componentes) y de una búsqueda semántica (RAG) en vivo. React, Next.js, Node.js, Python, Google Cloud.',
+      'Cofundador y CTO de Forgia (agentes de IA para WhatsApp) y full-stack engineer que lleva la IA y los LLM a producción. Cofundador de SkyQuetz Consulting, creador de NudaUI (más de 1.500 componentes) y de una búsqueda semántica (RAG) en vivo. React, Next.js, Node.js, Python, Google Cloud.',
   },
   en: {
-    title: `${IDENTITY.name} · Full-Stack Engineer shipping AI to production`,
+    title: `${IDENTITY.name} · Co-founder & CTO of Forgia, Full-Stack AI Engineer`,
     description:
-      'Full-stack engineer building and shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (more than 1,500 components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.',
+      'Co-founder & CTO of Forgia (AI agents for WhatsApp) and full-stack engineer shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (more than 1,500 components) and a live semantic search (RAG). React, Next.js, Node.js, Python, Google Cloud.',
   },
 } as const
 
@@ -59,7 +58,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
       <Projects lang={lang} />
       <OpenSource lang={lang} />
       <Forgia lang={lang} />
-      <SkyQuetz lang={lang} />
       <Proof lang={lang}>
         <LatestPosts lang={lang} />
       </Proof>

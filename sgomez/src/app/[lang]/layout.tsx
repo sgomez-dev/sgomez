@@ -20,7 +20,7 @@ const siteTitle =
 // description y el JSON-LD de la MISMA pagina, y si una menciona el rol de
 // cofundador y la otra no, el propio documento se contradice.
 const siteDescription =
-  "Full-stack engineer building and shipping AI/LLM features to production. Co-founder of Forgia (AI agents for WhatsApp) and SkyQuetz Consulting, creator of NudaUI (more than 1,500 components) and a live semantic search (RAG). React, Next.js, Node.js, Python.";
+  "Co-founder & CTO of Forgia (AI agents for WhatsApp) and full-stack engineer shipping AI/LLM features to production. Co-founder of SkyQuetz Consulting, creator of NudaUI (more than 1,500 components) and a live semantic search (RAG). React, Next.js, Node.js, Python.";
 
 /**
  * Metadata del sitio para un idioma. Se mantienen los valores de siempre y solo

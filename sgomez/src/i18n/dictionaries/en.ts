@@ -15,7 +15,7 @@ const en: Dictionary = {
   },
   chapters: {
     hero: {
-      eyebrow: "Full-stack engineer · Santander",
+      eyebrow: "Co-founder & CTO of Forgia · Santander",
       serif: "AI that reaches production.",
       heading: "A full-stack engineer who takes AI to production",
       available: "Available for new projects",
@@ -56,7 +56,7 @@ const en: Dictionary = {
       products: "In-house products",
     },
     forgia: {
-      eyebrow: "Forgia",
+      eyebrow: "Forgia · Co-founder & CTO",
       heading: "Every lead comes in cold",
       headingSerif: "and leaves red hot",
       pieces: "Forgia IA in three parts",

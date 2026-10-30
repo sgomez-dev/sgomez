@@ -50,7 +50,7 @@ sgomez/
 
 ### Capítulos
 
-La home compone nueve capítulos, en este orden: `Hero`, `About`, `Build`, `Experience`, `Projects`, `OpenSource`, `SkyQuetz`, `Proof` (recomendaciones, certificaciones, formación y últimas entradas del blog) y `Contact`. Cada uno es un componente de servidor en `src/chapters/`. Todo el texto está en el HTML del servidor y se ve sin JavaScript.
+La home compone nueve capítulos, en este orden: `Hero`, `About`, `Build`, `Experience`, `Projects`, `OpenSource`, `Forgia`, `Proof` (recomendaciones, certificaciones, formación y últimas entradas del blog) y `Contact`. Cada uno es un componente de servidor en `src/chapters/`. `SkyQuetz` existe pero no se pinta: la empresa solo aparece en la metadata (JSON-LD, llms.txt, API). Todo el texto está en el HTML del servidor y se ve sin JavaScript.
 
 ### Idiomas
 
