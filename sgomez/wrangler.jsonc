@@ -10,5 +10,8 @@
   },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "sgomez" }],
   "images": { "binding": "IMAGES" },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Las ramas que no son main publican una vista previa con `wrangler preview`, que exige este bloque (puede ir vacío).
+  // Sin él, el build de Workers de cada PR salía en rojo aunque main compilara bien.
+  "previews": {}
 }
