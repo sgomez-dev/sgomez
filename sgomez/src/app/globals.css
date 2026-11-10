@@ -72,10 +72,10 @@ body {
   box-shadow: 22px 22px 54px var(--lo), -18px -18px 44px var(--hi), inset 0 1px 0 #ffffff14;
 }
 
-/* El cristal (vídeos, lienzo y póster SVG) nació azul sobre negro. En la porcelana se lleva al teal y al salvia de la
-   paleta de Forgia con un filtro, sin volver a renderizar los vídeos. */
-[data-glass] > :not(button),
-[data-sequence] {
+/* El cristal (vídeos y póster SVG) nació azul sobre negro. En la porcelana se lleva al teal y al salvia de la
+   paleta de Forgia con un filtro, sin volver a renderizar los vídeos. La secuencia del capítulo 03 no lleva filtro:
+   sus fotogramas ya vienen teñidos con la misma matriz (un filtro en el lienzo frenaba el pintado sin GPU). */
+[data-glass] > :not(button) {
   filter: hue-rotate(-38deg) saturate(0.72) brightness(1.02);
 }
 
