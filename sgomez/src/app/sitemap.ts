@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: route.changeFrequency,
     priority: route.priority,
     alternates: { languages: hreflangAlternates(route.logical) },
-    ...(route.logical === "/" ? { images: [`${SITE_URL}/Santiago_Gómez_de_la_Torre_Romero.png`] } : {}),
+    ...(route.logical === "/" ? { images: [`${SITE_URL}/Santiago_Gómez_de_la_Torre_Romero.jpg`] } : {}),
   }));
 
   // Un caso de estudio, en cada idioma, con el `lastmod` de su propio `updated` (no el de la home) y sus hreflang.

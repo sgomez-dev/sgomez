@@ -33,7 +33,7 @@ describe("routeRequest", () => {
     ["/en/index.md", { kind: "next" }],
     ["/en/llms-full.txt", { kind: "next" }],
     ["/llms-full.txt", { kind: "next" }],
-    ["/Santiago_Gómez_de_la_Torre_Romero.png", { kind: "next" }],
+    ["/Santiago_Gómez_de_la_Torre_Romero.jpg", { kind: "next" }],
     ["/_next/static/x.js", { kind: "next" }],
   ])("%s", (path, expected) => {
     expect(routeRequest(path)).toEqual(expected);

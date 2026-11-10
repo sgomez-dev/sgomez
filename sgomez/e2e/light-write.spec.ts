@@ -5,7 +5,7 @@ test("el nombre se ve entero en el primer fotograma y la luz no cambia su caja n
   const span = page.locator("h1 [data-light-write]");
   await expect(span).toHaveText("Santiago Gómez de la Torre.");
   const color = await span.evaluate((el) => getComputedStyle(el).color);
-  expect(color).toBe("rgb(244, 246, 251)");
+  expect(color).toBe("rgb(22, 19, 15)");
   const before = await page.locator("h1").boundingBox();
   await page.waitForTimeout(2500);
   expect(await page.locator("h1").boundingBox()).toEqual(before);

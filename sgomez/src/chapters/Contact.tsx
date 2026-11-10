@@ -46,7 +46,7 @@ export default function Contact({ lang }: { lang: Lang }) {
               {INTENTS.map((intent, index) => {
                 const c = d.contact.intent[intent];
                 return (
-                  <li key={intent} data-motion="intent" style={{ "--i": index } as CSSProperties} className="relative flex min-w-0 flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 transition-colors focus-within:bg-[color:var(--bg-3)] hover:bg-[color:var(--bg-3)]">
+                  <li key={intent} data-motion="intent" style={{ "--i": index } as CSSProperties} className="relative flex min-w-0 flex-col gap-3 neu p-5 transition-colors focus-within:bg-[color:var(--bg-3)] hover:bg-[color:var(--bg-3)]">
                     <a
                       href={contactMailto(intent, lang)}
                       className={`group flex min-h-11 items-start justify-between gap-3 rounded-[var(--radius)] text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)] after:absolute after:inset-0 after:rounded-[var(--radius)] after:content-[''] ${focus}`}

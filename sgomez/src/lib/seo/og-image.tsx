@@ -11,7 +11,7 @@ import { getCaseStudy } from "@/lib/api/data";
 /**
  * Imagen Open Graph de un idioma (1200×630).
  *
- * Mismo lenguaje visual que la home: fondo #05060a con el resplandor radial, el
+ * Mismo lenguaje visual que la home: porcelana #ebe6de con luz radial, el
  * titular en Inter Tight 600 y la línea serif en Instrument Serif cursiva, con
  * el retrato a la derecha. Las fuentes son las mismas del sitio pero `next/og`
  * no lee WOFF2, que es lo que entrega `next/font`, así que van como TTF en
@@ -33,13 +33,13 @@ const PORTRAIT = path.join(process.cwd(), "src", "lib", "seo", "og-portrait.png"
 const NAME_LINES = ["Santiago", "Gómez de la Torre."] as const;
 
 const COLORS = {
-  bg: "#05060a",
-  text: "#f4f6fb",
-  text2: "#aab2c6",
-  serifInk: "#c9d1e6",
-  light1: "#8fa8ff",
-  light2: "#6ef0dc",
-  line: "rgba(255,255,255,0.14)",
+  bg: "#ebe6de",
+  text: "#16130f",
+  text2: "#554e44",
+  serifInk: "#1f5a69",
+  light1: "#2a6b7c",
+  light2: "#c9a96e",
+  line: "#ebe6de",
 };
 
 /**
@@ -83,7 +83,7 @@ export async function renderOgImage(lang: Lang, page?: { eyebrow: string; line: 
           justifyContent: "space-between",
           padding: "64px 72px",
           backgroundColor: COLORS.bg,
-          backgroundImage: `radial-gradient(60% 80% at 82% 38%, rgba(143,168,255,0.26), rgba(5,6,10,0) 70%), radial-gradient(40% 50% at 8% 100%, rgba(110,240,220,0.12), rgba(5,6,10,0) 70%)`,
+          backgroundImage: `radial-gradient(60% 80% at 82% 38%, rgba(255,255,255,0.75), rgba(235,230,222,0) 70%), radial-gradient(40% 50% at 8% 100%, rgba(201,169,110,0.18), rgba(235,230,222,0) 70%)`,
           color: COLORS.text,
           fontFamily: "Inter Tight",
         }}
@@ -154,7 +154,8 @@ export async function renderOgImage(lang: Lang, page?: { eyebrow: string; line: 
             borderRadius: 170,
             overflow: "hidden",
             border: `2px solid ${COLORS.line}`,
-            backgroundColor: "#0b0d14",
+            backgroundColor: "#1f5a69",
+            boxShadow: "22px 22px 48px #c4baab, -22px -22px 48px #ffffff",
           }}
         >
           {/* El redondeo va en la propia imagen: satori no recorta un <img> con el overflow redondeado del padre.

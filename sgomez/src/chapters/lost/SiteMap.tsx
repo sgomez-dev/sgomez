@@ -34,7 +34,7 @@ export default function SiteMap({ lang }: { lang: Lang }) {
                 <Link
                   prefetch={false}
                   href={route.path}
-                  className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] px-4 py-3 transition-colors hover:bg-[color:var(--bg-3)] ${FOCUS}`}
+                  className={`flex min-h-11 w-full items-center justify-between gap-3 neu-sm neu-press rounded-[var(--radius)] px-4 py-3 ${FOCUS}`}
                 >
                   <span className="text-[length:var(--step-0)] text-[color:var(--text)]">{route.title}</span>
                   <span className="text-[length:var(--step--1)] text-[color:var(--text-2)] [overflow-wrap:anywhere]">{route.path}</span>
@@ -73,7 +73,7 @@ export default function SiteMap({ lang }: { lang: Lang }) {
             role="region"
             aria-label={dict.markdownRegion}
             tabIndex={0}
-            className={`max-w-full overflow-x-auto rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] ${FOCUS}`}
+            className={`max-w-full overflow-x-auto neu ${FOCUS}`}
           >
             <pre className="w-max min-w-full p-4 font-mono text-[length:var(--step--1)] leading-relaxed text-[color:var(--text-2)] sm:text-sm">
               <code>{markdown}</code>

@@ -59,7 +59,7 @@ function BlockView({ block, tableLabel, codeLabel }: { block: Block; tableLabel:
           role="region"
           aria-label={tableLabel}
           tabIndex={0}
-          className={`max-w-full overflow-x-auto rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] ${FOCUS}`}
+          className={`max-w-full overflow-x-auto neu ${FOCUS}`}
         >
           <table className="w-full min-w-max text-left text-[length:var(--step--1)] sm:text-sm">
             <thead>
@@ -90,7 +90,7 @@ function BlockView({ block, tableLabel, codeLabel }: { block: Block; tableLabel:
           role="region"
           aria-label={codeLabel}
           tabIndex={0}
-          className={`max-w-full overflow-x-auto rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] ${FOCUS}`}
+          className={`max-w-full overflow-x-auto neu ${FOCUS}`}
         >
           <pre className="w-max min-w-full p-4 font-mono text-[length:var(--step--1)] leading-relaxed text-[color:var(--text)] sm:text-sm">
             <code>{block.code}</code>

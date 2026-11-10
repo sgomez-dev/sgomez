@@ -23,6 +23,62 @@ body {
   min-height: 100vh;
 }
 
+/* Neumorfismo (v4). Una superficie en relieve es del color del fondo y la separan una luz arriba a la izquierda
+   y una sombra abajo a la derecha; hundida, al revés y por dentro. Las tres alturas: -sm (chips, botones),
+   la normal (tarjetas) y -lg (paneles). */
+.neu {
+  background: var(--bg-2);
+  border-radius: var(--radius);
+  box-shadow: 9px 9px 22px var(--lo), -9px -9px 22px var(--hi);
+}
+.neu-sm {
+  background: var(--bg-2);
+  box-shadow: 4px 4px 10px var(--lo), -4px -4px 10px var(--hi);
+}
+.neu-lg {
+  background: var(--bg-2);
+  border-radius: calc(var(--radius) * 2);
+  box-shadow: 18px 18px 44px var(--lo), -18px -18px 44px var(--hi);
+}
+.neu-in {
+  background: var(--bg-3);
+  border-radius: var(--radius);
+  box-shadow: inset 6px 6px 14px var(--lo), inset -6px -6px 14px var(--hi);
+}
+.neu-in-sm {
+  background: var(--bg-3);
+  box-shadow: inset 3px 3px 7px var(--lo), inset -3px -3px 7px var(--hi);
+}
+/* Una tarjeta que es enlace se hunde un poco al pasar y del todo al pulsar. */
+.neu-press {
+  transition: box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) {
+  .neu-press:hover { box-shadow: 5px 5px 12px var(--lo), -5px -5px 12px var(--hi); }
+}
+.neu-press:active { box-shadow: inset 4px 4px 10px var(--lo), inset -4px -4px 10px var(--hi); transform: translateY(2px); }
+
+/* La losa de Forgia: Nero de su marca hundido en la porcelana. Dentro, los tokens de texto se invierten. */
+.forge-slab {
+  --text: #f7f3ed;
+  --text-2: #b9b2a6;
+  --line: #f7f3ed1a;
+  --bg-2: #161514;
+  --bg-3: #1c1b19;
+  --light-1: #c9a96e;
+  background: var(--nero);
+  color: var(--text);
+  border-radius: calc(var(--radius) * 2.4);
+  box-shadow: 22px 22px 54px var(--lo), -18px -18px 44px var(--hi), inset 0 1px 0 #ffffff14;
+}
+
+/* El cristal (vídeos, lienzo y póster SVG) nació azul sobre negro. En la porcelana se lleva al teal y al salvia de la
+   paleta de Forgia con un filtro, sin volver a renderizar los vídeos. */
+[data-glass] > :not(button),
+[data-sequence] {
+  filter: hue-rotate(-38deg) saturate(0.72) brightness(1.02);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -44,10 +100,8 @@ body {
 }
 
 .glass {
-  background: rgba(10, 10, 20, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--line);
+  background: var(--bg-2);
+  box-shadow: 9px 9px 22px var(--lo), -9px -9px 22px var(--hi);
 }
 
 .card-hover {
@@ -56,8 +110,7 @@ body {
 
 .card-hover:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in oklab, var(--light-1) 30%, transparent);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 12px var(--lo), -5px -5px 12px var(--hi);
 }
 
 /* Focus styles */

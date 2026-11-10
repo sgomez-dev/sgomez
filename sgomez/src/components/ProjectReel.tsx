@@ -40,7 +40,7 @@ export default function ProjectReel({ slug, className = "" }: { slug: string; cl
       data-motion="reel"
       aria-hidden="true"
       style={{ aspectRatio: `${REEL_SIZE.width} / ${REEL_SIZE.height}` }}
-      className={`group relative w-full overflow-hidden rounded-[8px] border border-[color:var(--line)] bg-[color:var(--bg-2)] ${className}`}
+      className={`group relative w-full overflow-hidden rounded-[10px] neu-in-sm ${className}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- póster decorativo ya optimizado en el render, sin optimizador */}
       <img src={src.poster} alt="" width={REEL_SIZE.width} height={REEL_SIZE.height} loading="lazy" decoding="async" className="block h-full w-full object-cover" />

@@ -1,19 +1,24 @@
 :root {
-  --bg: #05060a;
-  --bg-2: #0b0d14;
-  --bg-3: #121624;
-  --text: #f4f6fb;
-  --text-2: #aab2c6;
-  --serif-ink: #c9d1e6;
-  --light-1: #8fa8ff;
-  --light-2: #6ef0dc;
-  --line: #ffffff14;
-  /* Acento de Forgia (capítulo #forgia), de su libro de marca: la rampa de temperatura del lead.
+  /* Tema claro neumórfico (v4): porcelana cálida con la paleta de Forgia. Las superficies en relieve son del mismo
+     color que el fondo y se separan solo con luz (--hi) y sombra (--lo). */
+  --bg: #ebe6de;
+  --bg-2: #ebe6de;
+  --bg-3: #e3ddd3;
+  --text: #16130f;
+  --text-2: #554e44;
+  --serif-ink: #1f5a69;
+  --light-1: #2a6b7c;
+  --light-2: #7d5f27;
+  --line: #16130f17;
+  --hi: #ffffff;
+  --lo: #c4baab;
+  /* Acento de Forgia, de su libro de marca: la rampa de temperatura del lead.
      Frío, teal (lo que hace el bot), oro claro (calor máximo) y oro (una persona, el resultado). */
   --forge-cold: #4a4540;
   --forge-teal: #6fc8d8;
   --forge-hot: #e8d5a8;
   --forge-gold: #c9a96e;
+  --nero: #0e0e0e;
   --radius: 14px;
   --font-sans: var(--font-inter-tight);
   --font-serif: var(--font-instrument-serif);

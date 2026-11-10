@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: Lan
 export default async function HomePage({ params }: { params: Promise<{ lang: Lang }> }) {
   const { lang } = await params
   return (
-    <div className="text-white">
+    <div className="text-[color:var(--text)]">
       {/* El único @graph de la home: la home es el ProfilePage de la persona. */}
       <JsonLd
         data={pageGraph({
@@ -52,12 +52,13 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Lan
         })}
       />
       <Hero lang={lang} />
+      {/* Forgia es hoy casi todo su tiempo: va justo después de la portada, con el peso de un capítulo propio. */}
+      <Forgia lang={lang} />
       <About lang={lang} />
       <Build lang={lang} />
       <Experience lang={lang} />
       <Projects lang={lang} />
       <OpenSource lang={lang} />
-      <Forgia lang={lang} />
       <Proof lang={lang}>
         <LatestPosts lang={lang} />
       </Proof>

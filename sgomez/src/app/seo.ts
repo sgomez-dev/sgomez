@@ -46,7 +46,7 @@ export const IDENTITY = {
   // existe y que ya lo declara cofundador desde su lado.
   coFounderTitle: IDENTITY_TEXT.coFounderTitle.es,
   email: "contact@sgomez.dev",
-  image: "https://sgomez.dev/Santiago_Gómez_de_la_Torre_Romero.png",
+  image: "https://sgomez.dev/Santiago_Gómez_de_la_Torre_Romero.jpg",
   description: IDENTITY_TEXT.description.es,
   location: { city: "Santander", region: "Cantabria", country: "ES" },
   // sameAs cluster — every profile/property that is "also him". This is what
@@ -735,8 +735,8 @@ export function personGraph(lang: Lang = "es", page: GraphPage = HOME_PAGE): Jso
       itemListElement: isHome
         ? [
             { "@type": "ListItem", position: 1, name: x("Inicio", "Home"), item: homeUrl },
-            { "@type": "ListItem", position: 2, name: x("Proyectos", "Projects"), item: `${homeBase}#work` },
-            { "@type": "ListItem", position: 3, name: "Forgia", item: `${homeBase}#forgia` },
+            { "@type": "ListItem", position: 2, name: "Forgia", item: `${homeBase}#forgia` },
+            { "@type": "ListItem", position: 3, name: x("Proyectos", "Projects"), item: `${homeBase}#work` },
             { "@type": "ListItem", position: 4, name: "Open Source", item: `${homeBase}#open-source` },
             { "@type": "ListItem", position: 5, name: x("Contacto", "Contact"), item: `${homeBase}#contact` },
           ]

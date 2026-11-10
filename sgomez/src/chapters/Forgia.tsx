@@ -13,6 +13,10 @@ import { WordReveal, wordRevealStyle } from "@/components/motion/WordReveal";
 const linkClass =
   "inline-flex min-h-11 items-center gap-1.5 text-[length:var(--step-0)] font-medium text-[color:var(--forge-hot)] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
 
+/** La llamada principal de la losa: oro de Forgia con su relieve, como un botón de forgia.es. */
+const GOLD_BUTTON =
+  "inline-flex min-h-12 items-center gap-2 rounded-full bg-[linear-gradient(180deg,#e8d5a8,#c9a96e)] px-6 py-2.5 text-[length:var(--step-0)] font-semibold text-[#0e0e0e] shadow-[inset_0_1px_0_#ffffff80,0_12px_28px_-10px_#c9a96e99] transition-transform duration-300 hover:-translate-y-0.5 active:translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--forge-gold)]";
+
 /** Cada tramo va del color de su nudo al del siguiente: de arriba abajo, el raíl entero pasa del teal del bot al oro. */
 const RAIL = [
   "linear-gradient(to bottom, var(--forge-teal), color-mix(in oklab, var(--forge-teal) 50%, var(--forge-hot)))",
@@ -22,11 +26,13 @@ const RAIL = [
 /** Brasa ambiente del capítulo: un fondo, no una capa posicionada, así que no puede desbordar a 320. */
 const SECTION_STYLE: CSSProperties = {
   backgroundImage:
-    "radial-gradient(48rem 28rem at 88% 92%, color-mix(in oklab, var(--forge-gold) 7%, transparent), transparent 70%)",
+    "radial-gradient(48rem 28rem at 88% 92%, color-mix(in oklab, var(--forge-gold) 12%, transparent), transparent 70%), radial-gradient(36rem 22rem at 6% 0%, color-mix(in oklab, var(--forge-teal) 9%, transparent), transparent 70%)",
 };
 
 /**
- * Capítulo de Forgia, justo antes de SkyQuetz y con su mismo peso (titular tope a 40 px). El ancla es `forgia`; el
+ * Capítulo de Forgia, el primero tras la portada (v4): hoy es casi todo su tiempo. Va en una losa Nero de su marca
+ * hundida en la porcelana del sitio (`.forge-slab` en globals.css invierte los tokens de texto dentro), con su titular a
+ * tamaño de capítulo grande, la franja «Confían en Forgia» de forgia.es y dos llamadas. El ancla es `forgia`; el
  * nodo del grafo es `#forgia-org` (seo.ts) y no se repite aquí.
  *
  * La marca es «La Forja»: cada lead entra frío y sale al rojo. Tres adornos llevan esa idea, todos `aria-hidden` y en su
@@ -43,18 +49,22 @@ export default function Forgia({ lang }: { lang: Lang }) {
   const d = getDictionary(lang);
   const c = d.chapters.forgia;
   return (
-    <Section id="forgia" labelledBy="forgia-h" style={SECTION_STYLE}>
+    <Section id="forgia" labelledBy="forgia-h" className="!pt-6 sm:!pt-10">
       <Container>
-        <Eyebrow motion>{c.eyebrow}</Eyebrow>
+        <div className="forge-slab relative isolate overflow-hidden px-5 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-20" style={SECTION_STYLE}>
+        <Eyebrow motion className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span aria-hidden="true" className="size-1.5 rounded-full bg-[color:var(--forge-gold)] shadow-[0_0_12px_var(--forge-gold)]" />
+          {c.eyebrow}
+        </Eyebrow>
         <Display
           as="h2"
           id="forgia-h"
           lead={c.heading}
           serif={c.headingSerif}
           serifTone="text-[color:var(--forge-hot)]"
-          size="text-[length:clamp(1.75rem,1.5rem+1vw,2.5rem)]"
+          size="text-[length:var(--step-5)]"
           motion="text-reveal"
-          className="mt-4 max-w-[26ch] text-balance"
+          className="mt-5 max-w-[18ch] text-balance !tracking-[-0.05em]"
         />
         <div className="mt-10 grid gap-12 lg:mt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
           <div data-forge-col="" className="flex min-w-0 flex-col gap-5">
@@ -67,7 +77,7 @@ export default function Forgia({ lang }: { lang: Lang }) {
               {/* Con movimiento, el logotipo se forma con cristal una vez al entrar (MonogramReveal, como el de SkyQuetz). */}
               <MonogramReveal>
                 {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático de 1,6 KB: sin optimizador ni JS de cliente */}
-                <img src={forgia.logo} alt={t(forgia.logoAlt, lang)} width={4945} height={728} decoding="async" data-reveal="forgia" className="h-8 w-auto sm:h-10" />
+                <img src={forgia.logo} alt={t(forgia.logoAlt, lang)} width={4945} height={728} decoding="async" data-reveal="forgia" className="h-9 w-auto sm:h-12" />
                 {/* La brasa: tapa el punto del logotipo (centro al 98,08 % y al 86,95 % de la caja del SVG). */}
                 <span
                   aria-hidden="true"
@@ -81,18 +91,25 @@ export default function Forgia({ lang }: { lang: Lang }) {
             <p data-motion="word-reveal" style={wordRevealStyle(t(forgia.myPart, lang))} className="text-[length:var(--step-0)] leading-[1.65] text-[color:var(--text)]">
               <WordReveal text={t(forgia.myPart, lang)} />
             </p>
-            <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--line)]">
+            <dl className="grid grid-cols-3 gap-2 sm:gap-3">
               {forgia.stats.map((s) => (
-                <div key={s.value} className="flex min-w-0 flex-col-reverse justify-end gap-1 bg-[color:var(--bg-2)] p-3 sm:p-4">
+                <div key={s.value} className="flex min-w-0 flex-col-reverse justify-end gap-1 rounded-[var(--radius)] bg-[color:var(--bg-2)] p-3 shadow-[inset_0_1px_0_#ffffff0f,0_10px_24px_-12px_#000] sm:p-4">
                   <dt className="text-[length:var(--step--1)] uppercase tracking-[0.1em] text-[color:var(--text-2)]">{t(s.label, lang)}</dt>
                   <dd className="text-[length:var(--step-2)] font-semibold leading-none tracking-[-0.03em] tabular-nums text-[color:var(--text)]">{s.value}</dd>
                 </div>
               ))}
             </dl>
-            <a href={forgia.url} rel="noopener" className={`${linkClass} self-start`}>
-              {forgia.cta}
-              <span aria-hidden="true">↗</span>
-            </a>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <a href={forgia.url} rel="noopener" className={GOLD_BUTTON}>
+                {c.visit}
+                <span className="sr-only">, {forgia.cta}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href={forgia.url} rel="noopener" className={`${linkClass} px-2`}>
+                {forgia.cta}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
           <div className="flex min-w-0 flex-col gap-4">
             <p className="text-[length:var(--step--1)] uppercase tracking-[0.14em] text-[color:var(--text-2)]">{c.pieces}</p>
@@ -143,6 +160,35 @@ export default function Forgia({ lang }: { lang: Lang }) {
               })}
             </ol>
           </div>
+        </div>
+        <div className="mt-14 border-t border-[color:var(--line)] pt-10 lg:mt-20">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <h3 className="text-[length:var(--step-1)] font-semibold tracking-[-0.02em] text-[color:var(--text)]">{c.clients}</h3>
+            <p className="text-[length:var(--step--1)] text-[color:var(--text-2)]">{c.clientsNote}</p>
+          </div>
+          <ul className="mt-6 grid list-none grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 [&>li:last-child:nth-child(odd)]:col-span-2 sm:[&>li:last-child:nth-child(odd)]:col-span-1">
+            {forgia.clients.map((cl) => (
+              <li key={cl.name} className="min-w-0">
+                <a
+                  href={cl.url}
+                  rel="noopener"
+                  className="group flex h-24 min-h-11 items-center justify-center rounded-[var(--radius)] bg-[color:var(--bg-2)] px-5 shadow-[inset_0_1px_0_#ffffff0f] transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-[color:var(--bg-3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--forge-gold)] sm:h-28"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- AVIF estático y pequeño, sin optimizador */}
+                  <img
+                    src={cl.logo}
+                    alt={cl.name}
+                    width={cl.w}
+                    height={cl.h}
+                    loading="lazy"
+                    decoding="async"
+                    className="max-h-[52%] w-auto max-w-[80%] object-contain opacity-75 transition-opacity duration-300 group-hover:opacity-100"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
         </div>
       </Container>
     </Section>

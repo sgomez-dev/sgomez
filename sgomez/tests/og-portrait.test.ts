@@ -11,6 +11,6 @@ describe("foto de la imagen Open Graph", () => {
     const { statSync } = await import("node:fs");
     const { execFileSync } = await import("node:child_process");
     const date = (f: string) => Number(execFileSync("git", ["log", "-1", "--format=%ct", "--", f], { encoding: "utf8" }).trim() || statSync(f).mtimeMs / 1000);
-    expect(date("src/lib/seo/og-portrait.png")).toBeGreaterThanOrEqual(date("public/Santiago_Gómez_de_la_Torre_Romero.png"));
+    expect(date("src/lib/seo/og-portrait.png")).toBeGreaterThanOrEqual(date("public/Santiago_Gómez_de_la_Torre_Romero.jpg"));
   });
 });

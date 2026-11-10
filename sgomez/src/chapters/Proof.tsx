@@ -116,7 +116,7 @@ export default function Proof({ lang, children }: { lang: Lang; children?: React
           <Label id="proof-edu">{d.chapters.proof.education}</Label>
           <ul className="mt-6 flex list-none flex-col gap-3">
             {education.map((e) => (
-              <li key={e.slug} className="flex min-w-0 flex-col gap-1 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-4 sm:p-5">
+              <li key={e.slug} className="flex min-w-0 flex-col gap-1 neu p-4 sm:p-5">
                 <span className="text-[length:var(--step-1)] font-semibold tracking-[-0.02em] text-[color:var(--text)]">{e.institution}</span>
                 <span className="text-[length:var(--step-0)] text-[color:var(--text-2)]">{e.detail}</span>
               </li>

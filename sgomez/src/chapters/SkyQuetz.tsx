@@ -62,7 +62,7 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
                   <a
                     href={prod.url}
                     rel="noopener"
-                    className="group flex min-h-11 flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 transition-colors hover:bg-[color:var(--bg-3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]"
+                    className="group flex min-h-11 flex-col gap-3 neu neu-press p-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]"
                   >
                     <span className="text-[length:var(--step--1)] uppercase tracking-[0.1em] text-[color:var(--text-2)]">{t(prod.tagline, lang)}</span>
                     <span className="flex items-start justify-between gap-3 text-[length:var(--step-1)] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--text)]">
@@ -72,7 +72,7 @@ export default function SkyQuetz({ lang }: { lang: Lang }) {
                     <span className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{t(prod.desc, lang)}</span>
                     <span className="flex flex-wrap gap-2">
                       {prod.stack.map((s) => (
-                        <span key={s} className="rounded-full border border-[color:var(--line)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">{s}</span>
+                        <span key={s} className="neu-in-sm rounded-full px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">{s}</span>
                       ))}
                     </span>
                     <span className="text-[length:var(--step--1)] text-[color:var(--light-2)]">{prod.cta}</span>

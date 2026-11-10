@@ -53,7 +53,7 @@ for (const l of LANGS) {
       const links = (await bar.isVisible()) ? bar : (await page.locator("header summary").click(), page.locator("header details nav"));
       const hrefs = await links.locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("href") ?? ""));
       const anchors = hrefs.filter((h) => h.includes("#")).map((h) => h.split("#")[1]);
-      expect(anchors).toEqual(["about", "work", "open-source", "contact"]);
+      expect(anchors).toEqual(["forgia", "about", "work", "open-source", "contact"]);
       const sectionIds = await page.locator("main section[id]").evaluateAll((s) => s.map((x) => x.id));
       const positions = anchors.map((a) => sectionIds.indexOf(a));
       expect(positions.every((p) => p >= 0)).toBe(true);

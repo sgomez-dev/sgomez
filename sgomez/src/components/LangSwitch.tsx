@@ -20,7 +20,7 @@ export default function LangSwitch({ lang, label, casePaths = [] }: { lang: stri
       href={href}
       hrefLang={other}
       lang={other}
-      className="rounded-full border border-[color:var(--line)] inline-flex min-h-11 min-w-11 items-center justify-center px-4 text-sm font-medium text-[color:var(--text)] hover:bg-white/5"
+      className="neu-sm neu-press rounded-full inline-flex min-h-11 min-w-11 items-center justify-center px-4 text-sm font-medium text-[color:var(--text)]"
     >
       {label}
     </a>

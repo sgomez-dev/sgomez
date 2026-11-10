@@ -286,7 +286,9 @@ describe("Forgia antes que SkyQuetz", () => {
       const g = pageGraph({ lang, path: "/", title: "t", description: "d", type: "ProfilePage" }) as { "@graph": { "@type": string; itemListElement?: { position: number; item: string }[] }[] };
       const items = g["@graph"].find((n) => n["@type"] === "BreadcrumbList")!.itemListElement!;
       const pos = (anchor: string) => items.find((i) => i.item.endsWith(anchor))!.position;
-      expect(pos("#forgia")).toBe(pos("#open-source") - 1);
+      // Forgia va justo después de la portada: es el primer capítulo de la home y la primera miga tras «Inicio».
+      expect(pos("#forgia")).toBe(2);
+      expect(pos("#forgia")).toBeLessThan(pos("#work"));
       // SkyQuetz no se pinta en la home: su ancla no puede estar en el breadcrumb.
       expect(items.some((i) => i.item.endsWith("#skyquetz"))).toBe(false);
     });

@@ -4,6 +4,7 @@ const en: Dictionary = {
   nav: {
     work: "Work",
     about: "About",
+    forgia: "Forgia",
     openSource: "Open source",
     contact: "Contact",
     skills: "Skills",
@@ -18,7 +19,7 @@ const en: Dictionary = {
       eyebrow: "Co-founder & CTO of Forgia · Santander",
       serif: "AI that reaches production.",
       heading: "A full-stack engineer who takes AI to production",
-      available: "Available for new projects",
+      available: "Now building Forgia",
       portraitAlt: "Portrait of Santiago Gómez de la Torre",
     },
     about: {
@@ -62,6 +63,10 @@ const en: Dictionary = {
       pieces: "Forgia IA in three parts",
       whoBot: "The bot works it",
       whoYou: "You close it",
+      clients: "Trusted by",
+      clientsNote: "Clients who agreed to appear. Each logo links to their site.",
+      visit: "Discover Forgia",
+      talk: "Talk about my business",
     },
     proof: {
       eyebrow: "Proof",

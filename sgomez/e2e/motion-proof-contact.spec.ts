@@ -40,7 +40,9 @@ test.describe("capítulos 08 y 09", () => {
     // La última insignia es la última pastilla de emisores; `:last-child` a secas casaba antes con la tercera destacada.
     const last = '#proof ul:has(> [data-motion="badge"]):last-of-type > [data-motion="badge"]:last-child';
     const badge = page.locator(last);
-    await scrollToProgress(page, last, 0.97);
+    // Con el borde superior en el fondo de la vista: a 0,97 la pastilla (más baja que el desplazamiento de entrada)
+    // ya podía haber entrado entera según la altura de la página, y el muestreo no veía la mitad del ensamblaje.
+    await scrollToProgress(page, last, 1);
     const mid = await badge.evaluate((el) => getComputedStyle(el).clipPath);
     await scrollToProgress(page, last, 0.4);
     await expect.poll(() => badge.evaluate((el) => getComputedStyle(el).scale)).toBe("1");

@@ -23,7 +23,7 @@ export default function Footer({ lang }: { lang: Lang }) {
   ];
 
   return (
-    <footer className="border-t border-[color:var(--line)] bg-[color:var(--bg-2)] pt-12 pb-[calc(3rem+var(--safe-bottom))]">
+    <footer className="bg-[color:var(--bg)] pt-12 pb-[calc(3rem+var(--safe-bottom))]">
       <div className="mx-auto w-full max-w-[1200px] pl-[max(var(--gutter),var(--safe-left))] pr-[max(var(--gutter),var(--safe-right))]">
         <p className="text-sm text-[color:var(--serif-ink)]">{d.footer.tagline}</p>
         <nav aria-label={d.footer.ariaLabel} className="mt-6 flex flex-wrap gap-x-6 gap-y-0 text-sm">

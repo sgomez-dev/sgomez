@@ -38,7 +38,7 @@ export default function Experience({ lang }: { lang: Lang }) {
               key={e.slug}
               data-motion="card"
               data-index={i}
-              className="flex flex-col gap-3 rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] p-5 sm:p-6 md:w-[min(360px,72vw)] md:shrink-0 md:snap-start"
+              className="flex flex-col gap-3 neu p-5 sm:p-6 md:w-[min(360px,72vw)] md:shrink-0 md:snap-start"
             >
               <p data-e="period" className="text-[length:var(--step--1)] uppercase tracking-[0.12em] tabular-nums text-[color:var(--text-2)] [font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace]">
                 {e.period}

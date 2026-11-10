@@ -49,7 +49,7 @@ function siteMetadata(lang: Lang): Metadata {
   appleWebApp: {
     capable: true,
     title: "sgomez.dev",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
   },
   robots: {
     index: true,
@@ -63,7 +63,7 @@ function siteMetadata(lang: Lang): Metadata {
       "max-snippet": -1,
     },
   },
-  // El cristal del póster sobre fondo casi negro, el mismo favicon que links.sgomez.dev.
+  // El cristal en oro y teal de Forgia sobre Nero, el mismo favicon que links.sgomez.dev.
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -140,7 +140,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export const viewport: Viewport = {
-  themeColor: "#05060a",
+  themeColor: "#ebe6de",
   colorScheme: "dark",
   width: "device-width",
   viewportFit: "cover",
