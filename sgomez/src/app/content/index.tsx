@@ -161,6 +161,22 @@ export const forgia = {
       who: 'you',
     },
   ],
+  /**
+   * «Confían en Forgia», la misma franja que forgia.es (src/content/casos.ts de forgia-landing) y con sus mismos logos:
+   * solo el nombre y el enlace a su web, nada de qué usan ni de cifras. Los logos son crema sobre transparente, para la
+   * losa oscura del capítulo.
+   */
+  clients: [
+    { name: 'Expoplaza', logo: '/brand/clientes/expoplaza.avif', w: 800, h: 322, url: 'https://www.expoplaza.ec/' },
+    { name: 'Ultracom', logo: '/brand/clientes/ultracom.avif', w: 810, h: 264, url: 'https://netlife-ultra.com/' },
+    { name: 'WFC Soluciones', logo: '/brand/clientes/wfc.avif', w: 388, h: 228, url: 'https://wfcsoluciones.com/' },
+    { name: 'NuMe', logo: '/brand/clientes/nume.avif', w: 277, h: 156, url: 'https://nume-now.com/' },
+    { name: 'Doctor Import', logo: '/brand/clientes/doctorimport.avif', w: 773, h: 351, url: 'https://drpromedic.com/' },
+    { name: 'La Primera Sardinero', logo: '/brand/clientes/laprimera.avif', w: 470, h: 233, url: 'https://laprimerasardinero.com/' },
+    { name: 'Hacienda Granada', logo: '/brand/clientes/haciendagranada.avif', w: 660, h: 293, url: 'https://grupoplatos.com/hacienda-granada' },
+    { name: 'La Casa de los Platos', logo: '/brand/clientes/casadelosplatos.avif', w: 480, h: 433, url: 'https://grupoplatos.com/la-casa-de-los-platos' },
+    { name: 'La Bocha', logo: '/brand/clientes/labocha.avif', w: 800, h: 235, url: 'https://grupoplatos.com/la-bocha' },
+  ],
 } as const
 
 export const certifications = [

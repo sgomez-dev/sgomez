@@ -50,13 +50,15 @@ sgomez/
 
 ### Capítulos
 
-La home compone nueve capítulos, en este orden: `Hero`, `About`, `Build`, `Experience`, `Projects`, `OpenSource`, `Forgia`, `Proof` (recomendaciones, certificaciones, formación y últimas entradas del blog) y `Contact`. Cada uno es un componente de servidor en `src/chapters/`. `SkyQuetz` existe pero no se pinta: la empresa solo aparece en la metadata (JSON-LD, llms.txt, API). Todo el texto está en el HTML del servidor y se ve sin JavaScript.
+La home compone nueve capítulos, en este orden: `Hero`, `Forgia`, `About`, `Build`, `Experience`, `Projects`, `OpenSource`, `Proof` (recomendaciones, certificaciones, formación y últimas entradas del blog) y `Contact`. Cada uno es un componente de servidor en `src/chapters/`. `SkyQuetz` existe pero no se pinta: la empresa solo aparece en la metadata (JSON-LD, llms.txt, API). Todo el texto está en el HTML del servidor y se ve sin JavaScript.
 
 ### Idiomas
 
 Cada texto visible existe en español y en inglés. Las cadenas de interfaz viven en `src/i18n/dictionaries/` (el tipo del inglés obliga a que no falte ninguna clave) y el contenido largo en `src/app/content/` y `src/lib/content/pages.ts`, siempre como pares `{ es, en }`. Las recomendaciones se muestran en español y, en la versión inglesa, con su traducción etiquetada y el original en un desplegable.
 
 ### Tokens de diseño
+
+Desde la v4 el sitio es claro y neumórfico: porcelana `#ebe6de` con la paleta de Forgia (teal y oro). Las superficies en relieve son del color del fondo y se separan con `--hi` (luz) y `--lo` (sombra); las utilidades `.neu`, `.neu-sm`, `.neu-lg`, `.neu-in` y `.neu-press` viven en `globals.css`. El capítulo de Forgia va justo después de la portada en una losa Nero (`.forge-slab`, que invierte los tokens de texto dentro) con la franja «Confían en Forgia» de forgia.es. El cristal (vídeos y lienzo) se lleva al teal con un filtro CSS, sin volver a renderizarlo.
 
 `src/app/styles/tokens.css` define los colores (fondo, texto, luz), la escala tipográfica fluida (`--step-*`), el espaciado y las zonas seguras (`--safe-*`). Los componentes usan los tokens y `clamp()` en lugar de tamaños fijos, y un test comprueba el contraste WCAG AA de las parejas de color.
 

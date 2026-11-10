@@ -89,7 +89,7 @@ export default function CaseStudy({ lang, study }: { lang: Lang; study: CaseStud
               <h2 id="stack-h" className={H2}>{d.stack}</h2>
               <ul className="flex list-none flex-wrap gap-2">
                 {study.stack.map((s) => (
-                  <li key={s} className="rounded-full border border-[color:var(--line)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
+                  <li key={s} className="neu-in-sm rounded-full px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
                     {s}
                   </li>
                 ))}

@@ -39,13 +39,13 @@ export default function Build({ lang }: { lang: Lang }) {
         <Eyebrow motion>{d.chapters.build.eyebrow}</Eyebrow>
         <Display as="h2" id="build-h" lead={d.chapters.build.heading} size="text-[length:var(--step-4)]" motion="text-reveal" className="mt-4 max-w-[24ch]" />
         <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-12">
-          <ol className="flex flex-col gap-[10px] [overflow-x:clip]">
+          <ol className="-mx-3 flex flex-col gap-4 px-3 py-2 [overflow-x:clip] sm:-mx-5 sm:px-5">
             {layers.map((layer, i) => (
               <li
                 key={i}
                 data-motion="layer"
                 data-index={i}
-                className="flex flex-col gap-3 rounded-[var(--radius)] border border-[color-mix(in_oklab,var(--light-1)_35%,transparent)] bg-[color:var(--bg-3)] p-4 sm:p-5 md:flex-row md:items-center md:justify-between md:gap-8 lg:flex-col lg:items-start lg:justify-start lg:gap-3"
+                className="flex flex-col gap-3 neu p-4 sm:p-5 md:flex-row md:items-center md:justify-between md:gap-8 lg:flex-col lg:items-start lg:justify-start lg:gap-3"
               >
                 <span className="flex items-baseline gap-3 text-[length:var(--step-1)] font-semibold tracking-[-0.02em] text-[color:var(--text)] md:w-56 md:shrink-0 lg:w-auto">
                   <span aria-hidden="true" className="text-[length:var(--step--1)] font-normal tabular-nums text-[color:var(--text-2)]">
@@ -55,7 +55,7 @@ export default function Build({ lang }: { lang: Lang }) {
                 </span>
                 <ul className="flex flex-wrap gap-2 md:justify-end lg:justify-start">
                   {layer.chips.map((chip, k) => (
-                    <li key={chip} data-motion="tag" style={{ "--i": k } as CSSProperties} className="rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
+                    <li key={chip} data-motion="tag" style={{ "--i": k } as CSSProperties} className="neu-sm rounded-full px-3 py-1 text-[length:var(--step--1)] text-[color:var(--text-2)]">
                       {chip}
                     </li>
                   ))}

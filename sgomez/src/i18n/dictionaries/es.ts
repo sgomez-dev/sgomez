@@ -2,6 +2,7 @@ const es = {
   nav: {
     work: "Proyectos",
     about: "Sobre mí",
+    forgia: "Forgia",
     openSource: "Open source",
     contact: "Contacto",
     skills: "Skills",
@@ -16,7 +17,7 @@ const es = {
       eyebrow: "Cofundador y CTO de Forgia · Santander",
       serif: "IA que llega a producción.",
       heading: "Ingeniero full-stack que lleva la IA a producción",
-      available: "Disponible para nuevos proyectos",
+      available: "Ahora, construyendo Forgia",
       portraitAlt: "Retrato de Santiago Gómez de la Torre",
     },
     about: {
@@ -60,6 +61,10 @@ const es = {
       pieces: "Forgia IA, en tres piezas",
       whoBot: "Lo trabaja el bot",
       whoYou: "Lo cierras tú",
+      clients: "Confían en Forgia",
+      clientsNote: "Clientes con su permiso para aparecer. Cada logo lleva a su web.",
+      visit: "Conocer Forgia",
+      talk: "Hablar de mi negocio",
     },
     proof: {
       eyebrow: "Pruebas",

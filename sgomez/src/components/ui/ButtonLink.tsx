@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 const BASE =
-  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-6 py-2 text-[length:var(--step-0)] font-medium transition-colors";
+  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-6 py-2 text-[length:var(--step-0)] font-medium transition-[background-color,box-shadow,transform] duration-300";
 const VARIANTS = {
-  primary: "bg-[color:var(--text)] text-[color:var(--bg)] hover:bg-white",
-  ghost: "border border-[color:var(--line)] text-[color:var(--text)] hover:bg-white/5",
+  primary: "bg-[color:var(--text)] text-[color:var(--bg)] shadow-[6px_6px_16px_var(--lo),-6px_-6px_16px_var(--hi)] hover:bg-[color:var(--serif-ink)] active:translate-y-px",
+  ghost: "neu-sm neu-press text-[color:var(--text)]",
 } as const;
 
 /**

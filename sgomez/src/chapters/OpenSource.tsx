@@ -74,8 +74,8 @@ export default function OpenSource({ lang }: { lang: Lang }) {
           {blocks.map((b, i) => (
             <li key={b.key} data-motion="build" data-index={i} style={{ "--i": i } as CSSProperties} className="relative isolate flex min-w-0">
               <BuildTrace />
-              <div data-layer="outline" aria-hidden="true" className="absolute inset-0 -z-20 rounded-[var(--radius)] border border-[color-mix(in_oklab,var(--light-1)_35%,transparent)]" />
-              <div data-layer="fill" aria-hidden="true" className="absolute inset-[1px] -z-10 rounded-[calc(var(--radius)-1px)] bg-[color:var(--bg-3)]" />
+              <div data-layer="outline" aria-hidden="true" className="neu absolute inset-0 -z-20" />
+              <div data-layer="fill" aria-hidden="true" className="absolute inset-0 -z-10 rounded-[var(--radius)] bg-[color:var(--bg-2)]" />
               <div data-layer="content" className="flex w-full flex-col gap-4 p-5 sm:p-6">
                 <h3 className="text-[length:var(--step-2)] font-semibold leading-[1.1] tracking-[-0.03em] text-[color:var(--text)] [overflow-wrap:anywhere]">{b.name}</h3>
                 <p className="text-[length:var(--step-0)] leading-[1.6] text-[color:var(--text-2)]">{hardPercent(b.desc)}</p>

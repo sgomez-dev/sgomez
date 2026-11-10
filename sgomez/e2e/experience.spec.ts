@@ -1,7 +1,7 @@
 import { gzipSync } from "node:zlib";
 import { test, expect } from "./fixtures";
 
-const CHAPTERS = ["top", "about", "build", "experience", "work", "open-source", "skyquetz", "proof", "contact"];
+const CHAPTERS = ["top", "forgia", "about", "build", "experience", "work", "open-source", "proof", "contact"];
 
 /**
  * Estilos calculados del elemento y de todos sus ancestros hasta <body>: lo que

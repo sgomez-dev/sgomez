@@ -85,7 +85,7 @@ export default async function LatestPosts({ lang }: { lang: Lang }) {
             <a
               href={`${BLOG_URL}/${post.slug}`}
               rel="noopener"
-              className={`group flex min-h-11 w-full flex-col overflow-hidden rounded-[var(--radius)] border border-[color:var(--line)] bg-[color:var(--bg-2)] transition-colors hover:bg-[color:var(--bg-3)] ${focus}`}
+              className={`group flex min-h-11 w-full flex-col overflow-hidden neu neu-press ${focus}`}
             >
               {coverSrc(post.coverImage) ? (
                 <div className="relative aspect-video overflow-hidden bg-[color:var(--bg-3)]">

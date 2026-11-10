@@ -25,7 +25,7 @@ export default function Hero({ lang }: { lang: Lang }) {
               <HeroLoop pauseLabel={d.lost.pause} />
               <GlassPoster className="h-full w-full" />
             </GlassStage>
-            <Portrait alt={d.chapters.hero.portraitAlt} className="absolute bottom-0 left-0 w-[70%]" />
+            <Portrait alt={d.chapters.hero.portraitAlt} className="absolute bottom-0 left-0 w-[76%]" />
           </div>
           <div className="min-w-0 lg:order-1 sl:order-1">
             <Eyebrow intro={0}>{d.chapters.hero.eyebrow}</Eyebrow>
@@ -45,10 +45,18 @@ export default function Hero({ lang }: { lang: Lang }) {
               <ButtonLink href="#contact" variant="primary">{d.cta.talk}</ButtonLink>
               <ButtonLink href="#work" variant="ghost">{d.cta.work}</ButtonLink>
             </div>
-            <p data-intro="" style={{ "--k": 3 } as CSSProperties} className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] px-4 py-2 text-[length:var(--step--1)] text-[color:var(--text-2)]">
-              <span aria-hidden="true" className="size-2 rounded-full bg-[color:var(--light-2)] shadow-[0_0_10px_var(--light-2)]" />
+            <a
+              href="#forgia"
+              data-intro=""
+              style={{ "--k": 3 } as CSSProperties}
+              className="neu-sm neu-press mt-8 inline-flex min-h-11 items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 text-[length:var(--step--1)] font-medium text-[color:var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]"
+            >
+              <span aria-hidden="true" className="grid size-8 place-items-center rounded-full bg-[color:var(--nero)]">
+                <span className="size-2 rounded-full bg-[color:var(--forge-gold)] shadow-[0_0_10px_var(--forge-gold)]" />
+              </span>
               {d.chapters.hero.available}
-            </p>
+              <span aria-hidden="true" className="text-[color:var(--text-2)]">↓</span>
+            </a>
           </div>
         </div>
       </Container>

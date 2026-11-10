@@ -23,9 +23,9 @@ const year = (date: string) => Number(date.match(/\d{4}/)?.[0] ?? NaN);
 
 /** Tres tonos de la marca para las insignias, por emisor y siempre el mismo. */
 const HUES = [
-  "from-[#8FA8FF] via-[#FFFFFF] to-[#6EF0DC]",
-  "from-[#6EF0DC] via-[#FFFFFF] to-[#5B6CFF]",
-  "from-[#5B6CFF] via-[#C9D1E6] to-[#8FA8FF]",
+  "from-[#2A6B7C] via-[#FFFFFF] to-[#C9A96E]",
+  "from-[#C9A96E] via-[#FFFFFF] to-[#2A6B7C]",
+  "from-[#1F5A69] via-[#E8D5A8] to-[#C9A96E]",
 ];
 
 function Badge({ issuer, hue, size }: { issuer: string; hue: number; size: "lg" | "md" }) {
@@ -33,7 +33,7 @@ function Badge({ issuer, hue, size }: { issuer: string; hue: number; size: "lg" 
   const mark = issuerMark(issuer);
   return (
     <span aria-hidden="true" className={`relative grid shrink-0 place-items-center rounded-full bg-gradient-to-br p-px ${HUES[hue % HUES.length]} ${box}`}>
-      <span className={`grid size-full place-items-center rounded-full bg-[radial-gradient(120%_120%_at_30%_20%,rgba(143,168,255,0.28),rgba(11,13,20,0.96)_62%)] font-semibold tracking-[-0.04em] text-[color:var(--text)] ${mark.length > 2 ? (mark.length > 3 ? "text-[0.62em]" : "text-[0.78em]") : ""}`}>
+      <span className={`grid size-full place-items-center rounded-full bg-[radial-gradient(120%_120%_at_30%_20%,#ffffff,var(--bg-3)_62%)] shadow-[inset_2px_2px_5px_var(--lo),inset_-2px_-2px_5px_var(--hi)] font-semibold tracking-[-0.04em] text-[color:var(--text)] ${mark.length > 2 ? (mark.length > 3 ? "text-[0.62em]" : "text-[0.78em]") : ""}`}>
         {mark}
       </span>
     </span>
@@ -72,7 +72,7 @@ export default function Certifications({ lang }: { lang: Lang }) {
               href={c.credential_url}
               rel="noopener"
               aria-label={label(c)}
-              className={`group relative flex min-h-11 w-full flex-col gap-5 overflow-hidden rounded-[var(--radius)] border border-[color-mix(in_oklab,var(--light-1)_35%,transparent)] bg-[color:var(--bg-2)] bg-[radial-gradient(90%_70%_at_0%_0%,color-mix(in_oklab,var(--light-1)_18%,transparent),transparent_70%)] p-5 transition-colors hover:border-[color:var(--light-1)] sm:p-6 ${focus}`}
+              className={`group relative flex min-h-11 w-full flex-col gap-5 overflow-hidden neu bg-[radial-gradient(90%_70%_at_0%_0%,color-mix(in_oklab,var(--light-1)_18%,transparent),transparent_70%)] p-5 transition-colors hover:border-[color:var(--light-1)] sm:p-6 ${focus}`}
             >
               <span className="flex items-start justify-between gap-3">
                 <Badge issuer={c.institution} hue={hueOf(c.institution)} size="lg" />
@@ -92,7 +92,7 @@ export default function Certifications({ lang }: { lang: Lang }) {
         {issuers.map((issuer, i) => {
           const n = all.filter((c) => c.institution === issuer).length;
           return (
-            <li key={issuer} data-motion="badge" style={{ "--i": i % 3 } as CSSProperties} className="flex items-center gap-2.5 rounded-full border border-[color:var(--line)] bg-[color:var(--bg-2)] py-1.5 pl-1.5 pr-4">
+            <li key={issuer} data-motion="badge" style={{ "--i": i % 3 } as CSSProperties} className="flex items-center gap-2.5 neu-sm rounded-full py-1.5 pl-1.5 pr-4">
               <Badge issuer={issuer} hue={hueOf(issuer)} size="md" />
               <span className="flex flex-col leading-tight">
                 <span className="text-[length:var(--step--1)] font-semibold text-[color:var(--text)]">{issuer}</span>

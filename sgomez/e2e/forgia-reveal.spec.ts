@@ -53,39 +53,41 @@ test.describe("Forgia, logotipo que se forma con cristal", () => {
   test("con JS: suena una vez en su caja, la brasa se esconde y al acabar vuelve la imagen y la brasa se enciende", async ({ page }) => {
     const asked: string[] = [];
     page.on("request", (r) => VIDEO.test(r.url()) && asked.push(new URL(r.url()).pathname));
+    // Desde la v4 Forgia va justo después de la portada y en pantallas altas entra en la vista al cargar: los
+    // observadores se ponen antes de que exista la página, para no perderse el vídeo si suena enseguida.
+    await page.addInitScript(() => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const w = window as unknown as { __forgia: string[]; __geo: number[]; __ember: string };
+        w.__forgia = [];
+        new MutationObserver((ms) => {
+          for (const m of ms)
+            for (const n of m.addedNodes)
+              if (n instanceof HTMLVideoElement && n.querySelector("source")?.src.includes("/media/forgia/")) {
+                w.__forgia.push(n.paused || n.readyState < 2 ? "entra sin sonar" : "entra sonando");
+                requestAnimationFrame(() =>
+                  requestAnimationFrame(() => {
+                    const v = n.getBoundingClientRect();
+                    const i = document.querySelector("#forgia [data-monogram] img")!.getBoundingClientRect();
+                    w.__geo = [v.left - i.left, v.top - i.top, v.width, v.height, i.width, i.height];
+                  }),
+                );
+                n.addEventListener("ended", () => w.__forgia.push("ended"));
+              }
+        }).observe(document.body, { childList: true, subtree: true });
+        // La brasa, en cuanto la caja pasa a "playing" (la imagen ya está oculta y el vídeo suena).
+        const host = document.querySelector("#forgia [data-monogram]")!;
+        new MutationObserver(() => {
+          if (host.getAttribute("data-monogram") === "playing")
+            requestAnimationFrame(() => (w.__ember = getComputedStyle(host.querySelector("[data-ember]")!).opacity));
+        }).observe(host, { attributes: true, attributeFilter: ["data-monogram"] });
+      });
+    });
     await page.goto("/");
     await page.waitForLoadState("load");
-    await page.waitForTimeout(2500);
-    expect(asked).toEqual([]);
     const size = async () => logo(page).evaluate((i) => [i.clientWidth, i.clientHeight]);
     const before = await size();
     // Se anota cómo entra el vídeo (solo al sonar: oculto en el DOM contaría para el LCP), su caja frente a la de la
     // imagen, la opacidad de la brasa mientras suena y que acaba.
-    await page.evaluate(() => {
-      const w = window as unknown as { __forgia: string[]; __geo: number[]; __ember: string };
-      w.__forgia = [];
-      new MutationObserver((ms) => {
-        for (const m of ms)
-          for (const n of m.addedNodes)
-            if (n instanceof HTMLVideoElement && n.querySelector("source")?.src.includes("/media/forgia/")) {
-              w.__forgia.push(n.paused || n.readyState < 2 ? "entra sin sonar" : "entra sonando");
-              requestAnimationFrame(() =>
-                requestAnimationFrame(() => {
-                  const v = n.getBoundingClientRect();
-                  const i = document.querySelector("#forgia [data-monogram] img")!.getBoundingClientRect();
-                  w.__geo = [v.left - i.left, v.top - i.top, v.width, v.height, i.width, i.height];
-                }),
-              );
-              n.addEventListener("ended", () => w.__forgia.push("ended"));
-            }
-      }).observe(document.body, { childList: true, subtree: true });
-      // La brasa, en cuanto la caja pasa a "playing" (la imagen ya está oculta y el vídeo suena).
-      const host = document.querySelector("#forgia [data-monogram]")!;
-      new MutationObserver(() => {
-        if (host.getAttribute("data-monogram") === "playing")
-          requestAnimationFrame(() => (w.__ember = getComputedStyle(host.querySelector("[data-ember]")!).opacity));
-      }).observe(host, { attributes: true, attributeFilter: ["data-monogram"] });
-    });
     await box(page).scrollIntoViewIfNeeded();
     await expect(box(page)).toHaveAttribute("data-monogram", "done", { timeout: 20000 });
     const got = await page.evaluate(() => {

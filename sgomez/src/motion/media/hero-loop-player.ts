@@ -58,7 +58,7 @@ export function startHeroLoop(root: HTMLElement, cb: { label: string; onLive(): 
     b.setAttribute("aria-pressed", "false");
     b.style.pointerEvents = "auto";
     b.className =
-      "absolute right-0 top-full z-10 mt-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/[0.16] bg-[rgba(11,13,20,0.8)] px-4 py-2 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--light-1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
+      "absolute right-0 top-full z-10 mt-1 inline-flex min-h-11 min-w-11 items-center justify-center neu-sm neu-press rounded-full px-4 py-2 text-[length:var(--step--1)] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--light-1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--light-1)]";
     const icon = (paused: boolean) =>
       `<svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" class="mr-2 fill-current"><path d="${paused ? "M4 2.5v11l9-5.5z" : "M3.5 2h3v12h-3zm6 0h3v12h-3z"}"/></svg>`;
     b.innerHTML = icon(false);

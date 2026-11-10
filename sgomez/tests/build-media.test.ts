@@ -3,7 +3,8 @@ import { existsSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 /**
- * La secuencia del capítulo 03 se renderiza en local con Remotion (`npm run render -- --only=build` en `video/`) y se
+ * La secuencia del capítulo 03 se renderiza en local con Remotion (`npm run render -- --only=build` en `video/`), se tiñe
+ * con `node scripts/tint-build-sequence.mjs` y se
  * commitea. Presupuesto: como mucho 4 MB en escritorio, 1,5 MB en móvil y 200 KB el póster.
  */
 const dir = (n: string) => fileURLToPath(new URL(`../public/media/build/${n}`, import.meta.url));
